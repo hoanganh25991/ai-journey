@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Sentiment · App</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Sora:wght@400;600;700&display=swap" rel="stylesheet" />
+<style>
+:root {
+  --bg:#0c1118; --ink:#e8eef7; --muted:#8b97a8; --amber:#f0a35e; --cyan:#5ec8d4; --line:rgba(232,238,247,.12);
+}
+* { box-sizing:border-box; margin:0; padding:0; }
+body {
+  min-height:100vh; background:radial-gradient(ellipse at 10% 90%, rgba(94,200,212,.1), transparent 45%), var(--bg);
+  color:var(--ink); font-family:Sora,sans-serif; padding:32px 40px;
+}
+header { display:flex; justify-content:space-between; margin-bottom:24px; }
+header a { color:var(--cyan); font-family:"IBM Plex Mono",monospace; font-size:13px; text-decoration:none; }
+.wrap { max-width:720px; }
+textarea {
+  width:100%; min-height:140px; background:#15202e; border:1px solid var(--line); border-radius:14px;
+  color:var(--ink); padding:16px; font:16px/1.5 Sora,sans-serif; resize:vertical;
+}
+button {
+  margin-top:14px; background:transparent; border:1px solid var(--amber); color:var(--amber);
+  padding:12px 20px; border-radius:10px; font-family:"IBM Plex Mono",monospace; cursor:pointer;
+}
+.bars { margin-top:28px; display:grid; gap:14px; }
+.row { display:grid; grid-template-columns:100px 1fr 56px; gap:12px; align-items:center; font-family:"IBM Plex Mono",monospace; font-size:13px; }
+.track { height:12px; background:#15202e; border-radius:999px; overflow:hidden; border:1px solid var(--line); }
+.fill { height:100%; width:0; background:var(--cyan); transition:width .25s ease; }
+.fill.neg { background:#e85d5d; }
+.fill.neu { background:var(--muted); }
+.fill.pos { background:#5ec8d4; }
+.badge {
+  margin-top:20px; display:inline-block; padding:10px 16px; border-radius:999px;
+  border:1px solid var(--amber); color:var(--amber); font-family:"IBM Plex Mono",monospace; font-size:13px;
+}
+.tokens { margin-top:18px; color:var(--muted); font-size:14px; line-height:1.6; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Sentiment · working app</h1>
+  <div><a href="../slides/index.html">Slides</a> · <a href="../../../index.html">Lab UI</a></div>
+</header>
+<div class="wrap">
+  <textarea id="t" placeholder="Type a sentence… e.g. I love this demo but the bug is annoying.">I love this demo but the bug is annoying.</textarea>
+  <button type="button" id="go">Classify</button>
+  <div class="bars">
+    <div class="row"><span>negative</span><div class="track"><div class="fill neg" id="bn"></div></div><span id="pn">0%</span></div>
+    <div class="row"><span>neutral</span><div class="track"><div class="fill neu" id="bu"></div></div><span id="pu">0%</span></div>
+    <div class="row"><span>positive</span><div class="track"><div class="fill pos" id="bp"></div></div><span id="pp">0%</span></div>
+  </div>
+  <div class="badge" id="label">—</div>
+  <p class="tokens" id="tok"></p>
+</div>
+<script>
+const POS = new Set(["love","great","good","awesome","excellent","happy","amazing","nice","best","enjoy","beautiful","clear","win"]);
+const NEG = new Set(["bad","hate","bug","annoying","terrible","worst","sad","fail","broken","ugly","slow","angry","pain"]);
+
+function tokenize(s) {
+  return s.toLowerCase().replace(/[^a-z0-9\s']/g, " ").split(/\s+/).filter(Boolean);
+}
+function softmax(logits) {
+  const m = Math.max(...logits);
+  const ex = logits.map((v) => Math.exp(v - m));
+  const s = ex.reduce((a, b) => a + b, 0);
+  return ex.map((v) => v / s);
+}
+function classify(text) {
+  const tokens = tokenize(text);
+  let pos = 0, neg = 0;
+  for (const t of tokens) {
+    if (POS.has(t)) pos += 1;
+    if (NEG.has(t)) neg += 1;
+  }
+  // logits: neg, neu, pos
+  const logits = [neg + 0.2, 0.8 + (tokens.length ? 0.1 : 0), pos + 0.2];
+  if (pos === 0 && neg === 0) logits[1] += 1.2;
+  const probs = softmax(logits);
+  const names = ["negative", "neutral", "positive"];
+  let best = 0;
+  for (let i = 1; i < 3; i++) if (probs[i] > probs[best]) best = i;
+  return { tokens, probs, label: names[best] };
+}
+function render() {
+  const { tokens, probs, label } = classify(t.value);
+  const pct = probs.map((p) => Math.round(p * 100));
+  bn.style.width = pct[0] + "%"; pn.textContent = pct[0] + "%";
+  bu.style.width = pct[1] + "%"; pu.textContent = pct[1] + "%";
+  bp.style.width = pct[2] + "%"; pp.textContent = pct[2] + "%";
+  document.getElementById("label").textContent = "predicted · " + label;
+  tok.textContent = "tokens: " + (tokens.join(" · ") || "(empty)");
+}
+const t = document.getElementById("t");
+document.getElementById("go").onclick = render;
+t.addEventListener("input", render);
+render();
+</script>
+</body>
+</html>

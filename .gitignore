@@ -1,0 +1,5 @@
+.DS_Store
+.frontend-slides/
+# personal-kb lives in ~/work-station/personal-kb (future submodule)
+# docs/ is a built artifact but committed so it can be opened / served / gh-pages
+!scripts/

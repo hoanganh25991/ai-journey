@@ -1,0 +1,24 @@
+{
+  "source": "/Users/anhle/work-station/ai-learning-protonx-nlp3",
+  "copied": {
+    "tokenizer-viz.jpg": "day-16-tokenizer-visualization-190941-20241112.jpg",
+    "bpe-vs-wordpiece.png": "day-3-so-sanh-bpe-wordpiece-141233-20240928.png",
+    "build-vocab.jpg": "day-17-build-vocab-142421-20241116.jpg",
+    "embeddings-function.jpg": "day-6-embeddings-function-210924-20241008.jpg",
+    "cbow-embedding.jpg": "day-7-cbow-embedding-152347-20241012.jpg",
+    "tf-projector.jpg": "day-4-tensorflow-projector-205631-20241001.jpg",
+    "cosine-similarity.jpg": "day-6-similarity-cosine-tuong-dong-203759-20241008.jpg",
+    "embed-then-query.jpg": "day-22-embed-rồi-đi-truy-vấn-210418-20241203.jpg",
+    "self-attention.jpg": "day-12-self-attention-encoder-siêu-đơn-giản-193216-20241029.jpg",
+    "attention-table.jpg": "day-12-bảng-attention-190947-20241029.jpg",
+    "cross-attention.jpg": "day-12-cross-attention-193311-20241029.jpg",
+    "softmax.jpg": "day-8-hx-softmax-200233-20241015.jpg",
+    "softmax-regression.jpg": "day-5-softmax-regression-153702-20241005.jpg",
+    "attention-after-softmax.jpg": "day-15-attention-weight-sau-softmax-142559-20241109.jpg",
+    "graph-rag.jpg": "day-21-graph-rag-090341-20241130.jpg",
+    "rag-advanced.jpg": "day-27-rag-rag-nâng-cao-190426-20241217.jpg",
+    "drop-rag.jpg": "day-23-tạo-lib-cho-drop-rag-161247-20241207.jpg",
+    "cosine-vs-dot.jpg": "day-22-khi-nào-sử-dụng-cosine-similarity-dot-product-195256-20241203.jpg"
+  },
+  "note": "Curated screenshots from ai-learning-protonx-nlp3 for AI Lab notes/demos"
+}

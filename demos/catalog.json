@@ -1,0 +1,153 @@
+[
+  {
+    "id": "tokenize",
+    "title": "Tokenize — cut text into units",
+    "topics": [
+      "tokenize",
+      "BPE",
+      "vocabulary"
+    ],
+    "summary": "Text → tokens / subwords → IDs. BPE vs WordPiece.",
+    "notes": [
+      "notes/tokenize.md"
+    ],
+    "slides": "demos/tokenize/slides/index.html",
+    "app": "demos/tokenize/app/index.html",
+    "kind": "concept"
+  },
+  {
+    "id": "embedding",
+    "title": "Embedding — IDs become vectors",
+    "topics": [
+      "embedding",
+      "cosine",
+      "CBOW"
+    ],
+    "summary": "Token IDs → dense vectors; similarity in vector space.",
+    "notes": [
+      "notes/embedding.md"
+    ],
+    "slides": "demos/embedding/slides/index.html",
+    "app": "demos/embedding/app/index.html",
+    "kind": "concept"
+  },
+  {
+    "id": "attention",
+    "title": "Attention — which tokens matter",
+    "topics": [
+      "attention",
+      "QKV",
+      "transformer"
+    ],
+    "summary": "Query · Key · Value — contextual mixing across tokens.",
+    "notes": [
+      "notes/attention.md"
+    ],
+    "slides": "demos/attention/slides/index.html",
+    "app": "demos/attention/app/index.html",
+    "kind": "concept"
+  },
+  {
+    "id": "softmax",
+    "title": "Softmax — scores to probabilities",
+    "topics": [
+      "softmax",
+      "logits",
+      "classification"
+    ],
+    "summary": "Logits → distribution (sum=1). Used in attention & classifiers.",
+    "notes": [
+      "notes/softmax.md"
+    ],
+    "slides": "demos/softmax/slides/index.html",
+    "app": "demos/softmax/app/index.html",
+    "kind": "concept"
+  },
+  {
+    "id": "rag",
+    "title": "RAG — retrieve then generate",
+    "topics": [
+      "RAG",
+      "vector-db",
+      "retrieve"
+    ],
+    "summary": "Embed query → top-k chunks → LLM answer with citations.",
+    "notes": [
+      "notes/rag.md"
+    ],
+    "slides": "demos/rag/slides/index.html",
+    "app": "demos/rag/app/index.html",
+    "kind": "concept"
+  },
+  {
+    "id": "mcp",
+    "title": "MCP — tools for agents",
+    "topics": [
+      "MCP",
+      "tools",
+      "skills"
+    ],
+    "summary": "Model Context Protocol — host ↔ server ↔ tools (browser, blender…).",
+    "notes": [
+      "notes/mcp.md"
+    ],
+    "slides": "demos/mcp/slides/index.html",
+    "app": "demos/mcp/app/index.html",
+    "kind": "concept"
+  },
+  {
+    "id": "car-nn",
+    "title": "Car NN — sensor to action",
+    "topics": [
+      "fully-connected",
+      "classification",
+      "inference",
+      "sensors"
+    ],
+    "summary": "3 sensors [L,M,R] → hidden FC → forward / back / left / right.",
+    "notes": [
+      "notes/04-demo-car.md",
+      "notes/06-train-infer.md"
+    ],
+    "slides": "demos/car-nn/slides/index.html",
+    "app": "demos/car-nn/app/index.html",
+    "kind": "project"
+  },
+  {
+    "id": "sentiment",
+    "title": "Sentiment classifier",
+    "topics": [
+      "tokenize",
+      "embedding",
+      "classification",
+      "softmax"
+    ],
+    "summary": "Text → tokens → scores → negative / neutral / positive.",
+    "notes": [
+      "notes/05-demo-text.md",
+      "notes/01-tokenize-embed.md",
+      "notes/03-classify-rag.md"
+    ],
+    "slides": "demos/sentiment/slides/index.html",
+    "app": "demos/sentiment/app/index.html",
+    "kind": "project"
+  },
+  {
+    "id": "complexity-router",
+    "title": "Complexity router",
+    "topics": [
+      "classification",
+      "routing",
+      "agents",
+      "orchestration"
+    ],
+    "summary": "Text → simple / complex → fast path or heavy crew path.",
+    "notes": [
+      "notes/05-demo-text.md",
+      "notes/07-agents.md"
+    ],
+    "slides": "demos/complexity-router/slides/index.html",
+    "app": "demos/complexity-router/app/index.html",
+    "kind": "project"
+  }
+]

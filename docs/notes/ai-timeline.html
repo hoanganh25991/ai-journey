@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AI timeline — hành trình của tôi · AI Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+
+:root {
+  --bg: #eef3f9; --surface: #ffffff; --ink: #16202e; --muted: #5a6b80;
+  --teal: #0f8a9b; --teal-soft: rgba(15,138,155,.12); --amber: #c2703a;
+  --line: rgba(20,32,46,.12); --line-soft: rgba(20,32,46,.07);
+  --shadow: 0 1px 2px rgba(20,32,46,.05), 0 8px 24px rgba(20,32,46,.06);
+  --font: Sora, system-ui, sans-serif; --serif: "Instrument Serif", Georgia, serif;
+  --mono: "IBM Plex Mono", ui-monospace, monospace;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  min-height: 100vh; color: var(--ink); font-family: var(--font);
+  background:
+    radial-gradient(ellipse 60% 45% at 88% -5%, rgba(15,138,155,.10), transparent 60%),
+    radial-gradient(ellipse 55% 45% at 0% 105%, rgba(194,112,58,.08), transparent 55%),
+    var(--bg);
+  -webkit-font-smoothing: antialiased;
+}
+a { color: var(--teal); }
+::selection { background: var(--teal-soft); }
+
+.wrap { max-width: 740px; margin: 0 auto; padding: 32px 22px 96px; }
+.back { display: inline-flex; align-items: center; gap: 7px; text-decoration: none; color: var(--muted); font: 500 13px var(--mono); }
+.back:hover { color: var(--teal); }
+.doc {
+  background: var(--surface); border: 1px solid var(--line); border-radius: 18px;
+  padding: 34px 36px 44px; margin-top: 18px; box-shadow: var(--shadow);
+}
+.grp { font: 500 11px var(--mono); letter-spacing: .16em; text-transform: uppercase; color: var(--teal); }
+.doc h1 { font-size: 30px; letter-spacing: -.02em; margin: 8px 0 6px; }
+.summary { color: var(--muted); font-size: 15px; line-height: 1.55; }
+.actions { display: flex; flex-wrap: wrap; gap: 8px; margin: 18px 0 4px; }
+.actions a {
+  text-decoration: none; font: 500 12px var(--mono); padding: 9px 14px; border-radius: 10px;
+  border: 1px solid var(--line); color: var(--ink); background: transparent; transition: all .15s;
+}
+.actions a.primary { background: var(--teal); border-color: var(--teal); color: #fff; }
+.actions a:hover { border-color: var(--teal); color: var(--teal); }
+.actions a.primary:hover { color: #fff; opacity: .9; }
+.topics { display: flex; flex-wrap: wrap; gap: 7px; margin: 14px 0 4px; }
+.topics span { font: 500 11px var(--mono); color: var(--amber); }
+hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
+.body h1 { font-size: 24px; margin: 1.2em 0 .5em; }
+.body h2 { font-size: 19px; margin: 1.4em 0 .5em; letter-spacing: -.01em; }
+.body h3 { font-size: 16px; margin: 1.2em 0 .4em; }
+.body p, .body li { color: #2b3a4d; line-height: 1.65; font-size: 15px; }
+.body ul { padding-left: 1.25em; margin: .5em 0 1em; }
+.body li { margin: .25em 0; }
+.body a { color: var(--teal); text-decoration: none; border-bottom: 1px solid var(--teal-soft); }
+.body a:hover { border-color: var(--teal); }
+.body code { font-family: var(--mono); font-size: 13px; color: var(--amber); background: rgba(194,112,58,.09); padding: 1px 5px; border-radius: 5px; }
+.body pre { background: #0f1720; border-radius: 12px; padding: 16px; overflow: auto; margin: 14px 0; }
+.body pre code { color: #dbe6f2; background: none; padding: 0; font-size: 12.5px; line-height: 1.6; }
+.body blockquote { border-left: 3px solid var(--teal); background: var(--teal-soft); padding: 10px 16px; margin: 14px 0; border-radius: 0 8px 8px 0; color: var(--ink); }
+.body table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 13.5px; }
+.body th, .body td { border: 1px solid var(--line); padding: 9px 11px; text-align: left; color: #2b3a4d; }
+.body th { color: var(--teal); font: 500 11px var(--mono); letter-spacing: .05em; text-transform: uppercase; background: var(--teal-soft); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="../index.html">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m15 18-6-6 6-6"/></svg>
+    AI Lab
+  </a>
+  <article class="doc">
+    <h1>AI timeline — hành trình của tôi</h1>
+    <p class="summary">Hành trình từ 2023 (lần đầu biết LLM) → embedding… → agent → automation, neo vào mốc AI thực tế.</p>
+    <div class="actions"><a href="../../notes/10-ai-timeline.md">Raw .md</a></div>
+    <div class="topics"><span>#timeline</span><span>#history</span><span>#milestone</span><span>#mcp</span><span>#grok</span></div>
+    <hr class="sep" />
+    <div class="body"><h1>AI timeline — hành trình của tôi (2023 → nay)</h1>
+<blockquote>Mốc bắt đầu là <strong>2023</strong> — lần đầu tôi biết đến LLM, rồi mới đi tìm hiểu các khái niệm nền (tokenize, embedding, attention, softmax, RAG). Timeline này neo các note của lab vào dòng thời gian AI thực tế, và cho thấy vì sao giờ trọng tâm chuyển sang <strong>agent / automation</strong>.</blockquote>
+<blockquote>Nền học thuật có từ trước (Transformer 2017, BERT 2018, GPT-3 2020) — là gốc của các khái niệm, xem <a href="attention.html">attention.md</a>, <a href="embedding.html">embedding.md</a>. Nhưng <em>hành trình của tôi</em> bắt đầu từ 2023.</blockquote>
+<h2>4 giai đoạn</h2>
+<h3>1. 2023 — Lần đầu biết LLM &amp; học nền tảng</h3>
+<p>Cú hích: cuối 2022 <strong>ChatGPT (GPT-3.5)</strong> làm AI thành sản phẩm đại chúng → 2023 tôi bắt đầu tìm hiểu nghiêm túc. Đây là phần <strong>concepts</strong> của lab.</p>
+<ul>
+<li><strong>03/2023</strong> — GPT-4 · Claude 1 · Llama 1 (open weights). RAG bùng nổ.</li>
+<li>Đi học khái niệm nền theo thứ tự: <a href="tokenize.html">tokenize.md</a> → <a href="embedding.html">embedding.md</a> → <a href="attention.html">attention.md</a> → <a href="softmax.html">softmax.md</a>.</li>
+<li>Rồi tới retrieval: <a href="rag.html">rag.md</a>; train → infer: <a href="train-infer.html">06-train-infer.md</a>, <a href="train-gpu.html">train-gpu.md</a>.</li>
+<li><strong>07/2023</strong> — Claude 2 · Llama 2 (open, dùng thương mại). <strong>12/2023</strong> — Gemini 1.0 · Mixtral (MoE open).</li>
+</ul>
+<h3>2. 2024 — Model mạnh hơn + chớm agent code</h3>
+<ul>
+<li><strong>Gemini 1.5</strong> (1M context) · <strong>Claude 3 → 3.5 Sonnet</strong> (bước nhảy về code — thời Cursor cất cánh) · <strong>GPT-4o</strong> (đa phương thức) · <strong>Llama 3.1 405B</strong> · <strong>o1</strong> (reasoning) · <strong>DeepSeek V3</strong>.</li>
+<li>Tôi chuyển từ <em>đọc khái niệm</em> sang <em>dùng AI để code thật</em>.</li>
+</ul>
+<h3>3. Cuối 2024 – 2025 — Kỷ nguyên agent (MCP · skills · harness)</h3>
+<p>Lúc lab chuyển sang <strong>MCP · skills · harness</strong>.</p>
+<ul>
+<li><strong>25/11/2024</strong> — <strong>MCP</strong> (Anthropic): chuẩn kết nối agent ↔ tool. Bản lề. Xem <a href="mcp.html">mcp.md</a>.</li>
+<li><strong>01/2025</strong> — DeepSeek R1 (reasoning open, rẻ) — <a href="model-notes.html">08-model-notes.md</a>.</li>
+<li><strong>02/2025</strong> — Claude 3.7 Sonnet · GPT-4.5. <strong>03/2025</strong> — MCP thêm Streamable HTTP + OAuth · Gemini 2.5 Pro.</li>
+<li><strong>05/2025</strong> — Claude 4 (Sonnet/Opus) → <strong>Claude Code</strong> thành harness mạnh: <a href="agents.html">07-agents.md</a>.</li>
+<li><strong>08/2025</strong> — GPT-5. <strong>11/2025</strong> — Claude Opus 4.5 · <strong>AGENTS.md</strong> thành chuẩn · skills/rules: <a href="skills-rules.html">skills-rules.md</a>.</li>
+</ul>
+<h3>4. 2026 — Model wave + automation (bây giờ)</h3>
+<p>Trọng tâm hiện tại: <a href="model-notes.html">08-model-notes.md</a>, <a href="agent-automation.html">09-agent-automation.md</a>.</p>
+<ul>
+<li><strong>04/2026</strong> — GPT-5.5. <strong>28/05/2026</strong> — Claude Opus 4.8. <strong>06/2026</strong> — Claude Fable 5 · Sonnet 5.</li>
+<li><strong>08/07/2026</strong> — <strong>Grok 4.5</strong> (train cùng Cursor): nhanh, token-efficient, rẻ. <strong>09/07/2026</strong> — GPT-5.6.</li>
+<li>Song song: <strong>OpenClaw</strong> (harness <code>pi</code>) mở màn cảm giác agent control mọi thứ → <strong>Hermess</strong> làm tốt.</li>
+</ul>
+<h2>Bảng mốc chính</h2>
+<table><tbody>
+<tr><th>Thời điểm</th><th>Sự kiện</th><th>Trong lab</th></tr>
+<tr><td><strong>2023</strong></td><td><strong>Lần đầu biết LLM</strong> (ChatGPT/GPT-4)</td><td>bắt đầu học</td></tr>
+<tr><td>03/2023</td><td>GPT-4, Claude 1, Llama 1</td><td>tokenize · embedding · attention · softmax · RAG</td></tr>
+<tr><td>2024</td><td>Gemini 1.5, Claude 3.5, GPT-4o, o1</td><td>code agents</td></tr>
+<tr><td><strong>11/2024</strong></td><td><strong>MCP ra đời</strong></td><td>mcp</td></tr>
+<tr><td>2025</td><td>Claude 4 / GPT-5 / R1 · AGENTS.md</td><td>harness, skills</td></tr>
+<tr><td>2026</td><td>Grok 4.5, Opus 4.8, GPT-5.6</td><td>model notes, automation</td></tr>
+</tbody></table>
+<h2>Ý rút ra</h2>
+<ul>
+<li>Hành trình đi từ <strong>hiểu mô hình</strong> (2023–2024) → <strong>điều khiển agent</strong> (cuối 2024 →). MCP (11/2024) là bản lề.</li>
+<li>Concepts học năm 2023 <em>không lỗi thời</em>: tokenize / attention / RAG vẫn là nền cho mọi agent hôm nay.</li>
+<li>Cái mới cần theo: harness (Cursor / Claude Code / pi), model wave (Grok 4.5…), automation (OpenClaw / Hermess).</li>
+</ul>
+<h2>Related</h2>
+<ul>
+<li><a href="agents.html">07-agents.md</a>, <a href="model-notes.html">08-model-notes.md</a>, <a href="agent-automation.html">09-agent-automation.md</a>, <a href="mcp.html">mcp.md</a></li>
+</ul></div>
+  </article>
+</div>
+</body>
+</html>

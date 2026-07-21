@@ -1,0 +1,175 @@
+{
+  "version": 1,
+  "description": "Source of truth for AI Lab listing. Notes are primary; slides/demo optional.",
+  "notes": [
+    {
+      "id": "tokenize",
+      "file": "notes/tokenize.md",
+      "title": "Tokenize",
+      "summary": "Text → tokens / subwords → IDs. BPE vs WordPiece.",
+      "topics": ["tokenize", "BPE", "vocabulary"],
+      "group": "concept",
+      "slides": "demos/tokenize/slides/index.html",
+      "demo": "demos/tokenize/app/index.html"
+    },
+    {
+      "id": "embedding",
+      "file": "notes/embedding.md",
+      "title": "Embedding",
+      "summary": "Token IDs → dense vectors; cosine similarity in vector space.",
+      "topics": ["embedding", "cosine", "CBOW"],
+      "group": "concept",
+      "slides": "demos/embedding/slides/index.html",
+      "demo": "demos/embedding/app/index.html"
+    },
+    {
+      "id": "attention",
+      "file": "notes/attention.md",
+      "title": "Attention",
+      "summary": "Query · Key · Value — which tokens matter for context.",
+      "topics": ["attention", "QKV", "transformer"],
+      "group": "concept",
+      "slides": "demos/attention/slides/index.html",
+      "demo": "demos/attention/app/index.html"
+    },
+    {
+      "id": "softmax",
+      "file": "notes/softmax.md",
+      "title": "Softmax",
+      "summary": "Logits → probability distribution (sum = 1).",
+      "topics": ["softmax", "logits", "classification"],
+      "group": "concept",
+      "slides": "demos/softmax/slides/index.html",
+      "demo": "demos/softmax/app/index.html"
+    },
+    {
+      "id": "rag",
+      "file": "notes/rag.md",
+      "title": "RAG",
+      "summary": "Retrieve top-k chunks then generate grounded answers.",
+      "topics": ["RAG", "vector-db", "retrieve"],
+      "group": "concept",
+      "slides": "demos/rag/slides/index.html",
+      "demo": "demos/rag/app/index.html"
+    },
+    {
+      "id": "mcp",
+      "file": "notes/mcp.md",
+      "title": "MCP",
+      "summary": "Model Context Protocol — host ↔ server ↔ tools có schema.",
+      "topics": ["MCP", "tools", "protocol", "server"],
+      "group": "concept",
+      "slides": "demos/mcp/slides/index.html",
+      "demo": "demos/mcp/app/index.html"
+    },
+    {
+      "id": "skills-rules",
+      "file": "notes/skills-rules.md",
+      "title": "Skills · Rules · Commands",
+      "summary": "Know-how của AI agent: SKILL.md, rules, commands; global ~/.agents.",
+      "topics": ["skills", "rules", "commands", "agents-md", "dot-agents"],
+      "group": "concept",
+      "slides": null,
+      "demo": "demos/mcp/app/index.html"
+    },
+    {
+      "id": "train-gpu",
+      "file": "notes/train-gpu.md",
+      "title": "Train · PyTorch / TensorFlow · GPU",
+      "summary": "HF/Kaggle datasets, PyTorch & TensorFlow, GPU notebooks, train → inference.",
+      "topics": ["pytorch", "tensorflow", "GPU", "huggingface", "kaggle"],
+      "group": "concept",
+      "slides": null,
+      "demo": null
+    },
+    {
+      "id": "car-nn",
+      "file": "notes/04-demo-car.md",
+      "title": "Car NN — sensor to action",
+      "summary": "3 sensors → fully connected → forward / back / left / right.",
+      "topics": ["fully-connected", "classification", "sensors"],
+      "group": "concept",
+      "slides": "demos/car-nn/slides/index.html",
+      "demo": "demos/car-nn/app/index.html"
+    },
+    {
+      "id": "sentiment-routing",
+      "file": "notes/05-demo-text.md",
+      "title": "Sentiment & complexity routing",
+      "summary": "Text classifiers: polarity labels and simple/complex routing.",
+      "topics": ["sentiment", "routing", "classification"],
+      "group": "concept",
+      "slides": "demos/sentiment/slides/index.html",
+      "demo": "demos/sentiment/app/index.html",
+      "extra_links": [
+        { "label": "Complexity router slides", "href": "demos/complexity-router/slides/index.html" },
+        { "label": "Complexity router app", "href": "demos/complexity-router/app/index.html" }
+      ]
+    },
+    {
+      "id": "train-infer",
+      "file": "notes/06-train-infer.md",
+      "title": "Train → Inference",
+      "summary": "Hai lớp: học weights rồi dùng model để predict.",
+      "topics": ["train", "inference", "checkpoint"],
+      "group": "concept",
+      "slides": null,
+      "demo": null
+    },
+    {
+      "id": "agents",
+      "file": "notes/07-agents.md",
+      "title": "AI Agents · So sánh harness",
+      "summary": "Harness ≠ model: Cursor, Claude Code, Pi, Cline/Kilo, OpenCode, Zed.",
+      "topics": ["agents", "harness", "cursor", "claude", "pi", "first-mate"],
+      "group": "concept",
+      "slides": null,
+      "demo": "demos/mcp/app/index.html"
+    },
+    {
+      "id": "model-notes",
+      "file": "notes/08-model-notes.md",
+      "title": "Model field notes",
+      "summary": "Model ≠ harness: Grok 4.5, Composer, Anthropic, DeepSeek, Qwen, Kimi/GLM.",
+      "topics": ["grok", "openrouter", "deepseek", "anthropic", "composer", "cursor"],
+      "group": "concept",
+      "slides": null,
+      "demo": null
+    },
+    {
+      "id": "agent-automation",
+      "file": "notes/09-agent-automation.md",
+      "title": "Agent automation — OpenClaw · Hermess",
+      "summary": "Câu chuyện: OpenClaw (pi harness) mở màn cảm giác agent control mọi thứ → Hermess làm tốt.",
+      "topics": ["openclaw", "hermess", "pi", "automation", "harness"],
+      "group": "concept",
+      "slides": "demos/hermess/slides/index.html",
+      "demo": null
+    },
+    {
+      "id": "ai-timeline",
+      "file": "notes/10-ai-timeline.md",
+      "title": "AI timeline — hành trình của tôi",
+      "summary": "Hành trình từ 2023 (lần đầu biết LLM) → embedding… → agent → automation, neo vào mốc AI thực tế.",
+      "topics": ["timeline", "history", "milestone", "mcp", "grok"],
+      "group": "concept",
+      "slides": null,
+      "demo": null
+    },
+    {
+      "id": "personal-kb",
+      "file": "notes/personal-kb.md",
+      "title": "Personal KB — videos · docs · GitHub",
+      "summary": "Repo riêng ~/work-station/personal-kb: FTS search + Graph RAG keywords. Sẽ gắn submodule.",
+      "topics": ["knowledge-base", "youtube", "github-stars", "graph-rag", "taxonomy"],
+      "group": "concept",
+      "slides": "slides/ai-lab-notes.html",
+      "demo": null,
+      "extra_links": [
+        { "label": "personal-kb README", "href": "../personal-kb/README.md" },
+        { "label": "KB plan", "href": "../personal-kb/plans/knowledge-base.md" },
+        { "label": "Graph UI", "href": "../personal-kb/ui/public/graph.html" }
+      ]
+    }
+  ]
+}

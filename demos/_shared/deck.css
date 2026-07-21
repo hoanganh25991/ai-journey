@@ -1,0 +1,118 @@
+/* Shared Neural Ledger deck — fixed 1920×1080 */
+:root {
+  --stage-bg: #dde5ee;
+  --slide-bg: #f4f7fb;
+  --ink: #16202e;
+  --muted: #5a6b80;
+  --amber: #c2703a;
+  --cyan: #0f8a9b;
+  --line: rgba(20, 32, 46, 0.14);
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --font-display: "Sora", sans-serif;
+  --font-serif: "Instrument Serif", serif;
+  --font-mono: "IBM Plex Mono", monospace;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body {
+  width: 100%; height: 100%; margin: 0; overflow: hidden;
+  background: var(--stage-bg);
+}
+.deck-viewport { position: fixed; inset: 0; overflow: hidden; background: var(--stage-bg); }
+.deck-stage {
+  position: absolute; left: 0; top: 0; width: 1920px; height: 1080px;
+  overflow: hidden; transform-origin: 0 0; background: var(--slide-bg);
+}
+.slide {
+  position: absolute; inset: 0; width: 1920px; height: 1080px;
+  overflow: hidden; display: block; visibility: hidden; opacity: 0;
+  pointer-events: none; background: var(--slide-bg);
+  font-family: var(--font-display); color: var(--ink);
+}
+.slide.active, .slide.visible {
+  visibility: visible; opacity: 1; pointer-events: auto; z-index: 1;
+}
+.slide-bg {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 85% 12%, rgba(194,112,58,0.10), transparent 55%),
+    radial-gradient(ellipse 50% 50% at 8% 92%, rgba(15,138,155,0.10), transparent 50%),
+    linear-gradient(180deg, #f7fafd 0%, #eef3f9 55%, #e6edf5 100%);
+}
+.grid-overlay {
+  position: absolute; inset: 0; opacity: 0.28; pointer-events: none;
+  background-image:
+    linear-gradient(var(--line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-size: 80px 80px;
+  mask-image: radial-gradient(ellipse 75% 70% at 50% 40%, black, transparent);
+}
+.pad { position: absolute; inset: 72px 96px; }
+.topbar {
+  display: flex; justify-content: space-between; align-items: center;
+  font-family: var(--font-mono); font-size: 16px; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--muted); margin-bottom: 36px;
+}
+.topbar .pill {
+  color: var(--amber); border: 1px solid rgba(240,163,94,0.4);
+  padding: 6px 14px; border-radius: 999px;
+}
+h1 { font-size: 88px; font-weight: 700; letter-spacing: -0.035em; line-height: 1; }
+h1 em, h2 em { font-family: var(--font-serif); font-style: italic; font-weight: 400; color: var(--cyan); }
+h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 28px; }
+.lead { font-size: 28px; line-height: 1.5; color: var(--muted); max-width: 1100px; }
+.foot {
+  position: absolute; left: 96px; right: 96px; bottom: 56px;
+  display: flex; justify-content: space-between;
+  font-family: var(--font-mono); font-size: 15px; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--muted);
+}
+.cols-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 36px; }
+.cols-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+.card {
+  background: rgba(255,255,255,0.75); border: 1px solid var(--line);
+  border-radius: 16px; padding: 28px;
+  box-shadow: 0 1px 2px rgba(20,32,46,.05), 0 10px 30px rgba(20,32,46,.06);
+}
+.card h3 { font-size: 24px; margin-bottom: 12px; }
+.card p, .card li { font-size: 20px; line-height: 1.45; color: var(--muted); }
+.card ul { padding-left: 20px; }
+.card .tag {
+  font-family: var(--font-mono); font-size: 13px; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--cyan); margin-bottom: 10px;
+}
+.card.accent { border-color: rgba(240,163,94,0.45); }
+.card.cyan { border-color: rgba(94,200,212,0.45); }
+.flow-row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-top: 28px; }
+.flow-row .step {
+  font-family: var(--font-mono); font-size: 18px; padding: 14px 20px;
+  border: 1px solid var(--line); border-radius: 10px; background: rgba(255,255,255,0.65);
+}
+.flow-row .arr { color: var(--amber); font-size: 22px; }
+.reveal {
+  opacity: 0; transform: translateY(22px);
+  transition: opacity 0.55s var(--ease), transform 0.55s var(--ease);
+}
+.slide.visible .reveal { opacity: 1; transform: none; }
+.slide.visible .reveal:nth-child(1) { transition-delay: 0.05s; }
+.slide.visible .reveal:nth-child(2) { transition-delay: 0.14s; }
+.slide.visible .reveal:nth-child(3) { transition-delay: 0.24s; }
+.slide.visible .reveal:nth-child(4) { transition-delay: 0.34s; }
+.deck-controls {
+  position: fixed; left: 50%; bottom: 22px; transform: translateX(-50%);
+  z-index: 1000; display: flex; gap: 12px; align-items: center;
+  font-family: var(--font-mono); font-size: 13px; color: var(--muted);
+  background: rgba(255,255,255,0.92); border: 1px solid var(--line);
+  box-shadow: 0 4px 16px rgba(20,32,46,.1);
+  padding: 10px 18px; border-radius: 999px;
+}
+.deck-controls button {
+  background: transparent; border: 1px solid var(--line); color: var(--ink);
+  width: 36px; height: 36px; border-radius: 50%; cursor: pointer;
+}
+.deck-controls a {
+  color: var(--cyan); text-decoration: none; font-size: 12px; letter-spacing: 0.06em;
+  margin-left: 8px;
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.2s !important; }
+}

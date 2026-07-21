@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="vi"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Tokenize · App</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Sora:wght@400;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{--bg:#0c1118;--ink:#e8eef7;--muted:#8b97a8;--amber:#f0a35e;--cyan:#5ec8d4;--line:rgba(232,238,247,.12)}
+*{box-sizing:border-box;margin:0;padding:0}body{min-height:100vh;background:var(--bg);color:var(--ink);font-family:Sora,sans-serif;padding:28px 32px}
+header{display:flex;justify-content:space-between;margin-bottom:20px}a{color:var(--cyan);font:13px "IBM Plex Mono",monospace;text-decoration:none}
+textarea{width:100%;max-width:720px;min-height:100px;background:#15202e;border:1px solid var(--line);border-radius:12px;color:var(--ink);padding:14px;font:16px Sora,sans-serif}
+.modes{display:flex;gap:8px;margin:14px 0}.modes button{background:transparent;border:1px solid var(--line);color:var(--muted);padding:8px 12px;border-radius:8px;font:12px "IBM Plex Mono",monospace;cursor:pointer}.modes button.on{border-color:var(--amber);color:var(--amber)}
+.toks{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px;max-width:800px}
+.tok{font:13px "IBM Plex Mono",monospace;padding:8px 10px;border-radius:8px;border:1px solid var(--line);background:#15202e}
+.tok span{color:var(--muted);display:block;font-size:10px;margin-top:4px}
+.hint{margin-top:16px;color:var(--muted);font-size:14px;max-width:640px;line-height:1.5}
+</style></head><body>
+<header><h1>Tokenize · app</h1><div><a href="../slides/">Slides</a> · <a href="../../../index.html">Lab UI</a></div></header>
+<textarea id="t">unhappiness AI automation embedding</textarea>
+<div class="modes">
+  <button class="on" data-m="word">word</button>
+  <button data-m="char">char</button>
+  <button data-m="bpe">toy BPE</button>
+</div>
+<div class="toks" id="out"></div>
+<p class="hint">Toy BPE merges common pairs (un+happiness → …). Production: SentencePiece / WordPiece / tiktoken. Xem slides + protonx day-2/day-16.</p>
+<script>
+const MERGES=[["un","happiness"],["auto","mation"],["embed","ding"],["AI",""]];
+let mode="word";
+function bpe(text){
+  let toks=text.trim().split(/\s+/).filter(Boolean);
+  // naive: split long words into known pieces
+  const out=[];
+  for(const w of toks){
+    if(w.length<=4){out.push(w);continue;}
+    // greedy known prefixes
+    let rest=w, parts=[];
+    const prefs=["un","auto","embed","ing","ation","ness","happi"];
+    while(rest){
+      let hit=null;
+      for(const p of prefs){if(rest.startsWith(p)&&p.length<rest.length){hit=p;break;}}
+      if(hit){parts.push(hit);rest=rest.slice(hit.length);} else {parts.push(rest);rest="";}
+    }
+    out.push(...parts);
+  }
+  return out;
+}
+function run(){
+  const t=document.getElementById("t").value;
+  let toks=[];
+  if(mode==="word") toks=t.trim().split(/\s+/).filter(Boolean);
+  else if(mode==="char") toks=[...t.replace(/\s+/g," ").trim()];
+  else toks=bpe(t);
+  const vocab={}; toks.forEach((x,i)=>{if(!(x in vocab)) vocab[x]=Object.keys(vocab).length+1;});
+  out.innerHTML=toks.map(x=>`<div class="tok">${escape(x)}<span>id ${vocab[x]}</span></div>`).join("");
+}
+function escape(s){return s.replace(/[&<>]/g,c=>({ "&":"&amp;","<":"&lt;",">":"&gt;"}[c]));}
+document.querySelectorAll(".modes button").forEach(b=>b.onclick=()=>{
+  document.querySelectorAll(".modes button").forEach(x=>x.classList.remove("on"));
+  b.classList.add("on"); mode=b.dataset.m; run();
+});
+t.oninput=run; run();
+</script></body></html>

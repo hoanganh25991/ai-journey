@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="vi"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>RAG · App</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Sora:wght@400;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{--bg:#0c1118;--ink:#e8eef7;--muted:#8b97a8;--amber:#f0a35e;--cyan:#5ec8d4;--line:rgba(232,238,247,.12)}
+*{box-sizing:border-box;margin:0;padding:0}body{min-height:100vh;background:var(--bg);color:var(--ink);font-family:Sora,sans-serif;padding:28px 32px}
+header{display:flex;justify-content:space-between;margin-bottom:16px}a{color:var(--cyan);font:13px "IBM Plex Mono",monospace;text-decoration:none}
+input{width:min(640px,100%);background:#15202e;border:1px solid var(--line);border-radius:10px;color:var(--ink);padding:12px;font:16px Sora,sans-serif}
+button{margin:12px 0;background:transparent;border:1px solid var(--amber);color:var(--amber);padding:10px 14px;border-radius:8px;font:12px "IBM Plex Mono",monospace;cursor:pointer}
+.hit{border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin:10px 0;max-width:720px;background:rgba(21,32,46,.7)}
+.hit .s{font:11px "IBM Plex Mono",monospace;color:var(--amber)}
+.ans{margin-top:18px;padding:14px;border-left:3px solid var(--cyan);color:var(--muted);max-width:720px;line-height:1.5}
+</style></head><body>
+<header><h1>RAG · app</h1><div><a href="../slides/">Slides</a> · <a href="../../../index.html">Lab UI</a></div></header>
+<input id="q" value="What is first mate orchestration?"/>
+<button id="go">Retrieve + answer</button>
+<div id="hits"></div>
+<div class="ans" id="ans"></div>
+<script>
+const CORPUS=[
+  {id:"c1", text:"First mate is an agent that knows when to orchestrate crewmates and manage agents.md skills."},
+  {id:"c2", text:"RAG retrieves top-k chunks from a vector database then feeds them into an LLM for grounded answers."},
+  {id:"c3", text:"Softmax turns logits into probabilities for classification and attention weights."},
+  {id:"c4", text:"Embedding maps tokens to dense vectors so similar meanings are close in cosine space."},
+  {id:"c5", text:"MCP lets an AI host call external tools via standardized server interfaces."},
+  {id:"c6", text:"Kun Chen shared an agentic engineering workflow video about first mate style orchestration."},
+];
+function tok(s){return new Set(s.toLowerCase().replace(/[^a-z0-9\s]/g," ").split(/\s+/).filter(Boolean));}
+function score(query, doc){
+  const q=tok(query), d=tok(doc);
+  let inter=0; for(const t of q) if(d.has(t)) inter++;
+  return inter / Math.sqrt((q.size||1)*(d.size||1));
+}
+function run(){
+  const scored=CORPUS.map(c=>({...c, s:score(q.value,c.text)})).sort((a,b)=>b.s-a.s).slice(0,3);
+  hits.innerHTML=scored.map(c=>`<div class="hit"><div class="s">${c.id} · score ${c.s.toFixed(3)}</div>${c.text}</div>`).join("");
+  const ctx=scored.filter(c=>c.s>0).map(c=>c.text).join(" ");
+  ans.textContent = ctx
+    ? "Answer (stub): Based on retrieved chunks — "+ctx.slice(0,220)+(ctx.length>220?"…":"")
+    : "No chunks retrieved. Try different keywords.";
+}
+go.onclick=run; q.addEventListener("keydown",e=>{if(e.key==="Enter")run();}); run();
+</script></body></html>

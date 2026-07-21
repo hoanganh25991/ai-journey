@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="vi"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Softmax · App</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Sora:wght@400;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{--bg:#0c1118;--ink:#e8eef7;--muted:#8b97a8;--amber:#f0a35e;--cyan:#5ec8d4;--line:rgba(232,238,247,.12)}
+*{box-sizing:border-box;margin:0;padding:0}body{min-height:100vh;background:var(--bg);color:var(--ink);font-family:Sora,sans-serif;padding:28px 32px}
+header{display:flex;justify-content:space-between;margin-bottom:20px}a{color:var(--cyan);font:13px "IBM Plex Mono",monospace;text-decoration:none}
+label{display:block;margin:14px 0 6px;font:13px "IBM Plex Mono",monospace;color:var(--muted)}
+input[type=range]{width:min(420px,100%);accent-color:var(--cyan)}
+.bar{height:14px;background:#15202e;border-radius:999px;overflow:hidden;border:1px solid var(--line);margin:6px 0 14px;max-width:420px}
+.bar>div{height:100%;background:var(--cyan);width:0;transition:width .15s}
+.meta{font:13px "IBM Plex Mono",monospace;color:var(--muted);margin-top:12px}
+</style></head><body>
+<header><h1>Softmax · app</h1><div><a href="../slides/">Slides</a> · <a href="../../../index.html">Lab UI</a></div></header>
+<div id="sliders"></div>
+<p class="meta" id="sum"></p>
+<p class="meta">σ(zᵢ)=e^{zᵢ}/Σ e^{zⱼ} — tổng luôn ≈ 1. Dùng ở classifier head & attention weights.</p>
+<script>
+const names=["neg","neu","pos"];
+const vals=[1,0,0];
+const root=document.getElementById("sliders");
+function soft(z){const m=Math.max(...z); const e=z.map(x=>Math.exp(x-m)); const s=e.reduce((a,b)=>a+b,0); return e.map(v=>v/s);}
+function render(){
+  root.innerHTML="";
+  names.forEach((n,i)=>{
+    root.innerHTML+=`<label>${n} logit = <span id="v${i}">${vals[i].toFixed(1)}</span></label>
+      <input type="range" min="-4" max="4" step="0.1" value="${vals[i]}" data-i="${i}"/>
+      <div class="bar"><div id="b${i}"></div></div>`;
+  });
+  root.querySelectorAll("input").forEach(el=>el.oninput=e=>{
+    vals[+el.dataset.i]=+el.value; paint();
+  });
+  paint();
+}
+function paint(){
+  const p=soft(vals);
+  names.forEach((n,i)=>{
+    document.getElementById("v"+i).textContent=vals[i].toFixed(1);
+    document.getElementById("b"+i).style.width=(p[i]*100).toFixed(1)+"%";
+  });
+  sum.textContent="probs = ["+p.map(x=>x.toFixed(3)).join(", ")+"] · sum="+p.reduce((a,b)=>a+b,0).toFixed(3);
+}
+render();
+</script></body></html>
