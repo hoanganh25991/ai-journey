@@ -73,6 +73,10 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 .body table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 13.5px; }
 .body th, .body td { border: 1px solid var(--line); padding: 9px 11px; text-align: left; color: #2b3a4d; }
 .body th { color: var(--teal); font: 500 11px var(--mono); letter-spacing: .05em; text-transform: uppercase; background: var(--teal-soft); }
+.body figure { margin: 20px 0; }
+.body figure img { width: 100%; height: auto; display: block; border-radius: 12px; border: 1px solid var(--line); background: #e6edf5; }
+.body figcaption { font: 500 12px var(--mono); color: var(--muted); margin-top: 8px; text-align: center; }
+.body p img { max-width: 100%; height: auto; border-radius: 8px; }
 </style>
 </head>
 <body>
@@ -83,18 +87,37 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
   </a>
   <article class="doc">
     <h1>Train → Inference</h1>
-    <p class="summary">Hai lớp: học weights rồi dùng model để predict.</p>
+    <p class="summary">Hai đời của mô hình: học weights nặng một lần (train) rồi dùng nhẹ nhiều lần (infer).</p>
     <div class="actions"><a href="06-train-infer.md" id="labDownload" download="06-train-infer.md">Download</a>
 <button type="button" id="labShare">Share</button></div>
     <div class="topics"><span>#train</span><span>#inference</span><span>#checkpoint</span></div>
     <hr class="sep" />
     <div class="body"><h1>Train → Inference</h1>
-<p>Ban day du stack (PyTorch, TensorFlow, HF, Kaggle, GPU online): <strong><a href="train-gpu.html">train-gpu.md</a></strong>.</p>
+<blockquote>Mọi mô hình đều sống hai đời: đời <strong>học</strong> (train) tốn công một lần để chỉnh trọng số, và đời <strong>dùng</strong> (inference) chạy đi chạy lại để dự đoán. Hiểu tách bạch hai pha này giúp biết chỗ nào tốn GPU, chỗ nào chạy nhẹ.</blockquote>
+<h2>Vì sao quan trọng</h2>
+<p>Người mới hay gộp "AI" thành một khối. Thực ra phần <em>nặng</em> (train nhiều epoch trên GPU) chỉ làm một lần để ra checkpoint; phần <em>nhẹ</em> (inference) mới là thứ chạy trong app mỗi lần người dùng bấm. Các demo trong lab đều là inference — train thật diễn ra ở notebook / cloud GPU rồi mới cắm trọng số vào.</p>
+<h2>Hai pha</h2>
+<table><tbody>
+<tr><th>Pha</th><th>Việc</th><th>Chi phí</th><th>Output</th></tr>
+<tr><td><strong>Train</strong></td><td>Lặp qua dữ liệu nhiều epoch, so dự đoán với đáp án, chỉnh trọng số</td><td>Nặng, cần GPU</td><td>checkpoint (bộ trọng số)</td></tr>
+<tr><td><strong>Inference</strong></td><td>Nạp trọng số, đưa đầu vào, lấy dự đoán</td><td>Nhẹ, chạy realtime</td><td>nhãn / hành động</td></tr>
+</tbody></table>
 <pre><code>
-data → train (epochs on GPU) → checkpoint → load → infer
+data → train (nhiều epoch trên GPU) → checkpoint → load → infer (dự đoán)
 
 </code></pre>
-<p>Browser demos = minh hoa inference. Train nang o notebook protonx / cloud GPU.</p></div>
+<h2>Ý chính</h2>
+<ul>
+<li><strong>Học = giảm sai số:</strong> mỗi vòng, mô hình dự đoán, đo lệch (loss, vd cross-entropy đi cùng <a href="softmax.html">softmax.md</a>), rồi dịch trọng số theo hướng bớt lệch.</li>
+<li><strong>Checkpoint là "thành phẩm":</strong> train xong ta cất bộ trọng số; từ đó inference không cần dữ liệu train nữa.</li>
+<li><strong>Trong AI Lab:</strong> browser demos = minh họa <em>inference</em>, không train trong trình duyệt. Train nặng ở notebook protonx / Kaggle / Colab → export → cắm vào UI.</li>
+</ul>
+<h2>Related</h2>
+<ul>
+<li>Đầy đủ stack (PyTorch, TensorFlow, HF, Kaggle, GPU): <a href="train-gpu.html">train-gpu.md</a></li>
+<li>Demo inference: <a href="car-nn.html">04-demo-car.md</a>, <a href="sentiment-routing.html">05-demo-text.md</a></li>
+<li><a href="softmax.html">softmax.md</a> — loss khi train phân loại</li>
+</ul></div>
   </article>
 </div>
 <script>

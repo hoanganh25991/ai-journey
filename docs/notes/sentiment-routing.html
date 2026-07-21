@@ -73,6 +73,10 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 .body table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 13.5px; }
 .body th, .body td { border: 1px solid var(--line); padding: 9px 11px; text-align: left; color: #2b3a4d; }
 .body th { color: var(--teal); font: 500 11px var(--mono); letter-spacing: .05em; text-transform: uppercase; background: var(--teal-soft); }
+.body figure { margin: 20px 0; }
+.body figure img { width: 100%; height: auto; display: block; border-radius: 12px; border: 1px solid var(--line); background: #e6edf5; }
+.body figcaption { font: 500 12px var(--mono); color: var(--muted); margin-top: 8px; text-align: center; }
+.body p img { max-width: 100%; height: auto; border-radius: 8px; }
 </style>
 </head>
 <body>
@@ -83,7 +87,7 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
   </a>
   <article class="doc">
     <h1>Sentiment &amp; complexity routing</h1>
-    <p class="summary">Text classifiers: polarity labels and simple/complex routing.</p>
+    <p class="summary">Đọc câu rồi dán nhãn: cảm xúc (neg/neu/pos) và định tuyến dễ/khó.</p>
     <div class="actions"><a class="primary" href="../slides/sentiment/index.html">Slides ↗</a>
 <a href="../demos/sentiment/app/index.html">Demo ↗</a>
 <a href="05-demo-text.md" id="labDownload" download="05-demo-text.md">Download</a>
@@ -93,24 +97,34 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
     <div class="topics"><span>#sentiment</span><span>#routing</span><span>#classification</span></div>
     <hr class="sep" />
     <div class="body"><h1>Demo: Sentiment &amp; Complexity routing</h1>
+<blockquote>Hai demo văn bản dùng chung một ý: đọc một câu rồi <em>dán nhãn</em> cho nó. Sentiment dán nhãn cảm xúc; Complexity router dán nhãn "câu này dễ hay khó" để chọn cách xử lý.</blockquote>
+<h2>Vì sao đáng xem</h2>
+<p>Đây là nơi chuỗi khái niệm tokenize → embedding → softmax chạy end-to-end trên câu chữ thật, và cho thấy phân loại không chỉ để "đoán cảm xúc" mà còn để <em>điều phối</em> hệ thống: câu dễ thì trả lời nhanh, câu khó mới huy động agent phức tạp.</p>
+<h2>Hai pipeline</h2>
+<pre><code>
+Sentiment:   text → tokenize → embed → classifier → softmax → {neg, neu, pos}
+
+Router:      text → đo độ phức tạp → { đơn giản: model nhanh | phức tạp: crew / first-mate }
+
+</code></pre>
+<h2>Ý chính</h2>
+<ul>
+<li><strong>Sentiment (phân loại cảm xúc):</strong> ba lớp tiêu cực / trung tính / tích cực. Dùng lại đúng chuỗi <a href="tokenize.html">tokenize.md</a> → <a href="embedding.html">embedding.md</a> → <a href="softmax.html">softmax.md</a>.</li>
+<li><strong>Complexity router (định tuyến theo độ khó):</strong> phân loại yêu cầu thành "đơn giản" hay "phức tạp" rồi định tuyến — câu đơn giản đi model nhanh/rẻ, câu phức tạp mới gọi tới crew nhiều agent hoặc first-mate.</li>
+<li><strong>Cùng một khuôn, khác mục đích:</strong> cả hai đều là bài phân loại; điểm khác là <em>dùng nhãn để làm gì</em> — hiển thị cảm xúc, hay quyết định đường đi tiếp theo.</li>
+<li><strong>Định tuyến = tiết kiệm:</strong> không phải câu nào cũng cần mô hình mạnh nhất; router giúp cân bằng chất lượng và chi phí, cùng tinh thần với <a href="model-notes.html">08-model-notes.md</a>.</li>
+</ul>
 <h2>Slides &amp; apps</h2>
 <table><tbody>
 <tr><th>Demo</th><th>Slides</th><th>App</th></tr>
-<tr><td>Sentiment</td><td><a href="../slides/sentiment/index.html">slides</a></td><td><a href="../demos/sentiment/app">app</a></td></tr>
-<tr><td>Complexity router</td><td><a href="../slides/complexity-router/index.html">slides</a></td><td><a href="../demos/complexity-router/app">app</a></td></tr>
+<tr><td>Sentiment</td><td><a href="../slides/sentiment/index.html">slides</a></td><td><a href="../demos/sentiment/app/index.html">app</a></td></tr>
+<tr><td>Complexity router</td><td><a href="../slides/complexity-router/index.html">slides</a></td><td><a href="../demos/complexity-router/app/index.html">app</a></td></tr>
 </tbody></table>
-<h2>Pipelines</h2>
-<pre><code>
-text → tokenize → embed → classifier → {neg, neu, pos}
-
-text → complexity → simple(fast) | complex(crew / first-mate)
-
-</code></pre>
-<p>Train that: PyTorch/TF + HF/Kaggle + GPU — xem <a href="train-gpu.html">train-gpu.md</a>.</p>
 <h2>Related</h2>
 <ul>
 <li><a href="tokenize.html">tokenize.md</a>, <a href="embedding.html">embedding.md</a>, <a href="softmax.html">softmax.md</a></li>
-<li><a href="mcp.html">mcp.md</a>, <a href="agents.html">07-agents.md</a></li>
+<li><a href="agents.html">07-agents.md</a> — crew / first-mate cho nhánh phức tạp</li>
+<li>Huấn luyện: <a href="train-infer.html">06-train-infer.md</a>, <a href="train-gpu.html">train-gpu.md</a></li>
 </ul></div>
   </article>
 </div>

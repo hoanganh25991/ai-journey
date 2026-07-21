@@ -30,7 +30,7 @@
       <span class="step">working app</span>
     </div>
   </div>
-  <div class="foot"><span>01</span><span>protonx-nlp3 + AI Lab</span></div>
+  <div class="foot"><span>01</span><span>AI Lab</span></div>
 </section>
 
 <section class="slide">
@@ -41,7 +41,7 @@
     <div class="cols-2">
       <div class="card reveal"><div class="tag">remember</div><h3>Softmax</h3><p>Logits → distribution (sum=1). Used in attention & classifiers.</p></div>
       <div class="card cyan reveal"><div class="tag">topics</div><h3>Keywords</h3><p>softmax, logits, classification</p>
-        <p style="margin-top:12px">Nguồn học: <span style="color:var(--amber);font-family:var(--font-mono);font-size:16px">~/work-station/ai-learning-protonx-nlp3</span></p>
+        <p style="margin-top:12px">Đọc kèm: <span style="color:var(--amber);font-family:var(--font-mono);font-size:16px">notes/softmax.md</span></p>
       </div>
     </div>
   </div>
@@ -51,31 +51,57 @@
 <section class="slide">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
-    <div class="topbar reveal"><span>From protonx</span><span class="pill">softmax.jpg</span></div>
+    <div class="topbar reveal"><span>Minh họa</span><span class="pill">softmax.jpg</span></div>
     <h2 class="reveal" style="font-size:36px;margin-bottom:16px;">Hình minh họa</h2>
     <img class="shot shot-lg reveal" src="../../notes/assets/protonx/softmax.jpg" alt="softmax.jpg" />
   </div>
-  <div class="foot"><span>03</span><span>ai-learning-protonx-nlp3</span></div>
+  <div class="foot"><span>03</span><span>AI Lab · minh họa</span></div>
 </section>
 
 <section class="slide">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
-    <div class="topbar reveal"><span>From protonx</span><span class="pill">softmax-regression.jpg</span></div>
+    <div class="topbar reveal"><span>Minh họa</span><span class="pill">softmax-regression.jpg</span></div>
     <h2 class="reveal" style="font-size:36px;margin-bottom:16px;">Hình minh họa</h2>
     <img class="shot shot-lg reveal" src="../../notes/assets/protonx/softmax-regression.jpg" alt="softmax-regression.jpg" />
   </div>
-  <div class="foot"><span>04</span><span>ai-learning-protonx-nlp3</span></div>
+  <div class="foot"><span>04</span><span>AI Lab · minh họa</span></div>
 </section>
 
 <section class="slide">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
-    <div class="topbar reveal"><span>From protonx</span><span class="pill">attention-after-softmax.jpg</span></div>
+    <div class="topbar reveal"><span>Minh họa</span><span class="pill">attention-after-softmax.jpg</span></div>
     <h2 class="reveal" style="font-size:36px;margin-bottom:16px;">Hình minh họa</h2>
     <img class="shot shot-lg reveal" src="../../notes/assets/protonx/attention-after-softmax.jpg" alt="attention-after-softmax.jpg" />
   </div>
-  <div class="foot"><span>05</span><span>ai-learning-protonx-nlp3</span></div>
+  <div class="foot"><span>05</span><span>AI Lab · minh họa</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Softmax</span><span class="pill">ví dụ</span></div>
+    <h2 class="reveal">Điểm thô → phần trăm</h2>
+    <div class="cols-2">
+      <div class="card reveal"><div class="tag">logits</div><h3>[2.0, 1.0, 0.1]</h3><p>Ba điểm thô cho neg / neu / pos — khó đọc, không phải xác suất.</p></div>
+      <div class="card cyan reveal"><div class="tag">sau softmax</div><h3>[0.66, 0.24, 0.10]</h3><p>Cộng lại = 1. Đọc thẳng: "66% là tiêu cực".</p></div>
+    </div>
+  </div>
+  <div class="foot"><span>06</span><span>notes/softmax.md</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Softmax</span><span class="pill">lưu ý</span></div>
+    <h2 class="reveal">Vì sao ra một đỉnh rõ</h2>
+    <div class="cols-2">
+      <div class="card reveal"><div class="tag">trực giác</div><h3>Mũ hóa e^x</h3><p>Làm điểm cao nổi bật, ép điểm thấp nhỏ lại → kéo giãn khoảng cách.</p></div>
+      <div class="card cyan reveal"><div class="tag">khi train</div><h3>Đi cặp cross-entropy</h3><p>Đo dự đoán lệch đáp án bao nhiêu → tín hiệu để chỉnh trọng số.</p></div>
+    </div>
+  </div>
+  <div class="foot"><span>07</span><span>notes/softmax.md</span></div>
 </section>
 
 <section class="slide">

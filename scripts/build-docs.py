@@ -55,6 +55,8 @@ def inline(s: str) -> str:
     s = re.sub(r"\*\*([^*]+)\*\*", r"<strong>\1</strong>", s)
     s = re.sub(r"(?<!\*)\*([^*\n]+)\*(?!\*)", r"<em>\1</em>", s)
     s = re.sub(r"`([^`]+)`", r"<code>\1</code>", s)
+    # images before links (![alt](src) must not be caught by the link rule)
+    s = re.sub(r"!\[([^\]]*)\]\(([^)]+)\)", r'<img src="\2" alt="\1" loading="lazy" />', s)
     s = re.sub(r"\[([^\]]+)\]\(([^)]+)\)", r'<a href="\2">\1</a>', s)
     return s
 
@@ -128,6 +130,15 @@ def md_to_html(md: str) -> str:
             close_ul()
 
         if not line.strip():
+            continue
+        # standalone image on its own line → figure + caption (alt text)
+        mimg = re.match(r"^!\[([^\]]*)\]\(([^)]+)\)\s*$", line.strip())
+        if mimg:
+            close_ul()
+            alt = inline(mimg.group(1)) if mimg.group(1) else ""
+            src = mimg.group(2)
+            cap = f"<figcaption>{alt}</figcaption>" if alt else ""
+            out.append(f'<figure><img src="{src}" alt="{mimg.group(1)}" loading="lazy" />{cap}</figure>')
             continue
         if line.strip().startswith(">"):
             out.append(f"<blockquote>{inline(line.strip().lstrip('> ').strip())}</blockquote>")
@@ -677,6 +688,10 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 .body table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 13.5px; }
 .body th, .body td { border: 1px solid var(--line); padding: 9px 11px; text-align: left; color: #2b3a4d; }
 .body th { color: var(--teal); font: 500 11px var(--mono); letter-spacing: .05em; text-transform: uppercase; background: var(--teal-soft); }
+.body figure { margin: 20px 0; }
+.body figure img { width: 100%; height: auto; display: block; border-radius: 12px; border: 1px solid var(--line); background: #e6edf5; }
+.body figcaption { font: 500 12px var(--mono); color: var(--muted); margin-top: 8px; text-align: center; }
+.body p img { max-width: 100%; height: auto; border-radius: 8px; }
 </style>
 </head>
 <body>

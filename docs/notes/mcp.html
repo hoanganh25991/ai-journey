@@ -73,6 +73,10 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 .body table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 13.5px; }
 .body th, .body td { border: 1px solid var(--line); padding: 9px 11px; text-align: left; color: #2b3a4d; }
 .body th { color: var(--teal); font: 500 11px var(--mono); letter-spacing: .05em; text-transform: uppercase; background: var(--teal-soft); }
+.body figure { margin: 20px 0; }
+.body figure img { width: 100%; height: auto; display: block; border-radius: 12px; border: 1px solid var(--line); background: #e6edf5; }
+.body figcaption { font: 500 12px var(--mono); color: var(--muted); margin-top: 8px; text-align: center; }
+.body p img { max-width: 100%; height: auto; border-radius: 8px; }
 </style>
 </head>
 <body>
@@ -83,7 +87,7 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
   </a>
   <article class="doc">
     <h1>MCP</h1>
-    <p class="summary">Model Context Protocol — host ↔ server ↔ tools có schema.</p>
+    <p class="summary">Chuẩn chung để agent gọi tool ngoài — như cổng USB-C cho AI. Host ↔ server ↔ tools có schema.</p>
     <div class="actions"><a class="primary" href="../slides/mcp/index.html">Slides ↗</a>
 <a href="../demos/mcp/app/index.html">Demo ↗</a>
 <a href="mcp.md" id="labDownload" download="mcp.md">Download</a>
@@ -91,13 +95,9 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
     <div class="topics"><span>#MCP</span><span>#tools</span><span>#protocol</span><span>#server</span></div>
     <hr class="sep" />
     <div class="body"><h1>MCP — Model Context Protocol</h1>
-<blockquote>Host (Cursor / Claude / Pi) ↔ MCP server ↔ tools có schema. Cách chuẩn để agent <em>thực thi</em> ra ngoài mô hình.</blockquote>
-<h2>Slides &amp; demo</h2>
-<table><tbody>
-<tr><th></th><th>Link</th></tr>
-<tr><td>Slides</td><td><a href="../slides/mcp/index.html">slides/mcp</a></td></tr>
-<tr><td>Working app</td><td><a href="../demos/mcp/app/index.html">demos/mcp/app</a></td></tr>
-</tbody></table>
+<blockquote>Một chuẩn chung để agent <em>gọi công cụ ngoài</em>. Ví như cổng USB-C cho AI: thay vì mỗi app một kiểu cắm riêng, mọi tool nói cùng một "giọng" nên agent cắm vào là dùng được.</blockquote>
+<h2>Vì sao quan trọng</h2>
+<p>Bản thân mô hình chỉ sinh chữ; muốn nó <em>làm</em> việc thật — mở trình duyệt, truy vấn DB, render Blender, search web — phải nối ra công cụ bên ngoài. Trước MCP, mỗi tích hợp là code riêng, không tái dùng. MCP chuẩn hóa cách mô tả và gọi tool, nên một server viết một lần dùng được ở Cursor, Claude, Pi… Đây chính là bản lề đưa AI từ "trả lời" sang "thực thi" (xem <a href="ai-timeline.html">10-ai-timeline.md</a>).</p>
 <h2>Kiến trúc</h2>
 <pre><code>
 Host (agent)  →  MCP client  →  MCP server  →  tool / API / process
@@ -115,9 +115,10 @@ Host (agent)  →  MCP client  →  MCP server  →  tool / API / process
 </ul>
 <h2>Ý chính</h2>
 <ul>
-<li>Chuẩn hoá "gọi tool": thay vì mỗi app một cách tích hợp, MCP là một protocol chung.</li>
-<li>Model <strong>discover</strong> tool (list) rồi <strong>invoke</strong> (call) — không hardcode.</li>
-<li>Kết quả trả JSON có schema → dễ parse, dễ chain nhiều tool.</li>
+<li><strong>Discover rồi invoke:</strong> model <em>hỏi</em> server có tool gì (list) rồi mới <em>gọi</em> (call) — không hardcode. Thêm tool mới không phải sửa model.</li>
+<li><strong>Kết quả có schema:</strong> trả JSON theo khuôn → dễ parse, dễ nối nhiều tool thành chuỗi.</li>
+<li><strong>Một chuẩn, nhiều client:</strong> cùng một MCP server chạy được trên mọi host hỗ trợ MCP.</li>
+<li><strong>Ranh giới an toàn:</strong> tool khai báo rõ tham số và quyền → host kiểm soát được model được phép làm gì.</li>
 </ul>
 <h2>MCP ≠ Skills</h2>
 <table><tbody>
@@ -133,11 +134,10 @@ Host (agent)  →  MCP client  →  MCP server  →  tool / API / process
 <li><strong>blender</strong> — chạy <code>bpy</code>, inspect scene, render.</li>
 <li><strong>tavily</strong> — web search / extract / crawl khi kiến thức local không đủ.</li>
 </ul>
-<h2>Homes</h2>
+<h2>Tham khảo</h2>
 <ul>
-<li><code>~/.agents/skills</code> — global skills (Cursor/Claude/Pi tự load)</li>
-<li><code>~/work-station/agents-setup</code> — nơi thử nghiệm nhiều skill / lính</li>
-<li>Cursor Settings → MCP — khai báo server</li>
+<li><a href="https://modelcontextprotocol.io/">Model Context Protocol — spec &amp; docs</a></li>
+<li><a href="https://www.anthropic.com/news/model-context-protocol">Giới thiệu MCP (Anthropic)</a></li>
 </ul>
 <h2>Related</h2>
 <ul>

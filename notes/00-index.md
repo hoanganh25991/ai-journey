@@ -1,15 +1,46 @@
 # AI Lab — Notes Index
 
-**Gốc = notes.** Build ra hub: `python3 scripts/build-docs.py` → mở [`../docs/index.html`](../docs/index.html).
+> **Gốc = notes.** Mỗi chủ đề là một file `.md` viết như bài giải thích ngắn. Build ra hub tĩnh trong `docs/` rồi mở/serve từ đó.
 
-Catalog: [`catalog.json`](./catalog.json) (source of truth cho listing).
+Build: `./scripts/build.sh` → mở [`../docs/index.html`](../docs/index.html). Review giống GitHub Pages: `./scripts/review.sh`.
 
-## Quy ước
+Catalog: [`catalog.json`](./catalog.json) — source of truth cho listing (id, title, summary, slides, demo).
 
-- Mỗi mục trên UI = **một note**
-- `slides` / `demo` optional (`null` nếu chưa có)
-- Search trên hub = chỉ notes
-- Search video/docs/GitHub = dự án riêng [personal-knowledge-base.md](./personal-knowledge-base.md)
+## Ba lớp nội dung
+
+| Lớp | Vai trò | Khi nào đọc |
+|-----|---------|-------------|
+| **Note** (`.md`) | Nơi **đơn giản nhất** để nắm ý chính | luôn bắt đầu ở đây |
+| **Slide** (`slides/<topic>/`) | Trình bày, làm rõ bằng hình + từng bước | khi muốn giảng lại / thuyết trình |
+| **Demo** (`demos/<topic>/app/`) | Thử tay ngay trong browser | khi muốn *cảm* cách nó chạy |
+
+Một note là trung tâm; nó *có thể* trỏ tới một slide và một demo (khai trong `catalog.json`, để `null` nếu chưa có).
+
+## Quy ước viết note
+
+Mỗi note theo cùng một khung để dễ đọc và dễ mở rộng:
+
+1. Tiêu đề + một câu lead (ví dụ đời thường).
+2. **Vì sao quan trọng** — một đoạn ngắn.
+3. **Ý chính** — 3–5 mục, kèm ví dụ nhỏ.
+4. **Hình minh họa** — 1–3 ảnh, mỗi ảnh một caption.
+5. **Trong pipeline** — nối sang note khác.
+6. **Slides & demo** — bảng link.
+7. **Tham khảo** — 1–3 link công khai (tuỳ chọn).
+
+## Đưa hình / PDF vào note
+
+Ảnh là cách nhanh nhất để làm rõ một ý. Cách đưa lên:
+
+```
+ảnh chụp / 1 trang PDF  →  notes/assets/<chủ-đề>/ten-file.jpg
+                        →  trong note: ![caption ngắn](assets/<chủ-đề>/ten-file.jpg)
+                        →  ./scripts/build.sh  →  docs/notes/*.html
+```
+
+- Copy ảnh vào `notes/assets/…` rồi tham chiếu bằng đường dẫn **tương đối** `assets/…` — build copy nguyên sang `docs/notes/assets/` nên link chạy đúng ở cả local lẫn GitHub Pages.
+- Ảnh đứng riêng một dòng → tự thành `<figure>` có caption (lấy từ chữ trong `![…]`).
+- **PDF phức tạp:** đừng nhúng cả file. Chụp 1–2 trang then chốt thành ảnh, hoặc để link ngoài; phần cốt lõi thì viết lại bằng lời trong note.
 
 ## Notes
 
@@ -32,6 +63,6 @@ Catalog: [`catalog.json`](./catalog.json) (source of truth cho listing).
 | [10-ai-timeline.md](./10-ai-timeline.md) | field-notes | — | — |
 | [personal-knowledge-base.md](./personal-knowledge-base.md) | project | overview | CLI / plan |
 
-## Assets protonx
+## Assets
 
-[`assets/protonx/`](./assets/protonx/) — curated từ `~/work-station/ai-learning-protonx-nlp3`.
+[`assets/`](./assets/) — hình minh họa dùng trong note & slide. Thêm ảnh mới vào đây theo chủ đề rồi build lại.

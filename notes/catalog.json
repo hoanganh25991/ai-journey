@@ -6,7 +6,7 @@
       "id": "tokenize",
       "file": "notes/tokenize.md",
       "title": "Tokenize",
-      "summary": "Text → tokens / subwords → IDs. BPE vs WordPiece.",
+      "summary": "Cắt câu chữ thành token rồi đổi thành ID — máy chỉ đọc số. BPE vs WordPiece.",
       "topics": [
         "tokenize",
         "BPE",
@@ -20,7 +20,7 @@
       "id": "embedding",
       "file": "notes/embedding.md",
       "title": "Embedding",
-      "summary": "Token IDs → dense vectors; cosine similarity in vector space.",
+      "summary": "Đổi ID thành vector: gần nghĩa thì gần nhau, đo bằng cosine.",
       "topics": [
         "embedding",
         "cosine",
@@ -34,7 +34,7 @@
       "id": "attention",
       "file": "notes/attention.md",
       "title": "Attention",
-      "summary": "Query · Key · Value — which tokens matter for context.",
+      "summary": "Mỗi từ nên nhìn từ nào khác để hiểu đúng — cơ chế Q·K·V của Transformer.",
       "topics": [
         "attention",
         "QKV",
@@ -48,7 +48,7 @@
       "id": "softmax",
       "file": "notes/softmax.md",
       "title": "Softmax",
-      "summary": "Logits → probability distribution (sum = 1).",
+      "summary": "Biến điểm số thô thành phần trăm, cộng lại bằng 1.",
       "topics": [
         "softmax",
         "logits",
@@ -62,7 +62,7 @@
       "id": "rag",
       "file": "notes/rag.md",
       "title": "RAG",
-      "summary": "Retrieve top-k chunks then generate grounded answers.",
+      "summary": "Tra cứu tài liệu liên quan trước, rồi mới để model soạn câu trả lời có trích dẫn.",
       "topics": [
         "RAG",
         "vector-db",
@@ -76,7 +76,7 @@
       "id": "mcp",
       "file": "notes/mcp.md",
       "title": "MCP",
-      "summary": "Model Context Protocol — host ↔ server ↔ tools có schema.",
+      "summary": "Chuẩn chung để agent gọi tool ngoài — như cổng USB-C cho AI. Host ↔ server ↔ tools có schema.",
       "topics": [
         "MCP",
         "tools",
@@ -123,7 +123,7 @@
       "id": "car-nn",
       "file": "notes/04-demo-car.md",
       "title": "Car NN — sensor to action",
-      "summary": "3 sensors → fully connected → forward / back / left / right.",
+      "summary": "3 cảm biến → mạng fully connected → forward / back / left / right. Ví dụ nhìn thấy được của phân loại.",
       "topics": [
         "fully-connected",
         "classification",
@@ -137,7 +137,7 @@
       "id": "sentiment-routing",
       "file": "notes/05-demo-text.md",
       "title": "Sentiment & complexity routing",
-      "summary": "Text classifiers: polarity labels and simple/complex routing.",
+      "summary": "Đọc câu rồi dán nhãn: cảm xúc (neg/neu/pos) và định tuyến dễ/khó.",
       "topics": [
         "sentiment",
         "routing",
@@ -161,7 +161,7 @@
       "id": "train-infer",
       "file": "notes/06-train-infer.md",
       "title": "Train → Inference",
-      "summary": "Hai lớp: học weights rồi dùng model để predict.",
+      "summary": "Hai đời của mô hình: học weights nặng một lần (train) rồi dùng nhẹ nhiều lần (infer).",
       "topics": [
         "train",
         "inference",

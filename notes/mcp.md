@@ -1,13 +1,10 @@
 # MCP — Model Context Protocol
 
-> Host (Cursor / Claude / Pi) ↔ MCP server ↔ tools có schema. Cách chuẩn để agent *thực thi* ra ngoài mô hình.
+> Một chuẩn chung để agent *gọi công cụ ngoài*. Ví như cổng USB-C cho AI: thay vì mỗi app một kiểu cắm riêng, mọi tool nói cùng một "giọng" nên agent cắm vào là dùng được.
 
-## Slides & demo
+## Vì sao quan trọng
 
-| | Link |
-|--|------|
-| Slides | [slides/mcp](../slides/mcp/index.html) |
-| Working app | [demos/mcp/app](../demos/mcp/app/index.html) |
+Bản thân mô hình chỉ sinh chữ; muốn nó *làm* việc thật — mở trình duyệt, truy vấn DB, render Blender, search web — phải nối ra công cụ bên ngoài. Trước MCP, mỗi tích hợp là code riêng, không tái dùng. MCP chuẩn hóa cách mô tả và gọi tool, nên một server viết một lần dùng được ở Cursor, Claude, Pi… Đây chính là bản lề đưa AI từ "trả lời" sang "thực thi" (xem [10-ai-timeline.md](./10-ai-timeline.md)).
 
 ## Kiến trúc
 
@@ -24,9 +21,10 @@ Host (agent)  →  MCP client  →  MCP server  →  tool / API / process
 
 ## Ý chính
 
-- Chuẩn hoá "gọi tool": thay vì mỗi app một cách tích hợp, MCP là một protocol chung.
-- Model **discover** tool (list) rồi **invoke** (call) — không hardcode.
-- Kết quả trả JSON có schema → dễ parse, dễ chain nhiều tool.
+- **Discover rồi invoke:** model *hỏi* server có tool gì (list) rồi mới *gọi* (call) — không hardcode. Thêm tool mới không phải sửa model.
+- **Kết quả có schema:** trả JSON theo khuôn → dễ parse, dễ nối nhiều tool thành chuỗi.
+- **Một chuẩn, nhiều client:** cùng một MCP server chạy được trên mọi host hỗ trợ MCP.
+- **Ranh giới an toàn:** tool khai báo rõ tham số và quyền → host kiểm soát được model được phép làm gì.
 
 ## MCP ≠ Skills
 
@@ -44,11 +42,10 @@ Xem thêm: [skills-rules.md](./skills-rules.md).
 - **blender** — chạy `bpy`, inspect scene, render.
 - **tavily** — web search / extract / crawl khi kiến thức local không đủ.
 
-## Homes
+## Tham khảo
 
-- `~/.agents/skills` — global skills (Cursor/Claude/Pi tự load)
-- `~/work-station/agents-setup` — nơi thử nghiệm nhiều skill / lính
-- Cursor Settings → MCP — khai báo server
+- [Model Context Protocol — spec & docs](https://modelcontextprotocol.io/)
+- [Giới thiệu MCP (Anthropic)](https://www.anthropic.com/news/model-context-protocol)
 
 ## Related
 

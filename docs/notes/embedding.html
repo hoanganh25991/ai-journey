@@ -73,6 +73,10 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 .body table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 13.5px; }
 .body th, .body td { border: 1px solid var(--line); padding: 9px 11px; text-align: left; color: #2b3a4d; }
 .body th { color: var(--teal); font: 500 11px var(--mono); letter-spacing: .05em; text-transform: uppercase; background: var(--teal-soft); }
+.body figure { margin: 20px 0; }
+.body figure img { width: 100%; height: auto; display: block; border-radius: 12px; border: 1px solid var(--line); background: #e6edf5; }
+.body figcaption { font: 500 12px var(--mono); color: var(--muted); margin-top: 8px; text-align: center; }
+.body p img { max-width: 100%; height: auto; border-radius: 8px; }
 </style>
 </head>
 <body>
@@ -83,7 +87,7 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
   </a>
   <article class="doc">
     <h1>Embedding</h1>
-    <p class="summary">Token IDs → dense vectors; cosine similarity in vector space.</p>
+    <p class="summary">Đổi ID thành vector: gần nghĩa thì gần nhau, đo bằng cosine.</p>
     <div class="actions"><a class="primary" href="../slides/embedding/index.html">Slides ↗</a>
 <a href="../demos/embedding/app/index.html">Demo ↗</a>
 <a href="embedding.md" id="labDownload" download="embedding.md">Download</a>
@@ -91,27 +95,42 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
     <div class="topics"><span>#embedding</span><span>#cosine</span><span>#CBOW</span></div>
     <hr class="sep" />
     <div class="body"><h1>Embedding</h1>
-<blockquote>Token ID → vector dày đặc. Gần nghĩa → gần trong không gian.</blockquote>
+<blockquote>Đổi mỗi token ID thành một dãy số (vector). Điều hay: những gì <em>gần nghĩa</em> thì nằm <em>gần nhau</em> trong không gian số đó.</blockquote>
+<h2>Vì sao quan trọng</h2>
+<p>ID chỉ là cái tên đánh số, không mang nghĩa: <code>chó = 812</code>, <code>mèo = 4471</code> — hai số này ở cạnh nhau hay xa nhau chẳng nói lên điều gì. Embedding thay mỗi ID bằng một vector học được, sao cho "chó" và "mèo" (đều là thú cưng) rơi vào vùng gần nhau, còn "chó" và "hóa đơn" thì xa. Nhờ vậy máy mới "đo" được mức giống nhau về nghĩa — nền của tìm kiếm ngữ nghĩa, phân loại, RAG.</p>
+<h2>Ý chính</h2>
+<ul>
+<li><strong>Vector = tọa độ nghĩa:</strong> mỗi token/câu là một điểm trong không gian nhiều chiều (vd 300–1536 chiều). Gần nghĩa → gần điểm.</li>
+<li><strong>Học từ ngữ cảnh:</strong> mô hình như CBOW/Word2Vec học vector bằng cách đoán từ dựa trên các từ xung quanh. "Bạn là ai được quyết định bởi những từ hay đứng cạnh bạn."</li>
+<li><strong>Đo độ giống nhau bằng cosine:</strong> so <em>hướng</em> của hai vector, không so độ dài. Cùng hướng → cosine ≈ 1 (rất giống); vuông góc → ≈ 0.</li>
+<li><strong>Cosine hay dot-product?</strong> Cosine chuẩn hóa độ dài nên hợp khi chỉ quan tâm "cùng chủ đề"; dot-product còn tính cả độ mạnh/độ dài vector.</li>
+<li><strong>Không chỉ cho chữ:</strong> ảnh, âm thanh, người dùng… đều có thể embed để so sánh trong cùng một không gian.</li>
+</ul>
+<h2>Hình minh họa</h2>
+<figure><img src="assets/protonx/embeddings-function.jpg" alt="Embedding: hàm biến token thành vector dày đặc" loading="lazy" /><figcaption>Embedding: hàm biến token thành vector dày đặc</figcaption></figure>
+<figure><img src="assets/protonx/cbow-embedding.jpg" alt="CBOW học vector từ các từ ngữ cảnh xung quanh" loading="lazy" /><figcaption>CBOW học vector từ các từ ngữ cảnh xung quanh</figcaption></figure>
+<figure><img src="assets/protonx/cosine-similarity.jpg" alt="Cosine similarity: đo góc giữa hai vector nghĩa" loading="lazy" /><figcaption>Cosine similarity: đo góc giữa hai vector nghĩa</figcaption></figure>
+<figure><img src="assets/protonx/tf-projector.jpg" alt="Các từ được chiếu xuống không gian 3D trong TensorFlow Projector" loading="lazy" /><figcaption>Các từ được chiếu xuống không gian 3D trong TensorFlow Projector</figcaption></figure>
+<h2>Trong pipeline</h2>
+<pre><code>
+IDs → [embedding] → vectors → { phân loại | attention | tìm top-k cho RAG }
+
+</code></pre>
+<p>Embedding nhận đầu ra của <a href="tokenize.html">tokenize.md</a> và cấp "nhiên liệu" cho <a href="attention.html">attention.md</a> lẫn <a href="rag.html">rag.md</a>.</p>
 <h2>Slides &amp; demo</h2>
 <table><tbody>
 <tr><th></th><th>Link</th></tr>
 <tr><td>Slides</td><td><a href="../slides/embedding/index.html">slides/embedding</a></td></tr>
 <tr><td>Working app</td><td><a href="../demos/embedding/app/index.html">demos/embedding/app</a></td></tr>
 </tbody></table>
-<h2>Ý chính</h2>
+<h2>Tham khảo</h2>
 <ul>
-<li>Lookup table / learned matrix</li>
-<li>Cosine / dot-product similarity</li>
-<li>Nền cho classification, RAG, taxonomy semantic</li>
+<li>Google — <a href="https://developers.google.com/machine-learning/crash-course/embeddings">Machine Learning Crash Course: Embeddings</a></li>
+<li>Mikolov et al. 2013 — <a href="https://arxiv.org/abs/1301.3781">Word2Vec</a></li>
 </ul>
-<h2>Protonx</h2>
+<h2>Related</h2>
 <ul>
-<li><code>day-6-assignment-neural-network-cbow.ipynb</code></li>
-<li>Ảnh: embeddings-function, cbow, TF Projector, cosine</li>
-</ul>
-<h2>Related demos</h2>
-<ul>
-<li><a href="../demos/tokenize">tokenize</a>, <a href="../demos/rag">rag</a>, <a href="../demos/sentiment">sentiment</a></li>
+<li><a href="tokenize.html">tokenize.md</a>, <a href="rag.html">rag.md</a>, <a href="sentiment-routing.html">05-demo-text.md</a></li>
 </ul></div>
   </article>
 </div>

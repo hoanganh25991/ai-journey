@@ -73,6 +73,10 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 .body table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 13.5px; }
 .body th, .body td { border: 1px solid var(--line); padding: 9px 11px; text-align: left; color: #2b3a4d; }
 .body th { color: var(--teal); font: 500 11px var(--mono); letter-spacing: .05em; text-transform: uppercase; background: var(--teal-soft); }
+.body figure { margin: 20px 0; }
+.body figure img { width: 100%; height: auto; display: block; border-radius: 12px; border: 1px solid var(--line); background: #e6edf5; }
+.body figcaption { font: 500 12px var(--mono); color: var(--muted); margin-top: 8px; text-align: center; }
+.body p img { max-width: 100%; height: auto; border-radius: 8px; }
 </style>
 </head>
 <body>
@@ -83,7 +87,7 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
   </a>
   <article class="doc">
     <h1>Tokenize</h1>
-    <p class="summary">Text → tokens / subwords → IDs. BPE vs WordPiece.</p>
+    <p class="summary">Cắt câu chữ thành token rồi đổi thành ID — máy chỉ đọc số. BPE vs WordPiece.</p>
     <div class="actions"><a class="primary" href="../slides/tokenize/index.html">Slides ↗</a>
 <a href="../demos/tokenize/app/index.html">Demo ↗</a>
 <a href="tokenize.md" id="labDownload" download="tokenize.md">Download</a>
@@ -91,27 +95,46 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
     <div class="topics"><span>#tokenize</span><span>#BPE</span><span>#vocabulary</span></div>
     <hr class="sep" />
     <div class="body"><h1>Tokenize</h1>
-<blockquote>Text → tokens → IDs. Model không đọc chữ — nó đọc số.</blockquote>
+<blockquote>Máy không đọc chữ — nó đọc số. Tokenize là bước cắt câu chữ thành những mẩu nhỏ (token) rồi đổi mỗi mẩu thành một con số (ID).</blockquote>
+<h2>Vì sao quan trọng</h2>
+<p>Mọi mô hình ngôn ngữ chỉ nhận vào một dãy số. Trước khi làm bất cứ điều gì — embedding, attention, phân loại — câu chữ phải được biến thành dãy ID. Nếu bước cắt này sai, mọi bước sau đều nhận sai đầu vào. Tokenizer vì thế là "cửa khẩu" của cả pipeline.</p>
+<h2>Ý chính</h2>
+<ul>
+<li><strong>Ba mức cắt:</strong></li>
+</ul>
+<p>  - <em>Theo từ</em> (word): <code>"xin chào"</code> → <code>["xin", "chào"]</code>. Đơn giản nhưng gặp từ lạ là chịu.</p>
+<p>  - <em>Theo mẩu con</em> (subword): <code>"chàoo"</code> → <code>["chào", "o"]</code>. Ghép được từ chưa gặp từ các mẩu đã biết — cách phổ biến nhất hiện nay.</p>
+<p>  - <em>Theo ký tự</em> (char): <code>"chào"</code> → <code>["c","h","à","o"]</code>. Không bao giờ bí, nhưng chuỗi rất dài.</p>
+<ul>
+<li><strong>Vocabulary (từ điển):</strong> tập cố định mọi token mà mô hình biết; mỗi token ứng với một ID. Ví dụ <code>chào → 5021</code>.</li>
+<li><strong>BPE vs WordPiece:</strong> hai cách xây từ điển subword. Cùng ý tưởng "gộp dần cặp hay đi cùng nhau", khác ở tiêu chí gộp. Đây là kiểu tokenizer của GPT (BPE) và BERT (WordPiece).</li>
+<li><strong>Một token ≈ 4 ký tự tiếng Anh:</strong> nên chi phí gọi mô hình tính theo token, không theo chữ.</li>
+<li><strong>Sai tokenizer = sai tất cả:</strong> dùng tokenizer khác lúc train và lúc chạy → ID lệch → mô hình hiểu nhầm hoàn toàn.</li>
+</ul>
+<h2>Hình minh họa</h2>
+<figure><img src="assets/protonx/tokenizer-viz.jpg" alt="Câu chữ được cắt thành các token, mỗi token tô một màu" loading="lazy" /><figcaption>Câu chữ được cắt thành các token, mỗi token tô một màu</figcaption></figure>
+<figure><img src="assets/protonx/bpe-vs-wordpiece.png" alt="BPE và WordPiece: hai cách xây từ điển subword" loading="lazy" /><figcaption>BPE và WordPiece: hai cách xây từ điển subword</figcaption></figure>
+<figure><img src="assets/protonx/build-vocab.jpg" alt="Gộp dần các cặp ký tự hay đi cùng nhau để dựng vocabulary" loading="lazy" /><figcaption>Gộp dần các cặp ký tự hay đi cùng nhau để dựng vocabulary</figcaption></figure>
+<h2>Trong pipeline</h2>
+<pre><code>
+văn bản → [tokenize] → IDs → embedding → attention → … → softmax
+
+</code></pre>
+<p>Token ID là đầu vào cho <a href="embedding.html">embedding.md</a>; từ đó mới tới attention, phân loại, RAG.</p>
 <h2>Slides &amp; demo</h2>
 <table><tbody>
 <tr><th></th><th>Link</th></tr>
 <tr><td>Slides</td><td><a href="../slides/tokenize/index.html">slides/tokenize</a></td></tr>
 <tr><td>Working app</td><td><a href="../demos/tokenize/app/index.html">demos/tokenize/app</a></td></tr>
 </tbody></table>
-<h2>Ý chính</h2>
+<h2>Tham khảo</h2>
 <ul>
-<li>Word / subword (BPE, WordPiece, SentencePiece) / char</li>
-<li>Vocabulary cố định → mỗi token một ID</li>
-<li>Sai tokenizer = sai input cho mọi bước sau</li>
+<li>Hugging Face — <a href="https://huggingface.co/docs/transformers/tokenizer_summary">Tokenizers summary</a></li>
+<li>Sennrich et al. 2016 — <a href="https://arxiv.org/abs/1508.07909">Neural Machine Translation of Rare Words with Subword Units (BPE)</a></li>
 </ul>
-<h2>Protonx</h2>
+<h2>Related</h2>
 <ul>
-<li><code>byte-pair-encoding-bpe.md</code>, <code>day-2-assignment-wordpiece-tokenizer.ipynb</code></li>
-<li>Ảnh: <code>tokenizer-viz.jpg</code>, <code>bpe-vs-wordpiece.png</code>, <code>build-vocab.jpg</code></li>
-</ul>
-<h2>Related demos</h2>
-<ul>
-<li><a href="../demos/embedding">embedding</a>, <a href="../demos/sentiment">sentiment</a></li>
+<li><a href="embedding.html">embedding.md</a>, <a href="sentiment-routing.html">05-demo-text.md</a></li>
 </ul></div>
   </article>
 </div>

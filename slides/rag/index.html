@@ -30,7 +30,7 @@
       <span class="step">working app</span>
     </div>
   </div>
-  <div class="foot"><span>01</span><span>protonx-nlp3 + AI Lab</span></div>
+  <div class="foot"><span>01</span><span>AI Lab</span></div>
 </section>
 
 <section class="slide">
@@ -41,7 +41,7 @@
     <div class="cols-2">
       <div class="card reveal"><div class="tag">remember</div><h3>RAG</h3><p>Embed query → top-k chunks → LLM answer with citations.</p></div>
       <div class="card cyan reveal"><div class="tag">topics</div><h3>Keywords</h3><p>RAG, vector-db, retrieve</p>
-        <p style="margin-top:12px">Nguồn học: <span style="color:var(--amber);font-family:var(--font-mono);font-size:16px">~/work-station/ai-learning-protonx-nlp3</span></p>
+        <p style="margin-top:12px">Đọc kèm: <span style="color:var(--amber);font-family:var(--font-mono);font-size:16px">notes/rag.md</span></p>
       </div>
     </div>
   </div>
@@ -51,31 +51,57 @@
 <section class="slide">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
-    <div class="topbar reveal"><span>From protonx</span><span class="pill">graph-rag.jpg</span></div>
+    <div class="topbar reveal"><span>Minh họa</span><span class="pill">graph-rag.jpg</span></div>
     <h2 class="reveal" style="font-size:36px;margin-bottom:16px;">Hình minh họa</h2>
     <img class="shot shot-lg reveal" src="../../notes/assets/protonx/graph-rag.jpg" alt="graph-rag.jpg" />
   </div>
-  <div class="foot"><span>03</span><span>ai-learning-protonx-nlp3</span></div>
+  <div class="foot"><span>03</span><span>AI Lab · minh họa</span></div>
 </section>
 
 <section class="slide">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
-    <div class="topbar reveal"><span>From protonx</span><span class="pill">embed-then-query.jpg</span></div>
+    <div class="topbar reveal"><span>Minh họa</span><span class="pill">embed-then-query.jpg</span></div>
     <h2 class="reveal" style="font-size:36px;margin-bottom:16px;">Hình minh họa</h2>
     <img class="shot shot-lg reveal" src="../../notes/assets/protonx/embed-then-query.jpg" alt="embed-then-query.jpg" />
   </div>
-  <div class="foot"><span>04</span><span>ai-learning-protonx-nlp3</span></div>
+  <div class="foot"><span>04</span><span>AI Lab · minh họa</span></div>
 </section>
 
 <section class="slide">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
-    <div class="topbar reveal"><span>From protonx</span><span class="pill">rag-advanced.jpg</span></div>
+    <div class="topbar reveal"><span>Minh họa</span><span class="pill">rag-advanced.jpg</span></div>
     <h2 class="reveal" style="font-size:36px;margin-bottom:16px;">Hình minh họa</h2>
     <img class="shot shot-lg reveal" src="../../notes/assets/protonx/rag-advanced.jpg" alt="rag-advanced.jpg" />
   </div>
-  <div class="foot"><span>05</span><span>ai-learning-protonx-nlp3</span></div>
+  <div class="foot"><span>05</span><span>AI Lab · minh họa</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>RAG</span><span class="pill">ví dụ</span></div>
+    <h2 class="reveal">Mở sách rồi mới trả lời</h2>
+    <div class="cols-2">
+      <div class="card reveal"><div class="tag">retrieve</div><h3>Tra trước</h3><p>Câu hỏi → embed → tìm top-k đoạn gần nghĩa nhất trong vector DB.</p></div>
+      <div class="card cyan reveal"><div class="tag">generate</div><h3>Soạn sau</h3><p>Nhét các đoạn vào prompt → model trả lời bám tài liệu, kèm trích dẫn.</p></div>
+    </div>
+  </div>
+  <div class="foot"><span>06</span><span>notes/rag.md</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>RAG</span><span class="pill">lưu ý</span></div>
+    <h2 class="reveal">Dễ sai chỗ nào</h2>
+    <div class="cols-2">
+      <div class="card reveal"><div class="tag">bẫy</div><h3>Retrieve sai → hỏng</h3><p>Lấy nhầm đoạn thì model soạn hay đến mấy cũng sai. Chất lượng nằm ở bước tìm.</p></div>
+      <div class="card cyan reveal"><div class="tag">khác chat thuần</div><h3>Neo vào corpus</h3><p>Trả lời được cả tài liệu model chưa từng thấy — không phải chỉ dựa trí nhớ.</p></div>
+    </div>
+  </div>
+  <div class="foot"><span>07</span><span>notes/rag.md</span></div>
 </section>
 
 <section class="slide">

@@ -73,6 +73,10 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 .body table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 13.5px; }
 .body th, .body td { border: 1px solid var(--line); padding: 9px 11px; text-align: left; color: #2b3a4d; }
 .body th { color: var(--teal); font: 500 11px var(--mono); letter-spacing: .05em; text-transform: uppercase; background: var(--teal-soft); }
+.body figure { margin: 20px 0; }
+.body figure img { width: 100%; height: auto; display: block; border-radius: 12px; border: 1px solid var(--line); background: #e6edf5; }
+.body figcaption { font: 500 12px var(--mono); color: var(--muted); margin-top: 8px; text-align: center; }
+.body p img { max-width: 100%; height: auto; border-radius: 8px; }
 </style>
 </head>
 <body>
@@ -83,29 +87,39 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
   </a>
   <article class="doc">
     <h1>Car NN — sensor to action</h1>
-    <p class="summary">3 sensors → fully connected → forward / back / left / right.</p>
+    <p class="summary">3 cảm biến → mạng fully connected → forward / back / left / right. Ví dụ nhìn thấy được của phân loại.</p>
     <div class="actions"><a class="primary" href="../slides/car-nn/index.html">Slides ↗</a>
 <a href="../demos/car-nn/app/index.html">Demo ↗</a>
 <a href="04-demo-car.md" id="labDownload" download="04-demo-car.md">Download</a>
 <button type="button" id="labShare">Share</button></div>
     <div class="topics"><span>#fully-connected</span><span>#classification</span><span>#sensors</span></div>
     <hr class="sep" />
-    <div class="body"><h1>Demo: Car NN — Fully Connected</h1>
+    <div class="body"><h1>Demo: Car NN — từ cảm biến ra hành động</h1>
+<blockquote>Một chiếc xe đồ chơi có 3 cảm biến khoảng cách. Một mạng nơ-ron nhỏ (fully connected) nhìn 3 con số đó và quyết định: đi tới, lùi, rẽ trái hay rẽ phải. Đây là ví dụ <em>nhìn thấy được</em> của phân loại.</blockquote>
+<h2>Vì sao đáng xem</h2>
+<p>Các note khái niệm (embedding, softmax) khá trừu tượng. Demo này rút gọn tất cả về mức "thấy tận mắt": đầu vào là 3 số, đầu ra là 1 trong 4 hành động, và bạn quan sát mạng đổi quyết định ngay khi vật cản dịch chuyển. Nó cho cảm giác cụ thể về <em>một lớp fully connected + softmax</em> làm việc gì.</p>
+<h2>Ý chính</h2>
+<ul>
+<li><strong>Đầu vào:</strong> ba cảm biến trái / giữa / phải, mỗi cái là số trong <code>[0,1]</code>. Không vật cản → gần 1; có vật cản → nhỏ dần.</li>
+<li><strong>Mạng:</strong> một (hoặc vài) lớp fully connected biến 3 số đầu vào thành 4 điểm — mỗi điểm cho một hành động.</li>
+<li><strong>Ra quyết định:</strong> <a href="softmax.html">softmax.md</a> đổi 4 điểm thành xác suất, chọn hành động cao nhất → <code>{forward, back, left, right}</code>.</li>
+<li><strong>Trực giác "học":</strong> trọng số của lớp fully connected chính là thứ được điều chỉnh khi train, để bộ 3 cảm biến ánh xạ sang hành động hợp lý.</li>
+</ul>
+<h2>Kiến trúc</h2>
+<pre><code>
+sensors [L, M, R] ∈ [0,1]  →  hidden (fully connected)  →  softmax  →  {forward, back, left, right}
+
+</code></pre>
 <h2>Slides &amp; app</h2>
 <table><tbody>
 <tr><th></th><th>Link</th></tr>
 <tr><td>Slides</td><td><a href="../slides/car-nn/index.html">slides/car-nn</a></td></tr>
 <tr><td>App</td><td><a href="../demos/car-nn/app/index.html">demos/car-nn/app</a></td></tr>
 </tbody></table>
-<h2>Architecture</h2>
-<pre><code>
-sensors [L, M, R] in [0,1]  →  hidden FC  →  {forward, back, left, right}
-
-</code></pre>
-<p>Obstacle → sensor &lt; 1.</p>
 <h2>Related</h2>
 <ul>
-<li><a href="softmax.html">softmax.md</a>, <a href="train-gpu.html">train-gpu.md</a></li>
+<li><a href="softmax.html">softmax.md</a> — bước chọn hành động</li>
+<li><a href="train-infer.html">06-train-infer.md</a>, <a href="train-gpu.html">train-gpu.md</a> — huấn luyện trọng số</li>
 </ul></div>
   </article>
 </div>

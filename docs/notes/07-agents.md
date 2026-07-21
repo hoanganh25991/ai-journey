@@ -40,3 +40,8 @@ Orchestrate crew + `agents.md` — một agent "biết phải làm gì", điều
 - `~/.agents/skills` — global skills
 - `~/work-station/agents-setup` — skill trials
 - `graphify` — method link viz
+
+## Tham khảo
+
+- [AGENTS.md](https://agents.md/) — chuẩn khai báo hướng dẫn cho agent
+- [Cursor docs](https://docs.cursor.com/) · [Claude Code](https://docs.anthropic.com/en/docs/claude-code)

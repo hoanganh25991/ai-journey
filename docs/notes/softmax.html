@@ -73,6 +73,10 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 .body table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 13.5px; }
 .body th, .body td { border: 1px solid var(--line); padding: 9px 11px; text-align: left; color: #2b3a4d; }
 .body th { color: var(--teal); font: 500 11px var(--mono); letter-spacing: .05em; text-transform: uppercase; background: var(--teal-soft); }
+.body figure { margin: 20px 0; }
+.body figure img { width: 100%; height: auto; display: block; border-radius: 12px; border: 1px solid var(--line); background: #e6edf5; }
+.body figcaption { font: 500 12px var(--mono); color: var(--muted); margin-top: 8px; text-align: center; }
+.body p img { max-width: 100%; height: auto; border-radius: 8px; }
 </style>
 </head>
 <body>
@@ -83,7 +87,7 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
   </a>
   <article class="doc">
     <h1>Softmax</h1>
-    <p class="summary">Logits → probability distribution (sum = 1).</p>
+    <p class="summary">Biến điểm số thô thành phần trăm, cộng lại bằng 1.</p>
     <div class="actions"><a class="primary" href="../slides/softmax/index.html">Slides ↗</a>
 <a href="../demos/softmax/app/index.html">Demo ↗</a>
 <a href="softmax.md" id="labDownload" download="softmax.md">Download</a>
@@ -91,26 +95,44 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
     <div class="topics"><span>#softmax</span><span>#logits</span><span>#classification</span></div>
     <hr class="sep" />
     <div class="body"><h1>Softmax</h1>
-<blockquote>Logits → phân phối xác suất (tổng = 1).</blockquote>
+<blockquote>Biến một dãy điểm số thô (logits) thành phần trăm: mỗi lựa chọn một xác suất, cộng tất cả lại bằng 1.</blockquote>
+<h2>Vì sao quan trọng</h2>
+<p>Mô hình thường xuất ra vài con số thô, ví dụ điểm cho ba lớp cảm xúc: <code>tiêu cực 2.0, trung tính 1.0, tích cực 0.1</code>. Những số này khó đọc và không phải xác suất. Softmax nén chúng thành <code>[0.66, 0.24, 0.10]</code> — vừa dễ hiểu ("66% là tiêu cực"), vừa cộng lại bằng 1. Đây là bước cuối ở hầu hết bài phân loại, và cũng là bước chuẩn hóa trọng số bên trong attention.</p>
+<h2>Ý chính</h2>
+<ul>
+<li><strong>Công thức trực giác:</strong> lấy <code>e^điểm</code> cho từng lựa chọn rồi chia cho tổng. Mũ hóa làm điểm cao nổi bật hơn, điểm thấp bị ép nhỏ lại.</li>
+<li><strong>Giữ thứ hạng, nới khoảng cách:</strong> lựa chọn điểm cao nhất vẫn xác suất cao nhất, nhưng chênh lệch bị "kéo giãn" — thường ra một đỉnh rõ ràng.</li>
+<li><strong>Hai chỗ hay gặp:</strong></li>
+</ul>
+<p>  - <em>Đầu phân loại (classification head)</em>: ví dụ 3 lớp cảm xúc, xem <a href="sentiment-routing.html">05-demo-text.md</a>.</p>
+<p>  - <em>Trọng số attention</em>: chuẩn hóa điểm liên quan giữa các từ, xem <a href="attention.html">attention.md</a>.</p>
+<ul>
+<li><strong>Đi cặp với cross-entropy khi train:</strong> softmax cho xác suất dự đoán, cross-entropy đo nó lệch bao nhiêu so với đáp án đúng → tín hiệu để mô hình học.</li>
+<li><strong>Softmax regression = hồi quy logistic nhiều lớp:</strong> phiên bản mở rộng cho bài chọn 1 trong nhiều lớp.</li>
+</ul>
+<h2>Hình minh họa</h2>
+<figure><img src="assets/protonx/softmax.jpg" alt="Softmax biến điểm thô thành phân phối xác suất cộng bằng 1" loading="lazy" /><figcaption>Softmax biến điểm thô thành phân phối xác suất cộng bằng 1</figcaption></figure>
+<figure><img src="assets/protonx/softmax-regression.jpg" alt="Softmax regression: phân loại nhiều lớp" loading="lazy" /><figcaption>Softmax regression: phân loại nhiều lớp</figcaption></figure>
+<h2>Trong pipeline</h2>
+<pre><code>
+logits (điểm thô) → [softmax] → xác suất → chọn lớp / trọng số attention
+
+</code></pre>
+<p>Softmax là bước chốt của <a href="sentiment-routing.html">05-demo-text.md</a> và bước chuẩn hóa bên trong <a href="attention.html">attention.md</a>.</p>
 <h2>Slides &amp; demo</h2>
 <table><tbody>
 <tr><th></th><th>Link</th></tr>
 <tr><td>Slides</td><td><a href="../slides/softmax/index.html">slides/softmax</a></td></tr>
 <tr><td>Working app</td><td><a href="../demos/softmax/app/index.html">demos/softmax/app</a></td></tr>
 </tbody></table>
-<h2>Ý chính</h2>
+<h2>Tham khảo</h2>
 <ul>
-<li>Classification head (sentiment 3 lớp)</li>
-<li>Attention weights</li>
-<li>Cặp với cross-entropy khi train</li>
+<li>Google — <a href="https://developers.google.com/machine-learning/crash-course/multi-class-neural-networks/softmax">ML Crash Course: Softmax</a></li>
+<li><a href="https://cs231n.github.io/linear-classify/#softmax">CS231n — Softmax classifier</a></li>
 </ul>
-<h2>Protonx</h2>
+<h2>Related</h2>
 <ul>
-<li><code>day-8-review-softmax-regression-tensroflow.ipynb</code>, <code>cross-entropy-multi-class.md</code></li>
-</ul>
-<h2>Related demos</h2>
-<ul>
-<li><a href="../demos/sentiment">sentiment</a>, <a href="../demos/attention">attention</a></li>
+<li><a href="attention.html">attention.md</a>, <a href="sentiment-routing.html">05-demo-text.md</a></li>
 </ul></div>
   </article>
 </div>

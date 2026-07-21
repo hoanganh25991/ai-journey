@@ -73,6 +73,10 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 .body table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 13.5px; }
 .body th, .body td { border: 1px solid var(--line); padding: 9px 11px; text-align: left; color: #2b3a4d; }
 .body th { color: var(--teal); font: 500 11px var(--mono); letter-spacing: .05em; text-transform: uppercase; background: var(--teal-soft); }
+.body figure { margin: 20px 0; }
+.body figure img { width: 100%; height: auto; display: block; border-radius: 12px; border: 1px solid var(--line); background: #e6edf5; }
+.body figcaption { font: 500 12px var(--mono); color: var(--muted); margin-top: 8px; text-align: center; }
+.body p img { max-width: 100%; height: auto; border-radius: 8px; }
 </style>
 </head>
 <body>
@@ -83,34 +87,54 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
   </a>
   <article class="doc">
     <h1>RAG</h1>
-    <p class="summary">Retrieve top-k chunks then generate grounded answers.</p>
+    <p class="summary">Tra cứu tài liệu liên quan trước, rồi mới để model soạn câu trả lời có trích dẫn.</p>
     <div class="actions"><a class="primary" href="../slides/rag/index.html">Slides ↗</a>
 <a href="../demos/rag/app/index.html">Demo ↗</a>
 <a href="rag.md" id="labDownload" download="rag.md">Download</a>
 <button type="button" id="labShare">Share</button></div>
     <div class="topics"><span>#RAG</span><span>#vector-db</span><span>#retrieve</span></div>
     <hr class="sep" />
-    <div class="body"><h1>RAG</h1>
-<blockquote>Query → embed → top-k chunks → LLM + citations.</blockquote>
+    <div class="body"><h1>RAG — Retrieval-Augmented Generation</h1>
+<blockquote>Thay vì bắt mô hình trả lời bằng mỗi trí nhớ, trước tiên đi <em>tra cứu</em> tài liệu liên quan rồi mới để mô hình <em>soạn</em> câu trả lời dựa trên đó. Giống mở sách ra tra trước khi phát biểu.</blockquote>
+<h2>Vì sao quan trọng</h2>
+<p>Mô hình ngôn ngữ biết nhiều nhưng hay "chém" (bịa) khi gặp thứ ngoài trí nhớ, và không cập nhật tài liệu riêng của bạn. RAG vá cả hai: neo câu trả lời vào một kho tài liệu thật (tài liệu công ty, video, repo…), kèm trích dẫn nguồn. Nhờ vậy trả lời đúng hơn, cập nhật hơn, và kiểm chứng được — không cần train lại mô hình.</p>
+<h2>Ý chính</h2>
+<ul>
+<li><strong>Hai pha:</strong></li>
+</ul>
+<p>  - <em>Retrieve</em>: đổi câu hỏi thành vector (<a href="embedding.html">embedding.md</a>), tìm trong vector DB ra top-k đoạn (chunk) gần nghĩa nhất.</p>
+<p>  - <em>Generate</em>: nhét các đoạn đó vào prompt làm ngữ cảnh, mô hình soạn câu trả lời bám theo.</p>
+<ul>
+<li><strong>Chunk + vector DB:</strong> tài liệu được cắt thành đoạn nhỏ, mỗi đoạn một vector; DB (FAISS, Chroma, pgvector…) lo tìm nhanh đoạn gần nhất, có thể lọc thêm bằng metadata.</li>
+<li><strong>Khác chat thuần:</strong> chat thuần dựa vào trí nhớ mô hình; RAG luôn <em>neo vào corpus</em> nên trả lời được câu về tài liệu mô hình chưa từng thấy.</li>
+<li><strong>Chất lượng phụ thuộc retrieve:</strong> lấy sai đoạn thì mô hình soạn hay đến mấy cũng sai. Cắt chunk hợp lý và embedding tốt là mấu chốt.</li>
+<li><strong>Biến thể nâng cao:</strong> <em>Graph RAG</em> nối các thực thể thành đồ thị để trả lời câu bắc cầu; rerank, hybrid search (từ khóa + vector) để tăng độ chính xác.</li>
+</ul>
+<h2>Hình minh họa</h2>
+<figure><img src="assets/protonx/embed-then-query.jpg" alt="Embed câu hỏi rồi đi truy vấn kho tài liệu" loading="lazy" /><figcaption>Embed câu hỏi rồi đi truy vấn kho tài liệu</figcaption></figure>
+<figure><img src="assets/protonx/drop-rag.jpg" alt="Đường đi của một pipeline RAG" loading="lazy" /><figcaption>Đường đi của một pipeline RAG</figcaption></figure>
+<figure><img src="assets/protonx/graph-rag.jpg" alt="Graph RAG: nối thực thể thành đồ thị để trả lời câu bắc cầu" loading="lazy" /><figcaption>Graph RAG: nối thực thể thành đồ thị để trả lời câu bắc cầu</figcaption></figure>
+<figure><img src="assets/protonx/rag-advanced.jpg" alt="RAG nâng cao: thêm rerank / lọc để tăng độ chính xác" loading="lazy" /><figcaption>RAG nâng cao: thêm rerank / lọc để tăng độ chính xác</figcaption></figure>
+<h2>Trong pipeline</h2>
+<pre><code>
+câu hỏi → embed → tìm top-k trong vector DB → (đoạn + câu hỏi) → LLM → trả lời + trích dẫn
+
+</code></pre>
+<p>RAG đứng trên <a href="embedding.html">embedding.md</a>; Personal Knowledge-base của lab đi đúng hướng này (<a href="personal-knowledge-base.html">personal-knowledge-base.md</a>).</p>
 <h2>Slides &amp; demo</h2>
 <table><tbody>
 <tr><th></th><th>Link</th></tr>
 <tr><td>Slides</td><td><a href="../slides/rag/index.html">slides/rag</a></td></tr>
 <tr><td>Working app</td><td><a href="../demos/rag/app/index.html">demos/rag/app</a></td></tr>
 </tbody></table>
-<h2>Ý chính</h2>
+<h2>Tham khảo</h2>
 <ul>
-<li>Vector DB + metadata filters</li>
-<li>Khác pure chat: neo vào corpus (video/docs/repos)</li>
-<li>Personal Knowledge-base của lab = hướng RAG</li>
+<li>Lewis et al. 2020 — <a href="https://arxiv.org/abs/2005.11401">Retrieval-Augmented Generation</a></li>
+<li><a href="https://microsoft.github.io/graphrag/">Microsoft GraphRAG</a></li>
 </ul>
-<h2>Protonx</h2>
+<h2>Related</h2>
 <ul>
-<li><code>semantic-search/</code>, <code>day-22-bert-for-sentence-similarity.ipynb</code>, Graph RAG day-21</li>
-</ul>
-<h2>Related demos</h2>
-<ul>
-<li><a href="../demos/embedding">embedding</a>, Lab UI <code>/api/search</code></li>
+<li><a href="embedding.html">embedding.md</a>, <a href="personal-knowledge-base.html">personal-knowledge-base.md</a></li>
 </ul></div>
   </article>
 </div>
