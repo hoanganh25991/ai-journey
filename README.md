@@ -4,11 +4,11 @@
 
 ## Three pillars (peers)
 
-| Folder | What | Role |
-|--------|------|------|
-| [`notes/`](notes) | Markdown | **Knowledge — source of truth.** One `.md` document per topic. |
+| Folder              | What       | Role                                                                                             |
+| ------------------- | ---------- | ------------------------------------------------------------------------------------------------ |
+| [`notes/`](notes)   | Markdown   | **Knowledge — source of truth.** One `.md` document per topic.                                   |
 | [`slides/`](slides) | HTML decks | **Presentations.** One deck per topic at `slides/<topic>/index.html` (shared `slides/_shared/`). |
-| [`demos/`](demos) | HTML apps | **Interactive apps.** Each topic under `demos/<topic>/app/` (shared `demos/_shared/`). |
+| [`demos/`](demos)   | HTML apps  | **Interactive apps.** Each topic under `demos/<topic>/app/` (shared `demos/_shared/`).           |
 
 Plus a separate presentation: **Journey** (`docs/journey.html`) — a five-stage map over the notes (not itself a note).
 
