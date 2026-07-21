@@ -1,5 +1,5 @@
 {
-  "built_at": "2026-07-21T10:36:19Z",
+  "built_at": "2026-07-21T10:46:04Z",
   "synonyms": [
     [
       "tokenize",
@@ -123,6 +123,25 @@
   ],
   "notes": [
     {
+      "id": "roadmap",
+      "num": "00",
+      "date": "START",
+      "title": "Roadmap · hành trình AI Lab",
+      "summary": "Bản đồ vui 5 màn: ABC chữ → build/train → RAG → demo → agent. Bắt đầu từ đây.",
+      "topics": [
+        "roadmap",
+        "learning-path",
+        "map"
+      ],
+      "group": "map",
+      "page": "notes/roadmap.html",
+      "slides": null,
+      "demo": null,
+      "extra_links": [],
+      "search_text": "roadmap · hành trình ai lab bản đồ vui 5 màn: abc chữ → build/train → rag → demo → agent. bắt đầu từ đây. roadmap learning path map roadmap · hành trình ai lab bản đồ vui để đi hết 25 note. không cần học thẳng một mạch — chọn một màn hợp mood, click vào, xong thì sang màn kế. mốc thời gian trên card hub chỉ để đọc như một chuyến đi 2023 → 2026; thứ tự dưới đây là thứ tự học gợi ý . bản đồ nhanh (5 màn) ① abc — máy đọc chữ (01 → 04) mục tiêu: hiểu máy biến câu thành số, rồi “nhìn” và “chọn”. khi note một câu nhớ 01 01/2023 tokenize cắt chữ → id. máy không đọc chữ. 02 03/2023 embedding gần nghĩa → gần trong không gian số. 03 05/2023 attention mỗi từ tự quyết định nhìn chỗ nào. 04 06/2023 softmax điểm thô → phần trăm, cộng = 1. boss màn này: đọc xong còn giải thích được “chó / mèo gần nhau hơn chó / hóa đơn” bằng embedding + cosine. ② build model & train (05 → 11) mục tiêu: tự tay dán nhãn, train vài epoch, biết lấy data & model ở đâu. khi note một câu nhớ 05 08/2023 classification head + softmax = dán nhãn. 06 10/2023 train với pytorch forward → loss → backward → step. 07 11/2023 train với tensorflow rồi — keras lo vòng lặp. 08 01/2024 hugging face dataset + model pretrained + spaces. 09 03/2024 kaggle dataset + notebook gpu miễn phí. 10 05/2024 transformer xếp chồng attention = khung llm. 11 07/2024 sentence transformers câu → vector vài dòng; classify siêu nhanh. boss màn này: train được một classifier nhỏ (pytorch hoặc tf) rồi encode câu bằng sentence transformers không cần viết lại cả mạng. ③ tìm kiếm & rag (12 → 14) mục tiêu: đừng bắt model “nhớ hết” — cho nó tra cứu rồi mới trả lời. khi note một câu nhớ 12 08/2024 rag tra trước, soạn sau + trích dẫn. 13 10/2024 vector database kho vector + tìm top k hàng xóm. 14 12/2024 semantic search hybrid / tiered / fallback — bài học rag thật. boss màn này: phân biệt được keyword (elastic) vs nghĩa (embedding), và vì sao hybrid thường thắng. repo tham chiếu: semantic search . ④ thử tay trong lab (17 → 20) mục tiêu: thấy model làm việc trong browser — không còn chỉ đọc lý thuyết. khi note một câu nhớ 17 05/2025 train · gpu stack thật: pytorch/tf + hf/kaggle + gpu. 18 07/2025 car nn 3 cảm biến → 4 hành động. 19 09/2025 sentiment & routing phân loại cảm xúc + định tuyến dễ/khó. 20 10/2025 train → inference học nặng một lần, dùng nhẹ nhiều lần. boss màn này: mở được demo car nn hoặc sentiment và chỉ được chỗ nào là softmax / classification head. ⑤ agent — cầm tay làm (15 → 16 · 21 → 25) mục tiêu: từ “model trả lời” sang “agent điều khiển máy”. khi note một câu nhớ 15 01/2025 mcp cổng usb c cho ai gọi tool. 16 03/2025 skills · rules · commands ba lớp “dạy nghề” cho agent. 21 12/2025 ai agents · harness harness ≠ model — cursor / claude / pi… 22 02/2026 model field notes cảm nhận grok / opus / deepseek… 23 03/2026 agent automation openclaw mở màn → hermess làm tốt. 24 05/2026 ai timeline neo lab vào dòng thời gian ai thật. 25 07/2026 personal knowledge base search video / docs / github + graph rag. boss màn này: giải thích được mcp ≠ skills, và vì sao cùng một model chạy cursor vs claude code cảm giác khác hẳn. gợi ý lộ trình (tuỳ mood) mood hôm nay đi đường này mới bắt đầu, muốn nền ① abc (01→04) rồi dừng uống trà muốn làm model ① → ② (05→11), bỏ qua agent đang làm search / chatbot ① → ③ (12→14), xem thêm 11 thích demo vui ④ thẳng (18, 19) rồi quay lại ① nếu bí làm việc với coding agent ⑤ (15, 16, 21…) — đọc 22 khi chọn model một dòng chốt xong một màn thì quay lại hub, search theo , hoặc mở note kế trong bảng trên.",
+      "body_text": "Roadmap · hành trình AI Lab Bản đồ vui để đi hết 25 note. Không cần học thẳng một mạch — chọn một màn hợp mood, click vào, xong thì sang màn kế. Mốc thời gian trên card hub chỉ để đọc như một chuyến đi 2023 → 2026; thứ tự dưới đây là thứ tự học gợi ý . Bản đồ nhanh (5 màn) ① ABC — máy đọc chữ (01 → 04) Mục tiêu: hiểu máy biến câu thành số, rồi “nhìn” và “chọn”. Khi Note Một câu nhớ 01 01/2023 Tokenize Cắt chữ → ID. Máy không đọc chữ. 02 03/2023 Embedding Gần nghĩa → gần trong không gian số. 03 05/2023 Attention Mỗi từ tự quyết định nhìn chỗ nào. 04 06/2023 Softmax Điểm thô → phần trăm, cộng = 1. Boss màn này: đọc xong còn giải thích được “chó / mèo gần nhau hơn chó / hóa đơn” bằng embedding + cosine. ② Build model & train (05 → 11) Mục tiêu: tự tay dán nhãn, train vài epoch, biết lấy data & model ở đâu. Khi Note Một câu nhớ 05 08/2023 Classification Head + softmax = dán nhãn. 06 10/2023 Train với PyTorch forward → loss → backward → step. 07 11/2023 Train với TensorFlow rồi — Keras lo vòng lặp. 08 01/2024 Hugging Face Dataset + model pretrained + Spaces. 09 03/2024 Kaggle Dataset + notebook GPU miễn phí. 10 05/2024 Transformer Xếp chồng attention = khung LLM. 11 07/2024 sentence transformers Câu → vector vài dòng; classify siêu nhanh. Boss màn này: train được một classifier nhỏ (PyTorch hoặc TF) rồi encode câu bằng sentence transformers không cần viết lại cả mạng. ③ Tìm kiếm & RAG (12 → 14) Mục tiêu: đừng bắt model “nhớ hết” — cho nó tra cứu rồi mới trả lời. Khi Note Một câu nhớ 12 08/2024 RAG Tra trước, soạn sau + trích dẫn. 13 10/2024 Vector database Kho vector + tìm top k hàng xóm. 14 12/2024 Semantic search Hybrid / tiered / fallback — bài học RAG thật. Boss màn này: phân biệt được keyword (Elastic) vs nghĩa (embedding), và vì sao hybrid thường thắng. Repo tham chiếu: semantic search . ④ Thử tay trong lab (17 → 20) Mục tiêu: thấy model làm việc trong browser — không còn chỉ đọc lý thuyết. Khi Note Một câu nhớ 17 05/2025 Train · GPU Stack thật: PyTorch/TF + HF/Kaggle + GPU. 18 07/2025 Car NN 3 cảm biến → 4 hành động. 19 09/2025 Sentiment & routing Phân loại cảm xúc + định tuyến dễ/khó. 20 10/2025 Train → Inference Học nặng một lần, dùng nhẹ nhiều lần. Boss màn này: mở được demo car nn hoặc sentiment và chỉ được chỗ nào là softmax / classification head. ⑤ Agent — cầm tay làm (15 → 16 · 21 → 25) Mục tiêu: từ “model trả lời” sang “agent điều khiển máy”. Khi Note Một câu nhớ 15 01/2025 MCP Cổng USB C cho AI gọi tool. 16 03/2025 Skills · Rules · Commands Ba lớp “dạy nghề” cho agent. 21 12/2025 AI Agents · harness Harness ≠ model — Cursor / Claude / Pi… 22 02/2026 Model field notes Cảm nhận Grok / Opus / DeepSeek… 23 03/2026 Agent automation OpenClaw mở màn → Hermess làm tốt. 24 05/2026 AI timeline Neo lab vào dòng thời gian AI thật. 25 07/2026 Personal Knowledge base Search video / docs / GitHub + Graph RAG. Boss màn này: giải thích được MCP ≠ Skills, và vì sao cùng một model chạy Cursor vs Claude Code cảm giác khác hẳn. Gợi ý lộ trình (tuỳ mood) Mood hôm nay Đi đường này Mới bắt đầu, muốn nền ① ABC (01→04) rồi dừng uống trà Muốn làm model ① → ② (05→11), bỏ qua agent Đang làm search / chatbot ① → ③ (12→14), xem thêm 11 Thích demo vui ④ thẳng (18, 19) rồi quay lại ① nếu bí Làm việc với coding agent ⑤ (15, 16, 21…) — đọc 22 khi chọn model Một dòng chốt Xong một màn thì quay lại hub, search theo , hoặc mở note kế trong bảng trên."
+    },
+    {
       "id": "tokenize",
       "num": "01",
       "date": "01/2023",
@@ -144,7 +163,7 @@
     {
       "id": "embedding",
       "num": "02",
-      "date": "04/2023",
+      "date": "03/2023",
       "title": "Embedding",
       "summary": "Đổi ID thành vector: gần nghĩa thì gần nhau, đo bằng cosine.",
       "topics": [
@@ -163,7 +182,7 @@
     {
       "id": "attention",
       "num": "03",
-      "date": "07/2023",
+      "date": "05/2023",
       "title": "Attention",
       "summary": "Mỗi từ nên nhìn từ nào khác để hiểu đúng — cơ chế Q·K·V của Transformer.",
       "topics": [
@@ -182,7 +201,7 @@
     {
       "id": "softmax",
       "num": "04",
-      "date": "09/2023",
+      "date": "06/2023",
       "title": "Softmax",
       "summary": "Biến điểm số thô thành phần trăm, cộng lại bằng 1.",
       "topics": [
@@ -195,13 +214,158 @@
       "slides": "slides/softmax/index.html",
       "demo": "demos/softmax/app/index.html",
       "extra_links": [],
-      "search_text": "softmax biến điểm số thô thành phần trăm, cộng lại bằng 1. softmax logits classification softmax biến một dãy điểm số thô (logits) thành phần trăm: mỗi lựa chọn một xác suất, cộng tất cả lại bằng 1. vì sao quan trọng mô hình thường xuất ra vài con số thô, ví dụ điểm cho ba lớp cảm xúc: . những số này khó đọc và không phải xác suất. softmax nén chúng thành — vừa dễ hiểu (\"66% là tiêu cực\"), vừa cộng lại bằng 1. đây là bước cuối ở hầu hết bài phân loại, và cũng là bước chuẩn hóa trọng số bên trong attention. ý chính công thức trực giác: lấy cho từng lựa chọn rồi chia cho tổng. mũ hóa làm điểm cao nổi bật hơn, điểm thấp bị ép nhỏ lại. giữ thứ hạng, nới khoảng cách: lựa chọn điểm cao nhất vẫn xác suất cao nhất, nhưng chênh lệch bị \"kéo giãn\" — thường ra một đỉnh rõ ràng. hai chỗ hay gặp: đầu phân loại (classification head) : ví dụ 3 lớp cảm xúc, xem 05 demo text.md . trọng số attention : chuẩn hóa điểm liên quan giữa các từ, xem attention.md . đi cặp với cross entropy khi train: softmax cho xác suất dự đoán, cross entropy đo nó lệch bao nhiêu so với đáp án đúng → tín hiệu để mô hình học. softmax regression = hồi quy logistic nhiều lớp: phiên bản mở rộng cho bài chọn 1 trong nhiều lớp. hình minh họa softmax biến điểm thô thành phân phối xác suất cộng bằng 1 softmax regression: phân loại nhiều lớp trong pipeline softmax là bước chốt của 05 demo text.md và bước chuẩn hóa bên trong attention.md . slides & demo link slides slides/softmax working app demos/softmax/app tham khảo google — ml crash course: softmax cs231n — softmax classifier related attention.md , 05 demo text.md",
-      "body_text": "Softmax Biến một dãy điểm số thô (logits) thành phần trăm: mỗi lựa chọn một xác suất, cộng tất cả lại bằng 1. Vì sao quan trọng Mô hình thường xuất ra vài con số thô, ví dụ điểm cho ba lớp cảm xúc: . Những số này khó đọc và không phải xác suất. Softmax nén chúng thành — vừa dễ hiểu (\"66% là tiêu cực\"), vừa cộng lại bằng 1. Đây là bước cuối ở hầu hết bài phân loại, và cũng là bước chuẩn hóa trọng số bên trong attention. Ý chính Công thức trực giác: lấy cho từng lựa chọn rồi chia cho tổng. Mũ hóa làm điểm cao nổi bật hơn, điểm thấp bị ép nhỏ lại. Giữ thứ hạng, nới khoảng cách: lựa chọn điểm cao nhất vẫn xác suất cao nhất, nhưng chênh lệch bị \"kéo giãn\" — thường ra một đỉnh rõ ràng. Hai chỗ hay gặp: Đầu phân loại (classification head) : ví dụ 3 lớp cảm xúc, xem 05 demo text.md . Trọng số attention : chuẩn hóa điểm liên quan giữa các từ, xem attention.md . Đi cặp với cross entropy khi train: softmax cho xác suất dự đoán, cross entropy đo nó lệch bao nhiêu so với đáp án đúng → tín hiệu để mô hình học. Softmax regression = hồi quy logistic nhiều lớp: phiên bản mở rộng cho bài chọn 1 trong nhiều lớp. Hình minh họa Softmax biến điểm thô thành phân phối xác suất cộng bằng 1 Softmax regression: phân loại nhiều lớp Trong pipeline Softmax là bước chốt của 05 demo text.md và bước chuẩn hóa bên trong attention.md . Slides & demo Link Slides slides/softmax Working app demos/softmax/app Tham khảo Google — ML Crash Course: Softmax CS231n — Softmax classifier Related attention.md , 05 demo text.md"
+      "search_text": "softmax biến điểm số thô thành phần trăm, cộng lại bằng 1. softmax logits classification softmax biến một dãy điểm số thô (logits) thành phần trăm: mỗi lựa chọn một xác suất, cộng tất cả lại bằng 1. vì sao quan trọng mô hình thường xuất ra vài con số thô, ví dụ điểm cho ba lớp cảm xúc: . những số này khó đọc và không phải xác suất. softmax nén chúng thành — vừa dễ hiểu (\"66% là tiêu cực\"), vừa cộng lại bằng 1. đây là bước cuối ở hầu hết bài phân loại, và cũng là bước chuẩn hóa trọng số bên trong attention. ý chính công thức trực giác: lấy cho từng lựa chọn rồi chia cho tổng. mũ hóa làm điểm cao nổi bật hơn, điểm thấp bị ép nhỏ lại. giữ thứ hạng, nới khoảng cách: lựa chọn điểm cao nhất vẫn xác suất cao nhất, nhưng chênh lệch bị \"kéo giãn\" — thường ra một đỉnh rõ ràng. hai chỗ hay gặp: đầu phân loại (classification head) : ví dụ 3 lớp cảm xúc, xem 05 demo text.md . trọng số attention : chuẩn hóa điểm liên quan giữa các từ, xem attention.md . đi cặp với cross entropy khi train: softmax cho xác suất dự đoán, cross entropy đo nó lệch bao nhiêu so với đáp án đúng → tín hiệu để mô hình học. softmax regression = hồi quy logistic nhiều lớp: phiên bản mở rộng cho bài chọn 1 trong nhiều lớp. hình minh họa softmax biến điểm thô thành phân phối xác suất cộng bằng 1 softmax regression: phân loại nhiều lớp trong pipeline softmax là bước chốt của 05 demo text.md và bước chuẩn hóa bên trong attention.md . slides & demo link slides slides/softmax working app demos/softmax/app tham khảo google — ml crash course: softmax cs231n — softmax classifier related classification.md — bài build model ngay sau softmax attention.md , 05 demo text.md",
+      "body_text": "Softmax Biến một dãy điểm số thô (logits) thành phần trăm: mỗi lựa chọn một xác suất, cộng tất cả lại bằng 1. Vì sao quan trọng Mô hình thường xuất ra vài con số thô, ví dụ điểm cho ba lớp cảm xúc: . Những số này khó đọc và không phải xác suất. Softmax nén chúng thành — vừa dễ hiểu (\"66% là tiêu cực\"), vừa cộng lại bằng 1. Đây là bước cuối ở hầu hết bài phân loại, và cũng là bước chuẩn hóa trọng số bên trong attention. Ý chính Công thức trực giác: lấy cho từng lựa chọn rồi chia cho tổng. Mũ hóa làm điểm cao nổi bật hơn, điểm thấp bị ép nhỏ lại. Giữ thứ hạng, nới khoảng cách: lựa chọn điểm cao nhất vẫn xác suất cao nhất, nhưng chênh lệch bị \"kéo giãn\" — thường ra một đỉnh rõ ràng. Hai chỗ hay gặp: Đầu phân loại (classification head) : ví dụ 3 lớp cảm xúc, xem 05 demo text.md . Trọng số attention : chuẩn hóa điểm liên quan giữa các từ, xem attention.md . Đi cặp với cross entropy khi train: softmax cho xác suất dự đoán, cross entropy đo nó lệch bao nhiêu so với đáp án đúng → tín hiệu để mô hình học. Softmax regression = hồi quy logistic nhiều lớp: phiên bản mở rộng cho bài chọn 1 trong nhiều lớp. Hình minh họa Softmax biến điểm thô thành phân phối xác suất cộng bằng 1 Softmax regression: phân loại nhiều lớp Trong pipeline Softmax là bước chốt của 05 demo text.md và bước chuẩn hóa bên trong attention.md . Slides & demo Link Slides slides/softmax Working app demos/softmax/app Tham khảo Google — ML Crash Course: Softmax CS231n — Softmax classifier Related classification.md — bài build model ngay sau softmax attention.md , 05 demo text.md"
+    },
+    {
+      "id": "classification",
+      "num": "05",
+      "date": "08/2023",
+      "title": "Classification",
+      "summary": "Dán nhãn cho đầu vào — bài build model phổ biến nhất, ngay sau softmax.",
+      "topics": [
+        "classification",
+        "cross-entropy",
+        "multi-class",
+        "F1"
+      ],
+      "group": "concept",
+      "page": "notes/classification.html",
+      "slides": null,
+      "demo": null,
+      "extra_links": [],
+      "search_text": "classification dán nhãn cho đầu vào — bài build model phổ biến nhất, ngay sau softmax. classification cross entropy multi class f1 classification — dán nhãn cho đầu vào cho một đầu vào (câu chữ, ảnh, vài con số), model chọn một nhãn trong tập nhãn cho trước. đây là bài toán \"build model\" phổ biến nhất, đứng ngay sau softmax . vì sao quan trọng rất nhiều việc thực tế quy về phân loại: câu này tích cực hay tiêu cực, email có phải spam, ảnh là chó hay mèo, câu hỏi dễ hay khó. hiểu classification là hiểu cách một model \"ra quyết định rời rạc\" — và nó tái dùng đúng chuỗi tokenize → embedding → softmax mà lab đã đi qua. ý chính classification head: phần cuối của model biến biểu diễn (vector) thành một điểm số cho mỗi nhãn (logits), rồi softmax đổi thành xác suất → chọn nhãn cao nhất. binary vs multi class vs multi label: binary : 2 lớp (spam / không). multi class : chọn 1 trong nhiều lớp (neg / neu / pos). multi label : một đầu vào có thể mang nhiều nhãn cùng lúc. học bằng loss: cross entropy đo xác suất dự đoán lệch đáp án bao nhiêu; train là đẩy loss xuống (06 train infer.md ). đánh giá: accuracy dễ hiểu nhưng gây hiểu lầm khi dữ liệu lệch lớp; nên xem thêm precision / recall / f1. cân bằng dữ liệu: lớp hiếm dễ bị model bỏ qua — cần để ý phân bố nhãn. hình minh họa softmax regression: mô hình phân loại nhiều lớp softmax đổi điểm thô thành xác suất để chọn nhãn trong pipeline classification là \"đích đến\" của softmax.md ; huấn luyện nó bằng pytorch training.md hoặc tensorflow training.md . tham khảo scikit learn — classification google — classification (ml crash course) related softmax.md , 05 demo text.md pytorch training.md , tensorflow training.md",
+      "body_text": "Classification — dán nhãn cho đầu vào Cho một đầu vào (câu chữ, ảnh, vài con số), model chọn một nhãn trong tập nhãn cho trước. Đây là bài toán \"build model\" phổ biến nhất, đứng ngay sau softmax . Vì sao quan trọng Rất nhiều việc thực tế quy về phân loại: câu này tích cực hay tiêu cực, email có phải spam, ảnh là chó hay mèo, câu hỏi dễ hay khó. Hiểu classification là hiểu cách một model \"ra quyết định rời rạc\" — và nó tái dùng đúng chuỗi tokenize → embedding → softmax mà lab đã đi qua. Ý chính Classification head: phần cuối của model biến biểu diễn (vector) thành một điểm số cho mỗi nhãn (logits), rồi softmax đổi thành xác suất → chọn nhãn cao nhất. Binary vs multi class vs multi label: Binary : 2 lớp (spam / không). Multi class : chọn 1 trong nhiều lớp (neg / neu / pos). Multi label : một đầu vào có thể mang nhiều nhãn cùng lúc. Học bằng loss: cross entropy đo xác suất dự đoán lệch đáp án bao nhiêu; train là đẩy loss xuống (06 train infer.md ). Đánh giá: accuracy dễ hiểu nhưng gây hiểu lầm khi dữ liệu lệch lớp; nên xem thêm precision / recall / F1. Cân bằng dữ liệu: lớp hiếm dễ bị model bỏ qua — cần để ý phân bố nhãn. Hình minh họa Softmax regression: mô hình phân loại nhiều lớp Softmax đổi điểm thô thành xác suất để chọn nhãn Trong pipeline Classification là \"đích đến\" của softmax.md ; huấn luyện nó bằng pytorch training.md hoặc tensorflow training.md . Tham khảo scikit learn — classification Google — Classification (ML Crash Course) Related softmax.md , 05 demo text.md pytorch training.md , tensorflow training.md"
+    },
+    {
+      "id": "pytorch-training",
+      "num": "06",
+      "date": "10/2023",
+      "title": "Train với PyTorch",
+      "summary": "Vòng lặp epoch: forward → loss → backward → step. Tự tay train một classifier.",
+      "topics": [
+        "pytorch",
+        "training",
+        "epoch",
+        "optimizer",
+        "backprop"
+      ],
+      "group": "concept",
+      "page": "notes/pytorch-training.html",
+      "slides": null,
+      "demo": null,
+      "extra_links": [],
+      "search_text": "train với pytorch vòng lặp epoch: forward → loss → backward → step. tự tay train một classifier. pytorch training epoch optimizer backprop train với pytorch một bài \"chạy thật\": dùng pytorch để train một classifier — vòng lặp epoch, tính loss, backprop, cập nhật trọng số cho tới khi model đủ tốt. vì sao quan trọng pytorch là framework linh hoạt và phổ biến nhất để tự tay dựng và train model. hiểu vòng lặp training trong pytorch là hiểu cơ chế học thật sự diễn ra thế nào — thứ mà mọi thư viện cấp cao (hugging face , sentence transformers) đều gói lại bên dưới. vòng lặp training (khung xương) ý chính epoch vs batch: epoch = một lần đi hết dữ liệu; batch = một nhóm nhỏ xử lý mỗi bước. nhiều epoch để model học dần. 4 bước lặp lại: forward → loss → (gradient) → (cập nhật). nhớ để gradient không cộng dồn. optimizer & learning rate: adam/sgd quyết định đi bao xa mỗi bước; lr quá lớn → nhảy loạn, quá nhỏ → học chậm. train/val split: theo dõi loss trên tập validation để phát hiện overfitting (thuộc lòng train, kém trên dữ liệu mới). gpu: cho model và batch → train nhanh hơn nhiều; xem train gpu.md . xong thì lưu: → checkpoint để inference . trong pipeline đây là cách hiện thực việc train cho classification.md ; phiên bản tensorflow ở tensorflow training.md . tham khảo pytorch — training a classifier torch.optim related classification.md , tensorflow training.md train gpu.md , huggingface.md",
+      "body_text": "Train với PyTorch Một bài \"chạy thật\": dùng PyTorch để train một classifier — vòng lặp epoch, tính loss, backprop, cập nhật trọng số cho tới khi model đủ tốt. Vì sao quan trọng PyTorch là framework linh hoạt và phổ biến nhất để tự tay dựng và train model. Hiểu vòng lặp training trong PyTorch là hiểu cơ chế học thật sự diễn ra thế nào — thứ mà mọi thư viện cấp cao (Hugging Face , sentence transformers) đều gói lại bên dưới. Vòng lặp training (khung xương) Ý chính Epoch vs batch: epoch = một lần đi hết dữ liệu; batch = một nhóm nhỏ xử lý mỗi bước. Nhiều epoch để model học dần. 4 bước lặp lại: forward → loss → (gradient) → (cập nhật). Nhớ để gradient không cộng dồn. Optimizer & learning rate: Adam/SGD quyết định đi bao xa mỗi bước; lr quá lớn → nhảy loạn, quá nhỏ → học chậm. Train/val split: theo dõi loss trên tập validation để phát hiện overfitting (thuộc lòng train, kém trên dữ liệu mới). GPU: cho model và batch → train nhanh hơn nhiều; xem train gpu.md . Xong thì lưu: → checkpoint để inference . Trong pipeline Đây là cách hiện thực việc train cho classification.md ; phiên bản TensorFlow ở tensorflow training.md . Tham khảo PyTorch — Training a classifier torch.optim Related classification.md , tensorflow training.md train gpu.md , huggingface.md"
+    },
+    {
+      "id": "tensorflow-training",
+      "num": "07",
+      "date": "11/2023",
+      "title": "Train với TensorFlow / Keras",
+      "summary": "compile + fit: khai báo model rồi để Keras lo vòng lặp epoch.",
+      "topics": [
+        "tensorflow",
+        "keras",
+        "training",
+        "epoch"
+      ],
+      "group": "concept",
+      "page": "notes/tensorflow-training.html",
+      "slides": null,
+      "demo": null,
+      "extra_links": [],
+      "search_text": "train với tensorflow / keras compile + fit: khai báo model rồi để keras lo vòng lặp epoch. tensorflow keras training epoch train với tensorflow / keras cùng bài classifier, nhưng làm bằng tensorflow (api keras): định nghĩa model, , rồi qua nhiều epoch. ngắn gọn hơn pytorch nhờ vòng lặp training được gói sẵn. vì sao quan trọng tensorflow (qua keras) là lối train \"khai báo\": bạn mô tả model và cấu hình, framework lo phần lặp epoch. đối chiếu với pytorch (tự viết vòng lặp) giúp thấy rõ cùng một ý tưởng học nhưng hai phong cách api — và bạn chọn cái nào tùy dự án. khung xương ý chính = khai báo cách học: chọn optimizer, loss (softmax + cross entropy cho phân loại), metric theo dõi. = chạy training: framework tự lặp epoch/batch, tự backprop — không cần viết / như pytorch. theo dõi bằng metrics: , in ra mỗi epoch; bắt đầu tăng lại = dấu hiệu overfitting. callbacks: , giúp dừng đúng lúc và lưu model tốt nhất. tensorboard & projector: xem đường loss, và chiếu embedding xuống 3d để kiểm tra (embedding.md ). hình minh họa softmax regression — bài phân loại nhiều lớp làm bằng tensorflow tensorflow embedding projector: chiếu vector xuống 3d trong pipeline cùng đích với pytorch training.md , phục vụ classification.md . tham khảo tensorflow — basic classification keras api related classification.md , pytorch training.md train gpu.md , embedding.md",
+      "body_text": "Train với TensorFlow / Keras Cùng bài classifier, nhưng làm bằng TensorFlow (API Keras): định nghĩa model, , rồi qua nhiều epoch. Ngắn gọn hơn PyTorch nhờ vòng lặp training được gói sẵn. Vì sao quan trọng TensorFlow (qua Keras) là lối train \"khai báo\": bạn mô tả model và cấu hình, framework lo phần lặp epoch. Đối chiếu với PyTorch (tự viết vòng lặp) giúp thấy rõ cùng một ý tưởng học nhưng hai phong cách API — và bạn chọn cái nào tùy dự án. Khung xương Ý chính = khai báo cách học: chọn optimizer, loss (softmax + cross entropy cho phân loại), metric theo dõi. = chạy training: framework tự lặp epoch/batch, tự backprop — không cần viết / như PyTorch. Theo dõi bằng metrics: , in ra mỗi epoch; bắt đầu tăng lại = dấu hiệu overfitting. Callbacks: , giúp dừng đúng lúc và lưu model tốt nhất. TensorBoard & Projector: xem đường loss, và chiếu embedding xuống 3D để kiểm tra (embedding.md ). Hình minh họa Softmax regression — bài phân loại nhiều lớp làm bằng TensorFlow TensorFlow Embedding Projector: chiếu vector xuống 3D Trong pipeline Cùng đích với pytorch training.md , phục vụ classification.md . Tham khảo TensorFlow — Basic classification Keras API Related classification.md , pytorch training.md train gpu.md , embedding.md"
+    },
+    {
+      "id": "huggingface",
+      "num": "08",
+      "date": "01/2024",
+      "title": "Hugging Face — dataset + Space",
+      "summary": "GitHub của AI: Datasets + Models pretrained + Spaces → ra model dùng được.",
+      "topics": [
+        "huggingface",
+        "datasets",
+        "spaces",
+        "transformers",
+        "fine-tune"
+      ],
+      "group": "concept",
+      "page": "notes/huggingface.html",
+      "slides": null,
+      "demo": null,
+      "extra_links": [],
+      "search_text": "hugging face — dataset + space github của ai: datasets + models pretrained + spaces → ra model dùng được. huggingface datasets spaces transformers fine tune hugging face — dataset + space → ra model \"github của ai\": nơi lấy sẵn dataset , model pretrained, và chạy/host demo bằng spaces . rút ngắn quãng đường từ ý tưởng tới một model dùng được. vì sao quan trọng tự train từ đầu rất tốn. hugging face cho phép đứng trên vai người khác : tải dataset có sẵn, lấy model pretrained rồi chỉ fine tune nhẹ, và deploy demo trong vài phút. đây là cách nhanh nhất để đi từ training tới một model có thể chia sẻ. ba mảnh chính mảnh là gì dùng để datasets kho dữ liệu có nhãn, tải 1 dòng có ngay dữ liệu train/eval models (hub) model pretrained (bert, gpt, vit…) fine tune thay vì train từ 0 spaces host app demo (gradio/streamlit), có gpu chạy & chia sẻ model ra web ý chính + : vài dòng là nạp được model + tokenizer + dữ liệu; fine tune bằng hoặc vòng lặp pytorch/tf quen thuộc. fine tune train from scratch: tận dụng kiến thức đã học của model lớn → cần ít dữ liệu và thời gian hơn nhiều. spaces = demo + endpoint: đẩy model lên space (kèm gpu nếu cần) → có ngay ui và api để người khác thử. model card & license: đọc kỹ giấy phép và giới hạn trước khi dùng thương mại. output là một model: kết quả cuối là checkpoint/endpoint sẵn sàng inference . trong pipeline hugging face là \"nguồn dữ liệu + nơi chạy\" cho pytorch training.md / tensorflow training.md ; dữ liệu thi đấu thì xem kaggle.md . tham khảo hugging face hub · datasets · spaces transformers related pytorch training.md , tensorflow training.md kaggle.md , sentence transformers.md , train gpu.md",
+      "body_text": "Hugging Face — dataset + Space → ra model \"GitHub của AI\": nơi lấy sẵn dataset , model pretrained, và chạy/host demo bằng Spaces . Rút ngắn quãng đường từ ý tưởng tới một model dùng được. Vì sao quan trọng Tự train từ đầu rất tốn. Hugging Face cho phép đứng trên vai người khác : tải dataset có sẵn, lấy model pretrained rồi chỉ fine tune nhẹ, và deploy demo trong vài phút. Đây là cách nhanh nhất để đi từ training tới một model có thể chia sẻ. Ba mảnh chính Mảnh Là gì Dùng để Datasets kho dữ liệu có nhãn, tải 1 dòng có ngay dữ liệu train/eval Models (Hub) model pretrained (BERT, GPT, ViT…) fine tune thay vì train từ 0 Spaces host app demo (Gradio/Streamlit), có GPU chạy & chia sẻ model ra web Ý chính + : vài dòng là nạp được model + tokenizer + dữ liệu; fine tune bằng hoặc vòng lặp PyTorch/TF quen thuộc. Fine tune train from scratch: tận dụng kiến thức đã học của model lớn → cần ít dữ liệu và thời gian hơn nhiều. Spaces = demo + endpoint: đẩy model lên Space (kèm GPU nếu cần) → có ngay UI và API để người khác thử. Model card & license: đọc kỹ giấy phép và giới hạn trước khi dùng thương mại. Output là một model: kết quả cuối là checkpoint/endpoint sẵn sàng inference . Trong pipeline Hugging Face là \"nguồn dữ liệu + nơi chạy\" cho pytorch training.md / tensorflow training.md ; dữ liệu thi đấu thì xem kaggle.md . Tham khảo Hugging Face Hub · Datasets · Spaces transformers Related pytorch training.md , tensorflow training.md kaggle.md , sentence transformers.md , train gpu.md"
+    },
+    {
+      "id": "kaggle",
+      "num": "09",
+      "date": "03/2024",
+      "title": "Kaggle — dataset + GPU notebook",
+      "summary": "Kho dataset + notebook có GPU/TPU miễn phí + competition để cọ xát.",
+      "topics": [
+        "kaggle",
+        "dataset",
+        "gpu",
+        "notebook",
+        "competition"
+      ],
+      "group": "concept",
+      "page": "notes/kaggle.html",
+      "slides": null,
+      "demo": null,
+      "extra_links": [],
+      "search_text": "kaggle — dataset + gpu notebook kho dataset + notebook có gpu/tpu miễn phí + competition để cọ xát. kaggle dataset gpu notebook competition kaggle — dataset + notebook + gpu miễn phí nền tảng học và thi đấu ml: kho dataset khổng lồ, notebook chạy sẵn có gpu/tpu miễn phí , và các competition để cọ xát. tương tự hugging face nhưng nghiêng về thực hành và thi đấu. vì sao quan trọng khi mới học, hai thứ hay thiếu là dữ liệu tốt và máy đủ mạnh . kaggle cho cả hai miễn phí: dataset đa dạng và notebook có gpu để train ngay trên trình duyệt. các competition còn cho leaderboard và lời giải công khai — học từ cách người giỏi làm. ý chính datasets: hàng chục nghìn bộ dữ liệu công khai, tải thẳng vào notebook. notebooks (kernels): môi trường chạy sẵn thư viện, bật gpu/tpu trong settings → train không cần cài gì máy cá nhân. competitions: đề bài thật + metric + leaderboard; nộp dự đoán để chấm điểm. đọc public notebooks để học mẹo. giới hạn quota: gpu miễn phí có hạn giờ/tuần → canh dùng cho lúc train thật. kết nối hf: thường tải dataset ở kaggle, model pretrained ở hugging face , rồi train trên notebook kaggle. trong pipeline cùng vai \"dữ liệu + nơi chạy gpu\" với huggingface.md ; tổng quan stack ở train gpu.md . tham khảo kaggle datasets · notebooks kaggle learn related huggingface.md , pytorch training.md train gpu.md , 06 train infer.md",
+      "body_text": "Kaggle — dataset + notebook + GPU miễn phí Nền tảng học và thi đấu ML: kho dataset khổng lồ, notebook chạy sẵn có GPU/TPU miễn phí , và các competition để cọ xát. Tương tự Hugging Face nhưng nghiêng về thực hành và thi đấu. Vì sao quan trọng Khi mới học, hai thứ hay thiếu là dữ liệu tốt và máy đủ mạnh . Kaggle cho cả hai miễn phí: dataset đa dạng và notebook có GPU để train ngay trên trình duyệt. Các competition còn cho leaderboard và lời giải công khai — học từ cách người giỏi làm. Ý chính Datasets: hàng chục nghìn bộ dữ liệu công khai, tải thẳng vào notebook. Notebooks (Kernels): môi trường chạy sẵn thư viện, bật GPU/TPU trong settings → train không cần cài gì máy cá nhân. Competitions: đề bài thật + metric + leaderboard; nộp dự đoán để chấm điểm. Đọc public notebooks để học mẹo. Giới hạn quota: GPU miễn phí có hạn giờ/tuần → canh dùng cho lúc train thật. Kết nối HF: thường tải dataset ở Kaggle, model pretrained ở Hugging Face , rồi train trên notebook Kaggle. Trong pipeline Cùng vai \"dữ liệu + nơi chạy GPU\" với huggingface.md ; tổng quan stack ở train gpu.md . Tham khảo Kaggle Datasets · Notebooks Kaggle Learn Related huggingface.md , pytorch training.md train gpu.md , 06 train infer.md"
+    },
+    {
+      "id": "transformer",
+      "num": "10",
+      "date": "05/2024",
+      "title": "Transformer — kiến trúc lõi của LLM",
+      "summary": "Xếp chồng khối attention + positional encoding; encoder (BERT) / decoder (GPT).",
+      "topics": [
+        "transformer",
+        "attention",
+        "encoder",
+        "decoder",
+        "positional-encoding"
+      ],
+      "group": "concept",
+      "page": "notes/transformer.html",
+      "slides": null,
+      "demo": null,
+      "extra_links": [],
+      "search_text": "transformer — kiến trúc lõi của llm xếp chồng khối attention + positional encoding; encoder (bert) / decoder (gpt). transformer attention encoder decoder positional encoding transformer — kiến trúc lõi của llm kiến trúc ghép nhiều khối attention lại, xử lý cả câu song song thay vì tuần tự. là bộ khung đứng sau bert, gpt và gần như mọi model ngôn ngữ hiện đại. vì sao quan trọng trước transformer, model đọc câu tuần tự (rnn/lstm) — chậm và hay quên phần đầu câu. transformer (2017, \"attention is all you need\") bỏ tuần tự, cho mọi từ nhìn nhau cùng lúc bằng attention → train nhanh trên gpu và bắt được quan hệ xa. đây là bước ngoặt mở ra kỷ nguyên llm. ý chính xếp chồng khối attention: mỗi lớp gồm multi head attention + mạng feed forward, chồng nhiều lớp để học biểu diễn ngày càng trừu tượng. positional encoding: vì xử lý song song (không theo thứ tự), phải chèn thông tin vị trí để model biết từ nào đứng trước/sau. encoder / decoder: encoder (bert): đọc hiểu cả câu → hợp cho classification , embedding. decoder (gpt): sinh từ trái sang phải → hợp cho tạo văn bản. encoder decoder : dịch máy, tóm tắt (dùng cross attention). residual + layer norm: mẹo giúp mạng sâu vẫn train ổn định. song song = nhanh: không phụ thuộc bước trước → tận dụng gpu tối đa (train gpu.md ). hình minh họa self attention trong một khối encoder cross attention: decoder nhìn sang encoder (dịch máy) trọng số attention sau softmax bên trong một lớp trong pipeline transformer là \"khung nhà\" gói attention.md , embedding.md và softmax.md lại thành một model hoàn chỉnh. tham khảo vaswani et al. 2017 — attention is all you need jay alammar — the illustrated transformer related attention.md , embedding.md , softmax.md huggingface.md — model transformer pretrained",
+      "body_text": "Transformer — kiến trúc lõi của LLM Kiến trúc ghép nhiều khối attention lại, xử lý cả câu song song thay vì tuần tự. Là bộ khung đứng sau BERT, GPT và gần như mọi model ngôn ngữ hiện đại. Vì sao quan trọng Trước Transformer, model đọc câu tuần tự (RNN/LSTM) — chậm và hay quên phần đầu câu. Transformer (2017, \"Attention Is All You Need\") bỏ tuần tự, cho mọi từ nhìn nhau cùng lúc bằng attention → train nhanh trên GPU và bắt được quan hệ xa. Đây là bước ngoặt mở ra kỷ nguyên LLM. Ý chính Xếp chồng khối attention: mỗi lớp gồm multi head attention + mạng feed forward, chồng nhiều lớp để học biểu diễn ngày càng trừu tượng. Positional encoding: vì xử lý song song (không theo thứ tự), phải chèn thông tin vị trí để model biết từ nào đứng trước/sau. Encoder / decoder: Encoder (BERT): đọc hiểu cả câu → hợp cho classification , embedding. Decoder (GPT): sinh từ trái sang phải → hợp cho tạo văn bản. Encoder decoder : dịch máy, tóm tắt (dùng cross attention). Residual + layer norm: mẹo giúp mạng sâu vẫn train ổn định. Song song = nhanh: không phụ thuộc bước trước → tận dụng GPU tối đa (train gpu.md ). Hình minh họa Self attention trong một khối encoder Cross attention: decoder nhìn sang encoder (dịch máy) Trọng số attention sau softmax bên trong một lớp Trong pipeline Transformer là \"khung nhà\" gói attention.md , embedding.md và softmax.md lại thành một model hoàn chỉnh. Tham khảo Vaswani et al. 2017 — Attention Is All You Need Jay Alammar — The Illustrated Transformer Related attention.md , embedding.md , softmax.md huggingface.md — model Transformer pretrained"
+    },
+    {
+      "id": "sentence-transformers",
+      "num": "11",
+      "date": "07/2024",
+      "title": "sentence-transformers — embedding câu",
+      "summary": "Câu → vector trong vài dòng; classification & similarity siêu nhanh, siêu đơn giản.",
+      "topics": [
+        "sentence-transformers",
+        "sbert",
+        "embedding",
+        "similarity",
+        "classification"
+      ],
+      "group": "concept",
+      "page": "notes/sentence-transformers.html",
+      "slides": null,
+      "demo": null,
+      "extra_links": [],
+      "search_text": "sentence transformers — embedding câu câu → vector trong vài dòng; classification & similarity siêu nhanh, siêu đơn giản. sentence transformers sbert embedding similarity classification sentence transformers — embedding câu trong vài dòng thư viện của hugging face biến cả một câu thành một vector chất lượng cao chỉ với vài dòng code. nhờ đó các bài classification / similarity làm được siêu nhanh, siêu đơn giản . vì sao quan trọng tự train một model embedding câu tốn rất nhiều công. gói sẵn model pretrained (vd , ) để câu → vector dùng ngay. với nhiều bài toán, chỉ cần embedding tốt + một bước nhẹ là xong — không cần train mạng lớn. dùng nhanh ý chính câu → vector 1 bước: trả embedding đã tối ưu cho so sánh nghĩa ở mức câu (khác embedding từng token). classification siêu nhanh: encode câu rồi gắn một classifier nhẹ (logistic / k nn) lên trên — không cần fine tune cả transformer. similarity & search: để tìm câu gần nghĩa; là lõi của semantic search.md và retrieve trong rag.md . nạp vào vector db: vector từ đẩy thẳng vào vector database.md để tìm top k. chọn model theo nhu cầu: minilm nhẹ & nhanh; mpnet chính xác hơn nhưng nặng hơn. hình minh họa cosine similarity giữa hai vector câu embedding: hàm biến văn bản thành vector trong pipeline đây là con đường ngắn nhất từ embedding.md tới classification.md và semantic search.md mà không phải train nặng. tham khảo sbert / sentence transformers reimers & gurevych 2019 — sentence bert related embedding.md , classification.md semantic search.md , vector database.md , huggingface.md",
+      "body_text": "sentence transformers — embedding câu trong vài dòng Thư viện của Hugging Face biến cả một câu thành một vector chất lượng cao chỉ với vài dòng code. Nhờ đó các bài classification / similarity làm được siêu nhanh, siêu đơn giản . Vì sao quan trọng Tự train một model embedding câu tốn rất nhiều công. gói sẵn model pretrained (vd , ) để câu → vector dùng ngay. Với nhiều bài toán, chỉ cần embedding tốt + một bước nhẹ là xong — không cần train mạng lớn. Dùng nhanh Ý chính Câu → vector 1 bước: trả embedding đã tối ưu cho so sánh nghĩa ở mức câu (khác embedding từng token). Classification siêu nhanh: encode câu rồi gắn một classifier nhẹ (logistic / k NN) lên trên — không cần fine tune cả Transformer. Similarity & search: để tìm câu gần nghĩa; là lõi của semantic search.md và retrieve trong rag.md . Nạp vào vector DB: vector từ đẩy thẳng vào vector database.md để tìm top k. Chọn model theo nhu cầu: MiniLM nhẹ & nhanh; mpnet chính xác hơn nhưng nặng hơn. Hình minh họa Cosine similarity giữa hai vector câu Embedding: hàm biến văn bản thành vector Trong pipeline Đây là con đường ngắn nhất từ embedding.md tới classification.md và semantic search.md mà không phải train nặng. Tham khảo SBERT / sentence transformers Reimers & Gurevych 2019 — Sentence BERT Related embedding.md , classification.md semantic search.md , vector database.md , huggingface.md"
     },
     {
       "id": "rag",
-      "num": "05",
-      "date": "12/2023",
+      "num": "12",
+      "date": "08/2024",
       "title": "RAG",
       "summary": "Tra cứu tài liệu liên quan trước, rồi mới để model soạn câu trả lời có trích dẫn.",
       "topics": [
@@ -214,13 +378,60 @@
       "slides": "slides/rag/index.html",
       "demo": "demos/rag/app/index.html",
       "extra_links": [],
-      "search_text": "rag tra cứu tài liệu liên quan trước, rồi mới để model soạn câu trả lời có trích dẫn. rag vector db retrieve rag — retrieval augmented generation thay vì bắt mô hình trả lời bằng mỗi trí nhớ, trước tiên đi tra cứu tài liệu liên quan rồi mới để mô hình soạn câu trả lời dựa trên đó. giống mở sách ra tra trước khi phát biểu. vì sao quan trọng mô hình ngôn ngữ biết nhiều nhưng hay \"chém\" (bịa) khi gặp thứ ngoài trí nhớ, và không cập nhật tài liệu riêng của bạn. rag vá cả hai: neo câu trả lời vào một kho tài liệu thật (tài liệu công ty, video, repo…), kèm trích dẫn nguồn. nhờ vậy trả lời đúng hơn, cập nhật hơn, và kiểm chứng được — không cần train lại mô hình. ý chính hai pha: retrieve : đổi câu hỏi thành vector (embedding.md ), tìm trong vector db ra top k đoạn (chunk) gần nghĩa nhất. generate : nhét các đoạn đó vào prompt làm ngữ cảnh, mô hình soạn câu trả lời bám theo. chunk + vector db: tài liệu được cắt thành đoạn nhỏ, mỗi đoạn một vector; db (faiss, chroma, pgvector…) lo tìm nhanh đoạn gần nhất, có thể lọc thêm bằng metadata. khác chat thuần: chat thuần dựa vào trí nhớ mô hình; rag luôn neo vào corpus nên trả lời được câu về tài liệu mô hình chưa từng thấy. chất lượng phụ thuộc retrieve: lấy sai đoạn thì mô hình soạn hay đến mấy cũng sai. cắt chunk hợp lý và embedding tốt là mấu chốt. biến thể nâng cao: graph rag nối các thực thể thành đồ thị để trả lời câu bắc cầu; rerank, hybrid search (từ khóa + vector) để tăng độ chính xác. hình minh họa embed câu hỏi rồi đi truy vấn kho tài liệu đường đi của một pipeline rag graph rag: nối thực thể thành đồ thị để trả lời câu bắc cầu rag nâng cao: thêm rerank / lọc để tăng độ chính xác trong pipeline rag đứng trên embedding.md ; personal knowledge base của lab đi đúng hướng này (personal knowledge base.md ). slides & demo link slides slides/rag working app demos/rag/app tham khảo lewis et al. 2020 — retrieval augmented generation microsoft graphrag related embedding.md , personal knowledge base.md",
-      "body_text": "RAG — Retrieval Augmented Generation Thay vì bắt mô hình trả lời bằng mỗi trí nhớ, trước tiên đi tra cứu tài liệu liên quan rồi mới để mô hình soạn câu trả lời dựa trên đó. Giống mở sách ra tra trước khi phát biểu. Vì sao quan trọng Mô hình ngôn ngữ biết nhiều nhưng hay \"chém\" (bịa) khi gặp thứ ngoài trí nhớ, và không cập nhật tài liệu riêng của bạn. RAG vá cả hai: neo câu trả lời vào một kho tài liệu thật (tài liệu công ty, video, repo…), kèm trích dẫn nguồn. Nhờ vậy trả lời đúng hơn, cập nhật hơn, và kiểm chứng được — không cần train lại mô hình. Ý chính Hai pha: Retrieve : đổi câu hỏi thành vector (embedding.md ), tìm trong vector DB ra top k đoạn (chunk) gần nghĩa nhất. Generate : nhét các đoạn đó vào prompt làm ngữ cảnh, mô hình soạn câu trả lời bám theo. Chunk + vector DB: tài liệu được cắt thành đoạn nhỏ, mỗi đoạn một vector; DB (FAISS, Chroma, pgvector…) lo tìm nhanh đoạn gần nhất, có thể lọc thêm bằng metadata. Khác chat thuần: chat thuần dựa vào trí nhớ mô hình; RAG luôn neo vào corpus nên trả lời được câu về tài liệu mô hình chưa từng thấy. Chất lượng phụ thuộc retrieve: lấy sai đoạn thì mô hình soạn hay đến mấy cũng sai. Cắt chunk hợp lý và embedding tốt là mấu chốt. Biến thể nâng cao: Graph RAG nối các thực thể thành đồ thị để trả lời câu bắc cầu; rerank, hybrid search (từ khóa + vector) để tăng độ chính xác. Hình minh họa Embed câu hỏi rồi đi truy vấn kho tài liệu Đường đi của một pipeline RAG Graph RAG: nối thực thể thành đồ thị để trả lời câu bắc cầu RAG nâng cao: thêm rerank / lọc để tăng độ chính xác Trong pipeline RAG đứng trên embedding.md ; Personal Knowledge base của lab đi đúng hướng này (personal knowledge base.md ). Slides & demo Link Slides slides/rag Working app demos/rag/app Tham khảo Lewis et al. 2020 — Retrieval Augmented Generation Microsoft GraphRAG Related embedding.md , personal knowledge base.md"
+      "search_text": "rag tra cứu tài liệu liên quan trước, rồi mới để model soạn câu trả lời có trích dẫn. rag vector db retrieve rag — retrieval augmented generation thay vì bắt mô hình trả lời bằng mỗi trí nhớ, trước tiên đi tra cứu tài liệu liên quan rồi mới để mô hình soạn câu trả lời dựa trên đó. giống mở sách ra tra trước khi phát biểu. vì sao quan trọng mô hình ngôn ngữ biết nhiều nhưng hay \"chém\" (bịa) khi gặp thứ ngoài trí nhớ, và không cập nhật tài liệu riêng của bạn. rag vá cả hai: neo câu trả lời vào một kho tài liệu thật (tài liệu công ty, video, repo…), kèm trích dẫn nguồn. nhờ vậy trả lời đúng hơn, cập nhật hơn, và kiểm chứng được — không cần train lại mô hình. ý chính hai pha: retrieve : đổi câu hỏi thành vector (embedding.md ), tìm trong vector db ra top k đoạn (chunk) gần nghĩa nhất. generate : nhét các đoạn đó vào prompt làm ngữ cảnh, mô hình soạn câu trả lời bám theo. chunk + vector db: tài liệu được cắt thành đoạn nhỏ, mỗi đoạn một vector; db (faiss, chroma, pgvector…) lo tìm nhanh đoạn gần nhất, có thể lọc thêm bằng metadata. khác chat thuần: chat thuần dựa vào trí nhớ mô hình; rag luôn neo vào corpus nên trả lời được câu về tài liệu mô hình chưa từng thấy. chất lượng phụ thuộc retrieve: lấy sai đoạn thì mô hình soạn hay đến mấy cũng sai. cắt chunk hợp lý và embedding tốt là mấu chốt. biến thể nâng cao: graph rag nối các thực thể thành đồ thị để trả lời câu bắc cầu; rerank, hybrid search (từ khóa + vector) để tăng độ chính xác. hình minh họa embed câu hỏi rồi đi truy vấn kho tài liệu đường đi của một pipeline rag graph rag: nối thực thể thành đồ thị để trả lời câu bắc cầu rag nâng cao: thêm rerank / lọc để tăng độ chính xác trong pipeline rag đứng trên embedding.md ; personal knowledge base của lab đi đúng hướng này (personal knowledge base.md ). slides & demo link slides slides/rag working app demos/rag/app tham khảo lewis et al. 2020 — retrieval augmented generation microsoft graphrag related vector database.md , semantic search.md — hạ tầng & retrieve cho rag embedding.md , personal knowledge base.md",
+      "body_text": "RAG — Retrieval Augmented Generation Thay vì bắt mô hình trả lời bằng mỗi trí nhớ, trước tiên đi tra cứu tài liệu liên quan rồi mới để mô hình soạn câu trả lời dựa trên đó. Giống mở sách ra tra trước khi phát biểu. Vì sao quan trọng Mô hình ngôn ngữ biết nhiều nhưng hay \"chém\" (bịa) khi gặp thứ ngoài trí nhớ, và không cập nhật tài liệu riêng của bạn. RAG vá cả hai: neo câu trả lời vào một kho tài liệu thật (tài liệu công ty, video, repo…), kèm trích dẫn nguồn. Nhờ vậy trả lời đúng hơn, cập nhật hơn, và kiểm chứng được — không cần train lại mô hình. Ý chính Hai pha: Retrieve : đổi câu hỏi thành vector (embedding.md ), tìm trong vector DB ra top k đoạn (chunk) gần nghĩa nhất. Generate : nhét các đoạn đó vào prompt làm ngữ cảnh, mô hình soạn câu trả lời bám theo. Chunk + vector DB: tài liệu được cắt thành đoạn nhỏ, mỗi đoạn một vector; DB (FAISS, Chroma, pgvector…) lo tìm nhanh đoạn gần nhất, có thể lọc thêm bằng metadata. Khác chat thuần: chat thuần dựa vào trí nhớ mô hình; RAG luôn neo vào corpus nên trả lời được câu về tài liệu mô hình chưa từng thấy. Chất lượng phụ thuộc retrieve: lấy sai đoạn thì mô hình soạn hay đến mấy cũng sai. Cắt chunk hợp lý và embedding tốt là mấu chốt. Biến thể nâng cao: Graph RAG nối các thực thể thành đồ thị để trả lời câu bắc cầu; rerank, hybrid search (từ khóa + vector) để tăng độ chính xác. Hình minh họa Embed câu hỏi rồi đi truy vấn kho tài liệu Đường đi của một pipeline RAG Graph RAG: nối thực thể thành đồ thị để trả lời câu bắc cầu RAG nâng cao: thêm rerank / lọc để tăng độ chính xác Trong pipeline RAG đứng trên embedding.md ; Personal Knowledge base của lab đi đúng hướng này (personal knowledge base.md ). Slides & demo Link Slides slides/rag Working app demos/rag/app Tham khảo Lewis et al. 2020 — Retrieval Augmented Generation Microsoft GraphRAG Related vector database.md , semantic search.md — hạ tầng & retrieve cho RAG embedding.md , personal knowledge base.md"
+    },
+    {
+      "id": "vector-database",
+      "num": "13",
+      "date": "10/2024",
+      "title": "Vector database",
+      "summary": "Kho lưu vector + tìm top-k hàng xóm gần nhất (ANN). Hạ tầng cho RAG & semantic search.",
+      "topics": [
+        "vector-db",
+        "ANN",
+        "faiss",
+        "elasticsearch",
+        "pgvector"
+      ],
+      "group": "concept",
+      "page": "notes/vector-database.html",
+      "slides": null,
+      "demo": null,
+      "extra_links": [],
+      "search_text": "vector database kho lưu vector + tìm top k hàng xóm gần nhất (ann). hạ tầng cho rag & semantic search. vector db ann faiss elasticsearch pgvector vector database nơi cất hàng triệu vector embedding và trả lời cực nhanh câu hỏi \"vector nào gần cái này nhất?\". là hạ tầng đứng dưới rag và semantic search. vì sao quan trọng embedding biến mọi thứ thành vector, nhưng có vector rồi thì cất ở đâu và tìm thế nào? duyệt lần lượt cả triệu vector để so từng cái (brute force) thì quá chậm. vector database giải đúng bài này: lưu vector kèm dữ liệu gốc, và tìm top k \"hàng xóm gần nhất\" trong mili giây nhờ chỉ mục xấp xỉ. không có nó, rag và semantic search không chạy được ở quy mô thật. ý chính bài toán lõi — nearest neighbor: cho một vector truy vấn, tìm k vector gần nhất theo cosine / dot product (embedding.md ). ann thay vì brute force: chỉ mục xấp xỉ (hnsw, ivf…) đánh đổi một chút độ chính xác để tăng tốc hàng trăm lần — đủ tốt cho tìm kiếm. không chỉ là vector: mỗi bản ghi kèm metadata (nguồn, ngày, nhãn) để lọc trước/sau khi tìm; và cần crud (thêm/sửa/xóa) khi dữ liệu thay đổi. vài lựa chọn quen thuộc: faiss — in memory, rất nhanh, hợp thử nghiệm; nhưng thiếu crud và lưu bền. elasticsearch (knn plugin) — tích hợp sẵn với keyword search, có crud, phân tán được. pgvector / chroma — gắn thẳng vào postgres / dùng nhẹ cho app nhỏ. chọn theo nhu cầu: cần quy mô + crud + phân tán → elastic; cần tốc độ thuần trong ram → faiss. hình minh họa embed câu hỏi rồi đi truy vấn kho vector khi nào dùng cosine, khi nào dùng dot product để so vector trong pipeline vector database nhận vector từ embedding.md và cấp top k cho rag.md lẫn semantic search.md . tham khảo faiss (meta) pgvector · elasticsearch knn search related embedding.md , rag.md , semantic search.md",
+      "body_text": "Vector database Nơi cất hàng triệu vector embedding và trả lời cực nhanh câu hỏi \"vector nào gần cái này nhất?\". Là hạ tầng đứng dưới RAG và semantic search. Vì sao quan trọng Embedding biến mọi thứ thành vector, nhưng có vector rồi thì cất ở đâu và tìm thế nào? Duyệt lần lượt cả triệu vector để so từng cái (brute force) thì quá chậm. Vector database giải đúng bài này: lưu vector kèm dữ liệu gốc, và tìm top k \"hàng xóm gần nhất\" trong mili giây nhờ chỉ mục xấp xỉ. Không có nó, RAG và semantic search không chạy được ở quy mô thật. Ý chính Bài toán lõi — nearest neighbor: cho một vector truy vấn, tìm k vector gần nhất theo cosine / dot product (embedding.md ). ANN thay vì brute force: chỉ mục xấp xỉ (HNSW, IVF…) đánh đổi một chút độ chính xác để tăng tốc hàng trăm lần — đủ tốt cho tìm kiếm. Không chỉ là vector: mỗi bản ghi kèm metadata (nguồn, ngày, nhãn) để lọc trước/sau khi tìm; và cần CRUD (thêm/sửa/xóa) khi dữ liệu thay đổi. Vài lựa chọn quen thuộc: FAISS — in memory, rất nhanh, hợp thử nghiệm; nhưng thiếu CRUD và lưu bền. Elasticsearch (kNN plugin) — tích hợp sẵn với keyword search, có CRUD, phân tán được. pgvector / Chroma — gắn thẳng vào Postgres / dùng nhẹ cho app nhỏ. Chọn theo nhu cầu: cần quy mô + CRUD + phân tán → Elastic; cần tốc độ thuần trong RAM → FAISS. Hình minh họa Embed câu hỏi rồi đi truy vấn kho vector Khi nào dùng cosine, khi nào dùng dot product để so vector Trong pipeline Vector database nhận vector từ embedding.md và cấp top k cho rag.md lẫn semantic search.md . Tham khảo FAISS (Meta) pgvector · Elasticsearch kNN search Related embedding.md , rag.md , semantic search.md"
+    },
+    {
+      "id": "semantic-search",
+      "num": "14",
+      "date": "12/2024",
+      "title": "Semantic search — hybrid · tiered · fallback",
+      "summary": "Tìm theo nghĩa: ghép inverted-index (Elastic) + semantic index (embedding). Dự án học RAG của tôi.",
+      "topics": [
+        "semantic-search",
+        "hybrid",
+        "inverted-index",
+        "elasticsearch",
+        "ms-marco"
+      ],
+      "group": "project",
+      "page": "notes/semantic-search.html",
+      "slides": null,
+      "demo": null,
+      "extra_links": [
+        {
+          "label": "GitHub — semantic-search",
+          "href": "https://github.com/hoanganh25991/semantic-search"
+        }
+      ],
+      "search_text": "semantic search — hybrid · tiered · fallback tìm theo nghĩa: ghép inverted index (elastic) + semantic index (embedding). dự án học rag của tôi. semantic search hybrid inverted index elasticsearch ms marco semantic search — hybrid · tiered · fallback tìm theo nghĩa chứ không chỉ khớp từ khóa, bằng cách ghép hai loại chỉ mục: inverted index (elastic, theo từ khóa) và semantic index (embedding, theo nghĩa). đây là dự án mình làm để học sâu về rag. repo: github.com/hoanganh25991/semantic search — hybrid / tiered / fallback trên dataset ms marco. vì sao quan trọng tìm bằng từ khóa (bm25 / tf idf trong elastic) thì nhanh và rẻ, nhưng \"xe hơi\" với \"ô tô\" là hai từ khác nhau nên dễ trượt. tìm bằng embedding thì hiểu nghĩa, nhưng nặng và tốn khi chạy trên mọi câu. semantic search thực dụng là kết hợp cả hai: lấy cái nhanh để lọc, cái hiểu nghĩa để xếp hạng. đây cũng chính là bước \"retrieve\" chất lượng cao cho rag . hai loại chỉ mục chỉ mục cơ chế mạnh yếu inverted index (elastic) map từ khóa → tài liệu nhanh, rẻ, chính xác với truy vấn rõ không hiểu từ đồng nghĩa semantic index (embedding) vector trong vector database hiểu nghĩa, bắt được diễn đạt khác nặng hơn, cần model ba chiến lược tìm kiếm hybrid: dùng inverted index lọc nhanh ứng viên theo từ khóa, rồi semantic index rerank theo nghĩa. tối ưu chi phí; điểm yếu là nếu keyword trượt thì thiếu ứng viên để rerank. tiered: phân loại câu hỏi dễ/khó trước → câu dễ đi keyword, câu khó mới đi semantic. cân bằng tốc độ và độ chính xác (cùng ý tưởng với complexity router ). fallback: semantic trước để tối đa độ chính xác, nếu kết quả kém thì rớt về keyword. chính xác cao nhưng đắt hơn. dataset & đánh giá ms marco — câu hỏi thật của người dùng + đoạn văn liên quan, dùng làm testbed. metrics: precision@k (tỉ lệ kết quả đúng trong top k), mrr@10 (vị trí kết quả đúng đầu tiên) — quan trọng khi câu trả lời đầu tiên là thứ đáng giá nhất. query classification: phân loại câu hỏi simple ( ) vs complex ( , , …) bằng một classifier fine tune trên embedding — đầu vào cho chiến lược tiered. kiến trúc lưu trữ mongodb — lưu tài liệu thô. elasticsearch — lưu dữ liệu đã index (cả inverted lẫn knn) để tìm nhanh. hình minh họa embed câu hỏi rồi đi truy vấn — bước retrieve của semantic search retrieval nâng cao: kết hợp lọc + rerank để tăng độ chính xác trong pipeline semantic search đứng trên embedding.md + vector database.md , và là bước retrieve cho rag.md . tham khảo repo: hoanganh25991/semantic search ms marco · elasticsearch knn related vector database.md , rag.md , embedding.md 05 demo text.md — complexity router (cùng ý \"tiered\")",
+      "body_text": "Semantic search — hybrid · tiered · fallback Tìm theo nghĩa chứ không chỉ khớp từ khóa, bằng cách ghép hai loại chỉ mục: inverted index (Elastic, theo từ khóa) và semantic index (embedding, theo nghĩa). Đây là dự án mình làm để học sâu về RAG. Repo: github.com/hoanganh25991/semantic search — Hybrid / Tiered / Fallback trên dataset MS MARCO. Vì sao quan trọng Tìm bằng từ khóa (BM25 / TF IDF trong Elastic) thì nhanh và rẻ, nhưng \"xe hơi\" với \"ô tô\" là hai từ khác nhau nên dễ trượt. Tìm bằng embedding thì hiểu nghĩa, nhưng nặng và tốn khi chạy trên mọi câu. Semantic search thực dụng là kết hợp cả hai: lấy cái nhanh để lọc, cái hiểu nghĩa để xếp hạng. Đây cũng chính là bước \"retrieve\" chất lượng cao cho RAG . Hai loại chỉ mục Chỉ mục Cơ chế Mạnh Yếu Inverted index (Elastic) map từ khóa → tài liệu nhanh, rẻ, chính xác với truy vấn rõ không hiểu từ đồng nghĩa Semantic index (embedding) vector trong vector database hiểu nghĩa, bắt được diễn đạt khác nặng hơn, cần model Ba chiến lược tìm kiếm Hybrid: dùng inverted index lọc nhanh ứng viên theo từ khóa, rồi semantic index rerank theo nghĩa. Tối ưu chi phí; điểm yếu là nếu keyword trượt thì thiếu ứng viên để rerank. Tiered: phân loại câu hỏi dễ/khó trước → câu dễ đi keyword, câu khó mới đi semantic. Cân bằng tốc độ và độ chính xác (cùng ý tưởng với complexity router ). Fallback: semantic trước để tối đa độ chính xác, nếu kết quả kém thì rớt về keyword. Chính xác cao nhưng đắt hơn. Dataset & đánh giá MS MARCO — câu hỏi thật của người dùng + đoạn văn liên quan, dùng làm testbed. Metrics: Precision@k (tỉ lệ kết quả đúng trong top k), MRR@10 (vị trí kết quả đúng đầu tiên) — quan trọng khi câu trả lời đầu tiên là thứ đáng giá nhất. Query classification: phân loại câu hỏi simple ( ) vs complex ( , , …) bằng một classifier fine tune trên embedding — đầu vào cho chiến lược Tiered. Kiến trúc lưu trữ MongoDB — lưu tài liệu thô. Elasticsearch — lưu dữ liệu đã index (cả inverted lẫn kNN) để tìm nhanh. Hình minh họa Embed câu hỏi rồi đi truy vấn — bước retrieve của semantic search Retrieval nâng cao: kết hợp lọc + rerank để tăng độ chính xác Trong pipeline Semantic search đứng trên embedding.md + vector database.md , và là bước retrieve cho rag.md . Tham khảo Repo: hoanganh25991/semantic search MS MARCO · Elasticsearch kNN Related vector database.md , rag.md , embedding.md 05 demo text.md — complexity router (cùng ý \"tiered\")"
     },
     {
       "id": "mcp",
-      "num": "06",
-      "date": "03/2024",
+      "num": "15",
+      "date": "01/2025",
       "title": "MCP",
       "summary": "Chuẩn chung để agent gọi tool ngoài — như cổng USB-C cho AI. Host ↔ server ↔ tools có schema.",
       "topics": [
@@ -239,8 +450,8 @@
     },
     {
       "id": "skills-rules",
-      "num": "07",
-      "date": "06/2024",
+      "num": "16",
+      "date": "03/2025",
       "title": "Skills · Rules · Commands",
       "summary": "Know-how của AI agent: SKILL.md, rules, commands; global ~/.agents.",
       "topics": [
@@ -260,8 +471,8 @@
     },
     {
       "id": "train-gpu",
-      "num": "08",
-      "date": "09/2024",
+      "num": "17",
+      "date": "05/2025",
       "title": "Train · PyTorch / TensorFlow · GPU",
       "summary": "HF/Kaggle datasets, PyTorch & TensorFlow, GPU notebooks, train → inference.",
       "topics": [
@@ -281,8 +492,8 @@
     },
     {
       "id": "car-nn",
-      "num": "09",
-      "date": "11/2024",
+      "num": "18",
+      "date": "07/2025",
       "title": "Car NN — sensor to action",
       "summary": "3 cảm biến → mạng fully connected → forward / back / left / right. Ví dụ nhìn thấy được của phân loại.",
       "topics": [
@@ -300,8 +511,8 @@
     },
     {
       "id": "sentiment-routing",
-      "num": "10",
-      "date": "02/2025",
+      "num": "19",
+      "date": "09/2025",
       "title": "Sentiment & complexity routing",
       "summary": "Đọc câu rồi dán nhãn: cảm xúc (neg/neu/pos) và định tuyến dễ/khó.",
       "topics": [
@@ -328,8 +539,8 @@
     },
     {
       "id": "train-infer",
-      "num": "11",
-      "date": "05/2025",
+      "num": "20",
+      "date": "10/2025",
       "title": "Train → Inference",
       "summary": "Hai đời của mô hình: học weights nặng một lần (train) rồi dùng nhẹ nhiều lần (infer).",
       "topics": [
@@ -347,8 +558,8 @@
     },
     {
       "id": "agents",
-      "num": "12",
-      "date": "08/2025",
+      "num": "21",
+      "date": "12/2025",
       "title": "AI Agents · So sánh harness",
       "summary": "Harness ≠ model: Cursor, Claude Code, Pi, Cline/Kilo, OpenCode, Zed.",
       "topics": [
@@ -369,8 +580,8 @@
     },
     {
       "id": "model-notes",
-      "num": "13",
-      "date": "11/2025",
+      "num": "22",
+      "date": "02/2026",
       "title": "Model field notes",
       "summary": "Model ≠ harness: Grok 4.5, Composer, Anthropic, DeepSeek, Qwen, Kimi/GLM.",
       "topics": [
@@ -391,8 +602,8 @@
     },
     {
       "id": "agent-automation",
-      "num": "14",
-      "date": "01/2026",
+      "num": "23",
+      "date": "03/2026",
       "title": "Agent automation — OpenClaw · Hermess",
       "summary": "Câu chuyện: OpenClaw (pi harness) mở màn cảm giác agent control mọi thứ → Hermess làm tốt.",
       "topics": [
@@ -412,8 +623,8 @@
     },
     {
       "id": "ai-timeline",
-      "num": "15",
-      "date": "04/2026",
+      "num": "24",
+      "date": "05/2026",
       "title": "AI timeline — hành trình của tôi",
       "summary": "Hành trình từ 2023 (lần đầu biết LLM) → embedding… → agent → automation, neo vào mốc AI thực tế.",
       "topics": [
@@ -433,7 +644,7 @@
     },
     {
       "id": "personal-knowledge-base",
-      "num": "16",
+      "num": "25",
       "date": "07/2026",
       "title": "Personal Knowledge-base — videos · docs · GitHub",
       "summary": "Repo riêng ~/work-station/personal-kb: FTS search + Graph RAG keywords. Sẽ gắn submodule.",

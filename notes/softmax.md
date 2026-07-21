@@ -44,4 +44,5 @@ Softmax là bước chốt của [05-demo-text.md](./05-demo-text.md) và bướ
 
 ## Related
 
+- [classification.md](./classification.md) — bài build model ngay sau softmax
 - [attention.md](./attention.md), [05-demo-text.md](./05-demo-text.md)

@@ -6,6 +6,8 @@ Build: `./scripts/build.sh` → mở [`../docs/index.html`](../docs/index.html).
 
 Catalog: [`catalog.json`](./catalog.json) — source of truth cho listing (id, title, summary, slides, demo).
 
+**Bắt đầu từ đây:** [roadmap.md](./roadmap.md) — bản đồ vui 5 màn đi hết các note.
+
 ## Ba lớp nội dung
 
 | Lớp | Vai trò | Khi nào đọc |
@@ -46,11 +48,21 @@ Mỗi note theo cùng một khung để dễ đọc và dễ mở rộng:
 
 | Note | Group | Slides | Demo |
 |------|-------|--------|------|
+| [roadmap.md](./roadmap.md) | map | — | — |
 | [tokenize.md](./tokenize.md) | concept | có | có |
 | [embedding.md](./embedding.md) | concept | có | có |
 | [attention.md](./attention.md) | concept | có | có |
 | [softmax.md](./softmax.md) | concept | có | có |
+| [classification.md](./classification.md) | concept | — | — |
+| [pytorch-training.md](./pytorch-training.md) | concept | — | — |
+| [tensorflow-training.md](./tensorflow-training.md) | concept | — | — |
+| [huggingface.md](./huggingface.md) | concept | — | — |
+| [kaggle.md](./kaggle.md) | concept | — | — |
+| [transformer.md](./transformer.md) | concept | — | — |
+| [sentence-transformers.md](./sentence-transformers.md) | concept | — | — |
 | [rag.md](./rag.md) | concept | có | có |
+| [vector-database.md](./vector-database.md) | concept | — | — |
+| [semantic-search.md](./semantic-search.md) | project | — | GitHub |
 | [mcp.md](./mcp.md) | concept | có | có |
 | [skills-rules.md](./skills-rules.md) | concept | — | mcp app |
 | [train-gpu.md](./train-gpu.md) | concept | — | — |

@@ -48,4 +48,5 @@ RAG đứng trên [embedding.md](./embedding.md); Personal Knowledge-base của 
 
 ## Related
 
+- [vector-database.md](./vector-database.md), [semantic-search.md](./semantic-search.md) — hạ tầng & retrieve cho RAG
 - [embedding.md](./embedding.md), [personal-knowledge-base.md](./personal-knowledge-base.md)

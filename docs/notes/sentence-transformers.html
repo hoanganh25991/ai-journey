@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>sentence-transformers — embedding câu · AI Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+
+:root {
+  --bg: #eef3f9; --surface: #ffffff; --ink: #16202e; --muted: #5a6b80;
+  --teal: #0f8a9b; --teal-soft: rgba(15,138,155,.12); --amber: #c2703a;
+  --line: rgba(20,32,46,.12); --line-soft: rgba(20,32,46,.07);
+  --shadow: 0 1px 2px rgba(20,32,46,.05), 0 8px 24px rgba(20,32,46,.06);
+  --glow-teal: rgba(15,138,155,.10); --glow-amber: rgba(194,112,58,.08);
+  --font: Sora, system-ui, sans-serif; --serif: "Instrument Serif", Georgia, serif;
+  --mono: "IBM Plex Mono", ui-monospace, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0d1520; --surface: #152033; --ink: #e8eef6; --muted: #8b9bb0;
+    --teal: #3db8c9; --teal-soft: rgba(61,184,201,.16); --amber: #d4894a;
+    --line: rgba(232,238,246,.12); --line-soft: rgba(232,238,246,.07);
+    --shadow: 0 1px 2px rgba(0,0,0,.25), 0 8px 24px rgba(0,0,0,.35);
+    --glow-teal: rgba(61,184,201,.12); --glow-amber: rgba(212,137,74,.10);
+  }
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  min-height: 100vh; color: var(--ink); font-family: var(--font);
+  background:
+    radial-gradient(ellipse 60% 45% at 88% -5%, var(--glow-teal), transparent 60%),
+    radial-gradient(ellipse 55% 45% at 0% 105%, var(--glow-amber), transparent 55%),
+    var(--bg);
+  -webkit-font-smoothing: antialiased;
+}
+a { color: var(--teal); }
+::selection { background: var(--teal-soft); }
+
+.wrap { max-width: 960px; margin: 0 auto; padding: 32px 22px 96px; }
+.back { display: inline-flex; align-items: center; gap: 7px; text-decoration: none; color: var(--muted); font: 500 13px var(--mono); }
+.back:hover { color: var(--teal); }
+.doc {
+  background: var(--surface); border: 1px solid var(--line); border-radius: 18px;
+  padding: 34px 36px 44px; margin-top: 18px; box-shadow: var(--shadow);
+}
+.grp { font: 500 11px var(--mono); letter-spacing: .16em; text-transform: uppercase; color: var(--teal); }
+.doc h1 { font-size: 30px; letter-spacing: -.02em; margin: 8px 0 6px; }
+.summary { color: var(--muted); font-size: 15px; line-height: 1.55; }
+.actions { display: flex; flex-wrap: wrap; gap: 8px; margin: 18px 0 4px; }
+.actions a, .actions button {
+  text-decoration: none; font: 500 12px var(--mono); padding: 9px 14px; border-radius: 10px;
+  border: 1px solid var(--line); color: var(--ink); background: transparent; transition: all .15s;
+  cursor: pointer;
+}
+.actions a.primary { background: var(--teal); border-color: var(--teal); color: #fff; }
+.actions a:hover, .actions button:hover { border-color: var(--teal); color: var(--teal); }
+.actions a.primary:hover { color: #fff; opacity: .9; }
+.lab-toast {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+  background: var(--ink); color: #fff; font: 500 12px var(--mono);
+  padding: 10px 16px; border-radius: 999px; z-index: 1100;
+  opacity: 0; pointer-events: none; transition: opacity .2s;
+}
+.lab-toast.on { opacity: 1; }
+.topics { display: flex; flex-wrap: wrap; gap: 7px; margin: 14px 0 4px; }
+.topics span { font: 500 11px var(--mono); color: var(--amber); }
+hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
+.body h1 { font-size: 24px; margin: 1.2em 0 .5em; }
+.body h2 { font-size: 19px; margin: 1.4em 0 .5em; letter-spacing: -.01em; }
+.body h3 { font-size: 16px; margin: 1.2em 0 .4em; }
+.body p, .body li { color: #2b3a4d; line-height: 1.65; font-size: 15px; }
+.body ul { padding-left: 1.25em; margin: .5em 0 1em; }
+.body li { margin: .25em 0; }
+.body a { color: var(--teal); text-decoration: none; border-bottom: 1px solid var(--teal-soft); }
+.body a:hover { border-color: var(--teal); }
+.body code { font-family: var(--mono); font-size: 13px; color: var(--amber); background: rgba(194,112,58,.09); padding: 1px 5px; border-radius: 5px; }
+.body pre { background: #0f1720; border-radius: 12px; padding: 16px; overflow: auto; margin: 14px 0; }
+.body pre code { color: #dbe6f2; background: none; padding: 0; font-size: 12.5px; line-height: 1.6; }
+.body blockquote { border-left: 3px solid var(--teal); background: var(--teal-soft); padding: 10px 16px; margin: 14px 0; border-radius: 0 8px 8px 0; color: var(--ink); }
+.body table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 13.5px; }
+.body th, .body td { border: 1px solid var(--line); padding: 9px 11px; text-align: left; color: #2b3a4d; }
+.body th { color: var(--teal); font: 500 11px var(--mono); letter-spacing: .05em; text-transform: uppercase; background: var(--teal-soft); }
+.body figure { margin: 20px 0; }
+.body figure img { width: 100%; height: auto; display: block; border-radius: 12px; border: 1px solid var(--line); background: #e6edf5; }
+.body figcaption { font: 500 12px var(--mono); color: var(--muted); margin-top: 8px; text-align: center; }
+.body p img { max-width: 100%; height: auto; border-radius: 8px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="../index.html">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m15 18-6-6 6-6"/></svg>
+    AI Lab
+  </a>
+  <article class="doc">
+    <h1>sentence-transformers — embedding câu</h1>
+    <p class="summary">Câu → vector trong vài dòng; classification &amp; similarity siêu nhanh, siêu đơn giản.</p>
+    <div class="actions"><a href="sentence-transformers.md" id="labDownload" download="sentence-transformers.md">Download</a>
+<button type="button" id="labShare">Share</button></div>
+    <div class="topics"><span>#sentence-transformers</span><span>#sbert</span><span>#embedding</span><span>#similarity</span><span>#classification</span></div>
+    <hr class="sep" />
+    <div class="body"><h1>sentence-transformers — embedding câu trong vài dòng</h1>
+<blockquote>Thư viện của Hugging Face biến cả một câu thành một vector chất lượng cao chỉ với vài dòng code. Nhờ đó các bài classification / similarity làm được <em>siêu nhanh, siêu đơn giản</em>.</blockquote>
+<h2>Vì sao quan trọng</h2>
+<p>Tự train một model embedding câu tốn rất nhiều công. <code>sentence-transformers</code> gói sẵn model pretrained (vd <code>all-MiniLM</code>, <code>paraphrase-mpnet</code>) để <code>encode</code> câu → vector dùng ngay. Với nhiều bài toán, chỉ cần embedding tốt + một bước nhẹ là xong — không cần train mạng lớn.</p>
+<h2>Dùng nhanh</h2>
+<pre><code>
+from sentence_transformers import SentenceTransformer, util
+
+model = SentenceTransformer("all-MiniLM-L6-v2")
+
+
+
+emb = model.encode(["Xin chào", "Hello there"])
+
+sim = util.cos_sim(emb[0], emb[1])   # độ giống nhau về nghĩa
+
+</code></pre>
+<h2>Ý chính</h2>
+<ul>
+<li><strong>Câu → vector 1 bước:</strong> <code>encode()</code> trả embedding đã tối ưu cho <em>so sánh nghĩa ở mức câu</em> (khác embedding từng token).</li>
+<li><strong>Classification siêu nhanh:</strong> encode câu rồi gắn một classifier nhẹ (logistic / k-NN) lên trên — không cần fine-tune cả Transformer.</li>
+<li><strong>Similarity &amp; search:</strong> <code>cos_sim</code> để tìm câu gần nghĩa; là lõi của <a href="semantic-search.html">semantic-search.md</a> và retrieve trong <a href="rag.html">rag.md</a>.</li>
+<li><strong>Nạp vào vector DB:</strong> vector từ <code>encode()</code> đẩy thẳng vào <a href="vector-database.html">vector-database.md</a> để tìm top-k.</li>
+<li><strong>Chọn model theo nhu cầu:</strong> MiniLM nhẹ &amp; nhanh; mpnet chính xác hơn nhưng nặng hơn.</li>
+</ul>
+<h2>Hình minh họa</h2>
+<figure><img src="assets/protonx/cosine-similarity.jpg" alt="Cosine similarity giữa hai vector câu" loading="lazy" /><figcaption>Cosine similarity giữa hai vector câu</figcaption></figure>
+<figure><img src="assets/protonx/embeddings-function.jpg" alt="Embedding: hàm biến văn bản thành vector" loading="lazy" /><figcaption>Embedding: hàm biến văn bản thành vector</figcaption></figure>
+<h2>Trong pipeline</h2>
+<pre><code>
+câu → SentenceTransformer.encode → vector → { cos_sim: similarity | classifier nhẹ: nhãn | vector DB: search }
+
+</code></pre>
+<p>Đây là con đường ngắn nhất từ <a href="embedding.html">embedding.md</a> tới <a href="classification.html">classification.md</a> và <a href="semantic-search.html">semantic-search.md</a> mà không phải train nặng.</p>
+<h2>Tham khảo</h2>
+<ul>
+<li><a href="https://www.sbert.net/">SBERT / sentence-transformers</a></li>
+<li>Reimers &amp; Gurevych 2019 — <a href="https://arxiv.org/abs/1908.10084">Sentence-BERT</a></li>
+</ul>
+<h2>Related</h2>
+<ul>
+<li><a href="embedding.html">embedding.md</a>, <a href="classification.html">classification.md</a></li>
+<li><a href="semantic-search.html">semantic-search.md</a>, <a href="vector-database.html">vector-database.md</a>, <a href="huggingface.html">huggingface.md</a></li>
+</ul></div>
+  </article>
+</div>
+<script>
+(function () {
+  const title = "sentence-transformers — embedding câu";
+  function toast(msg) {
+    let el = document.querySelector(".lab-toast");
+    if (!el) { el = document.createElement("div"); el.className = "lab-toast"; document.body.appendChild(el); }
+    el.textContent = msg; el.classList.add("on");
+    clearTimeout(el._t); el._t = setTimeout(() => el.classList.remove("on"), 1600);
+  }
+  document.getElementById("labShare")?.addEventListener("click", async () => {
+    const url = location.href;
+    try { if (navigator.share) { await navigator.share({ title, url }); return; } }
+    catch (err) { if (err && err.name === "AbortError") return; }
+    try { await navigator.clipboard.writeText(url); toast("Copied link"); }
+    catch { window.prompt("Copy link:", url); }
+  });
+})();
+</script>
+</body>
+</html>

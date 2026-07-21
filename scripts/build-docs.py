@@ -214,14 +214,21 @@ def build_payload() -> tuple[dict, list[dict]]:
     catalog = json.loads(CATALOG.read_text(encoding="utf-8"))
     entries = catalog["notes"]
     file2id = {posixpath.basename(e["file"]): e["id"] for e in entries}
-    total = len(entries)
+    # Auto numbers/dates only for notes that don't override `num` (roadmap = "00").
+    content_total = sum(1 for e in entries if e.get("num") is None)
 
     search_notes: list[dict] = []
     page_notes: list[dict] = []
 
-    for i, entry in enumerate(entries):
-        num = f"{i + 1:02d}"
-        date = _auto_date(i, total)
+    content_i = -1
+    for entry in entries:
+        if entry.get("num") is not None:
+            num = str(entry["num"])
+            date = entry.get("date") or "—"
+        else:
+            content_i += 1
+            num = f"{content_i + 1:02d}"
+            date = entry.get("date") or _auto_date(content_i, content_total)
         path = ROOT / entry["file"]
         raw = path.read_bytes().decode("utf-8", errors="replace") if path.is_file() else ""
 
@@ -334,15 +341,25 @@ THEME_CSS = r"""
   --teal: #0f8a9b; --teal-soft: rgba(15,138,155,.12); --amber: #c2703a;
   --line: rgba(20,32,46,.12); --line-soft: rgba(20,32,46,.07);
   --shadow: 0 1px 2px rgba(20,32,46,.05), 0 8px 24px rgba(20,32,46,.06);
+  --glow-teal: rgba(15,138,155,.10); --glow-amber: rgba(194,112,58,.08);
   --font: Sora, system-ui, sans-serif; --serif: "Instrument Serif", Georgia, serif;
   --mono: "IBM Plex Mono", ui-monospace, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0d1520; --surface: #152033; --ink: #e8eef6; --muted: #8b9bb0;
+    --teal: #3db8c9; --teal-soft: rgba(61,184,201,.16); --amber: #d4894a;
+    --line: rgba(232,238,246,.12); --line-soft: rgba(232,238,246,.07);
+    --shadow: 0 1px 2px rgba(0,0,0,.25), 0 8px 24px rgba(0,0,0,.35);
+    --glow-teal: rgba(61,184,201,.12); --glow-amber: rgba(212,137,74,.10);
+  }
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
   min-height: 100vh; color: var(--ink); font-family: var(--font);
   background:
-    radial-gradient(ellipse 60% 45% at 88% -5%, rgba(15,138,155,.10), transparent 60%),
-    radial-gradient(ellipse 55% 45% at 0% 105%, rgba(194,112,58,.08), transparent 55%),
+    radial-gradient(ellipse 60% 45% at 88% -5%, var(--glow-teal), transparent 60%),
+    radial-gradient(ellipse 55% 45% at 0% 105%, var(--glow-amber), transparent 55%),
     var(--bg);
   -webkit-font-smoothing: antialiased;
 }
@@ -403,6 +420,8 @@ HUB_HTML = r"""<!DOCTYPE html>
   transition: border-color .15s, transform .15s, box-shadow .15s;
 }
 .row:hover { border-color: var(--teal); transform: translateY(-1px); box-shadow: var(--shadow); }
+.row-map { border-color: var(--teal); background: linear-gradient(180deg, rgba(15,138,155,.07), var(--surface) 48%); }
+.row-map .row-date { color: var(--teal); letter-spacing: .14em; }
 .row-date { font: 500 11px var(--mono); letter-spacing: .08em; color: var(--amber); margin-bottom: 6px; }
 .row-num {
   font: 600 11px var(--mono); letter-spacing: .05em; color: var(--teal);
@@ -442,7 +461,10 @@ footer { margin-top: 40px; font: 12px var(--mono); color: var(--muted); }
 <body>
 <div class="shell">
   <a class="brand" href="./index.html" aria-label="AI Lab">
-    <img src="notes/assets/ai-lab-logo.png" alt="AI Lab" width="420" height="120" />
+    <picture>
+      <source srcset="notes/assets/ai-lab-logo-dark.png" media="(prefers-color-scheme: dark)" />
+      <img src="notes/assets/ai-lab-logo-light.png" alt="AI Lab" width="420" height="120" />
+    </picture>
   </a>
   <p class="tagline">Notes are the source of truth. Search first — mở note dạng document, slides &amp; demo hiện khi có.</p>
 
@@ -561,8 +583,9 @@ footer { margin-top: 40px; font: 12px var(--mono); color: var(--muted); }
 
   function rowHtml(n, toks) {
     const snip = toks && toks.length ? snippet(n, toks) : "";
+    const mapCls = n.group === "map" ? " row-map" : "";
     return `
-      <a class="row" href="${escapeHtml(n.page)}">
+      <a class="row${mapCls}" href="${escapeHtml(n.page)}">
         ${n.date ? `<div class="row-date">${escapeHtml(n.date)}</div>` : ""}
         <div class="row-top">
           ${n.num ? `<span class="row-num">${escapeHtml(n.num)}</span>` : ""}

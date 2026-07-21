@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Semantic search — hybrid · tiered · fallback · AI Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+
+:root {
+  --bg: #eef3f9; --surface: #ffffff; --ink: #16202e; --muted: #5a6b80;
+  --teal: #0f8a9b; --teal-soft: rgba(15,138,155,.12); --amber: #c2703a;
+  --line: rgba(20,32,46,.12); --line-soft: rgba(20,32,46,.07);
+  --shadow: 0 1px 2px rgba(20,32,46,.05), 0 8px 24px rgba(20,32,46,.06);
+  --glow-teal: rgba(15,138,155,.10); --glow-amber: rgba(194,112,58,.08);
+  --font: Sora, system-ui, sans-serif; --serif: "Instrument Serif", Georgia, serif;
+  --mono: "IBM Plex Mono", ui-monospace, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0d1520; --surface: #152033; --ink: #e8eef6; --muted: #8b9bb0;
+    --teal: #3db8c9; --teal-soft: rgba(61,184,201,.16); --amber: #d4894a;
+    --line: rgba(232,238,246,.12); --line-soft: rgba(232,238,246,.07);
+    --shadow: 0 1px 2px rgba(0,0,0,.25), 0 8px 24px rgba(0,0,0,.35);
+    --glow-teal: rgba(61,184,201,.12); --glow-amber: rgba(212,137,74,.10);
+  }
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  min-height: 100vh; color: var(--ink); font-family: var(--font);
+  background:
+    radial-gradient(ellipse 60% 45% at 88% -5%, var(--glow-teal), transparent 60%),
+    radial-gradient(ellipse 55% 45% at 0% 105%, var(--glow-amber), transparent 55%),
+    var(--bg);
+  -webkit-font-smoothing: antialiased;
+}
+a { color: var(--teal); }
+::selection { background: var(--teal-soft); }
+
+.wrap { max-width: 960px; margin: 0 auto; padding: 32px 22px 96px; }
+.back { display: inline-flex; align-items: center; gap: 7px; text-decoration: none; color: var(--muted); font: 500 13px var(--mono); }
+.back:hover { color: var(--teal); }
+.doc {
+  background: var(--surface); border: 1px solid var(--line); border-radius: 18px;
+  padding: 34px 36px 44px; margin-top: 18px; box-shadow: var(--shadow);
+}
+.grp { font: 500 11px var(--mono); letter-spacing: .16em; text-transform: uppercase; color: var(--teal); }
+.doc h1 { font-size: 30px; letter-spacing: -.02em; margin: 8px 0 6px; }
+.summary { color: var(--muted); font-size: 15px; line-height: 1.55; }
+.actions { display: flex; flex-wrap: wrap; gap: 8px; margin: 18px 0 4px; }
+.actions a, .actions button {
+  text-decoration: none; font: 500 12px var(--mono); padding: 9px 14px; border-radius: 10px;
+  border: 1px solid var(--line); color: var(--ink); background: transparent; transition: all .15s;
+  cursor: pointer;
+}
+.actions a.primary { background: var(--teal); border-color: var(--teal); color: #fff; }
+.actions a:hover, .actions button:hover { border-color: var(--teal); color: var(--teal); }
+.actions a.primary:hover { color: #fff; opacity: .9; }
+.lab-toast {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+  background: var(--ink); color: #fff; font: 500 12px var(--mono);
+  padding: 10px 16px; border-radius: 999px; z-index: 1100;
+  opacity: 0; pointer-events: none; transition: opacity .2s;
+}
+.lab-toast.on { opacity: 1; }
+.topics { display: flex; flex-wrap: wrap; gap: 7px; margin: 14px 0 4px; }
+.topics span { font: 500 11px var(--mono); color: var(--amber); }
+hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
+.body h1 { font-size: 24px; margin: 1.2em 0 .5em; }
+.body h2 { font-size: 19px; margin: 1.4em 0 .5em; letter-spacing: -.01em; }
+.body h3 { font-size: 16px; margin: 1.2em 0 .4em; }
+.body p, .body li { color: #2b3a4d; line-height: 1.65; font-size: 15px; }
+.body ul { padding-left: 1.25em; margin: .5em 0 1em; }
+.body li { margin: .25em 0; }
+.body a { color: var(--teal); text-decoration: none; border-bottom: 1px solid var(--teal-soft); }
+.body a:hover { border-color: var(--teal); }
+.body code { font-family: var(--mono); font-size: 13px; color: var(--amber); background: rgba(194,112,58,.09); padding: 1px 5px; border-radius: 5px; }
+.body pre { background: #0f1720; border-radius: 12px; padding: 16px; overflow: auto; margin: 14px 0; }
+.body pre code { color: #dbe6f2; background: none; padding: 0; font-size: 12.5px; line-height: 1.6; }
+.body blockquote { border-left: 3px solid var(--teal); background: var(--teal-soft); padding: 10px 16px; margin: 14px 0; border-radius: 0 8px 8px 0; color: var(--ink); }
+.body table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 13.5px; }
+.body th, .body td { border: 1px solid var(--line); padding: 9px 11px; text-align: left; color: #2b3a4d; }
+.body th { color: var(--teal); font: 500 11px var(--mono); letter-spacing: .05em; text-transform: uppercase; background: var(--teal-soft); }
+.body figure { margin: 20px 0; }
+.body figure img { width: 100%; height: auto; display: block; border-radius: 12px; border: 1px solid var(--line); background: #e6edf5; }
+.body figcaption { font: 500 12px var(--mono); color: var(--muted); margin-top: 8px; text-align: center; }
+.body p img { max-width: 100%; height: auto; border-radius: 8px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="../index.html">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m15 18-6-6 6-6"/></svg>
+    AI Lab
+  </a>
+  <article class="doc">
+    <h1>Semantic search — hybrid · tiered · fallback</h1>
+    <p class="summary">Tìm theo nghĩa: ghép inverted-index (Elastic) + semantic index (embedding). Dự án học RAG của tôi.</p>
+    <div class="actions"><a href="semantic-search.md" id="labDownload" download="semantic-search.md">Download</a>
+<button type="button" id="labShare">Share</button>
+<a href="https://github.com/hoanganh25991/semantic-search">GitHub — semantic-search ↗</a></div>
+    <div class="topics"><span>#semantic-search</span><span>#hybrid</span><span>#inverted-index</span><span>#elasticsearch</span><span>#ms-marco</span></div>
+    <hr class="sep" />
+    <div class="body"><h1>Semantic search — hybrid · tiered · fallback</h1>
+<blockquote>Tìm theo <em>nghĩa</em> chứ không chỉ khớp từ khóa, bằng cách ghép hai loại chỉ mục: inverted index (Elastic, theo từ khóa) và semantic index (embedding, theo nghĩa). Đây là dự án mình làm để học sâu về RAG.</blockquote>
+<blockquote>Repo: <a href="https://github.com/hoanganh25991/semantic-search">github.com/hoanganh25991/semantic-search</a> — Hybrid / Tiered / Fallback trên dataset MS MARCO.</blockquote>
+<h2>Vì sao quan trọng</h2>
+<p>Tìm bằng từ khóa (BM25 / TF-IDF trong Elastic) thì nhanh và rẻ, nhưng "xe hơi" với "ô tô" là hai từ khác nhau nên dễ trượt. Tìm bằng <a href="embedding.html">embedding</a> thì hiểu nghĩa, nhưng nặng và tốn khi chạy trên mọi câu. Semantic search thực dụng là <strong>kết hợp</strong> cả hai: lấy cái nhanh để lọc, cái hiểu nghĩa để xếp hạng. Đây cũng chính là bước "retrieve" chất lượng cao cho <a href="rag.html">RAG</a>.</p>
+<h2>Hai loại chỉ mục</h2>
+<table><tbody>
+<tr><th>Chỉ mục</th><th>Cơ chế</th><th>Mạnh</th><th>Yếu</th></tr>
+<tr><td><strong>Inverted index</strong> (Elastic)</td><td>map từ khóa → tài liệu</td><td>nhanh, rẻ, chính xác với truy vấn rõ</td><td>không hiểu từ đồng nghĩa</td></tr>
+<tr><td><strong>Semantic index</strong> (embedding)</td><td>vector trong <a href="vector-database.html">vector database</a></td><td>hiểu nghĩa, bắt được diễn đạt khác</td><td>nặng hơn, cần model</td></tr>
+</tbody></table>
+<h2>Ba chiến lược tìm kiếm</h2>
+<ul>
+<li><strong>Hybrid:</strong> dùng inverted index <em>lọc nhanh</em> ứng viên theo từ khóa, rồi semantic index <em>rerank</em> theo nghĩa. Tối ưu chi phí; điểm yếu là nếu keyword trượt thì thiếu ứng viên để rerank.</li>
+<li><strong>Tiered:</strong> <em>phân loại câu hỏi</em> dễ/khó trước → câu dễ đi keyword, câu khó mới đi semantic. Cân bằng tốc độ và độ chính xác (cùng ý tưởng với <a href="sentiment-routing.html">complexity router</a>).</li>
+<li><strong>Fallback:</strong> semantic trước để tối đa độ chính xác, nếu kết quả kém thì <em>rớt về</em> keyword. Chính xác cao nhưng đắt hơn.</li>
+</ul>
+<h2>Dataset &amp; đánh giá</h2>
+<ul>
+<li><strong>MS MARCO</strong> — câu hỏi thật của người dùng + đoạn văn liên quan, dùng làm testbed.</li>
+<li><strong>Metrics:</strong> <em>Precision@k</em> (tỉ lệ kết quả đúng trong top-k), <em>MRR@10</em> (vị trí kết quả đúng đầu tiên) — quan trọng khi câu trả lời đầu tiên là thứ đáng giá nhất.</li>
+<li><strong>Query classification:</strong> phân loại câu hỏi <em>simple</em> (<code>description</code>) vs <em>complex</em> (<code>entity</code>, <code>location</code>, <code>numeric</code>…) bằng một classifier fine-tune trên embedding — đầu vào cho chiến lược Tiered.</li>
+</ul>
+<h2>Kiến trúc lưu trữ</h2>
+<ul>
+<li><strong>MongoDB</strong> — lưu tài liệu thô.</li>
+<li><strong>Elasticsearch</strong> — lưu dữ liệu đã index (cả inverted lẫn kNN) để tìm nhanh.</li>
+</ul>
+<h2>Hình minh họa</h2>
+<figure><img src="assets/protonx/embed-then-query.jpg" alt="Embed câu hỏi rồi đi truy vấn — bước retrieve của semantic search" loading="lazy" /><figcaption>Embed câu hỏi rồi đi truy vấn — bước retrieve của semantic search</figcaption></figure>
+<figure><img src="assets/protonx/rag-advanced.jpg" alt="Retrieval nâng cao: kết hợp lọc + rerank để tăng độ chính xác" loading="lazy" /><figcaption>Retrieval nâng cao: kết hợp lọc + rerank để tăng độ chính xác</figcaption></figure>
+<h2>Trong pipeline</h2>
+<pre><code>
+câu hỏi → (phân loại dễ/khó) → { keyword: inverted index | nghĩa: semantic index }
+
+        → hợp nhất / rerank → top-k → RAG
+
+</code></pre>
+<p>Semantic search đứng trên <a href="embedding.html">embedding.md</a> + <a href="vector-database.html">vector-database.md</a>, và là bước retrieve cho <a href="rag.html">rag.md</a>.</p>
+<h2>Tham khảo</h2>
+<ul>
+<li>Repo: <a href="https://github.com/hoanganh25991/semantic-search">hoanganh25991/semantic-search</a></li>
+<li><a href="https://microsoft.github.io/msmarco/">MS MARCO</a> · <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/knn-search.html">Elasticsearch kNN</a></li>
+</ul>
+<h2>Related</h2>
+<ul>
+<li><a href="vector-database.html">vector-database.md</a>, <a href="rag.html">rag.md</a>, <a href="embedding.html">embedding.md</a></li>
+<li><a href="sentiment-routing.html">05-demo-text.md</a> — complexity router (cùng ý "tiered")</li>
+</ul></div>
+  </article>
+</div>
+<script>
+(function () {
+  const title = "Semantic search — hybrid · tiered · fallback";
+  function toast(msg) {
+    let el = document.querySelector(".lab-toast");
+    if (!el) { el = document.createElement("div"); el.className = "lab-toast"; document.body.appendChild(el); }
+    el.textContent = msg; el.classList.add("on");
+    clearTimeout(el._t); el._t = setTimeout(() => el.classList.remove("on"), 1600);
+  }
+  document.getElementById("labShare")?.addEventListener("click", async () => {
+    const url = location.href;
+    try { if (navigator.share) { await navigator.share({ title, url }); return; } }
+    catch (err) { if (err && err.name === "AbortError") return; }
+    try { await navigator.clipboard.writeText(url); toast("Copied link"); }
+    catch { window.prompt("Copy link:", url); }
+  });
+})();
+</script>
+</body>
+</html>

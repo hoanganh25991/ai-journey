@@ -14,15 +14,25 @@
   --teal: #0f8a9b; --teal-soft: rgba(15,138,155,.12); --amber: #c2703a;
   --line: rgba(20,32,46,.12); --line-soft: rgba(20,32,46,.07);
   --shadow: 0 1px 2px rgba(20,32,46,.05), 0 8px 24px rgba(20,32,46,.06);
+  --glow-teal: rgba(15,138,155,.10); --glow-amber: rgba(194,112,58,.08);
   --font: Sora, system-ui, sans-serif; --serif: "Instrument Serif", Georgia, serif;
   --mono: "IBM Plex Mono", ui-monospace, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0d1520; --surface: #152033; --ink: #e8eef6; --muted: #8b9bb0;
+    --teal: #3db8c9; --teal-soft: rgba(61,184,201,.16); --amber: #d4894a;
+    --line: rgba(232,238,246,.12); --line-soft: rgba(232,238,246,.07);
+    --shadow: 0 1px 2px rgba(0,0,0,.25), 0 8px 24px rgba(0,0,0,.35);
+    --glow-teal: rgba(61,184,201,.12); --glow-amber: rgba(212,137,74,.10);
+  }
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
   min-height: 100vh; color: var(--ink); font-family: var(--font);
   background:
-    radial-gradient(ellipse 60% 45% at 88% -5%, rgba(15,138,155,.10), transparent 60%),
-    radial-gradient(ellipse 55% 45% at 0% 105%, rgba(194,112,58,.08), transparent 55%),
+    radial-gradient(ellipse 60% 45% at 88% -5%, var(--glow-teal), transparent 60%),
+    radial-gradient(ellipse 55% 45% at 0% 105%, var(--glow-amber), transparent 55%),
     var(--bg);
   -webkit-font-smoothing: antialiased;
 }

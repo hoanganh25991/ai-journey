@@ -3,6 +3,22 @@
   "description": "Source of truth for AI Lab listing. Notes are primary; slides/demo optional.",
   "notes": [
     {
+      "id": "roadmap",
+      "file": "notes/roadmap.md",
+      "title": "Roadmap · hành trình AI Lab",
+      "summary": "Bản đồ vui 5 màn: ABC chữ → build/train → RAG → demo → agent. Bắt đầu từ đây.",
+      "topics": [
+        "roadmap",
+        "learning-path",
+        "map"
+      ],
+      "group": "map",
+      "num": "00",
+      "date": "START",
+      "slides": null,
+      "demo": null
+    },
+    {
       "id": "tokenize",
       "file": "notes/tokenize.md",
       "title": "Tokenize",
@@ -59,6 +75,116 @@
       "demo": "demos/softmax/app/index.html"
     },
     {
+      "id": "classification",
+      "file": "notes/classification.md",
+      "title": "Classification",
+      "summary": "Dán nhãn cho đầu vào — bài build model phổ biến nhất, ngay sau softmax.",
+      "topics": [
+        "classification",
+        "cross-entropy",
+        "multi-class",
+        "F1"
+      ],
+      "group": "concept",
+      "slides": null,
+      "demo": null
+    },
+    {
+      "id": "pytorch-training",
+      "file": "notes/pytorch-training.md",
+      "title": "Train với PyTorch",
+      "summary": "Vòng lặp epoch: forward → loss → backward → step. Tự tay train một classifier.",
+      "topics": [
+        "pytorch",
+        "training",
+        "epoch",
+        "optimizer",
+        "backprop"
+      ],
+      "group": "concept",
+      "slides": null,
+      "demo": null
+    },
+    {
+      "id": "tensorflow-training",
+      "file": "notes/tensorflow-training.md",
+      "title": "Train với TensorFlow / Keras",
+      "summary": "compile + fit: khai báo model rồi để Keras lo vòng lặp epoch.",
+      "topics": [
+        "tensorflow",
+        "keras",
+        "training",
+        "epoch"
+      ],
+      "group": "concept",
+      "slides": null,
+      "demo": null
+    },
+    {
+      "id": "huggingface",
+      "file": "notes/huggingface.md",
+      "title": "Hugging Face — dataset + Space",
+      "summary": "GitHub của AI: Datasets + Models pretrained + Spaces → ra model dùng được.",
+      "topics": [
+        "huggingface",
+        "datasets",
+        "spaces",
+        "transformers",
+        "fine-tune"
+      ],
+      "group": "concept",
+      "slides": null,
+      "demo": null
+    },
+    {
+      "id": "kaggle",
+      "file": "notes/kaggle.md",
+      "title": "Kaggle — dataset + GPU notebook",
+      "summary": "Kho dataset + notebook có GPU/TPU miễn phí + competition để cọ xát.",
+      "topics": [
+        "kaggle",
+        "dataset",
+        "gpu",
+        "notebook",
+        "competition"
+      ],
+      "group": "concept",
+      "slides": null,
+      "demo": null
+    },
+    {
+      "id": "transformer",
+      "file": "notes/transformer.md",
+      "title": "Transformer — kiến trúc lõi của LLM",
+      "summary": "Xếp chồng khối attention + positional encoding; encoder (BERT) / decoder (GPT).",
+      "topics": [
+        "transformer",
+        "attention",
+        "encoder",
+        "decoder",
+        "positional-encoding"
+      ],
+      "group": "concept",
+      "slides": null,
+      "demo": null
+    },
+    {
+      "id": "sentence-transformers",
+      "file": "notes/sentence-transformers.md",
+      "title": "sentence-transformers — embedding câu",
+      "summary": "Câu → vector trong vài dòng; classification & similarity siêu nhanh, siêu đơn giản.",
+      "topics": [
+        "sentence-transformers",
+        "sbert",
+        "embedding",
+        "similarity",
+        "classification"
+      ],
+      "group": "concept",
+      "slides": null,
+      "demo": null
+    },
+    {
       "id": "rag",
       "file": "notes/rag.md",
       "title": "RAG",
@@ -71,6 +197,44 @@
       "group": "concept",
       "slides": "slides/rag/index.html",
       "demo": "demos/rag/app/index.html"
+    },
+    {
+      "id": "vector-database",
+      "file": "notes/vector-database.md",
+      "title": "Vector database",
+      "summary": "Kho lưu vector + tìm top-k hàng xóm gần nhất (ANN). Hạ tầng cho RAG & semantic search.",
+      "topics": [
+        "vector-db",
+        "ANN",
+        "faiss",
+        "elasticsearch",
+        "pgvector"
+      ],
+      "group": "concept",
+      "slides": null,
+      "demo": null
+    },
+    {
+      "id": "semantic-search",
+      "file": "notes/semantic-search.md",
+      "title": "Semantic search — hybrid · tiered · fallback",
+      "summary": "Tìm theo nghĩa: ghép inverted-index (Elastic) + semantic index (embedding). Dự án học RAG của tôi.",
+      "topics": [
+        "semantic-search",
+        "hybrid",
+        "inverted-index",
+        "elasticsearch",
+        "ms-marco"
+      ],
+      "group": "project",
+      "slides": null,
+      "demo": null,
+      "extra_links": [
+        {
+          "label": "GitHub — semantic-search",
+          "href": "https://github.com/hoanganh25991/semantic-search"
+        }
+      ]
     },
     {
       "id": "mcp",
