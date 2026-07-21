@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "description": "Source of truth for AI Lab listing. Notes are primary; slides and demos optional.",
+  "description": "Source of truth for AI Journey listing. Notes are primary; slides and demos optional.",
   "notes": [
     {
       "id": "tokenize",

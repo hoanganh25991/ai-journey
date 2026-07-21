@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>AI Lab Journey · AI Lab</title>
+<title>AI Journey · AI Journey</title>
 <script>
 (function () {
   try {
-    var KEY = "ai-lab-theme";
+    var KEY = "ai-journey-theme";
     var pref = localStorage.getItem(KEY) || "system";
     if (pref !== "light" && pref !== "dark" && pref !== "system") pref = "system";
     var dark = pref === "dark" || (pref === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches);
@@ -22,7 +22,7 @@
 <script>
 (function () {
   try {
-    var KEY = "ai-lab-lang";
+    var KEY = "ai-journey-lang";
     var pref = localStorage.getItem(KEY) || "system";
     if (pref !== "en" && pref !== "vi" && pref !== "system") pref = "system";
     var nav = String(navigator.language || "en").toLowerCase();
@@ -218,7 +218,7 @@ html.i18n-busy .lang-bar { opacity: .7; pointer-events: none; }
   <div class="nav-row">
     <a class="back" href="./index.html">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m15 18-6-6 6-6"/></svg>
-      AI Lab · notes
+      AI Journey · notes
     </a>
     <div class="prefs" translate="no">
 <div class="theme-bar" role="group" aria-label="Theme" translate="no">
@@ -234,7 +234,7 @@ html.i18n-busy .lang-bar { opacity: .7; pointer-events: none; }
 </div>
 <script>
 (function () {
-  var KEY = "ai-lab-theme";
+  var KEY = "ai-journey-theme";
   function resolve(pref) {
     if (pref === "light" || pref === "dark") return pref;
     return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
@@ -267,8 +267,8 @@ html.i18n-busy .lang-bar { opacity: .7; pointer-events: none; }
 
 <script>
 (function () {
-  var KEY = "ai-lab-lang";
-  var CACHE_KEY = "ai-lab-i18n-en-vi";
+  var KEY = "ai-journey-lang";
+  var CACHE_KEY = "ai-journey-i18n-en-vi";
   var SKIP = /^(SCRIPT|STYLE|NOSCRIPT|CODE|PRE|KBD|SAMP|TEXTAREA|SVG|MATH)$/;
   var cache = {};
   try { cache = JSON.parse(localStorage.getItem(CACHE_KEY) || "{}") || {}; } catch (e) { cache = {}; }
@@ -400,7 +400,7 @@ html.i18n-busy .lang-bar { opacity: .7; pointer-events: none; }
   <div data-lab-stack></div>
   <header class="hero">
     <div class="kicker">Map · five stages</div>
-    <h1>AI Lab Journey</h1>
+    <h1>AI Journey</h1>
     <p class="lead">One vivid map — five stages. Pick a mood or a node, open notes from that stage, then hop next.</p>
     <p class="chain">read text → label it → find documents → try demos → let agents work</p>
   </header>

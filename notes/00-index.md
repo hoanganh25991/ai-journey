@@ -1,4 +1,4 @@
-# AI Lab — Notes Index
+# AI Journey — Notes Index
 
 > **Source of truth = English notes.** Each topic is a `.md` file with a short explanation. Build the static hub in `docs/` and open or serve from there. Vietnamese is **not** stored in separate files — the built site translates EN → VI at runtime in the browser.
 

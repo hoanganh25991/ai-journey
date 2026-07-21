@@ -8,7 +8,7 @@
 <style>
 /* Shared Neural Ledger deck — fixed 1920×1080 */
 :root {
-  --stage-bg: #dde5ee;
+  --stage-bg: #f4f7fb;
   --slide-bg: #f4f7fb;
   --ink: #16202e;
   --muted: #5a6b80;
@@ -52,7 +52,6 @@ html, body {
     linear-gradient(var(--line) 1px, transparent 1px),
     linear-gradient(90deg, var(--line) 1px, transparent 1px);
   background-size: 80px 80px;
-  mask-image: radial-gradient(ellipse 75% 70% at 50% 40%, black, transparent);
 }
 .pad { position: absolute; inset: 72px 96px; }
 .topbar {
@@ -189,9 +188,9 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
   <div class="pad">
     <div class="topbar reveal"><span>Concept · knowledge-base</span><span class="pill">sibling repo</span></div>
     <h1 class="reveal" style="margin-top:88px;">Personal <em>Knowledge-base</em></h1>
-    <p class="lead reveal" style="margin-top:28px;">Videos · docs · GitHub. Private repo <span style="font-family:var(--font-mono);color:var(--cyan)">~/work-station/personal-kb</span> — FTS search + Graph RAG. Hub AI Lab only searches notes.</p>
+    <p class="lead reveal" style="margin-top:28px;">Videos · docs · GitHub. Private repo <span style="font-family:var(--font-mono);color:var(--cyan)">~/work-station/personal-kb</span> — FTS search + Graph RAG. Hub AI Journey only searches notes.</p>
     <div class="flow-row reveal">
-      <span class="step">notes (ai-lab)</span><span class="arr">≠</span>
+      <span class="step">notes (ai-journey)</span><span class="arr">≠</span>
       <span class="step">videos / docs / stars</span><span class="arr">→</span>
       <span class="step">knowledge-base</span>
     </div>
@@ -205,7 +204,7 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
     <div class="topbar reveal"><span>Why</span><span class="pill">split</span></div>
     <h2 class="reveal">Two search layers</h2>
     <div class="cols-2">
-      <div class="card cyan reveal"><div class="tag">ai-lab hub</div><h3>Notes only</h3><p><code>docs/index.html</code> — search notes · open document · slides/demo when available.</p></div>
+      <div class="card cyan reveal"><div class="tag">ai-journey hub</div><h3>Notes only</h3><p><code>docs/index.html</code> — search notes · open document · slides/demo when available.</p></div>
       <div class="card accent reveal"><div class="tag">knowledge-base</div><h3>Memory machine</h3><p>YouTube · docs · GitHub stars · Graph RAG — runs native UI on :8765.</p></div>
     </div>
   </div>
@@ -330,7 +329,7 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
     }
 
     async function share() {
-      const title = lab.title || document.title || "AI Lab";
+      const title = lab.title || document.title || "AI Journey";
       const url = location.href;
       try {
         if (navigator.share) {

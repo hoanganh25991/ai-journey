@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate missing AI Lab slide decks (Neural Ledger style) + SVG diagrams."""
+"""Generate missing AI Journey slide decks (Neural Ledger style) + SVG diagrams."""
 from __future__ import annotations
 
 from pathlib import Path
@@ -79,7 +79,7 @@ def title_slide(
     lead: str,
     steps: list[str],
     n: str = "01",
-    foot: str = "AI Lab",
+    foot: str = "AI Journey",
 ) -> str:
     flow = "".join(
         f'<span class="step">{s}</span>'
@@ -120,7 +120,7 @@ def img_slide(label: str, src: str, alt: str, n: str, caption: str = "") -> str:
     <img class="shot shot-lg reveal" src="{src}" alt="{alt}" />
     {cap}""",
         n,
-        "AI Lab · illustration",
+        "AI Journey · illustration",
     )
 
 
@@ -191,7 +191,7 @@ def close_slide(
     cta_href: str | None = None,
     cta_label: str = "Open →",
     n: str = "end",
-    foot: str = "AI Lab",
+    foot: str = "AI Journey",
 ) -> str:
     cta = (
         f'<a class="app-cta reveal" href="{cta_href}">{cta_label}</a>'

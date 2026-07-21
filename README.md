@@ -1,4 +1,4 @@
-# AI Lab
+# AI Journey
 
 **Notes are the source of truth.** One build pipeline writes everything into `docs/` — open / serve only from there. Search is the hub focus. Theme and language default to **System**; Vietnamese is applied at runtime via a web translate API (no parallel files).
 
@@ -43,10 +43,10 @@ Rebuilds the hub, note pages, journey, copies demos/slides, and `search-index.js
 
 ```bash
 ./scripts/review.sh
-# → http://127.0.0.1:8080/ai-lab/docs/index.html
+# → http://127.0.0.1:8080/ai-journey/docs/index.html
 ```
 
-Options: `--port 9000`, `--no-build`, `--no-open`, `--base /ai-lab`.
+Options: `--port 9000`, `--no-build`, `--no-open`, `--base /ai-journey`.
 
 Quick open without sub-path:
 

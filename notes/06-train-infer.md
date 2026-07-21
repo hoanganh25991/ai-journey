@@ -27,7 +27,7 @@ This mental model prevents two mistakes: (1) expecting a static HTML demo to “
 
 - **Fine-tune is still training:** loading a Hub model and updating weights on your labels is a *train* phase (lighter, but still GPU + labels). Calling the resulting API is *inference*. “Chat with the model” without updating weights is inference.
 
-- **In AI Lab:** browser demos show *inference* only. Heavy training in protonx / Kaggle / Colab notebooks → export → embed in UI ([train-gpu.md](./train-gpu.md)). If a demo button feels “smart,” it is running a forward pass on weights you already trained elsewhere.
+- **In AI Journey:** browser demos show *inference* only. Heavy training in protonx / Kaggle / Colab notebooks → export → embed in UI ([train-gpu.md](./train-gpu.md)). If a demo button feels “smart,” it is running a forward pass on weights you already trained elsewhere.
 
 ## Worked example (intuition)
 

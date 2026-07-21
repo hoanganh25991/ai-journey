@@ -8,7 +8,7 @@
 <style>
 /* Shared Neural Ledger deck — fixed 1920×1080 */
 :root {
-  --stage-bg: #dde5ee;
+  --stage-bg: #f4f7fb;
   --slide-bg: #f4f7fb;
   --ink: #16202e;
   --muted: #5a6b80;
@@ -52,7 +52,6 @@ html, body {
     linear-gradient(var(--line) 1px, transparent 1px),
     linear-gradient(90deg, var(--line) 1px, transparent 1px);
   background-size: 80px 80px;
-  mask-image: radial-gradient(ellipse 75% 70% at 50% 40%, black, transparent);
 }
 .pad { position: absolute; inset: 72px 96px; }
 .topbar {
@@ -223,7 +222,7 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
       <span class="step">checkpoint</span>
     </div>
   </div>
-  <div class="foot"><span>01</span><span>AI Lab</span></div>
+  <div class="foot"><span>01</span><span>AI Journey</span></div>
 </section>
 
 <section class="slide">
@@ -464,7 +463,7 @@ model.fit(x_train, y_train, epochs=EPOCHS,
     <p class="lead reveal" style="margin-top:28px;">notes/tensorflow-training.md — compare with pytorch-training for the imperative twin.</p>
     <a class="app-cta reveal" href="../../notes/tensorflow-training.html">Open note →</a>
   </div>
-  <div class="foot"><span>end</span><span>AI Lab</span></div>
+  <div class="foot"><span>end</span><span>AI Journey</span></div>
 </section>
 
 </main>
@@ -535,7 +534,7 @@ model.fit(x_train, y_train, epochs=EPOCHS,
     }
 
     async function share() {
-      const title = lab.title || document.title || "AI Lab";
+      const title = lab.title || document.title || "AI Journey";
       const url = location.href;
       try {
         if (navigator.share) {

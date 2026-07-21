@@ -56,7 +56,7 @@
     }
 
     async function share() {
-      const title = lab.title || document.title || "AI Lab";
+      const title = lab.title || document.title || "AI Journey";
       const url = location.href;
       try {
         if (navigator.share) {

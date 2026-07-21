@@ -8,7 +8,7 @@
 <style>
 /* Shared Neural Ledger deck — fixed 1920×1080 */
 :root {
-  --stage-bg: #dde5ee;
+  --stage-bg: #f4f7fb;
   --slide-bg: #f4f7fb;
   --ink: #16202e;
   --muted: #5a6b80;
@@ -52,7 +52,6 @@ html, body {
     linear-gradient(var(--line) 1px, transparent 1px),
     linear-gradient(90deg, var(--line) 1px, transparent 1px);
   background-size: 80px 80px;
-  mask-image: radial-gradient(ellipse 75% 70% at 50% 40%, black, transparent);
 }
 .pad { position: absolute; inset: 72px 96px; }
 .topbar {
@@ -217,7 +216,7 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
     <p class="lead reveal" style="margin-top:28px;">Many attention blocks in parallel — the frame behind BERT, GPT, and nearly every modern language model.</p>
     <div class="flow-row reveal"><span class="step">tokens</span><span class="arr">→</span><span class="step">embed + position</span><span class="arr">→</span><span class="step">N × blocks</span><span class="arr">→</span><span class="step">head</span></div>
   </div>
-  <div class="foot"><span>01</span><span>AI Lab</span></div>
+  <div class="foot"><span>01</span><span>AI Journey</span></div>
 </section>
 
 <section class="slide">
@@ -290,7 +289,7 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
     <img class="shot shot-md reveal" src="../../notes/assets/protonx/self-attention.jpg" alt="Self-attention in an encoder block" />
     <p class="lead reveal" style="margin-top:12px;font-size:20px;">Every token queries keys in the same sequence — Q · K · V mixing in one layer.</p>
   </div>
-  <div class="foot"><span>06</span><span>AI Lab · illustration</span></div>
+  <div class="foot"><span>06</span><span>AI Journey · illustration</span></div>
 </section>
 
 <section class="slide">
@@ -301,7 +300,7 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
     <img class="shot shot-md reveal" src="../../notes/assets/protonx/cross-attention.jpg" alt="Cross-attention decoder to encoder" />
     <p class="lead reveal" style="margin-top:12px;font-size:20px;">Decoder queries attend to encoder keys/values — target looking at source.</p>
   </div>
-  <div class="foot"><span>07</span><span>AI Lab · illustration</span></div>
+  <div class="foot"><span>07</span><span>AI Journey · illustration</span></div>
 </section>
 
 <section class="slide">
@@ -312,7 +311,7 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
     <img class="shot shot-md reveal" src="../../notes/assets/protonx/attention-after-softmax.jpg" alt="Attention weights after softmax" />
     <p class="lead reveal" style="margin-top:12px;font-size:20px;">Softmax turns raw scores into a distribution over tokens — then values are mixed.</p>
   </div>
-  <div class="foot"><span>08</span><span>AI Lab · illustration</span></div>
+  <div class="foot"><span>08</span><span>AI Journey · illustration</span></div>
 </section>
 
 <section class="slide">
@@ -323,7 +322,7 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
     <img class="shot shot-md reveal" src="../assets/transformer-stack.png" alt="Transformer stack of layers" />
     <p class="lead reveal" style="margin-top:12px;font-size:20px;">Depth builds abstraction: early layers syntax, later layers discourse and intent.</p>
   </div>
-  <div class="foot"><span>09</span><span>AI Lab · illustration</span></div>
+  <div class="foot"><span>09</span><span>AI Journey · illustration</span></div>
 </section>
 
 <section class="slide">
@@ -334,7 +333,7 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
     <img class="shot shot-md reveal" src="../assets/transformer-block-detail.png" alt="Encoder block internals" />
     <p class="lead reveal" style="margin-top:12px;font-size:20px;">Multi-head attention → residual → LayerNorm → FFN → residual — repeat N times.</p>
   </div>
-  <div class="foot"><span>10</span><span>AI Lab · illustration</span></div>
+  <div class="foot"><span>10</span><span>AI Journey · illustration</span></div>
 </section>
 
 
@@ -346,7 +345,7 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
     <img class="shot shot-md reveal" src="../assets/encoder-vs-decoder.png" alt="Encoder bidirectional vs decoder causal" />
     <p class="lead reveal" style="margin-top:12px;font-size:20px;">Full-sequence self-attention for understanding · left-to-right masking for generation.</p>
   </div>
-  <div class="foot"><span>11</span><span>AI Lab · illustration</span></div>
+  <div class="foot"><span>11</span><span>AI Journey · illustration</span></div>
 </section>
 
 <section class="slide">
@@ -472,7 +471,7 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
     <p class="lead reveal" style="margin-top:28px;">notes/transformer.md — related demo: demos/attention.</p>
     <a class="app-cta reveal" href="../../notes/transformer.html">Open note →</a>
   </div>
-  <div class="foot"><span>end</span><span>AI Lab</span></div>
+  <div class="foot"><span>end</span><span>AI Journey</span></div>
 </section>
 
 </main>
@@ -543,7 +542,7 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
     }
 
     async function share() {
-      const title = lab.title || document.title || "AI Lab";
+      const title = lab.title || document.title || "AI Journey";
       const url = location.href;
       try {
         if (navigator.share) {

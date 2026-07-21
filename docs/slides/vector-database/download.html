@@ -8,7 +8,7 @@
 <style>
 /* Shared Neural Ledger deck — fixed 1920×1080 */
 :root {
-  --stage-bg: #dde5ee;
+  --stage-bg: #f4f7fb;
   --slide-bg: #f4f7fb;
   --ink: #16202e;
   --muted: #5a6b80;
@@ -52,7 +52,6 @@ html, body {
     linear-gradient(var(--line) 1px, transparent 1px),
     linear-gradient(90deg, var(--line) 1px, transparent 1px);
   background-size: 80px 80px;
-  mask-image: radial-gradient(ellipse 75% 70% at 50% 40%, black, transparent);
 }
 .pad { position: absolute; inset: 72px 96px; }
 .topbar {
@@ -217,7 +216,7 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
     <p class="lead reveal" style="margin-top:28px;">Store millions of embeddings and answer “which vectors are closest?” in milliseconds — the shelf under RAG.</p>
     <div class="flow-row reveal"><span class="step">chunk</span><span class="arr">→</span><span class="step">embed</span><span class="arr">→</span><span class="step">index</span><span class="arr">→</span><span class="step">ANN top-k</span></div>
   </div>
-  <div class="foot"><span>01</span><span>AI Lab</span></div>
+  <div class="foot"><span>01</span><span>AI Journey</span></div>
 </section>
 
 <section class="slide">
@@ -290,7 +289,7 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
     <img class="shot shot-md reveal" src="../assets/vector-db-ann.png" alt="ANN nearest-neighbor search" />
     <p class="lead reveal" style="margin-top:12px;font-size:20px;">Graph / cluster indexes skip most of the space — close enough, fast enough.</p>
   </div>
-  <div class="foot"><span>06</span><span>AI Lab · illustration</span></div>
+  <div class="foot"><span>06</span><span>AI Journey · illustration</span></div>
 </section>
 
 <section class="slide">
@@ -301,7 +300,7 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
     <img class="shot shot-md reveal" src="../assets/vector-db-flow.svg" alt="Vector DB index and query flow" />
     <p class="lead reveal" style="margin-top:12px;font-size:20px;">Offline: documents → vectors. Online: question → top-k neighbors.</p>
   </div>
-  <div class="foot"><span>07</span><span>AI Lab · illustration</span></div>
+  <div class="foot"><span>07</span><span>AI Journey · illustration</span></div>
 </section>
 
 <section class="slide">
@@ -312,7 +311,7 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
     <img class="shot shot-md reveal" src="../assets/vector-retrieve-detail.png" alt="Retrieve detail pipeline" />
     <p class="lead reveal" style="margin-top:12px;font-size:20px;">Each passage is a searchable point; retrieval returns the passages, not just IDs.</p>
   </div>
-  <div class="foot"><span>08</span><span>AI Lab · illustration</span></div>
+  <div class="foot"><span>08</span><span>AI Journey · illustration</span></div>
 </section>
 
 <section class="slide">
@@ -323,7 +322,7 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
     <img class="shot shot-md reveal" src="../../notes/assets/protonx/embed-then-query.jpg" alt="Embed question then query store" />
     <p class="lead reveal" style="margin-top:12px;font-size:20px;">Same encoder as the index — the retrieve step shared by RAG and semantic search.</p>
   </div>
-  <div class="foot"><span>09</span><span>AI Lab · illustration</span></div>
+  <div class="foot"><span>09</span><span>AI Journey · illustration</span></div>
 </section>
 
 <section class="slide">
@@ -334,7 +333,7 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
     <img class="shot shot-md reveal" src="../../notes/assets/protonx/cosine-vs-dot.jpg" alt="Cosine versus dot product" />
     <p class="lead reveal" style="margin-top:12px;font-size:20px;">Match the metric the embedder was trained with — or normalize, then use dot.</p>
   </div>
-  <div class="foot"><span>10</span><span>AI Lab · illustration</span></div>
+  <div class="foot"><span>10</span><span>AI Journey · illustration</span></div>
 </section>
 
 
@@ -346,7 +345,7 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
     <img class="shot shot-md reveal" src="../assets/vector-db-choices.png" alt="Vector database product choices" />
     <p class="lead reveal" style="margin-top:12px;font-size:20px;">Speed research · hybrid + CRUD · relational home — pick the shelf that matches ops.</p>
   </div>
-  <div class="foot"><span>11</span><span>AI Lab · illustration</span></div>
+  <div class="foot"><span>11</span><span>AI Journey · illustration</span></div>
 </section>
 
 <section class="slide">
@@ -472,7 +471,7 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
     <p class="lead reveal" style="margin-top:28px;">notes/vector-database.md — related demo: demos/rag.</p>
     <a class="app-cta reveal" href="../../notes/vector-database.html">Open note →</a>
   </div>
-  <div class="foot"><span>end</span><span>AI Lab</span></div>
+  <div class="foot"><span>end</span><span>AI Journey</span></div>
 </section>
 
 </main>
@@ -543,7 +542,7 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
     }
 
     async function share() {
-      const title = lab.title || document.title || "AI Lab";
+      const title = lab.title || document.title || "AI Journey";
       const url = location.href;
       try {
         if (navigator.share) {

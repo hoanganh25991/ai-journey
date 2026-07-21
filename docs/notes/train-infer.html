@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Train → Inference · AI Lab</title>
+<title>Train → Inference · AI Journey</title>
 <script>
 (function () {
   try {
-    var KEY = "ai-lab-theme";
+    var KEY = "ai-journey-theme";
     var pref = localStorage.getItem(KEY) || "system";
     if (pref !== "light" && pref !== "dark" && pref !== "system") pref = "system";
     var dark = pref === "dark" || (pref === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches);
@@ -22,7 +22,7 @@
 <script>
 (function () {
   try {
-    var KEY = "ai-lab-lang";
+    var KEY = "ai-journey-lang";
     var pref = localStorage.getItem(KEY) || "system";
     if (pref !== "en" && pref !== "vi" && pref !== "system") pref = "system";
     var nav = String(navigator.language || "en").toLowerCase();
@@ -148,7 +148,7 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
   <div class="nav-row">
     <a class="back" href="../index.html">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m15 18-6-6 6-6"/></svg>
-      AI Lab
+      AI Journey
     </a>
     <div class="prefs" translate="no">
 <div class="theme-bar" role="group" aria-label="Theme" translate="no">
@@ -164,7 +164,7 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 </div>
 <script>
 (function () {
-  var KEY = "ai-lab-theme";
+  var KEY = "ai-journey-theme";
   function resolve(pref) {
     if (pref === "light" || pref === "dark") return pref;
     return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
@@ -197,8 +197,8 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 
 <script>
 (function () {
-  var KEY = "ai-lab-lang";
-  var CACHE_KEY = "ai-lab-i18n-en-vi";
+  var KEY = "ai-journey-lang";
+  var CACHE_KEY = "ai-journey-i18n-en-vi";
   var SKIP = /^(SCRIPT|STYLE|NOSCRIPT|CODE|PRE|KBD|SAMP|TEXTAREA|SVG|MATH)$/;
   var cache = {};
   try { cache = JSON.parse(localStorage.getItem(CACHE_KEY) || "{}") || {}; } catch (e) { cache = {}; }
@@ -365,7 +365,7 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 <li><strong>Fine-tune is still training:</strong> loading a Hub model and updating weights on your labels is a <em>train</em> phase (lighter, but still GPU + labels). Calling the resulting API is <em>inference</em>. “Chat with the model” without updating weights is inference.</li>
 </ul>
 <ul>
-<li><strong>In AI Lab:</strong> browser demos show <em>inference</em> only. Heavy training in protonx / Kaggle / Colab notebooks → export → embed in UI (<a href="train-gpu.html">train-gpu.md</a>). If a demo button feels “smart,” it is running a forward pass on weights you already trained elsewhere.</li>
+<li><strong>In AI Journey:</strong> browser demos show <em>inference</em> only. Heavy training in protonx / Kaggle / Colab notebooks → export → embed in UI (<a href="train-gpu.html">train-gpu.md</a>). If a demo button feels “smart,” it is running a forward pass on weights you already trained elsewhere.</li>
 </ul>
 <h2>Worked example (intuition)</h2>
 <p><strong>Car-nn (sensors → drive action):</strong></p>

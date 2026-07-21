@@ -8,7 +8,7 @@
 <style>
 /* Shared Neural Ledger deck — fixed 1920×1080 */
 :root {
-  --stage-bg: #dde5ee;
+  --stage-bg: #f4f7fb;
   --slide-bg: #f4f7fb;
   --ink: #16202e;
   --muted: #5a6b80;
@@ -52,7 +52,6 @@ html, body {
     linear-gradient(var(--line) 1px, transparent 1px),
     linear-gradient(90deg, var(--line) 1px, transparent 1px);
   background-size: 80px 80px;
-  mask-image: radial-gradient(ellipse 75% 70% at 50% 40%, black, transparent);
 }
 .pad { position: absolute; inset: 72px 96px; }
 .topbar {
@@ -215,7 +214,7 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
     <p class="lead reveal" style="margin-top:28px;">2023 → present: first LLM exposure → foundations → RAG → agents / automation — anchored to real milestones. Academic roots (Transformer 2017…) underpin concepts; <em>this</em> journey starts in 2023.</p>
     <div class="flow-row reveal"><span class="step">2023 basics</span><span class="arr">→</span><span class="step">2024 coding agents</span><span class="arr">→</span><span class="step">MCP hinge</span><span class="arr">→</span><span class="step">2026 automation</span></div>
   </div>
-  <div class="foot"><span>01</span><span>AI Lab</span></div>
+  <div class="foot"><span>01</span><span>AI Journey</span></div>
 </section>
 
 <section class="slide">
@@ -471,7 +470,7 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
     <p class="lead reveal" style="margin-top:28px;">notes/10-ai-timeline.md — stages, MCP hinge, decision guide. → agents · model-notes · Hermess.</p>
     <a class="app-cta reveal" href="../../notes/ai-timeline.html">Open note →</a>
   </div>
-  <div class="foot"><span>18</span><span>AI Lab</span></div>
+  <div class="foot"><span>18</span><span>AI Journey</span></div>
 </section>
 
 </main>
@@ -542,7 +541,7 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
     }
 
     async function share() {
-      const title = lab.title || document.title || "AI Lab";
+      const title = lab.title || document.title || "AI Journey";
       const url = location.href;
       try {
         if (navigator.share) {

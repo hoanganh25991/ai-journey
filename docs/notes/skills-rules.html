@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Skills · Rules · Commands · AI Lab</title>
+<title>Skills · Rules · Commands · AI Journey</title>
 <script>
 (function () {
   try {
-    var KEY = "ai-lab-theme";
+    var KEY = "ai-journey-theme";
     var pref = localStorage.getItem(KEY) || "system";
     if (pref !== "light" && pref !== "dark" && pref !== "system") pref = "system";
     var dark = pref === "dark" || (pref === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches);
@@ -22,7 +22,7 @@
 <script>
 (function () {
   try {
-    var KEY = "ai-lab-lang";
+    var KEY = "ai-journey-lang";
     var pref = localStorage.getItem(KEY) || "system";
     if (pref !== "en" && pref !== "vi" && pref !== "system") pref = "system";
     var nav = String(navigator.language || "en").toLowerCase();
@@ -148,7 +148,7 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
   <div class="nav-row">
     <a class="back" href="../index.html">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m15 18-6-6 6-6"/></svg>
-      AI Lab
+      AI Journey
     </a>
     <div class="prefs" translate="no">
 <div class="theme-bar" role="group" aria-label="Theme" translate="no">
@@ -164,7 +164,7 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 </div>
 <script>
 (function () {
-  var KEY = "ai-lab-theme";
+  var KEY = "ai-journey-theme";
   function resolve(pref) {
     if (pref === "light" || pref === "dark") return pref;
     return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
@@ -197,8 +197,8 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 
 <script>
 (function () {
-  var KEY = "ai-lab-lang";
-  var CACHE_KEY = "ai-lab-i18n-en-vi";
+  var KEY = "ai-journey-lang";
+  var CACHE_KEY = "ai-journey-i18n-en-vi";
   var SKIP = /^(SCRIPT|STYLE|NOSCRIPT|CODE|PRE|KBD|SAMP|TEXTAREA|SVG|MATH)$/;
   var cache = {};
   try { cache = JSON.parse(localStorage.getItem(CACHE_KEY) || "{}") || {}; } catch (e) { cache = {}; }
@@ -387,7 +387,7 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 <li><strong>Skill interactions:</strong> overlapping triggers (two PDF skills, two “search the web” skills) cause hesitation or contradictory steps. Strong models often ask to clarify — design descriptions to reduce collisions; document precedence in the skill body when overlap is intentional.</li>
 </ul>
 <h2>Worked example (intuition)</h2>
-<p>You want every AI Lab change to stay notes-first.</p>
+<p>You want every AI Journey change to stay notes-first.</p>
 <p>1. <strong>Rule (glob):</strong> on <code>notes/**</code>, a short always-ish rule: “edit English notes under <code>notes/</code>; keep section structure; don’t invent slide assets.” Cost: only when note files are touched — not on every unrelated TypeScript edit.</p>
 <p>2. <strong>Skill trigger:</strong> you ask “build a new deck about vector DBs.” The agent sees <code>frontend-slides</code> description (“create stunning HTML presentations…”) → reads that <code>SKILL.md</code> → follows the slide workflow. A vague skill named <code>docs</code> with description “helps with documentation” might <em>also</em> fire and fight over format — tighten descriptions.</p>
 <p>3. <strong>Command:</strong> you type <code>/graphify .</code> when you want a fresh knowledge graph — explicit, no reliance on the model guessing. Commands are ideal for expensive or rare workflows you don’t want auto-triggered.</p>
@@ -429,7 +429,7 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 <tr><td>Sharing across Cursor / Claude / Pi</td><td>Single tree in <code>~/.agents/skills</code></td><td>Copy-paste into client-specific skill folders</td></tr>
 </tbody></table>
 <h2>Case study</h2>
-<p>Keep AI Lab notes English and structured without pasting the same instructions every chat.</p>
+<p>Keep AI Journey notes English and structured without pasting the same instructions every chat.</p>
 <ul>
 <li><strong>Inputs:</strong> project glob rule on <code>notes/**</code>; global skills in <code>~/.agents/skills</code> (<code>frontend-slides</code>, <code>graphify</code>, …); occasional <code>/graphify .</code> command.</li>
 <li><strong>Steps:</strong> author a short glob rule (section order, English-only, don’t invent slide assets) → tighten skill descriptions with positive + negative triggers → ask “build a vector-DB deck” and confirm only <code>frontend-slides</code> loads → use <code>/graphify .</code> when you want an intentional graph rebuild.</li>

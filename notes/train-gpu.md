@@ -33,7 +33,7 @@ Lab demos illustrate inference only. To get a model you can plug in, you must tr
 
   Gate before GPU: one CPU batch that prints shapes and a finite loss. Gate before export: val metrics stable for 2–3 epochs and a confusion matrix that isn’t “always majority class.”
 
-- **In AI Lab:** browser demos show the flow; they do **not** replace GPU training. Train in a notebook / Kaggle / Colab, then embed weights in UI demos (car-nn, sentiment…). The demo’s job is latency and UX; the notebook’s job is learning.
+- **In AI Journey:** browser demos show the flow; they do **not** replace GPU training. Train in a notebook / Kaggle / Colab, then embed weights in UI demos (car-nn, sentiment…). The demo’s job is latency and UX; the notebook’s job is learning.
 
 - **What “good enough” means:** for teaching demos, stable val accuracy and a sane confusion matrix beat chasing 0.1% leaderboard gains. Ship the **best validation** checkpoint, not the last epoch. Log seed, dataset revision, and learning rate so you can reproduce the export.
 

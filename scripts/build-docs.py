@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build the AI Lab docs site.
+"""Build the AI Journey docs site.
 
 Source of truth (3 siblings):
     notes/*.md + notes/catalog.json   knowledge (primary)
@@ -395,7 +395,7 @@ html.i18n-busy .lang-bar { opacity: .7; pointer-events: none; }
 THEME_BOOT = r"""<script>
 (function () {
   try {
-    var KEY = "ai-lab-theme";
+    var KEY = "ai-journey-theme";
     var pref = localStorage.getItem(KEY) || "system";
     if (pref !== "light" && pref !== "dark" && pref !== "system") pref = "system";
     var dark = pref === "dark" || (pref === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches);
@@ -411,7 +411,7 @@ THEME_BOOT = r"""<script>
 LANG_BOOT = r"""<script>
 (function () {
   try {
-    var KEY = "ai-lab-lang";
+    var KEY = "ai-journey-lang";
     var pref = localStorage.getItem(KEY) || "system";
     if (pref !== "en" && pref !== "vi" && pref !== "system") pref = "system";
     var nav = String(navigator.language || "en").toLowerCase();
@@ -435,7 +435,7 @@ THEME_CTRL = r"""
 </div>
 <script>
 (function () {
-  var KEY = "ai-lab-theme";
+  var KEY = "ai-journey-theme";
   function resolve(pref) {
     if (pref === "light" || pref === "dark") return pref;
     return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
@@ -476,8 +476,8 @@ LANG_CTRL = r"""
 </div>
 <script>
 (function () {
-  var KEY = "ai-lab-lang";
-  var CACHE_KEY = "ai-lab-i18n-en-vi";
+  var KEY = "ai-journey-lang";
+  var CACHE_KEY = "ai-journey-i18n-en-vi";
   var SKIP = /^(SCRIPT|STYLE|NOSCRIPT|CODE|PRE|KBD|SAMP|TEXTAREA|SVG|MATH)$/;
   var cache = {};
   try { cache = JSON.parse(localStorage.getItem(CACHE_KEY) || "{}") || {}; } catch (e) { cache = {}; }
@@ -626,7 +626,7 @@ HUB_HTML = r"""<!DOCTYPE html>
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>AI Lab</title>
+<title>AI Journey</title>
 @@THEME_BOOT@@
 @@LANG_BOOT@@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -726,9 +726,9 @@ footer { margin-top: 40px; font: 12px var(--mono); color: var(--muted); }
 <body>
 <div class="shell">
   <div class="top-row">
-    <a class="brand" href="./index.html" aria-label="AI Lab">
-      <img class="logo-light" src="notes/assets/ai-lab-logo-light.png" alt="AI Lab" width="420" height="120" />
-      <img class="logo-dark" src="notes/assets/ai-lab-logo-dark.png" alt="AI Lab" width="420" height="120" />
+    <a class="brand" href="./index.html" aria-label="AI Journey">
+      <img class="logo-light" src="notes/assets/ai-journey-logo-light.png" alt="AI Journey" width="420" height="120" />
+      <img class="logo-dark" src="notes/assets/ai-journey-logo-dark.png" alt="AI Journey" width="420" height="120" />
     </a>
     @@THEME_CTRL@@
   </div>
@@ -744,7 +744,7 @@ footer { margin-top: 40px; font: 12px var(--mono); color: var(--muted); }
   <a class="journey-cta" href="journey.html">
     <div>
       <div class="j-kicker">Journey · not a note</div>
-      <div class="j-title">5 stages · a fun AI Lab map</div>
+      <div class="j-title">5 stages · a fun AI Journey map</div>
       <div class="j-sub">ABC of text → build/train → RAG → demo → agent. Pick a path by mood.</div>
     </div>
     <span class="j-go">Open journey →</span>
@@ -968,7 +968,7 @@ NOTE_HTML = r"""<!DOCTYPE html>
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>@@TITLE@@ · AI Lab</title>
+<title>@@TITLE@@ · AI Journey</title>
 @@THEME_BOOT@@
 @@LANG_BOOT@@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -1032,7 +1032,7 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
   <div class="nav-row">
     <a class="back" href="../index.html">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m15 18-6-6 6-6"/></svg>
-      AI Lab
+      AI Journey
     </a>
     @@THEME_CTRL@@
   </div>
@@ -1131,7 +1131,7 @@ JOURNEY_HTML = r"""<!DOCTYPE html>
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>@@TITLE@@ · AI Lab</title>
+<title>@@TITLE@@ · AI Journey</title>
 @@THEME_BOOT@@
 @@LANG_BOOT@@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -1265,7 +1265,7 @@ JOURNEY_HTML = r"""<!DOCTYPE html>
   <div class="nav-row">
     <a class="back" href="./index.html">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m15 18-6-6 6-6"/></svg>
-      AI Lab · notes
+      AI Journey · notes
     </a>
     @@THEME_CTRL@@
   </div>
@@ -1400,7 +1400,7 @@ def render_journey(payload: dict) -> str:
             f"</section>"
         )
 
-    title = spec.get("title") or "AI Lab Journey"
+    title = spec.get("title") or "AI Journey"
     return _inject_theme(
         JOURNEY_HTML.replace("@@TITLE@@", esc(title))
         .replace("@@LEAD@@", esc(spec.get("lead") or ""))
@@ -1471,7 +1471,7 @@ def _make_standalone_slide(index_html: Path, shared: Path) -> str:
     lab_snip = ""
     if "window.LAB" not in html:
         title = re.search(r"<title>([^<]+)</title>", html)
-        t = title.group(1).strip() if title else "AI Lab Slides"
+        t = title.group(1).strip() if title else "AI Journey Slides"
         lab_snip = f"<script>window.LAB={json.dumps({'title': t, 'download': 'download.html', 'downloadName': index_html.parent.name + '-slides.html'})};</script>\n"
 
     inline = f"{lab_snip}<script>\n{js}\n</script>\n"

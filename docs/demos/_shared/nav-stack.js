@@ -1,7 +1,7 @@
-/* AI Lab nav stack — breadcrumb + scroll restore across home → note → slides → demos */
+/* AI Journey nav stack — breadcrumb + scroll restore across home → note → slides → demos */
 (function (global) {
-  const SCROLL_KEY = "ai-lab-scroll";
-  const STACK_KEY = "ai-lab-stack";
+  const SCROLL_KEY = "ai-journey-scroll";
+  const STACK_KEY = "ai-journey-stack";
 
   function pageKey(href) {
     try {

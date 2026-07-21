@@ -8,7 +8,7 @@
 <style>
 /* Shared Neural Ledger deck — fixed 1920×1080 */
 :root {
-  --stage-bg: #dde5ee;
+  --stage-bg: #f4f7fb;
   --slide-bg: #f4f7fb;
   --ink: #16202e;
   --muted: #5a6b80;
@@ -52,7 +52,6 @@ html, body {
     linear-gradient(var(--line) 1px, transparent 1px),
     linear-gradient(90deg, var(--line) 1px, transparent 1px);
   background-size: 80px 80px;
-  mask-image: radial-gradient(ellipse 75% 70% at 50% 40%, black, transparent);
 }
 .pad { position: absolute; inset: 72px 96px; }
 .topbar {
@@ -217,7 +216,7 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
     <p class="lead reveal" style="margin-top:28px;">Search by meaning, not just keywords — combine inverted index speed with embedding rank.</p>
     <div class="flow-row reveal"><span class="step">question</span><span class="arr">→</span><span class="step">keyword / semantic</span><span class="arr">→</span><span class="step">merge</span><span class="arr">→</span><span class="step">top-k</span></div>
   </div>
-  <div class="foot"><span>01</span><span>AI Lab</span></div>
+  <div class="foot"><span>01</span><span>AI Journey</span></div>
 </section>
 
 <section class="slide">
@@ -308,7 +307,7 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
     <img class="shot shot-md reveal" src="../assets/semantic-hybrid.svg" alt="Hybrid inverted and semantic indexes" />
     <p class="lead reveal" style="margin-top:12px;font-size:20px;">Two shelves: exact terms and meaning coordinates — query both, merge results.</p>
   </div>
-  <div class="foot"><span>07</span><span>AI Lab · illustration</span></div>
+  <div class="foot"><span>07</span><span>AI Journey · illustration</span></div>
 </section>
 
 <section class="slide">
@@ -319,7 +318,7 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
     <img class="shot shot-md reveal" src="../assets/semantic-strategies.png" alt="Three semantic search strategies" />
     <p class="lead reveal" style="margin-top:12px;font-size:20px;">Same corpus, different control planes for cost and accuracy.</p>
   </div>
-  <div class="foot"><span>08</span><span>AI Lab · illustration</span></div>
+  <div class="foot"><span>08</span><span>AI Journey · illustration</span></div>
 </section>
 
 <section class="slide">
@@ -330,7 +329,7 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
     <img class="shot shot-md reveal" src="../assets/search-twoway.svg" alt="Two-way keyword and semantic search" />
     <p class="lead reveal" style="margin-top:12px;font-size:20px;">Keyword path and meaning path run in parallel or sequence — then merge / rerank.</p>
   </div>
-  <div class="foot"><span>09</span><span>AI Lab · illustration</span></div>
+  <div class="foot"><span>09</span><span>AI Journey · illustration</span></div>
 </section>
 
 <section class="slide">
@@ -341,7 +340,7 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
     <img class="shot shot-md reveal" src="../../notes/assets/protonx/embed-then-query.jpg" alt="Embed then query for retrieve" />
     <p class="lead reveal" style="margin-top:12px;font-size:20px;">The semantic half of hybrid search — same retrieve step RAG depends on.</p>
   </div>
-  <div class="foot"><span>10</span><span>AI Lab · illustration</span></div>
+  <div class="foot"><span>10</span><span>AI Journey · illustration</span></div>
 </section>
 
 <section class="slide">
@@ -352,7 +351,7 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
     <img class="shot shot-md reveal" src="../../notes/assets/protonx/rag-advanced.jpg" alt="Advanced retrieval filter and rerank" />
     <p class="lead reveal" style="margin-top:12px;font-size:20px;">Advanced retrieval stacks filtering and reranking for higher accuracy.</p>
   </div>
-  <div class="foot"><span>11</span><span>AI Lab · illustration</span></div>
+  <div class="foot"><span>11</span><span>AI Journey · illustration</span></div>
 </section>
 
 
@@ -475,7 +474,7 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
     <p class="lead reveal" style="margin-top:28px;">notes/semantic-search.md — github.com/hoanganh25991/semantic-search</p>
     <a class="app-cta reveal" href="../../notes/semantic-search.html">Open note →</a>
   </div>
-  <div class="foot"><span>end</span><span>AI Lab</span></div>
+  <div class="foot"><span>end</span><span>AI Journey</span></div>
 </section>
 
 </main>
@@ -546,7 +545,7 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
     }
 
     async function share() {
-      const title = lab.title || document.title || "AI Lab";
+      const title = lab.title || document.title || "AI Journey";
       const url = location.href;
       try {
         if (navigator.share) {

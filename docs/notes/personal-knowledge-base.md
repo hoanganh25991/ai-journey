@@ -1,7 +1,7 @@
 # Personal Knowledge-Base — Videos · Docs · GitHub
 
 > **Separate repo:** [`~/work-station/personal-kb`](../../personal-kb)  
-> Will attach to ai-lab as a **git submodule** (not added yet — run tooling from the sibling path).
+> Will attach to ai-journey as a **git submodule** (not added yet — run tooling from the sibling path).
 
 The hub `index.html` searches **notes** only. Personal Knowledge-base searches videos / GitHub / work-station files plus **Graph RAG** (linked keywords).
 

@@ -3,12 +3,12 @@
 
 GitHub Pages publishes this project repo at a sub-path:
 
-    https://<user>.github.io/ai-lab/            → repo root
-    https://<user>.github.io/ai-lab/docs/…      → the built site
+    https://<user>.github.io/ai-journey/            → repo root
+    https://<user>.github.io/ai-journey/docs/…      → the built site
 
 This server mirrors that: it mounts the repo root under a base path (default
-`/ai-lab`) so every *relative* link / image resolves the same locally as in
-production. Opening `/` or `/ai-lab/` redirects to the hub.
+`/ai-journey`) so every *relative* link / image resolves the same locally as in
+production. Opening `/` or `/ai-journey/` redirects to the hub.
 
 Usage:
 
@@ -16,7 +16,7 @@ Usage:
     python3 scripts/serve-docs.py --port 9000
     python3 scripts/serve-docs.py --no-build      # serve existing docs/
     python3 scripts/serve-docs.py --no-open
-    python3 scripts/serve-docs.py --base /ai-lab  # change sub-path
+    python3 scripts/serve-docs.py --base /ai-journey  # change sub-path
 """
 
 from __future__ import annotations
@@ -51,7 +51,7 @@ def make_handler(base: str):
             return f"{base}/docs/index.html"
 
         def translate_path(self, path: str) -> str:
-            # strip the base sub-path so /ai-lab/docs/x → /docs/x under ROOT
+            # strip the base sub-path so /ai-journey/docs/x → /docs/x under ROOT
             clean = path.split("?", 1)[0].split("#", 1)[0]
             if clean == base or clean.startswith(base + "/"):
                 path = path[len(base):] or "/"
@@ -79,9 +79,9 @@ class Server(socketserver.ThreadingTCPServer):
 
 
 def main() -> None:
-    ap = argparse.ArgumentParser(description="Build + review the AI Lab docs under a GitHub-Pages-like sub-path.")
+    ap = argparse.ArgumentParser(description="Build + review the AI Journey docs under a GitHub-Pages-like sub-path.")
     ap.add_argument("--port", type=int, default=8080)
-    ap.add_argument("--base", default="/ai-lab", help="sub-path to mount under (default /ai-lab)")
+    ap.add_argument("--base", default="/ai-journey", help="sub-path to mount under (default /ai-journey)")
     ap.add_argument("--no-build", dest="build", action="store_false", help="skip rebuild, serve existing docs/")
     ap.add_argument("--no-open", dest="open", action="store_false", help="don't auto-open the browser")
     args = ap.parse_args()

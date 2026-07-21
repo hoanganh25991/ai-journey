@@ -8,7 +8,7 @@
 <style>
 /* Shared Neural Ledger deck — fixed 1920×1080 */
 :root {
-  --stage-bg: #dde5ee;
+  --stage-bg: #f4f7fb;
   --slide-bg: #f4f7fb;
   --ink: #16202e;
   --muted: #5a6b80;
@@ -52,7 +52,6 @@ html, body {
     linear-gradient(var(--line) 1px, transparent 1px),
     linear-gradient(90deg, var(--line) 1px, transparent 1px);
   background-size: 80px 80px;
-  mask-image: radial-gradient(ellipse 75% 70% at 50% 40%, black, transparent);
 }
 .pad { position: absolute; inset: 72px 96px; }
 .topbar {
@@ -215,7 +214,7 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
     <p class="lead reveal" style="margin-top:28px;">Every model lives two lives: learning (heavy, once) and using (light, forever). Years at school vs answering one exam question.</p>
     <div class="flow-row reveal"><span class="step">data</span><span class="arr">→</span><span class="step">train</span><span class="arr">→</span><span class="step">checkpoint</span><span class="arr">→</span><span class="step">load</span><span class="arr">→</span><span class="step">infer</span></div>
   </div>
-  <div class="foot"><span>01</span><span>AI Lab</span></div>
+  <div class="foot"><span>01</span><span>AI Journey</span></div>
 </section>
 
 <section class="slide">
@@ -435,7 +434,7 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
     <div class="topbar reveal"><span>Pipeline</span><span class="pill">end-to-end</span></div>
     <h2 class="reveal">From data to prediction</h2>
     <div class="flow-row reveal" style="margin-top:48px;"><span class="step">data</span><span class="arr">→</span><span class="step">train (GPU epochs)</span><span class="arr">→</span><span class="step">checkpoint</span><span class="arr">→</span><span class="step">load</span><span class="arr">→</span><span class="step">infer</span></div>
-    <p class="lead reveal" style="margin-top:40px;">In AI Lab: protonx / Kaggle / Colab notebooks → export → embed in UI. See train-gpu.md for the stack.</p>
+    <p class="lead reveal" style="margin-top:40px;">In AI Journey: protonx / Kaggle / Colab notebooks → export → embed in UI. See train-gpu.md for the stack.</p>
   </div>
   <div class="foot"><span>16</span><span>pipeline</span></div>
 </section>
@@ -462,7 +461,7 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
     <p class="lead reveal" style="margin-top:28px;">notes/06-train-infer.md — then train-gpu for the practical stack.</p>
     <a class="app-cta reveal" href="../../notes/train-infer.html">Open note →</a>
   </div>
-  <div class="foot"><span>18</span><span>AI Lab</span></div>
+  <div class="foot"><span>18</span><span>AI Journey</span></div>
 </section>
 
 </main>
@@ -533,7 +532,7 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
     }
 
     async function share() {
-      const title = lab.title || document.title || "AI Lab";
+      const title = lab.title || document.title || "AI Journey";
       const url = location.href;
       try {
         if (navigator.share) {

@@ -47,7 +47,7 @@ Without this split, agents either ignore your conventions or burn context repeat
 
 ## Worked example (intuition)
 
-You want every AI Lab change to stay notes-first.
+You want every AI Journey change to stay notes-first.
 
 1. **Rule (glob):** on `notes/**`, a short always-ish rule: “edit English notes under `notes/`; keep section structure; don’t invent slide assets.” Cost: only when note files are touched — not on every unrelated TypeScript edit.
 2. **Skill trigger:** you ask “build a new deck about vector DBs.” The agent sees `frontend-slides` description (“create stunning HTML presentations…”) → reads that `SKILL.md` → follows the slide workflow. A vague skill named `docs` with description “helps with documentation” might *also* fire and fight over format — tighten descriptions.
@@ -96,7 +96,7 @@ You want every AI Lab change to stay notes-first.
 
 ## Case study
 
-Keep AI Lab notes English and structured without pasting the same instructions every chat.
+Keep AI Journey notes English and structured without pasting the same instructions every chat.
 
 - **Inputs:** project glob rule on `notes/**`; global skills in `~/.agents/skills` (`frontend-slides`, `graphify`, …); occasional `/graphify .` command.
 - **Steps:** author a short glob rule (section order, English-only, don’t invent slide assets) → tighten skill descriptions with positive + negative triggers → ask “build a vector-DB deck” and confirm only `frontend-slides` loads → use `/graphify .` when you want an intentional graph rebuild.

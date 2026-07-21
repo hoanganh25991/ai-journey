@@ -8,7 +8,7 @@
 <style>
 /* Shared Neural Ledger deck — fixed 1920×1080 */
 :root {
-  --stage-bg: #dde5ee;
+  --stage-bg: #f4f7fb;
   --slide-bg: #f4f7fb;
   --ink: #16202e;
   --muted: #5a6b80;
@@ -52,7 +52,6 @@ html, body {
     linear-gradient(var(--line) 1px, transparent 1px),
     linear-gradient(90deg, var(--line) 1px, transparent 1px);
   background-size: 80px 80px;
-  mask-image: radial-gradient(ellipse 75% 70% at 50% 40%, black, transparent);
 }
 .pad { position: absolute; inset: 72px 96px; }
 .topbar {
@@ -215,7 +214,7 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
     <p class="lead reveal" style="margin-top:28px;">Harness ≠ model. Same brain, different kitchens — tools, mise en place, and service rhythm change the meal.</p>
     <div class="flow-row reveal"><span class="step">model</span><span class="arr">→</span><span class="step">harness</span><span class="arr">→</span><span class="step">tools / MCP</span><span class="arr">→</span><span class="step">agent loop</span></div>
   </div>
-  <div class="foot"><span>01</span><span>AI Lab</span></div>
+  <div class="foot"><span>01</span><span>AI Journey</span></div>
 </section>
 
 <section class="slide">
@@ -479,7 +478,7 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
     <p class="lead reveal" style="margin-top:28px;">notes/07-agents.md — axes, Auto vs fixed, decision guide.</p>
     <a class="app-cta reveal" href="../../notes/agents.html">Open note →</a>
   </div>
-  <div class="foot"><span>18</span><span>AI Lab</span></div>
+  <div class="foot"><span>18</span><span>AI Journey</span></div>
 </section>
 
 </main>
@@ -550,7 +549,7 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
     }
 
     async function share() {
-      const title = lab.title || document.title || "AI Lab";
+      const title = lab.title || document.title || "AI Journey";
       const url = location.href;
       try {
         if (navigator.share) {
