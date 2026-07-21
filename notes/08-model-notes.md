@@ -1,10 +1,12 @@
 # Model field notes
 
-> **Model ≠ harness.** Notes on *the models themselves* (via OpenRouter + Cursor). Compare harnesses at [07-agents.md](./07-agents.md).
+> **Model ≠ harness.** Notes on *the models themselves* (via OpenRouter + Cursor). Compare harnesses at [07-agents.md](./07-agents.md). Everyday metaphor: engines (models) vs cars (harnesses) — swap engines carefully; don’t blame the engine for a missing steering wheel.
 
 ## Why it matters
 
 Harness choice shapes daily workflow; model choice shapes reasoning quality, speed, and cost. These are personal field notes — not benchmarks — on what each model feels like in real coding work.
+
+Use them as a starting map: greenfield vs debug, image needs, and budget change the winner.
 
 ## Key ideas
 
@@ -28,6 +30,31 @@ Harness choice shapes daily workflow; model choice shapes reasoning quality, spe
   - *Needs images (screenshots, diagrams):* avoid DeepSeek (no image input).
   - *Speed + low cost:* Grok 4.5 / Composer Fast.
   - *Clarifying constraints and skill design:* Anthropic strongest at asking back.
+
+- **Re-check prices:** OpenRouter and vendor pages move — treat $ numbers as snapshots, not eternal truth.
+
+## Worked example (intuition)
+
+Task A: “Scaffold a new notes-first docs site.” → Grok or Anthropic (greenfield + structure).  
+Task B: “This failing pytest, repo already large.” → DeepSeek V4 or Grok (local reasoning + cheap iteration).  
+Task C: “Read this screenshot of the broken UI.” → not DeepSeek; pick a vision-capable model.
+
+## Common pitfalls
+
+- **One model for every job** — waste money or quality.
+- **Trusting marketing TPS without task fit** — fast wrong answers still waste time.
+- **Ignoring image capability** — vision tasks silently degrade.
+- **Confusing Auto routing with a single model’s skill**.
+
+## Illustrations
+
+![Model spectrum: fast/cheap ↔ deep/slow](assets/model-notes/model-notes-spectrum.png)
+
+## Slides & demo
+
+| | Link |
+|--|------|
+| Slides | [slides/model-notes](../slides/model-notes/index.html) |
 
 ## References
 

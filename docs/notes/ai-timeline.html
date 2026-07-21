@@ -327,6 +327,7 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 </script>
 
   </div>
+  <div data-lab-stack></div>
   <article class="doc">
     <h1>AI timeline — my journey</h1>
     <p class="summary">Journey from 2023 (first LLM exposure) → embedding… → agents → automation, anchored to real AI milestones.</p>
@@ -343,44 +344,46 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 <h2>Key ideas</h2>
 <ul>
 <li><strong>Stage 1 — 2023: first LLM exposure and foundations</strong></li>
+<li>Late 2022 <strong>ChatGPT (GPT-3.5)</strong> made AI mainstream → 2023 I started learning seriously.</li>
+<li><strong>March 2023</strong> — GPT-4 · Claude 1 · Llama 1; RAG exploded.</li>
+<li>Learned in order: <a href="tokenize.html">tokenize.md</a> → <a href="embedding.html">embedding.md</a> → <a href="attention.html">attention.md</a> → <a href="softmax.html">softmax.md</a>.</li>
+<li>Then retrieval: <a href="rag.html">rag.md</a>; train → infer: <a href="train-infer.html">06-train-infer.md</a>, <a href="train-gpu.html">train-gpu.md</a>.</li>
+<li><strong>July 2023</strong> — Claude 2 · Llama 2. <strong>December 2023</strong> — Gemini 1.0 · Mixtral (MoE open).</li>
 </ul>
-<p>  - Late 2022 <strong>ChatGPT (GPT-3.5)</strong> made AI mainstream → 2023 I started learning seriously.</p>
-<p>  - <strong>March 2023</strong> — GPT-4 · Claude 1 · Llama 1; RAG exploded.</p>
-<p>  - Learned in order: <a href="tokenize.html">tokenize.md</a> → <a href="embedding.html">embedding.md</a> → <a href="attention.html">attention.md</a> → <a href="softmax.html">softmax.md</a>.</p>
-<p>  - Then retrieval: <a href="rag.html">rag.md</a>; train → infer: <a href="train-infer.html">06-train-infer.md</a>, <a href="train-gpu.html">train-gpu.md</a>.</p>
-<p>  - <strong>July 2023</strong> — Claude 2 · Llama 2. <strong>December 2023</strong> — Gemini 1.0 · Mixtral (MoE open).</p>
 <ul>
 <li><strong>Stage 2 — 2024: stronger models + early coding agents</strong></li>
+<li>Gemini 1.5 (1M context) · Claude 3 → 3.5 Sonnet (coding jump — Cursor took off) · GPT-4o · Llama 3.1 405B · o1 · DeepSeek V3.</li>
+<li>Shift from <em>reading concepts</em> to <em>using AI to code for real</em>.</li>
 </ul>
-<p>  - Gemini 1.5 (1M context) · Claude 3 → 3.5 Sonnet (coding jump — Cursor took off) · GPT-4o · Llama 3.1 405B · o1 · DeepSeek V3.</p>
-<p>  - Shift from <em>reading concepts</em> to <em>using AI to code for real</em>.</p>
 <ul>
 <li><strong>Stage 3 — late 2024–2025: agent era (MCP · skills · harness)</strong></li>
+<li>Lab pivots to <strong>MCP · skills · harness</strong>.</li>
+<li><strong>November 25, 2024</strong> — <strong>MCP</strong> (Anthropic): standard agent ↔ tool connection. Hinge. See <a href="mcp.html">mcp.md</a>.</li>
+<li><strong>January 2025</strong> — DeepSeek R1 — <a href="model-notes.html">08-model-notes.md</a>.</li>
+<li><strong>February 2025</strong> — Claude 3.7 Sonnet · GPT-4.5. <strong>March 2025</strong> — MCP Streamable HTTP + OAuth · Gemini 2.5 Pro.</li>
+<li><strong>May 2025</strong> — Claude 4 → <strong>Claude Code</strong> as strong harness: <a href="agents.html">07-agents.md</a>.</li>
+<li><strong>August 2025</strong> — GPT-5. <strong>November 2025</strong> — Claude Opus 4.5 · <strong>AGENTS.md</strong> standard · skills/rules: <a href="skills-rules.html">skills-rules.md</a>.</li>
 </ul>
-<p>  - Lab pivots to <strong>MCP · skills · harness</strong>.</p>
-<p>  - <strong>November 25, 2024</strong> — <strong>MCP</strong> (Anthropic): standard agent ↔ tool connection. Hinge. See <a href="mcp.html">mcp.md</a>.</p>
-<p>  - <strong>January 2025</strong> — DeepSeek R1 — <a href="model-notes.html">08-model-notes.md</a>.</p>
-<p>  - <strong>February 2025</strong> — Claude 3.7 Sonnet · GPT-4.5. <strong>March 2025</strong> — MCP Streamable HTTP + OAuth · Gemini 2.5 Pro.</p>
-<p>  - <strong>May 2025</strong> — Claude 4 → <strong>Claude Code</strong> as strong harness: <a href="agents.html">07-agents.md</a>.</p>
-<p>  - <strong>August 2025</strong> — GPT-5. <strong>November 2025</strong> — Claude Opus 4.5 · <strong>AGENTS.md</strong> standard · skills/rules: <a href="skills-rules.html">skills-rules.md</a>.</p>
 <ul>
 <li><strong>Stage 4 — 2026: model wave + automation (now)</strong></li>
+<li>Focus: <a href="model-notes.html">08-model-notes.md</a>, <a href="agent-automation.html">09-agent-automation.md</a>.</li>
+<li><strong>April 2026</strong> — GPT-5.5. <strong>May 28, 2026</strong> — Claude Opus 4.8. <strong>June 2026</strong> — Claude Fable 5 · Sonnet 5.</li>
+<li><strong>July 8, 2026</strong> — <strong>Grok 4.5</strong> (trained with Cursor): fast, token-efficient, cheap. <strong>July 9, 2026</strong> — GPT-5.6.</li>
+<li>Parallel: <strong>OpenClaw</strong> (<code>pi</code> harness) opens "agent controls everything" → <strong>Hermess</strong> polishes it.</li>
 </ul>
-<p>  - Focus: <a href="model-notes.html">08-model-notes.md</a>, <a href="agent-automation.html">09-agent-automation.md</a>.</p>
-<p>  - <strong>April 2026</strong> — GPT-5.5. <strong>May 28, 2026</strong> — Claude Opus 4.8. <strong>June 2026</strong> — Claude Fable 5 · Sonnet 5.</p>
-<p>  - <strong>July 8, 2026</strong> — <strong>Grok 4.5</strong> (trained with Cursor): fast, token-efficient, cheap. <strong>July 9, 2026</strong> — GPT-5.6.</p>
-<p>  - Parallel: <strong>OpenClaw</strong> (<code>pi</code> harness) opens "agent controls everything" → <strong>Hermess</strong> polishes it.</p>
 <ul>
 <li><strong>Milestone table:</strong></li>
 </ul>
-<p>  | When | Event | In the lab |</p>
-<p>  |------|-------|------------|</p>
-<p>  | <strong>2023</strong> | first LLM exposure (ChatGPT/GPT-4) | start studying |</p>
-<p>  | March 2023 | GPT-4, Claude 1, Llama 1 | tokenize · embedding · attention · softmax · RAG |</p>
-<p>  | 2024 | Gemini 1.5, Claude 3.5, GPT-4o, o1 | coding agents |</p>
-<p>  | <strong>Nov 2024</strong> | <strong>MCP launches</strong> | mcp |</p>
-<p>  | 2025 | Claude 4 / GPT-5 / R1 · AGENTS.md | harness, skills |</p>
-<p>  | 2026 | Grok 4.5, Opus 4.8, GPT-5.6 | model notes, automation |</p>
+<table><thead>
+<tr><th>When</th><th>Event</th><th>In the lab</th></tr>
+</thead><tbody>
+<tr><td><strong>2023</strong></td><td>first LLM exposure (ChatGPT/GPT-4)</td><td>start studying</td></tr>
+<tr><td>March 2023</td><td>GPT-4, Claude 1, Llama 1</td><td>tokenize · embedding · attention · softmax · RAG</td></tr>
+<tr><td>2024</td><td>Gemini 1.5, Claude 3.5, GPT-4o, o1</td><td>coding agents</td></tr>
+<tr><td><strong>Nov 2024</strong></td><td><strong>MCP launches</strong></td><td>mcp</td></tr>
+<tr><td>2025</td><td>Claude 4 / GPT-5 / R1 · AGENTS.md</td><td>harness, skills</td></tr>
+<tr><td>2026</td><td>Grok 4.5, Opus 4.8, GPT-5.6</td><td>model notes, automation</td></tr>
+</tbody></table>
 <ul>
 <li><strong>Takeaways:</strong> journey goes from <strong>understanding models</strong> (2023–2024) → <strong>steering agents</strong> (late 2024 onward). MCP (November 2024) is the hinge. 2023 concepts are not outdated — tokenize / attention / RAG still underpin every agent. Watch harnesses (Cursor / Claude Code / pi), model waves (Grok 4.5…), automation (OpenClaw / Hermess).</li>
 </ul>
@@ -390,9 +393,15 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 </ul></div>
   </article>
 </div>
+<script src="../_shared/nav-stack.js"></script>
 <script>
 (function () {
   const title = "AI timeline — my journey";
+  const num = "24";
+  if (window.AiLabNav) {
+    AiLabNav.enter((num ? num + " " : "") + title);
+    AiLabNav.wireBack("a.back", "../index.html");
+  }
   function toast(msg) {
     let el = document.querySelector(".lab-toast");
     if (!el) { el = document.createElement("div"); el.className = "lab-toast"; document.body.appendChild(el); }

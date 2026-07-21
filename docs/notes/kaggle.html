@@ -327,6 +327,7 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 </script>
 
   </div>
+  <div data-lab-stack></div>
   <article class="doc">
     <h1>Kaggle — dataset + GPU notebook</h1>
     <p class="summary">Dataset library + free GPU/TPU notebooks + competitions to practice.</p>
@@ -336,23 +337,51 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
     <div class="topics"><span>#kaggle</span><span>#dataset</span><span>#gpu</span><span>#notebook</span><span>#competition</span></div>
     <hr class="sep" />
     <div class="body"><h1>Kaggle — free dataset + notebook + GPU</h1>
-<blockquote>ML learning and competition platform: huge <strong>dataset</strong> library, <strong>notebooks</strong> with free <strong>GPU/TPU</strong>, and <strong>competitions</strong> to practice. Similar to Hugging Face but tilted toward hands-on work and leaderboards.</blockquote>
+<blockquote>ML learning and competition platform: huge <strong>dataset</strong> library, <strong>notebooks</strong> with free <strong>GPU/TPU</strong>, and <strong>competitions</strong> to practice. Similar to Hugging Face but tilted toward hands-on work and leaderboards. Everyday metaphor: a shared workshop with free tools, wood piles (datasets), and contests on the wall.</blockquote>
 <h2>Why it matters</h2>
 <p>When learning, two things are often missing: <em>good data</em> and <em>enough compute</em>. Kaggle offers both for free — diverse datasets and GPU notebooks in the browser. Competitions add leaderboards and public solutions so you can learn from what top performers do.</p>
+<p>Pair it with <a href="huggingface.html">Hugging Face</a>: grab a pretrained model from the Hub, train on Kaggle’s GPU, export the checkpoint into a lab demo.</p>
 <h2>Key ideas</h2>
 <ul>
-<li><strong>Datasets:</strong> tens of thousands of public datasets, downloadable straight into a notebook.</li>
-<li><strong>Notebooks (Kernels):</strong> built-in libraries; enable GPU/TPU in settings → train without installing anything locally.</li>
-<li><strong>Competitions:</strong> real problem + metric + leaderboard; submit predictions for a score. Read <em>public notebooks</em> for tips.</li>
-<li><strong>Quota limits:</strong> free GPU hours are capped per week — save them for real training runs.</li>
-<li><strong>HF connection:</strong> often download data on Kaggle, grab a pretrained model from <a href="huggingface.html">Hugging Face</a>, then train in a Kaggle notebook.</li>
+<li><strong>Datasets:</strong> tens of thousands of public datasets, downloadable straight into a notebook (or via the Kaggle API).</li>
+<li><strong>Notebooks (Kernels):</strong> built-in libraries (PyTorch, TF, sklearn…); enable GPU/TPU in settings → train without installing CUDA locally.</li>
+<li><strong>Competitions:</strong> real problem + metric + leaderboard; submit predictions for a score. Read <em>public notebooks</em> for tips — reproducing a strong baseline teaches faster than starting blank.</li>
+<li><strong>Quota limits:</strong> free GPU hours are capped per week — save them for real training runs, not idle kernels left open overnight.</li>
+<li><strong>HF connection:</strong> often download data on Kaggle, grab a pretrained model from Hugging Face, then train in a Kaggle notebook.</li>
+<li><strong>Export:</strong> download weights / ONNX / TorchScript → plug into <a href="train-infer.html">inference</a> demos (car-nn, sentiment…).</li>
 </ul>
+<h2>Short workflow</h2>
+<pre><code>
+pick dataset (or competition) → new notebook → enable GPU
+
+→ load data + HF model → train epochs → watch val metric
+
+→ export checkpoint → use in demo / Space
+
+</code></pre>
+<h2>Worked example (intuition)</h2>
+<p>Competition: classify dog breeds from images. You fork a public EfficientNet notebook, swap in a Hub vision model, train 5 epochs on GPU, submit. Leaderboard feedback tells you if augmentation or LR was the real lever — not just “I trained something.”</p>
+<h2>Common pitfalls</h2>
+<ul>
+<li><strong>Burning GPU quota on print-debug loops</strong> — debug on CPU / tiny samples first.</li>
+<li><strong>Ignoring the competition metric</strong> — optimizing accuracy when the score is log-loss.</li>
+<li><strong>Copy-paste without understanding</strong> — public notebooks win until the private leaderboard; learn <em>why</em> steps exist.</li>
+<li><strong>No offline export plan</strong> — notebook dies with the session; save artifacts to Kaggle datasets or download them.</li>
+</ul>
+<h2>Illustrations</h2>
+<figure><img src="../slides/assets/kaggle-stack.png" alt="Kaggle stack: dataset → notebook → free GPU" loading="lazy" /><figcaption>Kaggle stack: dataset → notebook → free GPU</figcaption></figure>
 <h2>Pipeline</h2>
 <pre><code>
 Kaggle dataset → notebook (enable GPU) → train (epochs) → export model → inference
 
 </code></pre>
-<p>Same role as "data + GPU runtime" alongside <a href="huggingface.html">huggingface.md</a>; stack overview at <a href="train-gpu.html">train-gpu.md</a>.</p>
+<p>Same role as “data + GPU runtime” alongside <a href="huggingface.html">huggingface.md</a>; stack overview at <a href="train-gpu.html">train-gpu.md</a>.</p>
+<h2>Slides &amp; demo</h2>
+<table><thead>
+<tr><th></th><th>Link</th></tr>
+</thead><tbody>
+<tr><td>Slides</td><td><a href="../slides/kaggle/index.html">slides/kaggle</a></td></tr>
+</tbody></table>
 <h2>References</h2>
 <ul>
 <li><a href="https://www.kaggle.com/datasets">Kaggle Datasets</a> · <a href="https://www.kaggle.com/code">Notebooks</a></li>
@@ -365,9 +394,15 @@ Kaggle dataset → notebook (enable GPU) → train (epochs) → export model →
 </ul></div>
   </article>
 </div>
+<script src="../_shared/nav-stack.js"></script>
 <script>
 (function () {
   const title = "Kaggle — dataset + GPU notebook";
+  const num = "09";
+  if (window.AiLabNav) {
+    AiLabNav.enter((num ? num + " " : "") + title);
+    AiLabNav.wireBack("a.back", "../index.html");
+  }
   function toast(msg) {
     let el = document.querySelector(".lab-toast");
     if (!el) { el = document.createElement("div"); el.className = "lab-toast"; document.body.appendChild(el); }

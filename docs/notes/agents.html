@@ -327,6 +327,7 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 </script>
 
   </div>
+  <div data-lab-stack></div>
   <article class="doc">
     <h1>AI Agents · harness comparison</h1>
     <p class="summary">Harness ≠ model: Cursor, Claude Code, Pi, Cline/Kilo, OpenCode, Zed.</p>
@@ -344,24 +345,26 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 <ul>
 <li><strong>Comparison table (personal experience):</strong></li>
 </ul>
-<p>  | Harness | Strengths | Limitations | Feel |</p>
-<p>  |---------|-----------|-------------|------|</p>
-<p>  | <strong>Cursor</strong> | fast feedback — see results and adjust immediately; Auto vs fixed model; MCP + strong skills | Auto quality can be unpredictable | fastest loop; default <code>grok-4.5</code> is cheap with very good quality |</p>
-<p>  | <strong>Claude Code</strong> | excellent at clarifying context; handles complex skills/rules well | slower; session limits → wait | solid for hard tasks / many constraints |</p>
-<p>  | <strong>Pi</strong> | loads global <code>~/.agents</code>; lightweight | smaller ecosystem | same skills as Cursor/Claude, minimal overhead |</p>
-<p>  | <strong>Cline / Kilo</strong> | open, customizable; Kilo clones Cline | quality depends on plugged-in model | good for rapid self-directed testing |</p>
-<p>  | <strong>OpenCode</strong> | open source, many models | fewer "smart" features than Cursor | test models via OpenRouter |</p>
-<p>  | <strong>Zed</strong> | fast editor, compact agent | agent less deep than Cursor/Claude | lightweight coding |</p>
+<table><thead>
+<tr><th>Harness</th><th>Strengths</th><th>Limitations</th><th>Feel</th></tr>
+</thead><tbody>
+<tr><td><strong>Cursor</strong></td><td>fast feedback — see results and adjust immediately; Auto vs fixed model; MCP + strong skills</td><td>Auto quality can be unpredictable</td><td>fastest loop; default <code>grok-4.5</code> is cheap with very good quality</td></tr>
+<tr><td><strong>Claude Code</strong></td><td>excellent at clarifying context; handles complex skills/rules well</td><td>slower; session limits → wait</td><td>solid for hard tasks / many constraints</td></tr>
+<tr><td><strong>Pi</strong></td><td>loads global <code>~/.agents</code>; lightweight</td><td>smaller ecosystem</td><td>same skills as Cursor/Claude, minimal overhead</td></tr>
+<tr><td><strong>Cline / Kilo</strong></td><td>open, customizable; Kilo clones Cline</td><td>quality depends on plugged-in model</td><td>good for rapid self-directed testing</td></tr>
+<tr><td><strong>OpenCode</strong></td><td>open source, many models</td><td>fewer "smart" features than Cursor</td><td>test models via OpenRouter</td></tr>
+<tr><td><strong>Zed</strong></td><td>fast editor, compact agent</td><td>agent less deep than Cursor/Claude</td><td>lightweight coding</td></tr>
+</tbody></table>
 <ul>
 <li><strong>Auto vs fixed model:</strong> Cursor Auto is fast but quality varies with routing. Fixed model (e.g. <code>grok-4.5</code>) is controllable — in practice often <em>better than Auto</em> without burning much budget (token efficiency? routing? worth investigating).</li>
 </ul>
 <ul>
 <li><strong>What harnesses differ on:</strong></li>
+<li><em>Context management</em> — how files get compressed and selected for the prompt.</li>
+<li><em>Tool calling</em> — MCP, shell, browser — smoothness and reliability.</li>
+<li><em>Agent loop</em> — self-correction, tests, asking back.</li>
+<li><em>Skills / rules</em> — loading global know-how from <code>~/.agents</code>.</li>
 </ul>
-<p>  - <em>Context management</em> — how files get compressed and selected for the prompt.</p>
-<p>  - <em>Tool calling</em> — MCP, shell, browser — smoothness and reliability.</p>
-<p>  - <em>Agent loop</em> — self-correction, tests, asking back.</p>
-<p>  - <em>Skills / rules</em> — loading global know-how from <code>~/.agents</code>.</p>
 <ul>
 <li><strong>First mate:</strong> orchestrates crew + <code>agents.md</code> — an agent that knows what to do and coordinates crewmates. Lab UI: Kun Chen video + repo <code>kunchenguid/firstmate</code>.</li>
 </ul>
@@ -369,8 +372,9 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 <li><strong>Homes:</strong> <code>~/.agents/skills</code> (global skills), <code>~/work-station/agents-setup</code> (skill trials), <code>graphify</code> (codebase link viz).</li>
 </ul>
 <h2>Slides &amp; demo</h2>
-<table><tbody>
+<table><thead>
 <tr><th></th><th>Link</th></tr>
+</thead><tbody>
 <tr><td>MCP demo</td><td><a href="../demos/mcp/app/index.html">demos/mcp</a></td></tr>
 <tr><td>Complexity router</td><td><a href="../demos/complexity-router/app/index.html">demos/complexity-router</a></td></tr>
 </tbody></table>
@@ -385,9 +389,15 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 </ul></div>
   </article>
 </div>
+<script src="../_shared/nav-stack.js"></script>
 <script>
 (function () {
   const title = "AI Agents · harness comparison";
+  const num = "21";
+  if (window.AiLabNav) {
+    AiLabNav.enter((num ? num + " " : "") + title);
+    AiLabNav.wireBack("a.back", "../index.html");
+  }
   function toast(msg) {
     let el = document.querySelector(".lab-toast");
     if (!el) { el = document.createElement("div"); el.className = "lab-toast"; document.body.appendChild(el); }

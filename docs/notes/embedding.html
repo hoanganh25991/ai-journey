@@ -327,6 +327,7 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 </script>
 
   </div>
+  <div data-lab-stack></div>
   <article class="doc">
     <h1>Embedding</h1>
     <p class="summary">Turn IDs into vectors: similar meaning → nearby points, measured with cosine similarity.</p>
@@ -360,8 +361,9 @@ IDs → [embedding] → vectors → { classification | attention | top-k for RAG
 </code></pre>
 <p>Embedding takes output from <a href="tokenize.html">tokenize.md</a> and powers both <a href="attention.html">attention.md</a> and <a href="rag.html">rag.md</a>.</p>
 <h2>Slides &amp; demo</h2>
-<table><tbody>
+<table><thead>
 <tr><th></th><th>Link</th></tr>
+</thead><tbody>
 <tr><td>Slides</td><td><a href="../slides/embedding/index.html">slides/embedding</a></td></tr>
 <tr><td>Working app</td><td><a href="../demos/embedding/app/index.html">demos/embedding/app</a></td></tr>
 </tbody></table>
@@ -376,9 +378,15 @@ IDs → [embedding] → vectors → { classification | attention | top-k for RAG
 </ul></div>
   </article>
 </div>
+<script src="../_shared/nav-stack.js"></script>
 <script>
 (function () {
   const title = "Embedding";
+  const num = "02";
+  if (window.AiLabNav) {
+    AiLabNav.enter((num ? num + " " : "") + title);
+    AiLabNav.wireBack("a.back", "../index.html");
+  }
   function toast(msg) {
     let el = document.querySelector(".lab-toast");
     if (!el) { el = document.createElement("div"); el.className = "lab-toast"; document.body.appendChild(el); }

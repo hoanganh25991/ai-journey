@@ -327,6 +327,7 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 </script>
 
   </div>
+  <div data-lab-stack></div>
   <article class="doc">
     <h1>Train with TensorFlow / Keras</h1>
     <p class="summary">compile + fit: declare the model, let Keras run the epoch loop.</p>
@@ -336,18 +337,20 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
     <div class="topics"><span>#tensorflow</span><span>#keras</span><span>#training</span><span>#epoch</span></div>
     <hr class="sep" />
     <div class="body"><h1>Train with TensorFlow / Keras</h1>
-<blockquote>Same classifier lesson, but with TensorFlow (Keras API): define the model, <code>compile</code>, then <code>fit</code> over many epochs. More concise than PyTorch thanks to the built-in training loop.</blockquote>
+<blockquote>Same classifier lesson, but with TensorFlow (Keras API): define the model, <code>compile</code>, then <code>fit</code> over many epochs. More concise than PyTorch thanks to the built-in training loop. Everyday metaphor: you write the recipe (<code>compile</code>); the kitchen runs it (<code>fit</code>).</blockquote>
 <h2>Why it matters</h2>
-<p>TensorFlow (via Keras) is declarative training: you describe the model and settings, the framework runs the epoch loop. Contrasting with <a href="pytorch-training.html">PyTorch</a> (where you write the loop yourself) shows the same learning idea in two API styles — pick the one that fits the project.</p>
+<p>TensorFlow (via Keras) is <strong>declarative</strong> training: you describe the model and settings, the framework runs the epoch loop. Contrasting with <a href="pytorch-training.html">PyTorch</a> (where you write the loop yourself) shows the same learning idea in two API styles — pick the one that fits the project.</p>
+<p>Keras is especially handy for quick softmax-regression experiments and for the Embedding Projector, which makes vector space visible in 3D while you train (<a href="embedding.html">embedding.md</a>).</p>
 <h2>Key ideas</h2>
 <ul>
-<li><strong><code>compile</code> = declare how to learn:</strong> pick optimizer, loss (softmax + cross-entropy for classification), and metrics to track.</li>
+<li><strong><code>compile</code> = declare how to learn:</strong> pick optimizer, loss (softmax + cross-entropy for multi-class), and metrics to track (<code>accuracy</code>, etc.).</li>
 <li><strong><code>fit</code> = run training:</strong> the framework handles epoch/batch iteration and backprop — no manual <code>backward()</code>/<code>step()</code> like PyTorch.</li>
 <li><strong>Monitor with metrics:</strong> <code>accuracy</code> and <code>val_loss</code> print each epoch; rising <code>val_loss</code> while train loss falls → overfitting.</li>
-<li><strong>Callbacks:</strong> <code>EarlyStopping</code>, <code>ModelCheckpoint</code> stop at the right time and save the best model.</li>
-<li><strong>TensorBoard and Projector:</strong> plot loss curves and project embeddings into 3D to inspect (<a href="embedding.html">embedding.md</a>).</li>
+<li><strong>Callbacks:</strong> <code>EarlyStopping</code> stops when val stops improving; <code>ModelCheckpoint</code> saves the best weights automatically.</li>
+<li><strong>TensorBoard and Projector:</strong> plot loss curves and project embeddings into 3D to inspect clusters and outliers.</li>
+<li><strong>Same math as PyTorch:</strong> under the hood it is still forward → loss → gradients → weight update. Only the API shape differs.</li>
 </ul>
-<p>Skeleton:</p>
+<h2>Skeleton</h2>
 <pre><code>
 model = keras.Sequential([
 
@@ -357,24 +360,60 @@ model = keras.Sequential([
 
 ])
 
-model.compile(optimizer="adam",
+model.compile(
 
-              loss="sparse_categorical_crossentropy",
+    optimizer="adam",
 
-              metrics=["accuracy"])
+    loss="sparse_categorical_crossentropy",
 
-model.fit(x_train, y_train, epochs=EPOCHS, validation_data=(x_val, y_val))
+    metrics=["accuracy"],
+
+)
+
+model.fit(
+
+    x_train, y_train,
+
+    epochs=EPOCHS,
+
+    validation_data=(x_val, y_val),
+
+    callbacks=[
+
+        keras.callbacks.EarlyStopping(patience=3, restore_best_weights=True),
+
+        keras.callbacks.ModelCheckpoint("best.keras", save_best_only=True),
+
+    ],
+
+)
 
 </code></pre>
+<h2>Worked example (intuition)</h2>
+<p>You stack a small dense net ending in <code>softmax</code> with <code>NUM_CLASSES</code> units. After <code>compile</code>, each <code>fit</code> epoch shuffles batches, computes cross-entropy against integer labels, and updates weights. When <code>val_loss</code> bottoms out, EarlyStopping restores that checkpoint — ready for inference.</p>
+<h2>Common pitfalls</h2>
+<ul>
+<li><strong><code>categorical</code> vs <code>sparse_categorical</code></strong> — one-hot labels need <code>categorical_crossentropy</code>; integer labels need <code>sparse_*</code>. Mixing them silently fails or errors.</li>
+<li><strong>Forgot validation_data</strong> — you only see train accuracy and miss overfitting.</li>
+<li><strong>No EarlyStopping</strong> — you keep the last epoch, which may be worse than an earlier one.</li>
+<li><strong>Projector without labels</strong> — hard to interpret; color points by class when possible.</li>
+</ul>
 <h2>Illustrations</h2>
 <figure><img src="assets/protonx/softmax-regression.jpg" alt="Softmax regression — multi-class classification in TensorFlow" loading="lazy" /><figcaption>Softmax regression — multi-class classification in TensorFlow</figcaption></figure>
 <figure><img src="assets/protonx/tf-projector.jpg" alt="TensorFlow Embedding Projector: vectors projected into 3D" loading="lazy" /><figcaption>TensorFlow Embedding Projector: vectors projected into 3D</figcaption></figure>
+<figure><img src="../slides/assets/tensorflow-keras.png" alt="Keras compile → fit flow" loading="lazy" /><figcaption>Keras compile → fit flow</figcaption></figure>
 <h2>Pipeline</h2>
 <pre><code>
 dataset → model (Keras) → compile → fit (epochs) → checkpoint
 
 </code></pre>
 <p>Same target as <a href="pytorch-training.html">pytorch-training.md</a>, serving <a href="classification.html">classification.md</a>.</p>
+<h2>Slides &amp; demo</h2>
+<table><thead>
+<tr><th></th><th>Link</th></tr>
+</thead><tbody>
+<tr><td>Slides</td><td><a href="../slides/tensorflow-training/index.html">slides/tensorflow-training</a></td></tr>
+</tbody></table>
 <h2>References</h2>
 <ul>
 <li><a href="https://www.tensorflow.org/tutorials/keras/classification">TensorFlow — Basic classification</a></li>
@@ -387,9 +426,15 @@ dataset → model (Keras) → compile → fit (epochs) → checkpoint
 </ul></div>
   </article>
 </div>
+<script src="../_shared/nav-stack.js"></script>
 <script>
 (function () {
   const title = "Train with TensorFlow / Keras";
+  const num = "07";
+  if (window.AiLabNav) {
+    AiLabNav.enter((num ? num + " " : "") + title);
+    AiLabNav.wireBack("a.back", "../index.html");
+  }
   function toast(msg) {
     let el = document.querySelector(".lab-toast");
     if (!el) { el = document.createElement("div"); el.className = "lab-toast"; document.body.appendChild(el); }

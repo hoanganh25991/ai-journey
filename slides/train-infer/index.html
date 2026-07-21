@@ -41,8 +41,8 @@
   <div class="pad">
     <div class="topbar reveal"><span>Concept · train-infer</span><span class="pill">teaching</span></div>
     <h1 class="reveal" style="margin-top:72px;">Train → <em>Inference</em></h1>
-    <p class="lead reveal" style="margin-top:28px;">Every model lives two lives: learn weights once (heavy), then predict lightly many times.</p>
-    <div class="flow-row reveal"><span class="step">data</span><span class="arr">→</span><span class="step">train</span><span class="arr">→</span><span class="step">checkpoint</span><span class="arr">→</span><span class="step">infer</span></div>
+    <p class="lead reveal" style="margin-top:28px;">Every model lives two lives: learning (heavy, once) and using (light, forever). Years at school vs answering one exam question.</p>
+    <div class="flow-row reveal"><span class="step">data</span><span class="arr">→</span><span class="step">train</span><span class="arr">→</span><span class="step">checkpoint</span><span class="arr">→</span><span class="step">load</span><span class="arr">→</span><span class="step">infer</span></div>
   </div>
   <div class="foot"><span>01</span><span>AI Lab</span></div>
 </section>
@@ -50,9 +50,13 @@
 <section class="slide">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
-    <div class="topbar reveal"><span>Why</span><span class="pill">split</span></div>
-    <h2 class="reveal">Stop treating “AI” as one block</h2>
-    <div class="cols-3"><div class="card accent reveal"><div class="tag">once</div><h3>Train once</h3><p>Many GPU epochs → checkpoint file.</p></div><div class="card cyan reveal"><div class="tag">many</div><h3>Infer many</h3><p>Every user click loads weights and predicts.</p></div><div class="card reveal"><div class="tag">lab</div><h3>Lab demos</h3><p>All inference — training happened in notebooks.</p></div></div>
+    <div class="topbar reveal"><span>Why</span><span class="pill">matters</span></div>
+    <h2 class="reveal">“AI” is not one block</h2>
+    <div class="cols-2">
+      <div class="card accent reveal"><div class="tag">mistake 1</div><h3>Expect demos to learn</h3><p>Static HTML demos do not “learn” from clicks — they only run forward passes.</p></div>
+      <div class="card cyan reveal"><div class="tag">mistake 2</div><h3>Rent a GPU per click</h3><p>Inference is a light forward pass; training is the expensive many-epoch loop.</p></div>
+    </div>
+    <p class="lead reveal" style="margin-top:28px;font-size:22px;">Lab demos are all inference. Real training happens in notebooks / cloud GPU, then weights plug into the UI.</p>
   </div>
   <div class="foot"><span>02</span><span>notes/06-train-infer.md</span></div>
 </section>
@@ -60,32 +64,43 @@
 <section class="slide">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
-    <div class="topbar reveal"><span>Two phases</span><span class="pill">ideas</span></div>
-    <h2 class="reveal">Key ideas</h2>
-    <div class="cols-3"><div class="card reveal"><div class="tag">train</div><h3>Train</h3><p>Loop data, measure loss, update weights.</p></div><div class="card cyan reveal"><div class="tag">ckpt</div><h3>Checkpoint</h3><p>The product — inference needs no training data.</p></div><div class="card reveal"><div class="tag">infer</div><h3>Inference</h3><p>Load weights → feed input → label/action.</p></div></div>
-    <p class="lead reveal" style="margin-top:24px;font-size:20px;">Keywords: train · inference · checkpoint · Read: <span style="color:var(--amber);font-family:var(--font-mono)">notes/06-train-infer.md</span></p>
+    <div class="topbar reveal"><span>Phases</span><span class="pill">table</span></div>
+    <h2 class="reveal">Two phases</h2>
+    <div class="card table-card reveal">
+      <table>
+        <thead><tr><th>Phase</th><th>Work</th><th>Cost</th><th>Output</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Train</strong></td><td>loop data for many epochs; compare prediction to label; update weights</td><td>heavy · needs GPU</td><td>checkpoint (weight file)</td></tr>
+          <tr><td><strong>Inference</strong></td><td>load weights; feed input; get prediction</td><td>light · realtime</td><td>label / action</td></tr>
+        </tbody>
+      </table>
+    </div>
   </div>
-  <div class="foot"><span>03</span><span>notes/06-train-infer.md</span></div>
+  <div class="foot"><span>03</span><span>key table</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Ideas</span><span class="pill">core</span></div>
+    <h2 class="reveal">Key ideas</h2>
+    <div class="cols-3">
+      <div class="card reveal"><div class="tag">learn</div><h3>Reducing error</h3><p>Predict → measure loss (e.g. cross-entropy + softmax) → nudge weights.</p></div>
+      <div class="card cyan reveal"><div class="tag">product</div><h3>Checkpoint is the product</h3><p>After training, save weights. Inference no longer needs labels or training data.</p></div>
+      <div class="card reveal"><div class="tag">eval</div><h3>Eval mode</h3><p><code style="font-family:var(--font-mono);font-size:15px">model.eval()</code> + <code style="font-family:var(--font-mono);font-size:15px">no_grad()</code> — disable dropout, freeze BN stats.</p></div>
+    </div>
+    <p class="lead reveal" style="margin-top:24px;font-size:20px;">Read: <span style="color:var(--amber);font-family:var(--font-mono)">notes/06-train-infer.md</span> · stack: <span style="color:var(--amber);font-family:var(--font-mono)">train-gpu.md</span></p>
+  </div>
+  <div class="foot"><span>04</span><span>notes/06-train-infer.md</span></div>
 </section>
 
 <section class="slide">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
     <div class="topbar reveal"><span>Illustration</span><span class="pill">train-infer-split.png</span></div>
-    <h2 class="reveal" style="font-size:36px;margin-bottom:16px;">Illustration</h2>
-    <img class="shot shot-lg reveal" src="../assets/train-infer-split.png" alt="Train vs infer" />
-    
-  </div>
-  <div class="foot"><span>04</span><span>AI Lab · illustration</span></div>
-</section>
-
-<section class="slide">
-  <div class="slide-bg"></div><div class="grid-overlay"></div>
-  <div class="pad">
-    <div class="topbar reveal"><span>Illustration</span><span class="pill">train-infer-flow.svg</span></div>
-    <h2 class="reveal" style="font-size:36px;margin-bottom:16px;">Illustration</h2>
-    <img class="shot shot-lg reveal" src="../assets/train-infer-flow.svg" alt="Two lives" />
-    
+    <h2 class="reveal" style="font-size:36px;margin-bottom:16px;">Two panels · train vs infer</h2>
+    <img class="shot shot-md reveal" src="../assets/train-infer-split.png" alt="Train panel with many GPU epochs versus inference panel with a single forward pass" />
+    <p class="lead reveal" style="margin-top:14px;font-size:20px;">Same model architecture — completely different cost profile and lifecycle.</p>
   </div>
   <div class="foot"><span>05</span><span>AI Lab · illustration</span></div>
 </section>
@@ -93,13 +108,27 @@
 <section class="slide">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
-    <div class="topbar reveal"><span>Compare</span><span class="pill">cost</span></div>
-    <h2 class="reveal">Cost and output</h2>
-    <div class="card table-card reveal">
-      <table><thead><tr><th>Phase</th><th>Cost</th><th>Output</th></tr></thead><tbody><tr><td>Train</td><td>Heavy · needs GPU</td><td>checkpoint (weights)</td></tr><tr><td>Inference</td><td>Light · realtime</td><td>label / action</td></tr></tbody></table>
-    </div>
+    <div class="topbar reveal"><span>Illustration</span><span class="pill">train-infer-flow.svg</span></div>
+    <h2 class="reveal" style="font-size:36px;margin-bottom:16px;">Two lives of a model</h2>
+    <img class="shot shot-md reveal" src="../assets/train-infer-flow.svg" alt="Flow diagram from data through training checkpoint into repeated inference" />
+    <p class="lead reveal" style="margin-top:14px;font-size:20px;">Data → train (many GPU epochs) → checkpoint → load → infer (predict).</p>
   </div>
-  <div class="foot"><span>06</span><span>notes/06-train-infer.md</span></div>
+  <div class="foot"><span>06</span><span>AI Lab · illustration</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Example</span><span class="pill">worked</span></div>
+    <h2 class="reveal">Worked example · car-nn</h2>
+    <div class="cols-3">
+      <div class="card accent reveal"><div class="tag">train</div><h3>Notebook weeks</h3><p>Sensors → network → drive action. Many epochs produced weights.</p></div>
+      <div class="card cyan reveal"><div class="tag">export</div><h3>weights.json</h3><p>(or similar) — the product you keep after the GPU session.</p></div>
+      <div class="card reveal"><div class="tag">infer</div><h3>Browser drive</h3><p>Demo loads numbers and runs forward passes. Clicking never updates weights.</p></div>
+    </div>
+    <p class="lead reveal" style="margin-top:28px;font-size:22px;">If the click updated weights, that would be training — and it already happened.</p>
+  </div>
+  <div class="foot"><span>07</span><span>car-nn</span></div>
 </section>
 
 <section class="slide">
@@ -107,41 +136,80 @@
   <div class="pad">
     <div class="topbar reveal"><span>Learning</span><span class="pill">loss</span></div>
     <h2 class="reveal">Learning = reducing error</h2>
-    <div class="cols-3"><div class="card accent reveal"><div class="tag">pred</div><h3>Predict</h3><p>Model outputs scores / probs.</p></div><div class="card cyan reveal"><div class="tag">loss</div><h3>Measure</h3><p>Cross-entropy with softmax for classifiers.</p></div><div class="card reveal"><div class="tag">nudge</div><h3>Update</h3><p>Nudge weights toward lower loss.</p></div></div>
+    <div class="cols-2">
+      <div class="card reveal"><div class="tag">round</div><h3>Each training step</h3><p>Model predicts → loss compares to label → gradients nudge weights toward lower loss.</p></div>
+      <div class="card cyan reveal"><div class="tag">link</div><h3>Softmax + CE</h3><p>Classifiers usually train with cross-entropy after softmax — see softmax.md and pytorch-training.md.</p></div>
+    </div>
+    <div class="code-block reveal" style="margin-top:28px;font-size:17px;"><span class="c"># intuition — not the full API</span>
+predict → loss(pred, label) → backward → step  <span class="c"># train</span>
+load(weights) → predict(x)                   <span class="c"># infer</span></div>
   </div>
-  <div class="foot"><span>07</span><span>notes/softmax.md</span></div>
+  <div class="foot"><span>08</span><span>loss loop</span></div>
 </section>
 
 <section class="slide">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
-    <div class="topbar reveal"><span>Pipeline</span><span class="pill">pipeline</span></div>
-    <h2 class="reveal">End to end</h2>
-    <div class="flow-row reveal" style="margin-top:48px;"><span class="step">data</span><span class="arr">→</span><span class="step">train (GPU)</span><span class="arr">→</span><span class="step">checkpoint</span><span class="arr">→</span><span class="step">load</span><span class="arr">→</span><span class="step">infer</span></div>
-    
+    <div class="topbar reveal"><span>Serve</span><span class="pill">eval</span></div>
+    <h2 class="reveal">At inference time</h2>
+    <div class="cols-3">
+      <div class="card accent reveal"><div class="tag">mode</div><h3>model.eval()</h3><p>Switch layers that behave differently at train vs serve.</p></div>
+      <div class="card cyan reveal"><div class="tag">grads</div><h3>torch.no_grad()</h3><p>No gradient graph — faster, less memory.</p></div>
+      <div class="card reveal"><div class="tag">ckpt</div><h3>Best val, not last</div><h3></h3><p>Prefer the best validation checkpoint over the final epoch blind.</p></div>
+    </div>
   </div>
-  <div class="foot"><span>08</span><span>notes/06-train-infer.md</span></div>
+  <div class="foot"><span>09</span><span>eval mode</span></div>
 </section>
 
 <section class="slide">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
-    <div class="topbar reveal"><span>In the lab</span><span class="pill">practice</span></div>
-    <h2 class="reveal">Where each half lives</h2>
-    <div class="cols-3"><div class="card accent reveal"><div class="tag">nb</div><h3>Notebooks</h3><p>protonx / Kaggle / Colab — real training.</p></div><div class="card cyan reveal"><div class="tag">ui</div><h3>Browser demos</h3><p>car-nn · sentiment — inference only.</p></div><div class="card reveal"><div class="tag">stack</div><h3>train-gpu.md</h3><p>Full tool checklist.</p></div></div>
+    <div class="topbar reveal"><span>Pitfalls</span><span class="pill">watch</span></div>
+    <h2 class="reveal">Easy to go wrong</h2>
+    <div class="cols-2">
+      <div class="card accent reveal"><div class="tag">pitfall</div><h3>Fine-tune ≠ inference</h3><p>Fine-tune still updates weights — it is training, not serve-time prediction.</p></div>
+      <div class="card cyan reveal"><div class="tag">pitfall</div><h3>Dropout left on</h3><p>Noisy, inconsistent predictions at serve time.</p></div>
+      <div class="card reveal"><div class="tag">pitfall</div><h3>Ship last epoch blindly</h3><p>Prefer best validation checkpoint.</p></div>
+      <div class="card reveal"><div class="tag">pitfall</div><h3>Train from scratch always</h3><p>Hub model + light fine-tune often beats reinventing training.</p></div>
+    </div>
   </div>
-  <div class="foot"><span>09</span><span>related</span></div>
+  <div class="foot"><span>10</span><span>pitfalls</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Pipeline</span><span class="pill">end-to-end</span></div>
+    <h2 class="reveal">From data to prediction</h2>
+    <div class="flow-row reveal" style="margin-top:48px;"><span class="step">data</span><span class="arr">→</span><span class="step">train (GPU epochs)</span><span class="arr">→</span><span class="step">checkpoint</span><span class="arr">→</span><span class="step">load</span><span class="arr">→</span><span class="step">infer</span></div>
+    <p class="lead reveal" style="margin-top:40px;">In AI Lab: protonx / Kaggle / Colab notebooks → export → embed in UI. See train-gpu.md for the stack.</p>
+  </div>
+  <div class="foot"><span>11</span><span>pipeline</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Related</span><span class="pill">next</span></div>
+    <h2 class="reveal">Where to go next</h2>
+    <div class="cols-3">
+      <div class="card accent reveal"><div class="tag">stack</div><h3>train-gpu</h3><p>PyTorch, TF, HF, Kaggle, Colab checklist.</p></div>
+      <div class="card cyan reveal"><div class="tag">loop</div><h3>pytorch-training</h3><p>Write the epoch loop by hand.</p></div>
+      <div class="card reveal"><div class="tag">demo</div><h3>car-nn / sentiment</h3><p>See inference-only demos in the browser.</p></div>
+    </div>
+  </div>
+  <div class="foot"><span>12</span><span>related</span></div>
 </section>
 
 <section class="slide">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
     <div class="topbar reveal"><span>Next</span><span class="pill">continue</span></div>
-    <h1 class="reveal" style="margin-top:100px;font-size:64px;">Learn once,<br /><em>predict forever.</em></h1>
-    <p class="lead reveal" style="margin-top:28px;">notes/06-train-infer.md</p>
+    <h1 class="reveal" style="margin-top:100px;font-size:64px;">Train once.<br /><em>Infer forever.</em></h1>
+    <p class="lead reveal" style="margin-top:28px;">notes/06-train-infer.md — then train-gpu for the practical stack.</p>
     <a class="app-cta reveal" href="../../notes/train-infer.html">Open note →</a>
   </div>
-  <div class="foot"><span>end</span><span>AI Lab</span></div>
+  <div class="foot"><span>13</span><span>AI Lab</span></div>
 </section>
 
 </main>

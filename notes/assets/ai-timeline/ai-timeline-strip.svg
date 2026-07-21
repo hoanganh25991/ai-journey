@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" fill="none">
+  <rect width="960" height="540" fill="#0c1118"/>
+  <line x1="80" y1="270" x2="880" y2="270" stroke="#5ec8d4" stroke-width="3"/>
+  <g font-family="IBM Plex Mono, monospace">
+    <circle cx="140" cy="270" r="10" fill="#f0a35e"/>
+    <text x="140" y="220" text-anchor="middle" fill="#e8eef7" font-size="16">2023</text>
+    <text x="140" y="320" text-anchor="middle" fill="#8b97a8" font-size="12">LLM basics</text>
+    <text x="140" y="340" text-anchor="middle" fill="#8b97a8" font-size="12">tokenize→RAG</text>
+    <circle cx="340" cy="270" r="10" fill="#5ec8d4"/>
+    <text x="340" y="220" text-anchor="middle" fill="#e8eef7" font-size="16">2024</text>
+    <text x="340" y="320" text-anchor="middle" fill="#8b97a8" font-size="12">coding agents</text>
+    <text x="340" y="340" text-anchor="middle" fill="#8b97a8" font-size="12">Claude 3.5</text>
+    <circle cx="540" cy="270" r="12" fill="#f0a35e"/>
+    <text x="540" y="200" text-anchor="middle" fill="#f0a35e" font-size="16">Nov 2024</text>
+    <text x="540" y="320" text-anchor="middle" fill="#e8eef7" font-size="13">MCP hinge</text>
+    <text x="540" y="340" text-anchor="middle" fill="#8b97a8" font-size="12">tools for agents</text>
+    <circle cx="720" cy="270" r="10" fill="#5ec8d4"/>
+    <text x="720" y="220" text-anchor="middle" fill="#e8eef7" font-size="16">2025</text>
+    <text x="720" y="320" text-anchor="middle" fill="#8b97a8" font-size="12">harness · skills</text>
+    <circle cx="860" cy="270" r="10" fill="#f0a35e"/>
+    <text x="860" y="220" text-anchor="middle" fill="#e8eef7" font-size="16">2026</text>
+    <text x="860" y="320" text-anchor="middle" fill="#8b97a8" font-size="12">Grok 4.5</text>
+    <text x="860" y="340" text-anchor="middle" fill="#8b97a8" font-size="12">automation</text>
+  </g>
+  <text x="480" y="80" text-anchor="middle" fill="#e8eef7" font-family="Sora, sans-serif" font-size="28">Understanding models → steering agents</text>
+</svg>

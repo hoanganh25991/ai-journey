@@ -327,6 +327,7 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 </script>
 
   </div>
+  <div data-lab-stack></div>
   <article class="doc">
     <h1>Personal Knowledge-base — videos · docs · GitHub</h1>
     <p class="summary">Separate repo ~/work-station/personal-kb: FTS search + Graph RAG keywords. Submodule planned.</p>
@@ -366,10 +367,10 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 </code></pre>
 <ul>
 <li><strong>Docs in the knowledge-base repo:</strong></li>
+<li><a href="../../../personal-kb/README.md">README</a></li>
+<li><a href="../../../personal-kb/data/SOURCES.md">Sources</a></li>
+<li><a href="../../../personal-kb/plans/knowledge-base.md">Plan</a></li>
 </ul>
-<p>  - <a href="../../../personal-kb/README.md">README</a></p>
-<p>  - <a href="../../../personal-kb/data/SOURCES.md">Sources</a></p>
-<p>  - <a href="../../../personal-kb/plans/knowledge-base.md">Plan</a></p>
 <ul>
 <li><strong>Graph UI:</strong> <a href="../../../personal-kb/ui/public/graph.html">graph.html</a></li>
 </ul>
@@ -379,8 +380,9 @@ ingest videos / docs / GitHub → FTS index + keyword graph → search / Graph R
 
 </code></pre>
 <h2>Slides &amp; demo</h2>
-<table><tbody>
+<table><thead>
 <tr><th></th><th>Link</th></tr>
+</thead><tbody>
 <tr><td>Slides</td><td><a href="../slides/personal-knowledge-base/index.html">slides/personal-knowledge-base</a></td></tr>
 <tr><td>Knowledge-base README</td><td><a href="../../../personal-kb/README.md">../personal-kb/README.md</a></td></tr>
 <tr><td>Plan</td><td><a href="../../../personal-kb/plans/knowledge-base.md">../personal-kb/plans/knowledge-base.md</a></td></tr>
@@ -392,9 +394,15 @@ ingest videos / docs / GitHub → FTS index + keyword graph → search / Graph R
 </ul></div>
   </article>
 </div>
+<script src="../_shared/nav-stack.js"></script>
 <script>
 (function () {
   const title = "Personal Knowledge-base — videos · docs · GitHub";
+  const num = "25";
+  if (window.AiLabNav) {
+    AiLabNav.enter((num ? num + " " : "") + title);
+    AiLabNav.wireBack("a.back", "../index.html");
+  }
   function toast(msg) {
     let el = document.querySelector(".lab-toast");
     if (!el) { el = document.createElement("div"); el.className = "lab-toast"; document.body.appendChild(el); }

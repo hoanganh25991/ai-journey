@@ -327,6 +327,7 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 </script>
 
   </div>
+  <div data-lab-stack></div>
   <article class="doc">
     <h1>Semantic search — hybrid · tiered · fallback</h1>
     <p class="summary">Search by meaning: combine inverted index (Elastic) + semantic index (embeddings). My hands-on RAG learning project.</p>
@@ -345,17 +346,17 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 <ul>
 <li><strong>Two index types:</strong></li>
 </ul>
-<p>  | Index | Mechanism | Strong | Weak |</p>
-<p>  |-------|-----------|--------|------|</p>
-<p>  | <strong>Inverted index</strong> (Elastic) | keyword → documents | fast, cheap, precise on exact terms | no synonym understanding |</p>
-<p>  | <strong>Semantic index</strong> (embedding) | vectors in <a href="vector-database.html">vector database</a> | captures meaning, varied phrasing | heavier, needs a model |</p>
+<table><thead>
+<tr><th>Index</th><th>Mechanism</th><th>Strong</th><th>Weak</th></tr>
+</thead><tbody>
+<tr><td><strong>Inverted index</strong> (Elastic)</td><td>keyword → documents</td><td>fast, cheap, precise on exact terms</td><td>no synonym understanding</td></tr>
+<tr><td><strong>Semantic index</strong> (embedding)</td><td>vectors in <a href="vector-database.html">vector database</a></td><td>captures meaning, varied phrasing</td><td>heavier, needs a model</td></tr>
+</tbody></table>
 <ul>
 <li><strong>Three search strategies:</strong></li>
-</ul>
-<p>  - <em>Hybrid:</em> inverted index <em>filters</em> candidates by keyword, semantic index <em>reranks</em> by meaning. Cost-efficient; fails when keywords miss entirely.</p>
-<p>  - <em>Tiered:</em> classify questions as easy/hard first → easy goes keyword, hard goes semantic. Balances speed and precision (same idea as <a href="sentiment-routing.html">complexity router</a>).</p>
-<p>  - <em>Fallback:</em> semantic first for max accuracy; if results are poor, <em>fall back</em> to keyword. Most accurate, most expensive.</p>
-<ul>
+<li><em>Hybrid:</em> inverted index <em>filters</em> candidates by keyword, semantic index <em>reranks</em> by meaning. Cost-efficient; fails when keywords miss entirely.</li>
+<li><em>Tiered:</em> classify questions as easy/hard first → easy goes keyword, hard goes semantic. Balances speed and precision (same idea as <a href="sentiment-routing.html">complexity router</a>).</li>
+<li><em>Fallback:</em> semantic first for max accuracy; if results are poor, <em>fall back</em> to keyword. Most accurate, most expensive.</li>
 <li><strong>Dataset and evaluation:</strong> MS MARCO — real user questions plus relevant passages. Metrics: <em>Precision@k</em>, <em>MRR@10</em>. Query classifier labels simple vs complex questions for the Tiered strategy.</li>
 <li><strong>Storage:</strong> MongoDB for raw documents; Elasticsearch for indexed data (inverted + kNN) for fast search.</li>
 </ul>
@@ -382,9 +383,15 @@ question → (classify easy/hard) → { keyword: inverted index | meaning: seman
 </ul></div>
   </article>
 </div>
+<script src="../_shared/nav-stack.js"></script>
 <script>
 (function () {
   const title = "Semantic search — hybrid · tiered · fallback";
+  const num = "14";
+  if (window.AiLabNav) {
+    AiLabNav.enter((num ? num + " " : "") + title);
+    AiLabNav.wireBack("a.back", "../index.html");
+  }
   function toast(msg) {
     let el = document.querySelector(".lab-toast");
     if (!el) { el = document.createElement("div"); el.className = "lab-toast"; document.body.appendChild(el); }

@@ -327,6 +327,7 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 </script>
 
   </div>
+  <div data-lab-stack></div>
   <article class="doc">
     <h1>Model field notes</h1>
     <p class="summary">Model ≠ harness: Grok 4.5, Composer, Anthropic, DeepSeek, Qwen, Kimi/GLM.</p>
@@ -343,26 +344,28 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 <ul>
 <li><strong>Quick table (personal experience):</strong></li>
 </ul>
-<p>  | Model / mode | Strong | Weak / cost |</p>
-<p>  |--------------|--------|-------------|</p>
-<p>  | <strong>Grok 4.5</strong> | fast, smooth, high quality; moderate spend | not top on every benchmark; more hallucination on unverifiable tasks |</p>
-<p>  | <strong>Composer 2.5 Fast</strong> | very fast, good replies | costs more than Auto |</p>
-<p>  | <strong>Cursor Auto</strong> | fast feedback loop | quality varies with routing |</p>
-<p>  | <strong>Anthropic Opus / Sonnet / Fable</strong> | best at clarifying context and skills; reliable interaction | slow; session limits |</p>
-<p>  | <strong>DeepSeek V4</strong> | strong debug / fix on existing code | no images; weaker on greenfield |</p>
-<p>  | <strong>Qwen 3</strong> | simple tasks | weak on complex following / describing large projects without codebase |</p>
-<p>  | <strong>Kimi / GLM</strong> | good code | expensive |</p>
+<table><thead>
+<tr><th>Model / mode</th><th>Strong</th><th>Weak / cost</th></tr>
+</thead><tbody>
+<tr><td><strong>Grok 4.5</strong></td><td>fast, smooth, high quality; moderate spend</td><td>not top on every benchmark; more hallucination on unverifiable tasks</td></tr>
+<tr><td><strong>Composer 2.5 Fast</strong></td><td>very fast, good replies</td><td>costs more than Auto</td></tr>
+<tr><td><strong>Cursor Auto</strong></td><td>fast feedback loop</td><td>quality varies with routing</td></tr>
+<tr><td><strong>Anthropic Opus / Sonnet / Fable</strong></td><td>best at clarifying context and skills; reliable interaction</td><td>slow; session limits</td></tr>
+<tr><td><strong>DeepSeek V4</strong></td><td>strong debug / fix on existing code</td><td>no images; weaker on greenfield</td></tr>
+<tr><td><strong>Qwen 3</strong></td><td>simple tasks</td><td>weak on complex following / describing large projects without codebase</td></tr>
+<tr><td><strong>Kimi / GLM</strong></td><td>good code</td><td>expensive</td></tr>
+</tbody></table>
 <ul>
 <li><strong>Grok 4.5 — why it impresses:</strong> fast, smooth, genuinely good — especially as Cursor default; does not burn much budget yet often beats Auto. Public context (xAI, mid-2026): optimized for coding + agentic at ~<strong>80 TPS</strong>; ~<strong>4.2× fewer output tokens</strong> than Opus 4.8 on SWE-Bench Pro → much cheaper per task ($2 in / $6 out per 1M). Benchmarks competitive with Opus 4.8 / GPT-5.5 on many coding evals; trained with Cursor. Main edge = <strong>intelligence per unit time and cost</strong> on verifiable tasks.</li>
 </ul>
 <ul>
 <li><strong>Principles:</strong></li>
+<li><em>Greenfield</em> (new project, thin codebase): favor strong reasoning (Anthropic, Grok) over DeepSeek/Qwen.</li>
+<li><em>Debug / fix on existing code:</em> DeepSeek V4 is effective and cheap.</li>
+<li><em>Needs images (screenshots, diagrams):</em> avoid DeepSeek (no image input).</li>
+<li><em>Speed + low cost:</em> Grok 4.5 / Composer Fast.</li>
+<li><em>Clarifying constraints and skill design:</em> Anthropic strongest at asking back.</li>
 </ul>
-<p>  - <em>Greenfield</em> (new project, thin codebase): favor strong reasoning (Anthropic, Grok) over DeepSeek/Qwen.</p>
-<p>  - <em>Debug / fix on existing code:</em> DeepSeek V4 is effective and cheap.</p>
-<p>  - <em>Needs images (screenshots, diagrams):</em> avoid DeepSeek (no image input).</p>
-<p>  - <em>Speed + low cost:</em> Grok 4.5 / Composer Fast.</p>
-<p>  - <em>Clarifying constraints and skill design:</em> Anthropic strongest at asking back.</p>
 <h2>References</h2>
 <ul>
 <li><a href="https://openrouter.ai/models">OpenRouter — models &amp; prices</a></li>
@@ -374,9 +377,15 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 </ul></div>
   </article>
 </div>
+<script src="../_shared/nav-stack.js"></script>
 <script>
 (function () {
   const title = "Model field notes";
+  const num = "22";
+  if (window.AiLabNav) {
+    AiLabNav.enter((num ? num + " " : "") + title);
+    AiLabNav.wireBack("a.back", "../index.html");
+  }
   function toast(msg) {
     let el = document.querySelector(".lab-toast");
     if (!el) { el = document.createElement("div"); el.className = "lab-toast"; document.body.appendChild(el); }

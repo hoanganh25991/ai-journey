@@ -327,6 +327,7 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 </script>
 
   </div>
+  <div data-lab-stack></div>
   <article class="doc">
     <h1>RAG</h1>
     <p class="summary">Retrieve relevant documents first, then let the model compose a grounded answer with citations.</p>
@@ -343,10 +344,8 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 <h2>Key ideas</h2>
 <ul>
 <li><strong>Two phases:</strong></li>
-</ul>
-<p>  - <em>Retrieve:</em> embed the question (<a href="embedding.html">embedding.md</a>), search the vector DB for the top-k chunks closest in meaning.</p>
-<p>  - <em>Generate:</em> insert those chunks into the prompt as context; the model composes the answer from them.</p>
-<ul>
+<li><em>Retrieve:</em> embed the question (<a href="embedding.html">embedding.md</a>), search the vector DB for the top-k chunks closest in meaning.</li>
+<li><em>Generate:</em> insert those chunks into the prompt as context; the model composes the answer from them.</li>
 <li><strong>Chunk + vector DB:</strong> split documents into segments, embed each segment; a DB (FAISS, Chroma, pgvector…) finds nearest segments fast, optionally filtered by metadata.</li>
 <li><strong>Unlike pure chat:</strong> pure chat relies on model memory; RAG is always <em>anchored to your corpus</em> — it can answer about documents the model never saw.</li>
 <li><strong>Quality depends on retrieval:</strong> wrong chunks → wrong answers no matter how good the model is. Good chunking and embeddings are critical.</li>
@@ -364,8 +363,9 @@ question → embed → top-k from vector DB → (chunks + question) → LLM → 
 </code></pre>
 <p>RAG stands on <a href="embedding.html">embedding.md</a>; the lab's Personal Knowledge-base follows this direction (<a href="personal-knowledge-base.html">personal-knowledge-base.md</a>).</p>
 <h2>Slides &amp; demo</h2>
-<table><tbody>
+<table><thead>
 <tr><th></th><th>Link</th></tr>
+</thead><tbody>
 <tr><td>Slides</td><td><a href="../slides/rag/index.html">slides/rag</a></td></tr>
 <tr><td>Working app</td><td><a href="../demos/rag/app/index.html">demos/rag/app</a></td></tr>
 </tbody></table>
@@ -381,9 +381,15 @@ question → embed → top-k from vector DB → (chunks + question) → LLM → 
 </ul></div>
   </article>
 </div>
+<script src="../_shared/nav-stack.js"></script>
 <script>
 (function () {
   const title = "RAG";
+  const num = "12";
+  if (window.AiLabNav) {
+    AiLabNav.enter((num ? num + " " : "") + title);
+    AiLabNav.wireBack("a.back", "../index.html");
+  }
   function toast(msg) {
     let el = document.querySelector(".lab-toast");
     if (!el) { el = document.createElement("div"); el.className = "lab-toast"; document.body.appendChild(el); }

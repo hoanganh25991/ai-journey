@@ -327,6 +327,7 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 </script>
 
   </div>
+  <div data-lab-stack></div>
   <article class="doc">
     <h1>Tokenize</h1>
     <p class="summary">Split text into tokens and map them to IDs — machines read numbers, not words. BPE vs WordPiece.</p>
@@ -343,11 +344,9 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 <h2>Key ideas</h2>
 <ul>
 <li><strong>Three cut levels:</strong></li>
-</ul>
-<p>  - <em>Word-level:</em> <code>"hello world"</code> → <code>["hello", "world"]</code>. Simple, but unknown words are a problem.</p>
-<p>  - <em>Subword:</em> <code>"helloo"</code> → <code>["hello", "o"]</code>. Builds unseen words from known pieces — the most common approach today.</p>
-<p>  - <em>Character:</em> <code>"hello"</code> → <code>["h","e","l","l","o"]</code>. Never stuck, but sequences get very long.</p>
-<ul>
+<li><em>Word-level:</em> <code>"hello world"</code> → <code>["hello", "world"]</code>. Simple, but unknown words are a problem.</li>
+<li><em>Subword:</em> <code>"helloo"</code> → <code>["hello", "o"]</code>. Builds unseen words from known pieces — the most common approach today.</li>
+<li><em>Character:</em> <code>"hello"</code> → <code>["h","e","l","l","o"]</code>. Never stuck, but sequences get very long.</li>
 <li><strong>Vocabulary:</strong> a fixed set of tokens the model knows; each token maps to one ID. Example: <code>hello → 5021</code>.</li>
 <li><strong>BPE vs WordPiece:</strong> two ways to build a subword vocabulary. Both merge frequent pairs; they differ in merge criteria. GPT uses BPE; BERT uses WordPiece.</li>
 <li><strong>Rough rule:</strong> one token ≈ four English characters — model cost is counted in tokens, not characters.</li>
@@ -364,8 +363,9 @@ text → [tokenize] → IDs → embedding → attention → … → softmax
 </code></pre>
 <p>Token IDs feed <a href="embedding.html">embedding.md</a>; from there the path goes to attention, classification, and RAG.</p>
 <h2>Slides &amp; demo</h2>
-<table><tbody>
+<table><thead>
 <tr><th></th><th>Link</th></tr>
+</thead><tbody>
 <tr><td>Slides</td><td><a href="../slides/tokenize/index.html">slides/tokenize</a></td></tr>
 <tr><td>Working app</td><td><a href="../demos/tokenize/app/index.html">demos/tokenize/app</a></td></tr>
 </tbody></table>
@@ -380,9 +380,15 @@ text → [tokenize] → IDs → embedding → attention → … → softmax
 </ul></div>
   </article>
 </div>
+<script src="../_shared/nav-stack.js"></script>
 <script>
 (function () {
   const title = "Tokenize";
+  const num = "01";
+  if (window.AiLabNav) {
+    AiLabNav.enter((num ? num + " " : "") + title);
+    AiLabNav.wireBack("a.back", "../index.html");
+  }
   function toast(msg) {
     let el = document.querySelector(".lab-toast");
     if (!el) { el = document.createElement("div"); el.className = "lab-toast"; document.body.appendChild(el); }

@@ -327,6 +327,7 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 </script>
 
   </div>
+  <div data-lab-stack></div>
   <article class="doc">
     <h1>Attention</h1>
     <p class="summary">Each word decides which other words to attend to — the Q·K·V mechanism behind Transformers.</p>
@@ -343,12 +344,10 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 <h2>Key ideas</h2>
 <ul>
 <li><strong>Q, K, V — three roles per word:</strong></li>
-</ul>
-<p>  - <em>Query (Q):</em> "What information do I need?"</p>
-<p>  - <em>Key (K):</em> "What information can I provide?"</p>
-<p>  - <em>Value (V):</em> "The content I actually carry."</p>
-<p>  - Compare this word's Q to every word's K → relevance scores → mix V values by those scores.</p>
-<ul>
+<li><em>Query (Q):</em> "What information do I need?"</li>
+<li><em>Key (K):</em> "What information can I provide?"</li>
+<li><em>Value (V):</em> "The content I actually carry."</li>
+<li>Compare this word's Q to every word's K → relevance scores → mix V values by those scores.</li>
 <li><strong>Score → softmax → weighted average:</strong> raw scores pass through <a href="softmax.html">softmax.md</a> into weights that sum to 1, then combine V vectors.</li>
 <li><strong>Self-attention vs cross-attention:</strong> self = words in the <em>same</em> sentence look at each other; cross = one sentence attends to another (e.g. translation: target attends to source).</li>
 <li><strong>Multi-head = parallel views:</strong> one head may capture grammar, another topic — then results merge.</li>
@@ -365,8 +364,9 @@ vectors (embedding) → [attention: Q·K → softmax → ×V] → context-rich r
 </code></pre>
 <p>Attention follows <a href="embedding.html">embedding.md</a> and uses <a href="softmax.html">softmax.md</a> to normalize weights.</p>
 <h2>Slides &amp; demo</h2>
-<table><tbody>
+<table><thead>
 <tr><th></th><th>Link</th></tr>
+</thead><tbody>
 <tr><td>Slides</td><td><a href="../slides/attention/index.html">slides/attention</a></td></tr>
 <tr><td>Working app</td><td><a href="../demos/attention/app/index.html">demos/attention/app</a></td></tr>
 </tbody></table>
@@ -381,9 +381,15 @@ vectors (embedding) → [attention: Q·K → softmax → ×V] → context-rich r
 </ul></div>
   </article>
 </div>
+<script src="../_shared/nav-stack.js"></script>
 <script>
 (function () {
   const title = "Attention";
+  const num = "03";
+  if (window.AiLabNav) {
+    AiLabNav.enter((num ? num + " " : "") + title);
+    AiLabNav.wireBack("a.back", "../index.html");
+  }
   function toast(msg) {
     let el = document.querySelector(".lab-toast");
     if (!el) { el = document.createElement("div"); el.className = "lab-toast"; document.body.appendChild(el); }

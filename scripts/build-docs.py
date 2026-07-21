@@ -98,42 +98,45 @@ def md_to_html(md: str) -> str:
             )
             continue
 
-        if re.match(r"^\|", line) and "|" in line[1:]:
-            cells = [c.strip() for c in line.strip().strip("|").split("|")]
+        # Tables may be indented (nested under a list item)
+        stripped = line.strip()
+        if re.match(r"^\|", stripped) and "|" in stripped[1:]:
+            cells = [c.strip() for c in stripped.strip("|").split("|")]
             if all(re.match(r"^:?-+:?$", c.replace(" ", "")) for c in cells):
                 continue
             if not in_table:
                 close_ul()
-                out.append("<table><tbody>")
+                out.append("<table><thead>")
                 in_table = True
                 out.append("<tr>" + "".join(f"<th>{inline(c)}</th>" for c in cells) + "</tr>")
+                out.append("</thead><tbody>")
             else:
                 out.append("<tr>" + "".join(f"<td>{inline(c)}</td>" for c in cells) + "</tr>")
             continue
         else:
             close_table()
 
-        m = re.match(r"^(#{1,3})\s+(.*)$", line)
+        m = re.match(r"^(#{1,3})\s+(.*)$", stripped)
         if m:
             close_ul()
             level = len(m.group(1))
             out.append(f"<h{level}>{inline(m.group(2))}</h{level}>")
             continue
 
-        if re.match(r"^[-*]\s+", line):
+        if re.match(r"^[-*]\s+", stripped):
             if not in_ul:
                 out.append("<ul>")
                 in_ul = True
-            item = re.sub(r"^[-*]\s+", "", line)
+            item = re.sub(r"^[-*]\s+", "", stripped)
             out.append(f"<li>{inline(item)}</li>")
             continue
         else:
             close_ul()
 
-        if not line.strip():
+        if not stripped:
             continue
         # standalone image on its own line → figure + caption (alt text)
-        mimg = re.match(r"^!\[([^\]]*)\]\(([^)]+)\)\s*$", line.strip())
+        mimg = re.match(r"^!\[([^\]]*)\]\(([^)]+)\)\s*$", stripped)
         if mimg:
             close_ul()
             alt = inline(mimg.group(1)) if mimg.group(1) else ""
@@ -141,10 +144,10 @@ def md_to_html(md: str) -> str:
             cap = f"<figcaption>{alt}</figcaption>" if alt else ""
             out.append(f'<figure><img src="{src}" alt="{mimg.group(1)}" loading="lazy" />{cap}</figure>')
             continue
-        if line.strip().startswith(">"):
-            out.append(f"<blockquote>{inline(line.strip().lstrip('> ').strip())}</blockquote>")
+        if stripped.startswith(">"):
+            out.append(f"<blockquote>{inline(stripped.lstrip('> ').strip())}</blockquote>")
             continue
-        out.append(f"<p>{inline(line)}</p>")
+        out.append(f"<p>{inline(stripped)}</p>")
 
     close_ul()
     close_table()
@@ -730,6 +733,7 @@ footer { margin-top: 40px; font: 12px var(--mono); color: var(--muted); }
     @@THEME_CTRL@@
   </div>
   <p class="tagline">Notes are the source of truth. Search first — open a note as a document; slides &amp; demos appear when available.</p>
+  <div data-lab-stack></div>
 
   <form class="search-wrap" id="searchForm" autocomplete="off">
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
@@ -751,6 +755,7 @@ footer { margin-top: 40px; font: 12px var(--mono); color: var(--muted); }
   <footer id="foot"></footer>
 </div>
 
+<script src="_shared/nav-stack.js"></script>
 <script id="NOTES_DATA" type="application/json">@@NOTES_JSON@@</script>
 <script>
 (function () {
@@ -944,6 +949,9 @@ footer { margin-top: 40px; font: 12px var(--mono); color: var(--muted); }
   if (params.get("q")) { query = params.get("q"); qEl.value = query; }
 
   render();
+  if (window.AiLabNav) {
+    AiLabNav.enter("Home");
+  }
   qEl.focus();
 })();
 </script>
@@ -1028,6 +1036,7 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
     </a>
     @@THEME_CTRL@@
   </div>
+  <div data-lab-stack></div>
   <article class="doc">
     <h1>@@TITLE@@</h1>
     <p class="summary">@@SUMMARY@@</p>
@@ -1037,9 +1046,15 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
     <div class="body">@@BODY@@</div>
   </article>
 </div>
+<script src="../_shared/nav-stack.js"></script>
 <script>
 (function () {
   const title = @@TITLE_JS@@;
+  const num = @@NUM_JS@@;
+  if (window.AiLabNav) {
+    AiLabNav.enter((num ? num + " " : "") + title);
+    AiLabNav.wireBack("a.back", "../index.html");
+  }
   function toast(msg) {
     let el = document.querySelector(".lab-toast");
     if (!el) { el = document.createElement("div"); el.className = "lab-toast"; document.body.appendChild(el); }
@@ -1094,6 +1109,7 @@ def render_note_page(n: dict) -> str:
         actions.append(f'<a href="{esc(l["href"])}">{esc(l["label"])} ↗</a>')
     topics = "".join(f"<span>#{esc(t)}</span>" for t in n.get("topics") or [])
     title_js = json.dumps(n["title"], ensure_ascii=False)
+    num_js = json.dumps(n.get("num") or "", ensure_ascii=False)
     return _inject_theme(
         NOTE_HTML.replace("@@TITLE@@", esc(n["title"]))
         .replace("@@SUMMARY@@", esc(n["summary"]))
@@ -1101,6 +1117,7 @@ def render_note_page(n: dict) -> str:
         .replace("@@TOPICS@@", topics)
         .replace("@@BODY@@", n["body_html"])
         .replace("@@TITLE_JS@@", title_js)
+        .replace("@@NUM_JS@@", num_js)
     )
 
 
@@ -1252,6 +1269,7 @@ JOURNEY_HTML = r"""<!DOCTYPE html>
     </a>
     @@THEME_CTRL@@
   </div>
+  <div data-lab-stack></div>
   <header class="hero">
     <div class="kicker">Map · five stages</div>
     <h1>@@TITLE@@</h1>
@@ -1263,8 +1281,13 @@ JOURNEY_HTML = r"""<!DOCTYPE html>
   <div class="panels">@@STAGES@@</div>
   <div class="fin">Back to the <a href="./index.html">hub</a> · search by #topic</div>
 </div>
+<script src="_shared/nav-stack.js"></script>
 <script>
 (function () {
+  if (window.AiLabNav) {
+    AiLabNav.enter("Journey");
+    AiLabNav.wireBack("a.back", "./index.html");
+  }
   var ids = @@STAGE_IDS@@;
   function show(id) {
     if (ids.indexOf(id) < 0) id = ids[0];
@@ -1402,6 +1425,13 @@ def copy_assets() -> None:
         if dst.exists():
             shutil.rmtree(dst)
         shutil.copytree(src, dst, ignore=shutil.ignore_patterns(".DS_Store"))
+
+    # hub/notes/journey share one nav-stack copy
+    shared_src = ROOT / "demos" / "_shared" / "nav-stack.js"
+    if shared_src.is_file():
+        shared_dst = DOCS / "_shared"
+        shared_dst.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(shared_src, shared_dst / "nav-stack.js")
 
     # note assets (protonx images) → docs/notes/assets so both note pages and
     # decks (which point at ../../../notes/assets/...) resolve inside docs/.

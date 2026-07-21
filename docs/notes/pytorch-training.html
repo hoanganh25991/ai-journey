@@ -327,6 +327,7 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 </script>
 
   </div>
+  <div data-lab-stack></div>
   <article class="doc">
     <h1>Train with PyTorch</h1>
     <p class="summary">Epoch loop: forward → loss → backward → step. Train a classifier by hand.</p>
@@ -336,19 +337,26 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
     <div class="topics"><span>#pytorch</span><span>#training</span><span>#epoch</span><span>#optimizer</span><span>#backprop</span></div>
     <hr class="sep" />
     <div class="body"><h1>Train with PyTorch</h1>
-<blockquote>A hands-on lesson: use PyTorch to train a classifier — epoch loop, compute loss, backprop, update weights until the model is good enough.</blockquote>
+<blockquote>A hands-on lesson: use PyTorch to train a classifier — epoch loop, compute loss, backprop, update weights until the model is good enough. Everyday metaphor: each batch is one practice set; each epoch is one full pass through the textbook.</blockquote>
 <h2>Why it matters</h2>
 <p>PyTorch is the most popular flexible framework for building and training models yourself. Understanding its training loop means understanding how learning actually happens — the same mechanism every high-level library (<a href="huggingface.html">Hugging Face</a>, sentence-transformers) wraps underneath.</p>
+<p>If you can write <code>forward → loss → backward → step</code> confidently, you can debug exploding loss, pick learning rates, and move models to GPU without treating training as a black box.</p>
 <h2>Key ideas</h2>
 <ul>
-<li><strong>Epoch vs batch:</strong> an <em>epoch</em> is one pass over all data; a <em>batch</em> is a small chunk processed per step. Many epochs let the model learn gradually.</li>
-<li><strong>Four steps per batch:</strong> forward → loss → <code>backward()</code> (gradients) → <code>step()</code> (weight update). Call <code>zero_grad()</code> so gradients do not accumulate.</li>
-<li><strong>Optimizer and learning rate:</strong> Adam/SGD decides how far to move each step; learning rate too high → unstable jumps, too low → slow learning.</li>
-<li><strong>Train/val split:</strong> track validation loss to catch <em>overfitting</em> (memorizes training data, fails on new data).</li>
-<li><strong>GPU:</strong> <code>.to("cuda")</code> for model and batch → much faster training; see <a href="train-gpu.html">train-gpu.md</a>.</li>
-<li><strong>When done, save:</strong> <code>torch.save(model.state_dict())</code> → checkpoint for <a href="train-infer.html">inference</a>.</li>
+<li><strong>Epoch vs batch:</strong> an <em>epoch</em> is one pass over all data; a <em>batch</em> is a small chunk processed per step. Many epochs let the model learn gradually. Large batches are stabler but need more memory; small batches are noisier but can generalize better.</li>
+<li><strong>Four steps per batch:</strong></li>
 </ul>
-<p>Training loop (skeleton):</p>
+<p>1. <code>zero_grad()</code> — clear old gradients (they accumulate by default).</p>
+<p>2. <strong>Forward</strong> — <code>logits = model(x)</code>.</p>
+<p>3. <strong>Loss</strong> — compare logits to labels (e.g. <code>CrossEntropyLoss</code>).</p>
+<p>4. <strong><code>backward()</code></strong> then <strong><code>step()</code></strong> — compute gradients, update weights.</p>
+<ul>
+<li><strong>Optimizer and learning rate:</strong> Adam/SGD decides how far to move each step. LR too high → unstable jumps / NaNs; too low → painfully slow learning. Start with <code>1e-3</code> for Adam on small nets; fine-tuning Transformers often uses <code>2e-5</code>–<code>5e-5</code>.</li>
+<li><strong>Train/val split:</strong> track <strong>validation</strong> loss to catch <em>overfitting</em> (memorizes training data, fails on new data). Rising val loss while train loss falls is the classic signal.</li>
+<li><strong>GPU:</strong> <code>.to("cuda")</code> (or <code>"mps"</code> on Apple Silicon) for <strong>both</strong> model and each batch → much faster training; see <a href="train-gpu.html">train-gpu.md</a>.</li>
+<li><strong>When done, save:</strong> <code>torch.save(model.state_dict(), "ckpt.pt")</code> → checkpoint for <a href="train-infer.html">inference</a>. Prefer saving the best val checkpoint, not only the last epoch.</li>
+</ul>
+<h2>Training loop (skeleton)</h2>
 <pre><code>
 model = MyClassifier()
 
@@ -359,6 +367,8 @@ loss_fn = nn.CrossEntropyLoss()
 
 
 for epoch in range(EPOCHS):
+
+    model.train()
 
     for x, y in dataloader:          # each batch
 
@@ -372,13 +382,35 @@ for epoch in range(EPOCHS):
 
         opt.step()                   # update weights
 
+
+
+    # optional: model.eval(); measure val loss / accuracy
+
 </code></pre>
+<h2>Worked example (intuition)</h2>
+<p>Suppose a tiny binary classifier is wrong on a batch. Loss is high → <code>backward()</code> assigns blame to each weight → <code>step()</code> nudges weights slightly so the next forward pass is a bit less wrong. After thousands of batches, the decision boundary fits the data. That is all “learning” is, at the loop level.</p>
+<h2>Common pitfalls</h2>
+<ul>
+<li><strong>Forgot <code>zero_grad()</code></strong> — gradients stack across batches → wild updates.</li>
+<li><strong>Train mode at eval</strong> — dropout/batchnorm behave differently; use <code>model.eval()</code> + <code>torch.no_grad()</code> when validating.</li>
+<li><strong>Device mismatch</strong> — model on CUDA, batch on CPU → runtime error. Move both.</li>
+<li><strong>Leaky validation</strong> — tuning hyperparameters on the test set; keep a true held-out test.</li>
+</ul>
+<h2>Illustrations</h2>
+<figure><img src="../slides/assets/pytorch-loop.png" alt="PyTorch training loop as a circular flowchart" loading="lazy" /><figcaption>PyTorch training loop as a circular flowchart</figcaption></figure>
+<figure><img src="../slides/assets/pytorch-steps.svg" alt="Four steps per batch: forward → loss → backward → step" loading="lazy" /><figcaption>Four steps per batch: forward → loss → backward → step</figcaption></figure>
 <h2>Pipeline</h2>
 <pre><code>
 dataset → DataLoader → [epoch loop: forward → loss → backward → step] → checkpoint
 
 </code></pre>
 <p>This is how to implement training for <a href="classification.html">classification.md</a>; the TensorFlow version is at <a href="tensorflow-training.html">tensorflow-training.md</a>.</p>
+<h2>Slides &amp; demo</h2>
+<table><thead>
+<tr><th></th><th>Link</th></tr>
+</thead><tbody>
+<tr><td>Slides</td><td><a href="../slides/pytorch-training/index.html">slides/pytorch-training</a></td></tr>
+</tbody></table>
 <h2>References</h2>
 <ul>
 <li><a href="https://pytorch.org/tutorials/beginner/blitz/cifar10_tutorial.html">PyTorch — Training a classifier</a></li>
@@ -387,13 +419,19 @@ dataset → DataLoader → [epoch loop: forward → loss → backward → step] 
 <h2>Related</h2>
 <ul>
 <li><a href="classification.html">classification.md</a>, <a href="tensorflow-training.html">tensorflow-training.md</a></li>
-<li><a href="train-gpu.html">train-gpu.md</a>, <a href="huggingface.html">huggingface.md</a></li>
+<li><a href="train-gpu.html">train-gpu.md</a>, <a href="huggingface.html">huggingface.md</a>, <a href="train-infer.html">06-train-infer.md</a></li>
 </ul></div>
   </article>
 </div>
+<script src="../_shared/nav-stack.js"></script>
 <script>
 (function () {
   const title = "Train with PyTorch";
+  const num = "06";
+  if (window.AiLabNav) {
+    AiLabNav.enter((num ? num + " " : "") + title);
+    AiLabNav.wireBack("a.back", "../index.html");
+  }
   function toast(msg) {
     let el = document.querySelector(".lab-toast");
     if (!el) { el = document.createElement("div"); el.className = "lab-toast"; document.body.appendChild(el); }

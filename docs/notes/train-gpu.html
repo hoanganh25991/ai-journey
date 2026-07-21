@@ -327,6 +327,7 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 </script>
 
   </div>
+  <div data-lab-stack></div>
   <article class="doc">
     <h1>Train · PyTorch / TensorFlow · GPU</h1>
     <p class="summary">HF/Kaggle datasets, PyTorch and TensorFlow, GPU notebooks, train → inference.</p>
@@ -343,18 +344,20 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 <ul>
 <li><strong>Two layers of work:</strong></li>
 </ul>
-<p>  | Layer | Job | Output |</p>
-<p>  |-------|-----|--------|</p>
-<p>  | <strong>Training</strong> | HF/Kaggle → notebook/endpoint → many GPU epochs | checkpoint |</p>
-<p>  | <strong>Inference</strong> | load model → predict | label / action |</p>
-<p>  See <a href="train-infer.html">06-train-infer.md</a> for the two-phase mental model.</p>
+<table><thead>
+<tr><th>Layer</th><th>Job</th><th>Output</th></tr>
+</thead><tbody>
+<tr><td><strong>Training</strong></td><td>HF/Kaggle → notebook/endpoint → many GPU epochs</td><td>checkpoint</td></tr>
+<tr><td><strong>Inference</strong></td><td>load model → predict</td><td>label / action</td></tr>
+</tbody></table>
+<p>See <a href="train-infer.html">06-train-infer.md</a> for the two-phase mental model.</p>
 <ul>
 <li><strong>Stack used in practice:</strong></li>
+<li><strong>PyTorch</strong> — flexible; most training code in the lab.</li>
+<li><strong>TensorFlow</strong> — softmax regression and Embedding Projector for visualizing vectors.</li>
+<li><strong>Data:</strong> Hugging Face Datasets and Kaggle — pre-labeled, ready to download.</li>
+<li><strong>GPU online:</strong> Google Colab / cloud notebooks — train to ~95%+ accuracy, then export.</li>
 </ul>
-<p>  - <strong>PyTorch</strong> — flexible; most training code in the lab.</p>
-<p>  - <strong>TensorFlow</strong> — softmax regression and Embedding Projector for visualizing vectors.</p>
-<p>  - <strong>Data:</strong> Hugging Face Datasets and Kaggle — pre-labeled, ready to download.</p>
-<p>  - <strong>GPU online:</strong> Google Colab / cloud notebooks — train to ~95%+ accuracy, then export.</p>
 <ul>
 <li><strong>Short workflow:</strong></li>
 </ul>
@@ -384,9 +387,15 @@ HF/Kaggle data → notebook (PyTorch/TF) → GPU epochs → checkpoint → demo 
 </ul></div>
   </article>
 </div>
+<script src="../_shared/nav-stack.js"></script>
 <script>
 (function () {
   const title = "Train · PyTorch / TensorFlow · GPU";
+  const num = "17";
+  if (window.AiLabNav) {
+    AiLabNav.enter((num ? num + " " : "") + title);
+    AiLabNav.wireBack("a.back", "../index.html");
+  }
   function toast(msg) {
     let el = document.querySelector(".lab-toast");
     if (!el) { el = document.createElement("div"); el.className = "lab-toast"; document.body.appendChild(el); }

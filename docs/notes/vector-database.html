@@ -327,6 +327,7 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 </script>
 
   </div>
+  <div data-lab-stack></div>
   <article class="doc">
     <h1>Vector database</h1>
     <p class="summary">Store vectors and find top-k nearest neighbors (ANN). Infrastructure for RAG and semantic search.</p>
@@ -345,11 +346,9 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 <li><strong>ANN instead of brute force:</strong> approximate indexes (HNSW, IVF…) trade a little accuracy for orders-of-magnitude speed — good enough for search.</li>
 <li><strong>More than vectors:</strong> each record carries <em>metadata</em> (source, date, tags) for <strong>filtering</strong> before or after search; needs CRUD when data changes.</li>
 <li><strong>Common choices:</strong></li>
-</ul>
-<p>  - <em>FAISS</em> — in-memory, very fast, good for experiments; lacks durable storage and CRUD.</p>
-<p>  - <em>Elasticsearch (kNN plugin)</em> — integrates with keyword search, has CRUD, scales out.</p>
-<p>  - <em>pgvector / Chroma</em> — Postgres extension or lightweight store for small apps.</p>
-<ul>
+<li><em>FAISS</em> — in-memory, very fast, good for experiments; lacks durable storage and CRUD.</li>
+<li><em>Elasticsearch (kNN plugin)</em> — integrates with keyword search, has CRUD, scales out.</li>
+<li><em>pgvector / Chroma</em> — Postgres extension or lightweight store for small apps.</li>
 <li><strong>Pick by need:</strong> scale + CRUD + distribution → Elastic; pure in-RAM speed → FAISS.</li>
 </ul>
 <h2>Illustrations</h2>
@@ -374,9 +373,15 @@ question  → embedding → [vector database: top-k search] → RAG / semantic s
 </ul></div>
   </article>
 </div>
+<script src="../_shared/nav-stack.js"></script>
 <script>
 (function () {
   const title = "Vector database";
+  const num = "13";
+  if (window.AiLabNav) {
+    AiLabNav.enter((num ? num + " " : "") + title);
+    AiLabNav.wireBack("a.back", "../index.html");
+  }
   function toast(msg) {
     let el = document.querySelector(".lab-toast");
     if (!el) { el = document.createElement("div"); el.className = "lab-toast"; document.body.appendChild(el); }

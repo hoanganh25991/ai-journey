@@ -327,6 +327,7 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 </script>
 
   </div>
+  <div data-lab-stack></div>
   <article class="doc">
     <h1>MCP</h1>
     <p class="summary">Common standard for agents to call external tools — USB-C for AI. Host ↔ server ↔ tools with schema.</p>
@@ -352,10 +353,12 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
      └──────────── tool call / tool result ─────────────┘
 
 </code></pre>
-<p>  - <em>Host:</em> where the model runs (Cursor, Claude Code, Pi…).</p>
-<p>  - <em>Server:</em> process that exposes a tool list plus input schema (JSON Schema).</p>
-<p>  - <em>Tool:</em> one action — navigate a browser, query a DB, render Blender, search the web.</p>
-<p>  - Transport via stdio or HTTP; each tool declares its parameters → the model calls correctly.</p>
+<ul>
+<li><em>Host:</em> where the model runs (Cursor, Claude Code, Pi…).</li>
+<li><em>Server:</em> process that exposes a tool list plus input schema (JSON Schema).</li>
+<li><em>Tool:</em> one action — navigate a browser, query a DB, render Blender, search the web.</li>
+<li>Transport via stdio or HTTP; each tool declares its parameters → the model calls correctly.</li>
+</ul>
 <ul>
 <li><strong>Discover then invoke:</strong> the model <em>lists</em> available tools, then <em>calls</em> them — no hardcoding. New tools do not require editing the model.</li>
 <li><strong>Results with schema:</strong> JSON in a known shape → easy to parse and chain tools.</li>
@@ -363,8 +366,9 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 <li><strong>Safety boundary:</strong> tools declare parameters and permissions → the host controls what the model may do.</li>
 </ul>
 <p><strong>MCP ≠ Skills</strong></p>
-<table><tbody>
+<table><thead>
 <tr><th></th><th>MCP</th><th>Skills</th></tr>
+</thead><tbody>
 <tr><td>What</td><td>executable <em>tools</em></td><td>markdown <em>instructions</em> for doing a job well</td></tr>
 <tr><td>Format</td><td>server + schema</td><td><code>SKILL.md</code> + scripts</td></tr>
 <tr><td>When</td><td>need to run an external action</td><td>need know-how / repeatable process</td></tr>
@@ -382,9 +386,15 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 </ul></div>
   </article>
 </div>
+<script src="../_shared/nav-stack.js"></script>
 <script>
 (function () {
   const title = "MCP";
+  const num = "15";
+  if (window.AiLabNav) {
+    AiLabNav.enter((num ? num + " " : "") + title);
+    AiLabNav.wireBack("a.back", "../index.html");
+  }
   function toast(msg) {
     let el = document.querySelector(".lab-toast");
     if (!el) { el = document.createElement("div"); el.className = "lab-toast"; document.body.appendChild(el); }

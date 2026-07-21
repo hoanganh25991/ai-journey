@@ -327,6 +327,7 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 </script>
 
   </div>
+  <div data-lab-stack></div>
   <article class="doc">
     <h1>Train → Inference</h1>
     <p class="summary">Two lives of a model: learn weights once (train), then use lightly many times (infer).</p>
@@ -343,10 +344,12 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 <ul>
 <li><strong>Two phases:</strong></li>
 </ul>
-<p>  | Phase | Work | Cost | Output |</p>
-<p>  |-------|------|------|--------|</p>
-<p>  | <strong>Train</strong> | loop data for many epochs, compare prediction to label, update weights | heavy, needs GPU | checkpoint (weight file) |</p>
-<p>  | <strong>Inference</strong> | load weights, feed input, get prediction | light, realtime | label / action |</p>
+<table><thead>
+<tr><th>Phase</th><th>Work</th><th>Cost</th><th>Output</th></tr>
+</thead><tbody>
+<tr><td><strong>Train</strong></td><td>loop data for many epochs, compare prediction to label, update weights</td><td>heavy, needs GPU</td><td>checkpoint (weight file)</td></tr>
+<tr><td><strong>Inference</strong></td><td>load weights, feed input, get prediction</td><td>light, realtime</td><td>label / action</td></tr>
+</tbody></table>
 <ul>
 <li><strong>Learning = reducing error:</strong> each round the model predicts, measures loss (e.g. cross-entropy with <a href="softmax.html">softmax.md</a>), then nudges weights toward lower loss.</li>
 <li><strong>Checkpoint is the product:</strong> after training, save weights; inference no longer needs training data.</li>
@@ -365,9 +368,15 @@ data → train (many GPU epochs) → checkpoint → load → infer (predict)
 </ul></div>
   </article>
 </div>
+<script src="../_shared/nav-stack.js"></script>
 <script>
 (function () {
   const title = "Train → Inference";
+  const num = "20";
+  if (window.AiLabNav) {
+    AiLabNav.enter((num ? num + " " : "") + title);
+    AiLabNav.wireBack("a.back", "../index.html");
+  }
   function toast(msg) {
     let el = document.querySelector(".lab-toast");
     if (!el) { el = document.createElement("div"); el.className = "lab-toast"; document.body.appendChild(el); }

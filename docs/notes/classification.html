@@ -327,6 +327,7 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 </script>
 
   </div>
+  <div data-lab-stack></div>
   <article class="doc">
     <h1>Classification</h1>
     <p class="summary">Assign a label to input — the most common model-building task, right after softmax.</p>
@@ -336,25 +337,39 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
     <div class="topics"><span>#classification</span><span>#cross-entropy</span><span>#multi-class</span><span>#F1</span></div>
     <hr class="sep" />
     <div class="body"><h1>Classification — label the input</h1>
-<blockquote>Given an input (text, image, numbers), the model picks one label from a fixed set. This is the most common "build a model" problem — right after <a href="softmax.html">softmax</a>.</blockquote>
+<blockquote>Given an input (text, image, numbers), the model picks one label from a fixed set. Everyday example: a review arrives → the model says <em>positive</em>, <em>neutral</em>, or <em>negative</em>. This is the most common “build a model” problem — right after <a href="softmax.html">softmax</a>.</blockquote>
 <h2>Why it matters</h2>
-<p>Much practical work is categorization: is this review positive or negative, is the email spam, is the photo a dog or a cat, is the question easy or hard. Understanding classification is understanding how a model makes discrete decisions — and it reuses the same tokenize → embedding → softmax chain the lab walks through.</p>
+<p>Much practical work is categorization: is this review positive or negative, is the email spam, is the photo a dog or a cat, is the question easy or hard. Understanding classification is understanding how a model makes <strong>discrete decisions</strong> — and it reuses the same tokenize → embedding → softmax chain the lab walks through.</p>
+<p>If you can train a solid classifier, you already understand loss, evaluation, and the train/infer split that every larger system (RAG routers, sentiment demos, car-nn) depends on.</p>
 <h2>Key ideas</h2>
 <ul>
-<li><strong>Classification head:</strong> the last layer turns a representation (vector) into a score per label (logits), then <a href="softmax.html">softmax</a> converts to probabilities → pick the highest.</li>
+<li><strong>Classification head:</strong> the last layer turns a representation (vector) into a score per label (<em>logits</em>), then <a href="softmax.html">softmax</a> converts to probabilities → pick the highest (<code>argmax</code>).</li>
 <li><strong>Binary vs multi-class vs multi-label:</strong></li>
+<li><em>Binary:</em> two classes (spam / not spam). Often one logit + sigmoid, or two logits + softmax.</li>
+<li><em>Multi-class:</em> pick <strong>exactly one</strong> of many (neg / neu / pos). Softmax + cross-entropy.</li>
+<li><em>Multi-label:</em> one input can carry several labels at once (e.g. a news article tagged <em>politics</em> and <em>economy</em>). Usually independent sigmoids + binary cross-entropy per label.</li>
+<li><strong>Training loss:</strong> <em>cross-entropy</em> measures how wrong the predicted probability is versus the true label; training pushes loss down (<a href="train-infer.html">06-train-infer.md</a>).</li>
+<li><strong>Evaluation beyond accuracy:</strong> accuracy is easy but misleading on imbalanced data. Also check <strong>precision</strong>, <strong>recall</strong>, and <strong>F1</strong>. For rare classes (fraud, rare diseases), recall often matters more than overall accuracy.</li>
+<li><strong>Class balance:</strong> rare labels are easily ignored — the model can get 95% accuracy by always predicting the majority class. Always inspect the label distribution before trusting a score.</li>
 </ul>
-<p>  - <em>Binary:</em> two classes (spam / not spam).</p>
-<p>  - <em>Multi-class:</em> pick exactly one of many (neg / neu / pos).</p>
-<p>  - <em>Multi-label:</em> one input can carry several labels at once.</p>
+<h2>Worked example</h2>
+<p>Input sentence: <code>"The battery dies in two hours."</code></p>
+<p>1. Tokenize → IDs → embedding → (optional Transformer) → one vector for the sentence.</p>
+<p>2. Classification head → logits, e.g. <code>[2.1, 0.3, −1.4]</code> for <code>{neg, neu, pos}</code>.</p>
+<p>3. Softmax → probabilities ≈ <code>[0.81, 0.14, 0.05]</code>.</p>
+<p>4. Prediction = <strong>neg</strong>. During training, if the true label is <code>neg</code>, cross-entropy is low; if the true label were <code>pos</code>, loss would be high and weights would update.</p>
+<h2>Common pitfalls</h2>
 <ul>
-<li><strong>Training loss:</strong> <em>cross-entropy</em> measures how wrong the predicted probability is; training pushes loss down (<a href="train-infer.html">06-train-infer.md</a>).</li>
-<li><strong>Evaluation:</strong> accuracy is easy but misleading on imbalanced data; also check precision, recall, and F1.</li>
-<li><strong>Class balance:</strong> rare labels are easily ignored — watch the label distribution.</li>
+<li><strong>Wrong metric on skewed data</strong> — report F1 / per-class recall, not only accuracy.</li>
+<li><strong>Train/val leakage</strong> — same review appearing in both splits → fake high scores.</li>
+<li><strong>Label noise</strong> — inconsistent human labels cap how good the model can get.</li>
+<li><strong>Threshold blindness</strong> — for binary tasks, the default 0.5 cutoff may be wrong; tune on validation.</li>
 </ul>
 <h2>Illustrations</h2>
 <figure><img src="assets/protonx/softmax-regression.jpg" alt="Softmax regression: multi-class classification model" loading="lazy" /><figcaption>Softmax regression: multi-class classification model</figcaption></figure>
 <figure><img src="assets/protonx/softmax.jpg" alt="Softmax converts raw scores to probabilities for label selection" loading="lazy" /><figcaption>Softmax converts raw scores to probabilities for label selection</figcaption></figure>
+<figure><img src="../slides/assets/classification-pipeline.svg" alt="Classification pipeline: input → embedding → head → softmax → label" loading="lazy" /><figcaption>Classification pipeline: input → embedding → head → softmax → label</figcaption></figure>
+<figure><img src="../slides/assets/classification-hero.png" alt="Classification hero: scores become a discrete decision" loading="lazy" /><figcaption>Classification hero: scores become a discrete decision</figcaption></figure>
 <h2>Pipeline</h2>
 <pre><code>
 input → embedding → classification head → softmax → label
@@ -362,7 +377,14 @@ input → embedding → classification head → softmax → label
                                     (train: cross-entropy)
 
 </code></pre>
-<p>Classification is the destination of <a href="softmax.html">softmax.md</a>; train it with <a href="pytorch-training.html">pytorch-training.md</a> or <a href="tensorflow-training.html">tensorflow-training.md</a>.</p>
+<p>Classification is the destination of <a href="softmax.html">softmax.md</a>; train it with <a href="pytorch-training.html">pytorch-training.md</a> or <a href="tensorflow-training.html">tensorflow-training.md</a>. See it live in <a href="sentiment-routing.html">05-demo-text.md</a> and <a href="car-nn.html">04-demo-car.md</a>.</p>
+<h2>Slides &amp; demo</h2>
+<table><thead>
+<tr><th></th><th>Link</th></tr>
+</thead><tbody>
+<tr><td>Slides</td><td><a href="../slides/classification/index.html">slides/classification</a></td></tr>
+<tr><td>Related demos</td><td><a href="../demos/sentiment/app/index.html">sentiment</a> · <a href="../demos/car-nn/app/index.html">car-nn</a></td></tr>
+</tbody></table>
 <h2>References</h2>
 <ul>
 <li><a href="https://scikit-learn.org/stable/supervised_learning.html">scikit-learn — classification</a></li>
@@ -370,14 +392,20 @@ input → embedding → classification head → softmax → label
 </ul>
 <h2>Related</h2>
 <ul>
-<li><a href="softmax.html">softmax.md</a>, <a href="sentiment-routing.html">05-demo-text.md</a></li>
+<li><a href="softmax.html">softmax.md</a>, <a href="sentiment-routing.html">05-demo-text.md</a>, <a href="car-nn.html">04-demo-car.md</a></li>
 <li><a href="pytorch-training.html">pytorch-training.md</a>, <a href="tensorflow-training.html">tensorflow-training.md</a></li>
 </ul></div>
   </article>
 </div>
+<script src="../_shared/nav-stack.js"></script>
 <script>
 (function () {
   const title = "Classification";
+  const num = "05";
+  if (window.AiLabNav) {
+    AiLabNav.enter((num ? num + " " : "") + title);
+    AiLabNav.wireBack("a.back", "../index.html");
+  }
   function toast(msg) {
     let el = document.querySelector(".lab-toast");
     if (!el) { el = document.createElement("div"); el.className = "lab-toast"; document.body.appendChild(el); }

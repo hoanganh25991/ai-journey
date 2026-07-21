@@ -327,6 +327,7 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 </script>
 
   </div>
+  <div data-lab-stack></div>
   <article class="doc">
     <h1>Hugging Face — dataset + Space</h1>
     <p class="summary">GitHub for AI: Datasets + pretrained Models + Spaces → a usable model fast.</p>
@@ -336,29 +337,63 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
     <div class="topics"><span>#huggingface</span><span>#datasets</span><span>#spaces</span><span>#transformers</span><span>#fine-tune</span></div>
     <hr class="sep" />
     <div class="body"><h1>Hugging Face — dataset + Space → usable model</h1>
-<blockquote>"GitHub for AI": get <strong>datasets</strong>, <strong>pretrained models</strong>, and host demos with <strong>Spaces</strong>. Shortens the path from idea to a model you can actually use.</blockquote>
+<blockquote>“GitHub for AI”: get <strong>datasets</strong>, <strong>pretrained models</strong>, and host demos with <strong>Spaces</strong>. Shortens the path from idea to a model you can actually use. Everyday metaphor: don’t forge steel — borrow a good knife, sharpen it on your wood, then show others how it cuts.</blockquote>
 <h2>Why it matters</h2>
-<p>Training from scratch is expensive. Hugging Face lets you stand on others' work: download a labeled dataset, grab a pretrained model, fine-tune lightly, and deploy a demo in minutes. It is the fastest route from <a href="pytorch-training.html">training</a> to a shareable model.</p>
+<p>Training from scratch is expensive. Hugging Face lets you stand on others’ work: download a labeled dataset, grab a pretrained model, fine-tune lightly, and deploy a demo in minutes. It is the fastest route from <a href="pytorch-training.html">training</a> to a shareable model.</p>
+<p>For the lab, HF is also where sentence-transformers models, tokenizer cards, and many RAG embedding checkpoints live.</p>
 <h2>Key ideas</h2>
 <ul>
 <li><strong>Three main pieces:</strong></li>
-</ul>
-<p>  - <em>Datasets</em> — labeled data, one line: <code>load_dataset(...)</code>.</p>
-<p>  - <em>Models (Hub)</em> — pretrained BERT, GPT, ViT, etc.; fine-tune instead of training from zero.</p>
-<p>  - <em>Spaces</em> — host demo apps (Gradio/Streamlit), with optional GPU.</p>
-<ul>
+<li><em>Datasets</em> — labeled data, often one line: <code>load_dataset("imdb")</code>.</li>
+<li><em>Models (Hub)</em> — pretrained BERT, GPT, ViT, MiniLM, etc.; fine-tune instead of training from zero.</li>
+<li><em>Spaces</em> — host demo apps (Gradio/Streamlit), with optional GPU, plus a simple API endpoint.</li>
 <li><strong><code>transformers</code> + <code>datasets</code>:</strong> a few lines to load model, tokenizer, and data; fine-tune with <code>Trainer</code> or a familiar PyTorch/TF loop.</li>
-<li><strong>Fine-tune beats scratch:</strong> leverage knowledge from large models → needs far less data and time.</li>
+<li><strong>Fine-tune beats scratch:</strong> leverage knowledge from large models → needs far less data and time. A few thousand labeled examples often beat a huge scratch train.</li>
 <li><strong>Spaces = demo + endpoint:</strong> push a model to a Space → instant UI and API for others to try.</li>
-<li><strong>Model card and license:</strong> read license and usage restrictions before commercial use.</li>
+<li><strong>Model card and license:</strong> read license, intended use, and limitations before commercial use. Some weights are research-only.</li>
+<li><strong>Tokenizer must match the model:</strong> always load the tokenizer that belongs to that checkpoint — mismatch corrupts every ID (<a href="tokenize.html">tokenize.md</a>).</li>
 <li><strong>Output is a model:</strong> checkpoint or endpoint ready for <a href="train-infer.html">inference</a>.</li>
 </ul>
+<h2>Typical path</h2>
+<pre><code>
+from datasets import load_dataset
+
+from transformers import AutoTokenizer, AutoModelForSequenceClassification, Trainer
+
+
+
+ds = load_dataset("imdb")
+
+tok = AutoTokenizer.from_pretrained("bert-base-uncased")
+
+model = AutoModelForSequenceClassification.from_pretrained("bert-base-uncased", num_labels=2)
+
+# tokenize, Trainer(...).train(), then model.push_to_hub("my-imdb-clf")
+
+</code></pre>
+<h2>Worked example (intuition)</h2>
+<p>Want a Vietnamese sentiment demo? Search the Hub for a multilingual or vi checkpoint → load a small labeled set → fine-tune 2–3 epochs on a free GPU (<a href="kaggle.html">kaggle.md</a> / Colab) → push to a Space. You never trained a Transformer from random weights.</p>
+<h2>Common pitfalls</h2>
+<ul>
+<li><strong>Ignoring the model card</strong> — wrong license or unsafe intended use.</li>
+<li><strong>Tokenizer mismatch</strong> — using a different vocab than the checkpoint.</li>
+<li><strong>Fine-tuning the whole giant model when LoRA would do</strong> — wasted GPU and money for small tasks.</li>
+<li><strong>Eval on the Hub’s test split after peeking</strong> — keep a private holdout.</li>
+</ul>
+<h2>Illustrations</h2>
+<figure><img src="../slides/assets/huggingface-hub.png" alt="Hugging Face Hub: Datasets, Models, Spaces" loading="lazy" /><figcaption>Hugging Face Hub: Datasets, Models, Spaces</figcaption></figure>
 <h2>Pipeline</h2>
 <pre><code>
 HF Datasets → pretrained model (Hub) → fine-tune (PyTorch/TF) → push to Hub / Spaces → use
 
 </code></pre>
-<p>Hugging Face is the data source and runtime for <a href="pytorch-training.html">pytorch-training.md</a> / <a href="tensorflow-training.html">tensorflow-training.md</a>; for competition-style data, see <a href="kaggle.html">kaggle.md</a>.</p>
+<p>Hugging Face is the data source and runtime partner for <a href="pytorch-training.html">pytorch-training.md</a> / <a href="tensorflow-training.html">tensorflow-training.md</a>; for competition-style data and free GPU, see <a href="kaggle.html">kaggle.md</a>.</p>
+<h2>Slides &amp; demo</h2>
+<table><thead>
+<tr><th></th><th>Link</th></tr>
+</thead><tbody>
+<tr><td>Slides</td><td><a href="../slides/huggingface/index.html">slides/huggingface</a></td></tr>
+</tbody></table>
 <h2>References</h2>
 <ul>
 <li><a href="https://huggingface.co/docs/hub/">Hugging Face Hub</a> · <a href="https://huggingface.co/docs/datasets/">Datasets</a> · <a href="https://huggingface.co/docs/hub/spaces">Spaces</a></li>
@@ -371,9 +406,15 @@ HF Datasets → pretrained model (Hub) → fine-tune (PyTorch/TF) → push to Hu
 </ul></div>
   </article>
 </div>
+<script src="../_shared/nav-stack.js"></script>
 <script>
 (function () {
   const title = "Hugging Face — dataset + Space";
+  const num = "08";
+  if (window.AiLabNav) {
+    AiLabNav.enter((num ? num + " " : "") + title);
+    AiLabNav.wireBack("a.back", "../index.html");
+  }
   function toast(msg) {
     let el = document.querySelector(".lab-toast");
     if (!el) { el = document.createElement("div"); el.className = "lab-toast"; document.body.appendChild(el); }

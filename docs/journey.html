@@ -397,6 +397,7 @@ html.i18n-busy .lang-bar { opacity: .7; pointer-events: none; }
 </script>
 
   </div>
+  <div data-lab-stack></div>
   <header class="hero">
     <div class="kicker">Map · five stages</div>
     <h1>AI Lab Journey</h1>
@@ -420,8 +421,13 @@ html.i18n-busy .lang-bar { opacity: .7; pointer-events: none; }
 <section class="stage-panel" id="agent" role="tabpanel"><div class="stage-head"><div><div class="roman">⑤</div><h2>Agent · steer the machine</h2><p class="goal">From &quot;model answers&quot; to &quot;agent controls the machine&quot;.</p></div><div class="stage-nav"><button type="button" data-go="demo" aria-label="Previous stage"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m15 18-6-6 6-6"/></svg></button></div></div><div class="stops"><a class="stop" href="notes/mcp.html"><span class="meta"><span class="num">15</span><span class="when">01/2025</span></span><span class="title">MCP</span><span class="blip">USB-C port for AI tool calls.</span></a><a class="stop" href="notes/skills-rules.html"><span class="meta"><span class="num">16</span><span class="when">03/2025</span></span><span class="title">Skills · Rules · Commands</span><span class="blip">Three layers of teaching an agent.</span></a><a class="stop" href="notes/agents.html"><span class="meta"><span class="num">21</span><span class="when">12/2025</span></span><span class="title">AI Agents · harness comparison</span><span class="blip">Harness ≠ model — Cursor / Claude / Pi…</span></a><a class="stop" href="notes/model-notes.html"><span class="meta"><span class="num">22</span><span class="when">02/2026</span></span><span class="title">Model field notes</span><span class="blip">Field notes on Grok / Opus / DeepSeek…</span></a><a class="stop" href="notes/agent-automation.html"><span class="meta"><span class="num">23</span><span class="when">03/2026</span></span><span class="title">Agent automation — OpenClaw · Hermess</span><span class="blip">OpenClaw opened the door → Hermess polished it.</span></a><a class="stop" href="notes/ai-timeline.html"><span class="meta"><span class="num">24</span><span class="when">05/2026</span></span><span class="title">AI timeline — my journey</span><span class="blip">Anchor the lab to real AI history.</span></a><a class="stop" href="notes/personal-knowledge-base.html"><span class="meta"><span class="num">25</span><span class="when">07/2026</span></span><span class="title">Personal Knowledge-base — videos · docs · GitHub</span><span class="blip">Search video / docs / GitHub + Graph RAG.</span></a></div><div class="boss"><strong>Challenge</strong>Explain MCP ≠ Skills, and why the same model feels different in Cursor vs Claude Code.</div></section></div>
   <div class="fin">Back to the <a href="./index.html">hub</a> · search by #topic</div>
 </div>
+<script src="_shared/nav-stack.js"></script>
 <script>
 (function () {
+  if (window.AiLabNav) {
+    AiLabNav.enter("Journey");
+    AiLabNav.wireBack("a.back", "./index.html");
+  }
   var ids = ["abc", "build", "rag", "demo", "agent"];
   function show(id) {
     if (ids.indexOf(id) < 0) id = ids[0];
