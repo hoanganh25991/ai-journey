@@ -640,11 +640,12 @@ HUB_HTML = r"""<!DOCTYPE html>
 .tagline { margin-top: 14px; color: var(--muted); font-size: 15px; max-width: 560px; line-height: 1.5; }
 .journey-cta {
   display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
-  margin: 22px 0 0; padding: 16px 18px; text-decoration: none; color: inherit;
+  margin: 18px 0 0; padding: 16px 18px; text-decoration: none; color: inherit;
   background: linear-gradient(120deg, rgba(15,138,155,.10), var(--surface) 55%);
   border: 1px solid var(--teal); border-radius: 16px; box-shadow: var(--shadow);
   transition: transform .15s, box-shadow .15s;
 }
+#results { margin-top: 32px; padding-top: 8px; }
 .journey-cta:hover { transform: translateY(-1px); box-shadow: 0 8px 28px rgba(15,138,155,.14); }
 .journey-cta .j-kicker {
   font: 600 11px var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--teal);
@@ -655,7 +656,7 @@ HUB_HTML = r"""<!DOCTYPE html>
   margin-left: auto; font: 600 12px var(--mono); color: #fff; background: var(--teal);
   padding: 10px 14px; border-radius: 999px; white-space: nowrap;
 }
-.search-wrap { position: relative; margin: 30px 0 10px; }
+.search-wrap { position: relative; margin: 22px 0 10px; }
 #q {
   width: 100%; background: var(--surface); border: 1px solid var(--line);
   border-radius: 14px; padding: 18px 20px 18px 52px; color: var(--ink);
@@ -729,6 +730,13 @@ footer { margin-top: 40px; font: 12px var(--mono); color: var(--muted); }
     @@THEME_CTRL@@
   </div>
   <p class="tagline">Notes are the source of truth. Search first — open a note as a document; slides &amp; demos appear when available.</p>
+
+  <form class="search-wrap" id="searchForm" autocomplete="off">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+    <input id="q" type="search" placeholder="Search: tokenize, rag, mcp, skills, grok…" />
+  </form>
+  <p class="meta-line" id="metaLine">Loading…</p>
+
   <a class="journey-cta" href="journey.html">
     <div>
       <div class="j-kicker">Journey · not a note</div>
@@ -737,12 +745,6 @@ footer { margin-top: 40px; font: 12px var(--mono); color: var(--muted); }
     </div>
     <span class="j-go">Open journey →</span>
   </a>
-
-  <form class="search-wrap" id="searchForm" autocomplete="off">
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
-    <input id="q" type="search" placeholder="Search: tokenize, rag, mcp, skills, grok…" />
-  </form>
-  <p class="meta-line" id="metaLine">Loading…</p>
 
   <div id="results"></div>
 
