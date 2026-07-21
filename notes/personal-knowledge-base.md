@@ -1,9 +1,9 @@
-# Personal KB — videos · docs · GitHub
+# Personal Knowledge-base — videos · docs · GitHub
 
 > **Đã tách repo:** [`~/work-station/personal-kb`](../../personal-kb)  
 > Sẽ gắn vào ai-lab như **git submodule** (chưa add — chạy tooling từ sibling path).
 
-Trang root `index.html` chỉ search **notes**. Personal KB search video / GitHub / work-station + **Graph RAG** (keywords liên kết).
+Trang root `index.html` chỉ search **notes**. Personal Knowledge-base search video / GitHub / work-station + **Graph RAG** (keywords liên kết).
 
 ## Chạy
 
@@ -17,7 +17,7 @@ python3 ui/server.py
 # → http://127.0.0.1:8765/graph Graph RAG (nodes tròn, zoom, click)
 ```
 
-## Tài liệu trong personal-kb
+## Tài liệu trong repo Knowledge-base
 
 - [README](../../personal-kb/README.md)
 - [Sources](../../personal-kb/data/SOURCES.md)

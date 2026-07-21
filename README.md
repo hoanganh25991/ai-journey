@@ -72,7 +72,7 @@ Root `index.html` chỉ redirect sang `docs/index.html`. Không sửa file trong
 
 ## Search (client-side, thông minh)
 
-- Chỉ quét **notes** (không phải video/GitHub — xem note Personal KB).
+- Chỉ quét **notes** (không phải video/GitHub — xem note Personal Knowledge-base).
 - Synonym (vd `tokenizer`≈`tokenize`≈`bpe`), rank theo title/topics/summary/body, snippet + highlight.
 - `?q=…` deep-link; `?note=<id>` mở thẳng note page.
 - Ít kết quả → gợi ý follow-up (topic liên quan trong catalog).
@@ -84,6 +84,6 @@ Root `index.html` chỉ redirect sang `docs/index.html`. Không sửa file trong
 3. Khai báo trong [`notes/catalog.json`](notes/catalog.json): trỏ `slides` / `demo` vào file trên (`null` nếu chưa có)
 4. `./scripts/buid.sh`
 
-## Personal KB (repo riêng)
+## Personal Knowledge-base (repo riêng)
 
-Search videos · docs · GitHub · **Graph RAG** — ở [`~/work-station/personal-kb`](../personal-kb) (sẽ gắn submodule). Xem note [`notes/personal-kb.md`](notes/personal-kb.md).
+Search videos · docs · GitHub · **Graph RAG** — ở [`~/work-station/personal-kb`](../personal-kb) (sẽ gắn submodule). Xem note [`notes/personal-knowledge-base.md`](notes/personal-knowledge-base.md).

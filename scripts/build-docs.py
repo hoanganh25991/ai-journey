@@ -288,7 +288,7 @@ SYNONYMS = [
     ["model", "models", "openrouter", "llm", "grok", "deepseek", "qwen", "kimi", "glm", "composer"],
     ["train", "training", "epoch", "gpu", "pytorch", "tensorflow", "inference", "checkpoint"],
     ["search", "find", "query", "follow-up"],
-    ["kb", "knowledge-base", "personal-kb", "taxonomy", "youtube", "graph-rag", "first-mate"],
+    ["kb", "knowledge-base", "personal-kb", "personal-knowledge-base", "taxonomy", "youtube", "graph-rag", "first-mate"],
     ["timeline", "history", "milestone", "era", "transformer", "bert"],
 ]
 
@@ -552,7 +552,7 @@ footer { margin-top: 40px; font: 12px var(--mono); color: var(--muted); }
     return `
       <div class="followup">
         <h4>Ít kết quả cho “${escapeHtml(query)}”.</h4>
-        <p>Search chỉ quét <strong>notes</strong> (không phải video/GitHub — xem note Personal KB). Thử thu hẹp hoặc chọn một hướng liên quan:</p>
+        <p>Search chỉ quét <strong>notes</strong> (không phải video/GitHub — xem note Personal Knowledge-base). Thử thu hẹp hoặc chọn một hướng liên quan:</p>
         <div class="chips">${chips}</div>
       </div>`;
   }

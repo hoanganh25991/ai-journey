@@ -12,7 +12,7 @@
 ## Ý chính
 - Vector DB + metadata filters
 - Khác pure chat: neo vào corpus (video/docs/repos)
-- Personal KB của lab = hướng RAG
+- Personal Knowledge-base của lab = hướng RAG
 
 ## Protonx
 - `semantic-search/`, `day-22-bert-for-sentence-similarity.ipynb`, Graph RAG day-21

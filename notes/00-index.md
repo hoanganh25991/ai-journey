@@ -9,7 +9,7 @@ Catalog: [`catalog.json`](./catalog.json) (source of truth cho listing).
 - Mỗi mục trên UI = **một note**
 - `slides` / `demo` optional (`null` nếu chưa có)
 - Search trên hub = chỉ notes
-- Search video/docs/GitHub = dự án riêng [personal-kb.md](./personal-kb.md)
+- Search video/docs/GitHub = dự án riêng [personal-knowledge-base.md](./personal-knowledge-base.md)
 
 ## Notes
 
@@ -30,7 +30,7 @@ Catalog: [`catalog.json`](./catalog.json) (source of truth cho listing).
 | [08-model-notes.md](./08-model-notes.md) | field-notes | — | — |
 | [09-agent-automation.md](./09-agent-automation.md) | field-notes | Hermess | — |
 | [10-ai-timeline.md](./10-ai-timeline.md) | field-notes | — | — |
-| [personal-kb.md](./personal-kb.md) | project | overview | CLI / plan |
+| [personal-knowledge-base.md](./personal-knowledge-base.md) | project | overview | CLI / plan |
 
 ## Assets protonx
 

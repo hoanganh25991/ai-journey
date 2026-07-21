@@ -35,4 +35,4 @@ Context công khai (xAI, 2026-07) khớp cảm nhận:
 - **Cần tốc độ + chi phí thấp**: Grok 4.5 / Composer Fast.
 - **Cần làm rõ ràng buộc, thiết kế skill**: Anthropic mạnh nhất ở hỏi ngược.
 
-Related: [07-agents.md](./07-agents.md), [mcp.md](./mcp.md), [skills-rules.md](./skills-rules.md), [personal-kb.md](./personal-kb.md)
+Related: [07-agents.md](./07-agents.md), [mcp.md](./mcp.md), [skills-rules.md](./skills-rules.md), [personal-knowledge-base.md](./personal-knowledge-base.md)
