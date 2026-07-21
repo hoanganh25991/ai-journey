@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Semantic search — hybrid · tiered · fallback · AI Lab</title>
+<title>Semantic Search — Hybrid · Tiered · Fallback · AI Lab</title>
 <script>
 (function () {
   try {
@@ -329,7 +329,7 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
   </div>
   <div data-lab-stack></div>
   <article class="doc">
-    <h1>Semantic search — hybrid · tiered · fallback</h1>
+    <h1>Semantic Search — Hybrid · Tiered · Fallback</h1>
     <p class="summary">Search by meaning: combine inverted index (Elastic) + semantic index (embeddings). My hands-on RAG learning project.</p>
     <div class="actions"><a class="primary" href="../slides/semantic-search/index.html">Slides ↗</a>
 <a href="semantic-search.md" id="labDownload" download="semantic-search.md">Download</a>
@@ -337,7 +337,7 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 <a href="https://github.com/hoanganh25991/semantic-search">GitHub — semantic-search ↗</a></div>
     <div class="topics"><span>#semantic-search</span><span>#hybrid</span><span>#inverted-index</span><span>#elasticsearch</span><span>#ms-marco</span></div>
     <hr class="sep" />
-    <div class="body"><h1>Semantic search — hybrid · tiered · fallback</h1>
+    <div class="body"><h1>Semantic Search — Hybrid · Tiered · Fallback</h1>
 <blockquote>Search by <em>meaning</em>, not just keywords, by combining two index types: inverted index (Elastic, by keyword) and semantic index (embedding, by meaning). This is the project I built to learn RAG deeply.</blockquote>
 <blockquote>Repo: <a href="https://github.com/hoanganh25991/semantic-search">github.com/hoanganh25991/semantic-search</a> — Hybrid / Tiered / Fallback on the MS MARCO dataset.</blockquote>
 <h2>Why it matters</h2>
@@ -400,6 +400,8 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 <li><strong>Elastic kNN + BM25:</strong> <code>bool</code> query with <code>should</code> clauses or RRF plugin; ensure the same <code>_id</code> space so fusion isn’t comparing apples to oranges across indexes.</li>
 <li><strong>Cold-start / failure modes:</strong> embedding model not loaded (multi-second first query), ANN index relocating shards, Mongo fetch slower than search — users blame “search quality” when the real bug is timeout → empty UI.</li>
 <li><strong>Eval loop:</strong> fix a 200–500 query gold set from <em>your</em> logs; track Precision@5, MRR@10, p95 latency, and % path taken (keyword / hybrid / semantic / fallback) per release.</li>
+<li><strong>RRF intuition.</strong> Reciprocal rank fusion scores <code>Σ 1/(k + rank)</code> across lists (often <code>k=60</code>). It needs no score calibration between BM25 and cosine — usually stabler than hand-tuned weighted sums when engines use different numeric scales.</li>
+<li><strong>Online shadow traffic.</strong> Before switching default strategy, run the new path in shadow (log rankings, don’t show users) for a day of queries; compare overlap@10 and p95 against the champion. Strategy flips without shadow data create silent regressions.</li>
 </ul>
 <h2>Decision guide</h2>
 <table><thead>
@@ -412,6 +414,26 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 <tr><td>Cost-sensitive high QPS</td><td>Tiered with measured easy/hard mix</td><td>Embedding every query at peak QPS</td></tr>
 <tr><td>RAG needs diverse supporting passages</td><td>Optimize Recall@k + deduped fusion</td><td>MRR-only tuning that returns one near-duplicate</td></tr>
 </tbody></table>
+<figure><img src="assets/semantic-search/semantic-case.png" alt="Case study: jump-start query hybrid retrieve" loading="lazy" /><figcaption>Case study: jump-start query hybrid retrieve</figcaption></figure>
+<h2>Case study</h2>
+<p>MS MARCO-style how-to query: <code>"How do I jump-start a car?"</code> on a corpus that often says <code>"boost a vehicle battery"</code>.</p>
+<ul>
+<li><strong>Inputs:</strong> dual indexes (Elastic BM25 + embedding kNN), optional easy/hard classifier, gold judgments for MRR@10 / Recall@50.</li>
+<li><strong>Steps:</strong> <strong>Hybrid</strong> — BM25 retrieves ~100 candidates with <code>car|battery|vehicle</code> → embed query once → cosine rerank → top-10. <strong>Tiered</strong> — classifier marks how-to as hard → semantic/hybrid path; <code>"error code E42"</code> stays keyword-only (~&amp;lt;20 ms). <strong>Fallback</strong> — if top semantic score &amp;lt; 0.25, return BM25 so the UI is never empty.</li>
+<li><strong>Output:</strong> paraphrase queries gain MRR; exact error codes stay cheap; dashboards show % traffic per path and p95 latency.</li>
+<li><strong>What you'd check:</strong> empty BM25 candidate sets; classifier false negatives on hard paraphrases; Fallback threshold thrash; RRF dedupe by doc id; private holdout not only public MS MARCO leaderboard.</li>
+</ul>
+<h2>Lab checklist</h2>
+<ul>
+<li>[ ] Run the same query through keyword-only and embedding-only; compare top-5</li>
+<li>[ ] Implement a simple hybrid (filter/retrieve then rerank) on a toy corpus</li>
+<li>[ ] Compute MRR@10 or Precision@5 on ≥20 labeled queries</li>
+<li>[ ] Add a Fallback rule when top score or hit count is too low</li>
+<li>[ ] Log which path ran (keyword / hybrid / semantic / fallback) for each query</li>
+<li>[ ] Measure p50 and p95 latency with and without embedding</li>
+<li>[ ] Fuse two ranked lists with RRF (or weighted sum) and dedupe ids</li>
+<li>[ ] Write one paragraph on when Tiered would beat Hybrid for your traffic mix</li>
+</ul>
 <h2>Pipeline</h2>
 <pre><code>
 question → (classify easy/hard) → { keyword: inverted index | meaning: semantic index }
@@ -442,7 +464,7 @@ question → (classify easy/hard) → { keyword: inverted index | meaning: seman
 <script src="../_shared/nav-stack.js"></script>
 <script>
 (function () {
-  const title = "Semantic search — hybrid · tiered · fallback";
+  const title = "Semantic Search — Hybrid · Tiered · Fallback";
   const num = "14";
   if (window.AiLabNav) {
     AiLabNav.enter((num ? num + " " : "") + title);

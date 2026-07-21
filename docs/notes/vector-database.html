@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Vector database · AI Lab</title>
+<title>Vector Database · AI Lab</title>
 <script>
 (function () {
   try {
@@ -329,14 +329,14 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
   </div>
   <div data-lab-stack></div>
   <article class="doc">
-    <h1>Vector database</h1>
+    <h1>Vector Database</h1>
     <p class="summary">Store vectors and find top-k nearest neighbors (ANN). Infrastructure for RAG and semantic search.</p>
     <div class="actions"><a class="primary" href="../slides/vector-database/index.html">Slides ↗</a>
 <a href="vector-database.md" id="labDownload" download="vector-database.md">Download</a>
 <button type="button" id="labShare">Share</button></div>
     <div class="topics"><span>#vector-db</span><span>#ANN</span><span>#faiss</span><span>#elasticsearch</span><span>#pgvector</span></div>
     <hr class="sep" />
-    <div class="body"><h1>Vector database</h1>
+    <div class="body"><h1>Vector Database</h1>
 <blockquote>Store millions of embedding vectors and answer “which vectors are closest to this one?” in milliseconds. The infrastructure under RAG and semantic search. Everyday metaphor: a library that shelves books by <em>meaning coordinates</em>, not only by title keywords — and can point to the nearest shelves instantly.</blockquote>
 <h2>Why it matters</h2>
 <p><a href="embedding.html">Embedding</a> turns everything into vectors — but where do you store them, and how do you search? Scanning every vector one by one (brute force) is too slow at scale. A vector database stores vectors with their source data and finds top-k nearest neighbors fast via approximate indexes. Without it, <a href="rag.html">RAG</a> and <a href="semantic-search.html">semantic search</a> cannot run at real-world scale.</p>
@@ -388,6 +388,8 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 <li><strong>Latency budget sketch:</strong> embed query 2–20 ms + ANN 1–30 ms + fetch payloads 1–10 ms is a common comfortable band for interactive RAG; p99 spikes usually come from cold caches, huge <code>k</code>, or heavy metadata filters.</li>
 <li><strong>CRUD reality:</strong> deleting a document means deleting <em>all</em> its chunk vectors; partial updates need stable <code>chunk_id</code>s. Re-embedding after model upgrade means <strong>full reindex</strong>, not a hot swap of one row.</li>
 <li><strong>Hybrid join:</strong> many stacks run BM25 and HNSW separately then fuse scores (RRF — reciprocal rank fusion). Pure vector DB alone will miss exact SKUs/IDs that keyword search catches.</li>
+<li><strong>Recall@k vs latency curve.</strong> Plot Recall@10 against <code>efSearch</code>/<code>nprobe</code> on a fixed gold set; pick the knee that meets your SLA. Shipping “default ANN knobs” without this curve is guessing.</li>
+<li><strong>Idempotent upserts.</strong> Use stable <code>chunk_id = hash(source + offsets + model_id)</code>. Re-ingesting the same doc should replace vectors, not duplicate neighbors that pollute top-k.</li>
 </ul>
 <h2>Decision guide</h2>
 <table><thead>
@@ -400,6 +402,25 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 <tr><td>App data already in Postgres</td><td>pgvector (HNSW/IVFFlat)</td><td>Extra DB just for vectors unless scale demands it</td></tr>
 <tr><td>Cosine-trained embeddings</td><td>Cosine space, or normalize + IP</td><td>L2 on raw SBERT vectors — ranking distortion</td></tr>
 </tbody></table>
+<h2>Case study</h2>
+<p>Index an internal wiki (~8 000 chunks of 200–400 tokens) for RAG answer support.</p>
+<ul>
+<li><strong>Inputs:</strong> markdown pages → chunker → MiniLM 384-d normalized embeddings; metadata <code>{source, date, product_area}</code>.</li>
+<li><strong>Steps:</strong> upsert into HNSW (or pgvector/Chroma for the lab) → gold 50 questions with known passages → tune <code>efSearch</code> until Recall@10 ≥ 0.9 vs flat baseline → query path: embed question → ANN top-8 → filter <code>date &gt;= 2024</code> → return payloads to the LLM.</li>
+<li><strong>Output:</strong> interactive retrieve ~10–40 ms ANN + embed; RAG context pack of 8 chunks; ops runbook for full reindex when the embedding model changes.</li>
+<li><strong>What you'd check:</strong> dim/metric match at write and read; deleting a page removes all its chunk ids; ANN recall not silently tanked by tiny <code>efSearch</code>; hybrid BM25 still available for SKU/error-code queries.</li>
+</ul>
+<h2>Lab checklist</h2>
+<ul>
+<li>[ ] Chunk a small document set and embed with a fixed sentence-transformer</li>
+<li>[ ] Insert vectors + metadata into one store (FAISS, Chroma, or pgvector)</li>
+<li>[ ] Query with a paraphrase and inspect top-k texts (not only scores)</li>
+<li>[ ] Compare flat/exact search vs ANN on the same gold queries (Recall@10)</li>
+<li>[ ] Raise/lower <code>efSearch</code> or <code>nprobe</code> and record latency vs recall</li>
+<li>[ ] Apply a metadata filter and note empty-result behavior</li>
+<li>[ ] Delete or update one source document and verify stale chunks are gone</li>
+<li>[ ] Write the reindex rule: new embedding model ⇒ rebuild all vectors</li>
+</ul>
 <h2>Pipeline</h2>
 <pre><code>
 documents → chunk → embedding → [vector database]
@@ -430,7 +451,7 @@ question  → embedding → [vector database: top-k search] → RAG / semantic s
 <script src="../_shared/nav-stack.js"></script>
 <script>
 (function () {
-  const title = "Vector database";
+  const title = "Vector Database";
   const num = "13";
   if (window.AiLabNav) {
     AiLabNav.enter((num ? num + " " : "") + title);

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Model field notes · slides</title>
+<title>Model Field Notes · Slides</title>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Sora:wght@400;600;700&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="../_shared/deck.css" />
 <style>
@@ -31,6 +31,10 @@
 .code-block .k { color: #5ec8d4; }
 .code-block .s { color: #f0a35e; }
 .caption { margin-top: 14px; font-size: 20px; color: var(--muted); max-width: 92%; }
+.case-dense .card { padding: 16px 18px; }
+.case-dense .card h3 { font-size: 20px; margin-bottom: 8px; }
+.case-dense .card p { font-size: 16px !important; line-height: 1.35; }
+.lab-dense .card p { font-size: 16px !important; line-height: 1.35; }
 </style>
 </head>
 <body>
@@ -40,8 +44,8 @@
 <section class="slide active">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
-    <div class="topbar reveal"><span>Field notes · model-notes</span><span class="pill">teaching</span></div>
-    <h1 class="reveal" style="margin-top:72px;">Model field notes · <em>engines</em></h1>
+    <div class="topbar reveal"><span>Concept · Model Field Notes</span><span class="pill">teaching</span></div>
+    <h1 class="reveal" style="margin-top:72px;">Model Field Notes · <em>engines</em></h1>
     <p class="lead reveal" style="margin-top:28px;">Model ≠ harness. Engines vs cars — swap engines carefully; don’t blame the engine for a missing steering wheel.</p>
     <div class="flow-row reveal"><span class="step">task fit</span><span class="arr">→</span><span class="step">pick model</span><span class="arr">→</span><span class="step">cost / speed</span><span class="arr">→</span><span class="step">re-check prices</span></div>
   </div>
@@ -223,6 +227,42 @@
   <div class="foot"><span>11</span><span>Decision guide</span></div>
 </section>
 
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Case Study</span><span class="pill">lab</span></div>
+    <h2 class="reveal" style="font-size:40px;margin-bottom:12px;">Case Study</h2>
+    <p class="lead reveal" style="margin-top:0;margin-bottom:14px;font-size:20px;">Route five real prompts without defaulting to “always Opus.”</p>
+    <div class="cols-2 case-dense" style="gap:14px;">
+      <div class="card accent reveal" style="padding:18px 20px;"><div class="tag">inputs</div><h3>Inputs</h3><p>prompts A–E from the worked table (scaffold site, failing pytest, UI screenshot, skill draft, rename prop).</p></div>
+      <div class="card cyan reveal"><div class="tag">steps</div><h3>Steps</h3><p>A → Grok/Anthropic (greenfield); B → DeepSeek/Grok (debug in-tree); C → vision model only; D → Anthropic ask-back; E → Auto/Grok cheap edit. After each run, decide whether to change <strong>harness context</strong> before changing model.</p></div>
+      <div class="card reveal"><div class="tag">output</div><h3>Output</h3><p>lower spend on mechanical edits; fewer blind UI guesses; skill design gets clarifying questions.</p></div>
+      <div class="card reveal"><div class="tag">check</div><h3>Verify</h3><p>image gate before model pick; tools available on debug tasks; token volume not just $/1M sticker; quarterly re-run of A/B prompts after vendor updates.</p></div>
+    </div>
+  </div>
+  <div class="foot"><span>12</span><span>notes/08-model-notes.md</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Lab Checklist</span><span class="pill">do</span></div>
+    <h2 class="reveal" style="font-size:40px;margin-bottom:12px;">Lab Checklist</h2>
+    <div class="cols-2 lab-dense" style="gap:14px;">
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">01</span><p style="margin:0;font-size:18px;line-height:1.4;">Copy the task→model map into your own notes and mark what you have access to</p></div>
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">02</span><p style="margin:0;font-size:18px;line-height:1.4;">Run one greenfield and one debug prompt on two different models; compare outcomes</p></div>
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">03</span><p style="margin:0;font-size:18px;line-height:1.4;">Attach a screenshot once and verify you did <strong>not</strong> route to a text-only model</p></div>
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">04</span><p style="margin:0;font-size:18px;line-height:1.4;">Price a real task using output tokens × $/1M, not sticker rank alone</p></div>
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">05</span><p style="margin:0;font-size:18px;line-height:1.4;">Pin a model for a long refactor and log the model id in the PR/summary</p></div>
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">06</span><p style="margin:0;font-size:18px;line-height:1.4;">When quality drops, check harness tools before upgrading the model</p></div>
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">07</span><p style="margin:0;font-size:18px;line-height:1.4;">Revisit OpenRouter/vendor pricing and refresh any $ numbers in your notes</p></div>
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">08</span><p style="margin:0;font-size:18px;line-height:1.4;">Update your matrix only after a two-strike surprise (or hard evidence)</p></div>
+    </div>
+  </div>
+  <div class="foot"><span>13</span><span>notes/08-model-notes.md</span></div>
+</section>
+
 <section class="slide">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
@@ -235,7 +275,7 @@
       <div class="card reveal"><div class="tag">pitfall</div><h3>Upgrade when tools are blind</h3><p>Pays more for the same blindfold — fix harness first.</p></div>
     </div>
   </div>
-  <div class="foot"><span>12</span><span>pitfalls</span></div>
+  <div class="foot"><span>14</span><span>pitfalls</span></div>
 </section>
 
 <section class="slide">
@@ -246,7 +286,7 @@
     <div class="flow-row reveal" style="margin-top:48px;"><span class="step">name the task</span><span class="arr">→</span><span class="step">greenfield / debug / vision?</span><span class="arr">→</span><span class="step">speed vs depth</span><span class="arr">→</span><span class="step">check $</span><span class="arr">→</span><span class="step">pin &amp; run</span></div>
     <p class="lead reveal" style="margin-top:40px;">Then pick the harness that can actually call the tools you need. Re-check OpenRouter / LMArena — snapshots, not gospel.</p>
   </div>
-  <div class="foot"><span>13</span><span>pipeline</span></div>
+  <div class="foot"><span>15</span><span>pipeline</span></div>
 </section>
 
 <section class="slide">
@@ -260,7 +300,7 @@
       <div class="card reveal"><div class="tag">skills</div><h3>skills-rules</h3><p>Global know-how the harness loads.</p></div>
     </div>
   </div>
-  <div class="foot"><span>14</span><span>related</span></div>
+  <div class="foot"><span>16</span><span>related</span></div>
 </section>
 
 <section class="slide">
@@ -271,7 +311,7 @@
     <p class="lead reveal" style="margin-top:28px;">notes/08-model-notes.md — task map, Grok spotlight, decision guide.</p>
     <a class="app-cta reveal" href="../../notes/model-notes.html">Open note →</a>
   </div>
-  <div class="foot"><span>15</span><span>AI Lab</span></div>
+  <div class="foot"><span>17</span><span>AI Lab</span></div>
 </section>
 
 </main>

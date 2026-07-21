@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Model field notes · AI Lab</title>
+<title>Model Field Notes · AI Lab</title>
 <script>
 (function () {
   try {
@@ -329,14 +329,14 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
   </div>
   <div data-lab-stack></div>
   <article class="doc">
-    <h1>Model field notes</h1>
+    <h1>Model Field Notes</h1>
     <p class="summary">Model ≠ harness: Grok 4.5, Composer, Anthropic, DeepSeek, Qwen, Kimi/GLM.</p>
     <div class="actions"><a class="primary" href="../slides/model-notes/index.html">Slides ↗</a>
 <a href="08-model-notes.md" id="labDownload" download="08-model-notes.md">Download</a>
 <button type="button" id="labShare">Share</button></div>
     <div class="topics"><span>#grok</span><span>#openrouter</span><span>#deepseek</span><span>#anthropic</span><span>#composer</span><span>#cursor</span></div>
     <hr class="sep" />
-    <div class="body"><h1>Model field notes</h1>
+    <div class="body"><h1>Model Field Notes</h1>
 <blockquote><strong>Model ≠ harness.</strong> Notes on <em>the models themselves</em> (via OpenRouter + Cursor). Compare harnesses at <a href="agents.html">07-agents.md</a>. Everyday metaphor: engines (models) vs cars (harnesses) — swap engines carefully; don’t blame the engine for a missing steering wheel.</blockquote>
 <h2>Why it matters</h2>
 <p>Harness choice shapes daily workflow; model choice shapes reasoning quality, speed, and cost. These are personal field notes — not benchmarks — on what each model feels like in real coding work.</p>
@@ -415,6 +415,8 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 <li><strong>Pair with harness axes:</strong> a strong model in a tool-poor harness underperforms a mid model with shell+MCP. Diagnose harness before model (<a href="agents.html">07-agents.md</a>).</li>
 <li><strong>Session limits and latency:</strong> Opus-quality sessions that hit caps mid-refactor cost more in human time than a slightly weaker unlimited loop. Plan task chunks accordingly.</li>
 <li><strong>Re-benchmark on your repo:</strong> run the same failing test / same scaffold prompt quarterly; field notes rot when vendors ship silent updates.</li>
+<li><strong>Two-strike update rule.</strong> Change a row in your personal matrix only after the same surprise happens twice (or once with hard evidence: tests, screenshots). One lucky/unlucky chat is noise.</li>
+<li><strong>Cost caps as product decisions.</strong> Set a soft $/day or token budget for exploratory Auto use; pin models for long agents. Unbounded Auto + huge context is how “cheap” defaults become expensive weekends.</li>
 </ul>
 <h2>Decision guide</h2>
 <table><thead>
@@ -427,6 +429,25 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 <tr><td>High-volume small edits</td><td>Grok 4.5 / Auto / Composer Fast</td><td>Always-max model — cost without quality gain</td></tr>
 <tr><td>Need reproducible long agent run</td><td>Pinned model + logged id</td><td>Untracked Auto routing mid-task</td></tr>
 </tbody></table>
+<h2>Case study</h2>
+<p>Route five real prompts without defaulting to “always Opus.”</p>
+<ul>
+<li><strong>Inputs:</strong> prompts A–E from the worked table (scaffold site, failing pytest, UI screenshot, skill draft, rename prop).</li>
+<li><strong>Steps:</strong> A → Grok/Anthropic (greenfield); B → DeepSeek/Grok (debug in-tree); C → vision model only; D → Anthropic ask-back; E → Auto/Grok cheap edit. After each run, decide whether to change <strong>harness context</strong> before changing model.</li>
+<li><strong>Output:</strong> lower spend on mechanical edits; fewer blind UI guesses; skill design gets clarifying questions.</li>
+<li><strong>What you'd check:</strong> image gate before model pick; tools available on debug tasks; token volume not just $/1M sticker; quarterly re-run of A/B prompts after vendor updates.</li>
+</ul>
+<h2>Lab checklist</h2>
+<ul>
+<li>[ ] Copy the task→model map into your own notes and mark what you have access to</li>
+<li>[ ] Run one greenfield and one debug prompt on two different models; compare outcomes</li>
+<li>[ ] Attach a screenshot once and verify you did <strong>not</strong> route to a text-only model</li>
+<li>[ ] Price a real task using output tokens × $/1M, not sticker rank alone</li>
+<li>[ ] Pin a model for a long refactor and log the model id in the PR/summary</li>
+<li>[ ] When quality drops, check harness tools before upgrading the model</li>
+<li>[ ] Revisit OpenRouter/vendor pricing and refresh any $ numbers in your notes</li>
+<li>[ ] Update your matrix only after a two-strike surprise (or hard evidence)</li>
+</ul>
 <h2>Slides &amp; demo</h2>
 <table><thead>
 <tr><th></th><th>Link</th></tr>
@@ -447,7 +468,7 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 <script src="../_shared/nav-stack.js"></script>
 <script>
 (function () {
-  const title = "Model field notes";
+  const title = "Model Field Notes";
   const num = "22";
   if (window.AiLabNav) {
     AiLabNav.enter((num ? num + " " : "") + title);

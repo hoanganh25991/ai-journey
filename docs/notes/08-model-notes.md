@@ -1,4 +1,4 @@
-# Model field notes
+# Model Field Notes
 
 > **Model ≠ harness.** Notes on *the models themselves* (via OpenRouter + Cursor). Compare harnesses at [07-agents.md](./07-agents.md). Everyday metaphor: engines (models) vs cars (harnesses) — swap engines carefully; don’t blame the engine for a missing steering wheel.
 
@@ -80,6 +80,8 @@ After the run: if A looks shallow, switch harness context (pin files) before swi
 - **Pair with harness axes:** a strong model in a tool-poor harness underperforms a mid model with shell+MCP. Diagnose harness before model ([07-agents.md](./07-agents.md)).
 - **Session limits and latency:** Opus-quality sessions that hit caps mid-refactor cost more in human time than a slightly weaker unlimited loop. Plan task chunks accordingly.
 - **Re-benchmark on your repo:** run the same failing test / same scaffold prompt quarterly; field notes rot when vendors ship silent updates.
+- **Two-strike update rule.** Change a row in your personal matrix only after the same surprise happens twice (or once with hard evidence: tests, screenshots). One lucky/unlucky chat is noise.
+- **Cost caps as product decisions.** Set a soft $/day or token budget for exploratory Auto use; pin models for long agents. Unbounded Auto + huge context is how “cheap” defaults become expensive weekends.
 
 ## Decision guide
 
@@ -91,6 +93,26 @@ After the run: if A looks shallow, switch harness context (pin files) before swi
 | Designing skills/rules with conflicts | Anthropic (clarifying) | Auto that never asks and invents policy |
 | High-volume small edits | Grok 4.5 / Auto / Composer Fast | Always-max model — cost without quality gain |
 | Need reproducible long agent run | Pinned model + logged id | Untracked Auto routing mid-task |
+
+## Case study
+
+Route five real prompts without defaulting to “always Opus.”
+
+- **Inputs:** prompts A–E from the worked table (scaffold site, failing pytest, UI screenshot, skill draft, rename prop).
+- **Steps:** A → Grok/Anthropic (greenfield); B → DeepSeek/Grok (debug in-tree); C → vision model only; D → Anthropic ask-back; E → Auto/Grok cheap edit. After each run, decide whether to change **harness context** before changing model.
+- **Output:** lower spend on mechanical edits; fewer blind UI guesses; skill design gets clarifying questions.
+- **What you'd check:** image gate before model pick; tools available on debug tasks; token volume not just $/1M sticker; quarterly re-run of A/B prompts after vendor updates.
+
+## Lab checklist
+
+- [ ] Copy the task→model map into your own notes and mark what you have access to
+- [ ] Run one greenfield and one debug prompt on two different models; compare outcomes
+- [ ] Attach a screenshot once and verify you did **not** route to a text-only model
+- [ ] Price a real task using output tokens × $/1M, not sticker rank alone
+- [ ] Pin a model for a long refactor and log the model id in the PR/summary
+- [ ] When quality drops, check harness tools before upgrading the model
+- [ ] Revisit OpenRouter/vendor pricing and refresh any $ numbers in your notes
+- [ ] Update your matrix only after a two-strike surprise (or hard evidence)
 
 ## Slides & demo
 

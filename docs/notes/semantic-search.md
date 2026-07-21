@@ -1,4 +1,4 @@
-# Semantic search — hybrid · tiered · fallback
+# Semantic Search — Hybrid · Tiered · Fallback
 
 > Search by *meaning*, not just keywords, by combining two index types: inverted index (Elastic, by keyword) and semantic index (embedding, by meaning). This is the project I built to learn RAG deeply.
 
@@ -71,6 +71,8 @@ Question: `"How do I jump-start a car?"`
 - **Elastic kNN + BM25:** `bool` query with `should` clauses or RRF plugin; ensure the same `_id` space so fusion isn’t comparing apples to oranges across indexes.
 - **Cold-start / failure modes:** embedding model not loaded (multi-second first query), ANN index relocating shards, Mongo fetch slower than search — users blame “search quality” when the real bug is timeout → empty UI.
 - **Eval loop:** fix a 200–500 query gold set from *your* logs; track Precision@5, MRR@10, p95 latency, and % path taken (keyword / hybrid / semantic / fallback) per release.
+- **RRF intuition.** Reciprocal rank fusion scores `Σ 1/(k + rank)` across lists (often `k=60`). It needs no score calibration between BM25 and cosine — usually stabler than hand-tuned weighted sums when engines use different numeric scales.
+- **Online shadow traffic.** Before switching default strategy, run the new path in shadow (log rankings, don’t show users) for a day of queries; compare overlap@10 and p95 against the champion. Strategy flips without shadow data create silent regressions.
 
 ## Decision guide
 
@@ -82,6 +84,28 @@ Question: `"How do I jump-start a car?"`
 | Need best offline quality, cost secondary | Fallback or Hybrid + cross-encoder rerank | Tiered with an untested classifier |
 | Cost-sensitive high QPS | Tiered with measured easy/hard mix | Embedding every query at peak QPS |
 | RAG needs diverse supporting passages | Optimize Recall@k + deduped fusion | MRR-only tuning that returns one near-duplicate |
+
+![Case study: jump-start query hybrid retrieve](assets/semantic-search/semantic-case.png)
+
+## Case study
+
+MS MARCO-style how-to query: `"How do I jump-start a car?"` on a corpus that often says `"boost a vehicle battery"`.
+
+- **Inputs:** dual indexes (Elastic BM25 + embedding kNN), optional easy/hard classifier, gold judgments for MRR@10 / Recall@50.
+- **Steps:** **Hybrid** — BM25 retrieves ~100 candidates with `car|battery|vehicle` → embed query once → cosine rerank → top-10. **Tiered** — classifier marks how-to as hard → semantic/hybrid path; `"error code E42"` stays keyword-only (~&lt;20 ms). **Fallback** — if top semantic score &lt; 0.25, return BM25 so the UI is never empty.
+- **Output:** paraphrase queries gain MRR; exact error codes stay cheap; dashboards show % traffic per path and p95 latency.
+- **What you'd check:** empty BM25 candidate sets; classifier false negatives on hard paraphrases; Fallback threshold thrash; RRF dedupe by doc id; private holdout not only public MS MARCO leaderboard.
+
+## Lab checklist
+
+- [ ] Run the same query through keyword-only and embedding-only; compare top-5
+- [ ] Implement a simple hybrid (filter/retrieve then rerank) on a toy corpus
+- [ ] Compute MRR@10 or Precision@5 on ≥20 labeled queries
+- [ ] Add a Fallback rule when top score or hit count is too low
+- [ ] Log which path ran (keyword / hybrid / semantic / fallback) for each query
+- [ ] Measure p50 and p95 latency with and without embedding
+- [ ] Fuse two ranked lists with RRF (or weighted sum) and dedupe ids
+- [ ] Write one paragraph on when Tiered would beat Hybrid for your traffic mix
 
 ## Pipeline
 

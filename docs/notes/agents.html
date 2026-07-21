@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>AI Agents · harness comparison · AI Lab</title>
+<title>AI Agents · Harness Comparison · AI Lab</title>
 <script>
 (function () {
   try {
@@ -329,7 +329,7 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
   </div>
   <div data-lab-stack></div>
   <article class="doc">
-    <h1>AI Agents · harness comparison</h1>
+    <h1>AI Agents · Harness Comparison</h1>
     <p class="summary">Harness ≠ model: Cursor, Claude Code, Pi, Cline/Kilo, OpenCode, Zed.</p>
     <div class="actions"><a class="primary" href="../slides/agents/index.html">Slides ↗</a>
 <a href="../demos/mcp/app/index.html">Demo ↗</a>
@@ -337,7 +337,7 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 <button type="button" id="labShare">Share</button></div>
     <div class="topics"><span>#agents</span><span>#harness</span><span>#cursor</span><span>#claude</span><span>#pi</span><span>#first-mate</span></div>
     <hr class="sep" />
-    <div class="body"><h1>AI Agents · harness comparison</h1>
+    <div class="body"><h1>AI Agents · Harness Comparison</h1>
 <blockquote><strong>Harness ≠ model.</strong> Harness = orchestration software (UI, tool calling, context, agent loop). Model = the brain plugged in. The same model on different harnesses feels very different. Compare models at <a href="model-notes.html">08-model-notes.md</a>. Everyday metaphor: the same chef in different kitchens — tools, mise en place, and service rhythm change the meal.</blockquote>
 <h2>Why it matters</h2>
 <p>Picking a model is only half the story. The harness decides what context the model sees, which tools it can call, and how it loops until the job is done. Two people with the same model in Cursor vs Claude Code can have opposite experiences — because the harness differs.</p>
@@ -406,6 +406,8 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 <li><strong>Routing transparency:</strong> Auto that silently switches mid-task breaks reproducibility. For long refactors, pin the model and note it in the PR description.</li>
 <li><strong>Multi-agent / first-mate patterns:</strong> worth it when subtasks are isolatable (explore vs edit vs review). Wasteful when the harness can’t share a single filesystem truth — then you get conflicting patches.</li>
 <li><strong>Security axis:</strong> harnesses that auto-approve network and secret reads feel fast until they leak. Prefer explicit approvals for prod credentials; keep <code>.env</code> out of prompts.</li>
+<li><strong>Observability of the loop.</strong> Prefer harnesses that show tool calls, command output, and which model ran. Without that trace, “quality feels worse today” is undebuggable — could be routing, MCP, or context drop.</li>
+<li><strong>Bootstrap checklist for a new harness:</strong> (1) can it see the repo, (2) can it run a test, (3) can it apply a patch, (4) does it load <code>~/.agents</code> / AGENTS.md. Fail any one and fix that before A/B testing models.</li>
 </ul>
 <h2>Decision guide</h2>
 <table><thead>
@@ -418,6 +420,25 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 <tr><td>“Model is dumb today” but shell/MCP denied</td><td>Fix harness permissions / MCP health</td><td>Immediately swapping to a bigger model</td></tr>
 <tr><td>Reproducible long task</td><td>Pin model + AGENTS.md + skills</td><td>Auto routing with no log of which model ran</td></tr>
 </tbody></table>
+<h2>Case study</h2>
+<p>Same bug report — “CI tests fail” — across three harness thicknesses.</p>
+<ul>
+<li><strong>Inputs:</strong> failing CI log, local repo, MCP/shell permissions, project skills + AGENTS.md.</li>
+<li><strong>Steps:</strong> <strong>Thick (Cursor):</strong> run tests → read log → patch → re-run → summarize. <strong>Claude Code:</strong> slower, stronger ask-back on flake vs deterministic failure before editing. <strong>Thin chat:</strong> model only <em>describes</em> <code>pytest -q</code>; you paste everything.</li>
+<li><strong>Output:</strong> thick harnesses produce a verified fix; thin harnesses produce advice. Model card unchanged.</li>
+<li><strong>What you'd check:</strong> shell/MCP not denied; skills actually loaded; Auto vs pinned model logged; don’t swap to a bigger model until the harness can execute and observe.</li>
+</ul>
+<h2>Lab checklist</h2>
+<ul>
+<li>[ ] Pick two harnesses and run the same small repo task on both</li>
+<li>[ ] Deny shell once on purpose; note how the session degrades to chatbot mode</li>
+<li>[ ] Pin a model vs Auto on a multi-step task; record which felt more stable</li>
+<li>[ ] Confirm <code>~/.agents</code> or project skills are visible to the client you use</li>
+<li>[ ] Add or update AGENTS.md with one non-negotiable project convention</li>
+<li>[ ] Trace one agent loop: plan → tool call → observe → retry</li>
+<li>[ ] Debug one MCP server with a tiny ping/<code>list_tools</code> before blaming the model</li>
+<li>[ ] Write which harness axis failed last time you “blamed the model”</li>
+</ul>
 <h2>Slides &amp; demo</h2>
 <table><thead>
 <tr><th></th><th>Link</th></tr>
@@ -440,7 +461,7 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 <script src="../_shared/nav-stack.js"></script>
 <script>
 (function () {
-  const title = "AI Agents · harness comparison";
+  const title = "AI Agents · Harness Comparison";
   const num = "21";
   if (window.AiLabNav) {
     AiLabNav.enter((num ? num + " " : "") + title);

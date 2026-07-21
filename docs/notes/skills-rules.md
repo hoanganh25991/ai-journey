@@ -80,6 +80,8 @@ You want every AI Lab change to stay notes-first.
 - **Installation path:** `~/.agents/scripts/skill.sh install owner/repo --id my-pack` then `sync` / `check`. Parallel copies under `~/.cursor/skills` defeat the single source of truth — keep one tree under `~/.agents`.
 - **Failure mode — silent non-trigger:** user says “make slides” but description only lists “PPTX export” → skill never loads → agent freestyles a worse deck. Fix descriptions when you observe misses in real chats.
 - **Failure mode — trigger storm:** five search skills all match “research X” → model loads multiple huge SKILL.md files → context pressure and contradictory citation rules. Narrow descriptions; add explicit “prefer this over…” notes.
+- **Rule lint habit.** Periodically grep always-rules for length and secrets; if two always-rules contradict (e.g. “always commit” vs “never commit unless asked”), the model will zigzag — resolve precedence explicitly.
+- **Command vs skill ownership.** If users must remember a slash command for a workflow that should auto-appear from natural language, promote the procedure into a skill description; keep `/commands` for rare, expensive, intentional rituals.
 
 ## Decision guide
 
@@ -91,6 +93,26 @@ You want every AI Lab change to stay notes-first.
 | Convention only for `*.tsx` or `notes/**` | Glob **rule** | Global always-rule for file-local style |
 | Two skills overlap on “search / research” | Tighten descriptions; document precedence | Shipping both vague — trigger storms |
 | Sharing across Cursor / Claude / Pi | Single tree in `~/.agents/skills` | Copy-paste into client-specific skill folders |
+
+## Case study
+
+Keep AI Lab notes English and structured without pasting the same instructions every chat.
+
+- **Inputs:** project glob rule on `notes/**`; global skills in `~/.agents/skills` (`frontend-slides`, `graphify`, …); occasional `/graphify .` command.
+- **Steps:** author a short glob rule (section order, English-only, don’t invent slide assets) → tighten skill descriptions with positive + negative triggers → ask “build a vector-DB deck” and confirm only `frontend-slides` loads → use `/graphify .` when you want an intentional graph rebuild.
+- **Output:** agents follow notes conventions when editing markdown; slide requests don’t fight a vague “docs” skill; graph rebuilds are explicit and rare.
+- **What you'd check:** always-rule token size; skill description false positives in real chats; no duplicate trees under `~/.cursor/skills`; secrets never pasted into rules.
+
+## Lab checklist
+
+- [ ] Open one `SKILL.md` and rewrite its description with “use when” + “do not use when”
+- [ ] Add or inspect a short glob rule that applies only to a folder you care about
+- [ ] Trigger a skill via natural language and confirm the agent read the skill body
+- [ ] Run one intentional `/command` workflow and note why it should not auto-fire
+- [ ] Measure rough line count of always-on rules; move any novel-length block into a skill
+- [ ] Verify skills live under `~/.agents/skills` (not duplicated per client)
+- [ ] Create a deliberate overlap between two skill descriptions, then resolve precedence
+- [ ] Scan rules/skills for secrets or personal tokens and remove any found
 
 ## Pipeline
 

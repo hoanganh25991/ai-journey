@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Vector database · slides</title>
+<title>Vector Database · Slides</title>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Sora:wght@400;600;700&display=swap" rel="stylesheet" />
 <style>
 /* Shared Neural Ledger deck — fixed 1920×1080 */
@@ -199,6 +199,10 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
 .table-card.dense table { font-size: 16px; }
 .table-card.dense th, .table-card.dense td { padding: 8px 12px; }
 .card p, .card li { font-size: 19px; }
+.case-dense .card { padding: 16px 18px; }
+.case-dense .card h3 { font-size: 20px; margin-bottom: 8px; }
+.case-dense .card p { font-size: 16px !important; line-height: 1.35; }
+.lab-dense .card p { font-size: 16px !important; line-height: 1.35; }
 </style>
 </head>
 <body>
@@ -208,8 +212,8 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
 <section class="slide active">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
-    <div class="topbar reveal"><span>Concept · vector-database</span><span class="pill">teaching</span></div>
-    <h1 class="reveal" style="margin-top:72px;">Vector database · <em>nearest meaning, fast</em></h1>
+    <div class="topbar reveal"><span>Concept · Vector Database</span><span class="pill">teaching</span></div>
+    <h1 class="reveal" style="margin-top:72px;">Vector Database · <em>nearest meaning, fast</em></h1>
     <p class="lead reveal" style="margin-top:28px;">Store millions of embeddings and answer “which vectors are closest?” in milliseconds — the shelf under RAG.</p>
     <div class="flow-row reveal"><span class="step">chunk</span><span class="arr">→</span><span class="step">embed</span><span class="arr">→</span><span class="step">index</span><span class="arr">→</span><span class="step">ANN top-k</span></div>
   </div>
@@ -385,6 +389,42 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
 </section>
 
 
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Case Study</span><span class="pill">lab</span></div>
+    <h2 class="reveal" style="font-size:40px;margin-bottom:12px;">Case Study</h2>
+    <p class="lead reveal" style="margin-top:0;margin-bottom:14px;font-size:20px;">Index an internal wiki (~8 000 chunks of 200–400 tokens) for RAG answer support.</p>
+    <div class="cols-2 case-dense" style="gap:14px;">
+      <div class="card accent reveal" style="padding:18px 20px;"><div class="tag">inputs</div><h3>Inputs</h3><p>markdown pages → chunker → MiniLM 384-d normalized embeddings; metadata <code>{source, date, product_area}</code>.</p></div>
+      <div class="card cyan reveal"><div class="tag">steps</div><h3>Steps</h3><p>upsert into HNSW (or pgvector/Chroma for the lab) → gold 50 questions with known passages → tune <code>efSearch</code> until Recall@10 ≥ 0.9 vs flat baseline → query path: embed question → ANN top-8 → filter <code>date >= 2024</code> → return payloads to the LLM.</p></div>
+      <div class="card reveal"><div class="tag">output</div><h3>Output</h3><p>interactive retrieve ~10–40 ms ANN + embed; RAG context pack of 8 chunks; ops runbook for full reindex when the embedding model changes.</p></div>
+      <div class="card reveal"><div class="tag">check</div><h3>Verify</h3><p>dim/metric match at write and read; deleting a page removes all its chunk ids; ANN recall not silently tanked by tiny <code>efSearch</code>; hybrid BM25 still available for SKU/error-code queries.</p></div>
+    </div>
+  </div>
+  <div class="foot"><span>14</span><span>notes/vector-database.md</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Lab Checklist</span><span class="pill">do</span></div>
+    <h2 class="reveal" style="font-size:40px;margin-bottom:12px;">Lab Checklist</h2>
+    <div class="cols-2 lab-dense" style="gap:14px;">
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">01</span><p style="margin:0;font-size:18px;line-height:1.4;">Chunk a small document set and embed with a fixed sentence-transformer</p></div>
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">02</span><p style="margin:0;font-size:18px;line-height:1.4;">Insert vectors + metadata into one store (FAISS, Chroma, or pgvector)</p></div>
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">03</span><p style="margin:0;font-size:18px;line-height:1.4;">Query with a paraphrase and inspect top-k texts (not only scores)</p></div>
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">04</span><p style="margin:0;font-size:18px;line-height:1.4;">Compare flat/exact search vs ANN on the same gold queries (Recall@10)</p></div>
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">05</span><p style="margin:0;font-size:18px;line-height:1.4;">Raise/lower <code>efSearch</code> or <code>nprobe</code> and record latency vs recall</p></div>
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">06</span><p style="margin:0;font-size:18px;line-height:1.4;">Apply a metadata filter and note empty-result behavior</p></div>
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">07</span><p style="margin:0;font-size:18px;line-height:1.4;">Delete or update one source document and verify stale chunks are gone</p></div>
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">08</span><p style="margin:0;font-size:18px;line-height:1.4;">Write the reindex rule: new embedding model ⇒ rebuild all vectors</p></div>
+    </div>
+  </div>
+  <div class="foot"><span>15</span><span>notes/vector-database.md</span></div>
+</section>
+
 <section class="slide">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
@@ -396,7 +436,7 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
       <div class="card reveal"><div class="tag">filter</div><h3>Filter order</h3><p>Prefilter can empty candidates; postfilter may return &lt;k hits.</p></div>
     </div>
   </div>
-  <div class="foot"><span>14</span><span>notes/vector-database.md</span></div>
+  <div class="foot"><span>16</span><span>notes/vector-database.md</span></div>
 </section>
 
 <section class="slide">
@@ -407,7 +447,7 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
     <div class="flow-row reveal" style="margin-top:36px;"><span class="step">documents</span><span class="arr">→</span><span class="step">chunk</span><span class="arr">→</span><span class="step">embed</span><span class="arr">→</span><span class="step">vector DB</span></div>
     <div class="flow-row reveal" style="margin-top:28px;"><span class="step">question</span><span class="arr">→</span><span class="step">embed</span><span class="arr">→</span><span class="step">top-k search</span><span class="arr">→</span><span class="step">RAG / search</span></div>
   </div>
-  <div class="foot"><span>15</span><span>notes/vector-database.md</span></div>
+  <div class="foot"><span>17</span><span>notes/vector-database.md</span></div>
 </section>
 
 <section class="slide">
@@ -421,7 +461,7 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
       <div class="card reveal"><div class="tag">hybrid</div><h3>Semantic search</h3><p>Combine keyword filters with ANN rank.</p></div>
     </div>
   </div>
-  <div class="foot"><span>16</span><span>related notes</span></div>
+  <div class="foot"><span>18</span><span>related notes</span></div>
 </section>
 
 <section class="slide">

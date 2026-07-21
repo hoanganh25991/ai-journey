@@ -1,4 +1,4 @@
-# sentence-transformers — sentence embedding in a few lines
+# Sentence-Transformers — Sentence Embedding In A Few Lines
 
 > A Hugging Face library that turns a whole sentence into a high-quality vector in just a few lines. Classification and similarity tasks become fast and simple. Everyday metaphor: instead of weighing every letter, you stamp the whole postcard into one coordinate on a meaning map.
 
@@ -77,6 +77,8 @@ Corpus: 5,000 FAQ answers, ~80–200 tokens each.
 - **Failure mode — domain shift:** general MiniLM on legal/medical jargon clusters poorly. Fix: domain fine-tune with MultipleNegativesRankingLoss on your query–passage pairs, or pick a domain checkpoint.
 - **Asymmetric retrieval:** short query vs long passage — models trained with `MultipleNegativesRankingLoss` on QA pairs beat symmetric paraphrase models on FAQ search; the reverse is true for “find duplicate sentences.”
 - **Multilingual pitfall:** `paraphrase-multilingual-*` shares one space across languages, but quality is uneven by language; always measure Recall@k on *your* language pair, not only English MTEB headlines.
+- **Batch and length knobs.** `encode(..., batch_size=...)` and tokenizer max length dominate wall-clock more than micro-optimizing NumPy casts. Cap sequences to the length you actually indexed — encoding 512-token chunks when FAQs are 80 tokens wastes ~6× compute.
+- **Unit test for the index.** Keep 20 hand-labeled query→doc pairs; after every model or normalize change, assert Recall@5 does not collapse. This catches “forgot normalize,” “wrong prefix,” and “mixed checkpoints” faster than eyeballing demos.
 
 ## Decision guide
 
@@ -88,6 +90,26 @@ Corpus: 5,000 FAQ answers, ~80–200 tokens each.
 | Question → long passage search | `multi-qa-*` or asymmetric E5 (`query:`/`passage:`) | Symmetric paraphrase model alone |
 | Real-time embed on every keystroke | MiniLM + batch/cache; or smaller distilled embedder | Re-encoding the full corpus per keystroke |
 | Metric in DB is inner product | L2-normalize in `encode` (cosine ≡ dot) | Raw unnormalized vectors with IP — magnitude dominates |
+
+## Case study
+
+Build a FAQ retriever for 5 000 support answers (~80–200 tokens) used by a RAG bot.
+
+- **Inputs:** FAQ strings + ids; `SentenceTransformer("all-MiniLM-L6-v2")`; queries from a 100-example gold set.
+- **Steps:** offline `encode(faqs, batch_size=64, normalize_embeddings=True)` → `5000×384` matrix (~7.3 MB) → FAISS `IndexFlatIP` → at query time encode one vector → top-5 → pass texts to the LLM.
+- **Output:** p50 retrieve &lt;50 ms on CPU for this size; gold Recall@5 target ≥0.85 before wiring RAG.
+- **What you'd check:** cosine(`Hello`,`Hi there`) ≫ cosine(`Hello`, unrelated FAQ); no second model mixed into the index; if switching to multilingual FAQs, rebuild the entire index with one multilingual checkpoint.
+
+## Lab checklist
+
+- [ ] `encode` three sentences and print pairwise cosine similarities
+- [ ] Toggle `normalize_embeddings` and compare rankings under dot product
+- [ ] Embed a small corpus (≥100 docs) and retrieve top-5 for two paraphrased queries
+- [ ] Measure encode throughput (docs/sec) for your typical chunk length
+- [ ] Swap MiniLM vs mpnet (or E5) on the same gold queries and compare Recall@5
+- [ ] Document the embedding dim and metric you will store in the vector DB
+- [ ] (If using E5/BGE) verify query vs passage prefixes match the model card
+- [ ] Rebuild once after a model change and confirm old vectors are discarded
 
 ## Pipeline
 

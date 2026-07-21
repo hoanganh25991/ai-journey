@@ -65,6 +65,8 @@ This mental model prevents two mistakes: (1) expecting a static HTML demo to “
 - **Online learning ≠ clicking in a demo:** continually updating weights from live traffic is a deliberate training system (labels, monitoring, rollback). Lab demos do not do this.
 - **Latency budgets:** train optimizes for final quality; serve optimizes for p95 latency and cost. A 0.5% accuracy gain that triples serve cost may be wrong for a product, fine for a research notebook.
 - **Reproducibility bridge:** same tokenizer, same preprocessing, same label map between train and infer. Mismatched class order (`neg/neu/pos` vs `pos/neu/neg`) silently swaps predictions.
+- **Artifact contract.** Ship a tiny `inference_config.json` beside weights: class names in order, max length, normalize flags. Demos that hardcode these in three places eventually disagree with the notebook.
+- **Cost split accounting.** Track “$/quality point” in train separately from “$/1k predictions” in serve. Decisions that help one side often hurt the other — make the trade explicit when choosing model size.
 
 ## Decision guide
 
@@ -76,6 +78,28 @@ This mental model prevents two mistakes: (1) expecting a static HTML demo to “
 | Predictions flicker with same input | Force `model.eval()` + deterministic seed where relevant | Leaving dropout active at serve |
 | Choosing which file to ship | Best validation checkpoint | Last epoch by default — often overfit |
 | Cost spike on every prediction | Distill / quantize / smaller model for serve | Renting train-class GPUs for light forward passes |
+
+![Lab checklist bridging train and infer](assets/train-infer/lab-checklist.png)
+
+## Case study
+
+Car-nn and sentiment demos both follow the same two-life pattern.
+
+- **Inputs (train):** labeled sensor→action pairs or review→sentiment labels; GPU notebook; val split for checkpoint selection.
+- **Steps:** many epochs of forward→loss→backward→step → keep best-val weights → export to static demo assets → UI path loads weights once, runs `eval()`/`no_grad` forward per click.
+- **Output:** users feel realtime inference; you paid GPU hours once. Sentiment clicks are `argmax(softmax(logits))` only — never an optimizer.
+- **What you'd check:** dropout off at serve; label-map order matches training; demo cannot “learn” from clicks; if outputs flicker on identical input, suspect train mode left on.
+
+## Lab checklist
+
+- [ ] Draw the train vs infer table (work, cost, output) from memory
+- [ ] Train a tiny model for ≥2 epochs and save a checkpoint file
+- [ ] Reload weights in a fresh process with `eval()` + `no_grad`
+- [ ] Feed the same input twice and confirm deterministic outputs (dropout off)
+- [ ] Compare metrics of last-epoch vs best-val checkpoint
+- [ ] List three artifacts that must match between train and serve (tokenizer, labels, preprocess)
+- [ ] Explain in one sentence why a browser demo should not run `loss.backward()`
+- [ ] Optional: note one serve optimization (quantize/distill/smaller model) that does not replace training
 
 ## Pipeline
 

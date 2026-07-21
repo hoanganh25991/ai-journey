@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Train with PyTorch · AI Lab</title>
+<title>Train With PyTorch · AI Lab</title>
 <script>
 (function () {
   try {
@@ -329,14 +329,14 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
   </div>
   <div data-lab-stack></div>
   <article class="doc">
-    <h1>Train with PyTorch</h1>
+    <h1>Train With PyTorch</h1>
     <p class="summary">Epoch loop: forward → loss → backward → step. Train a classifier by hand.</p>
     <div class="actions"><a class="primary" href="../slides/pytorch-training/index.html">Slides ↗</a>
 <a href="pytorch-training.md" id="labDownload" download="pytorch-training.md">Download</a>
 <button type="button" id="labShare">Share</button></div>
     <div class="topics"><span>#pytorch</span><span>#training</span><span>#epoch</span><span>#optimizer</span><span>#backprop</span></div>
     <hr class="sep" />
-    <div class="body"><h1>Train with PyTorch</h1>
+    <div class="body"><h1>Train With PyTorch</h1>
 <blockquote>A hands-on lesson: use PyTorch to train a classifier — epoch loop, compute loss, backprop, update weights until the model is good enough. Everyday metaphor: each batch is one practice set; each epoch is one full pass through the textbook.</blockquote>
 <h2>Why it matters</h2>
 <p>PyTorch is the most popular flexible framework for building and training models yourself. Understanding its training loop means understanding how learning actually happens — the same mechanism every high-level library (<a href="huggingface.html">Hugging Face</a>, sentence-transformers) wraps underneath.</p>
@@ -412,6 +412,8 @@ for epoch in range(EPOCHS):
 <li><strong>AMP and grad scaling.</strong> <code>with autocast(): loss = ...</code> then <code>scaler.scale(loss).backward(); scaler.step(opt); scaler.update()</code>. Failure mode: unscaled underflow → silent zero grads; the GradScaler exists to prevent that.</li>
 <li><strong>DataLoader knobs that matter.</strong> <code>num_workers=2–4</code>, <code>pin_memory=True</code> (CUDA), and <code>persistent_workers=True</code> often matter more than micro-optimizing the model once GPU util is &amp;lt;50%. Shuffle train, not val. Set <code>torch.manual_seed</code> + <code>generator</code> for reproducible splits.</li>
 <li><strong>Compare to Keras.</strong> Same math; PyTorch makes the loop explicit (easier custom losses, GANs, RL). Cost: you own <code>train()</code>/<code>eval()</code>, device moves, and checkpointing. Prefer PyTorch when you need non-standard training; prefer Keras <code>fit</code> for fast baselines (<a href="tensorflow-training.html">tensorflow-training.md</a>).</li>
+<li><strong>Logging that pays off.</strong> Log <code>loss</code>, LR, and grad norm (<code>torch.nn.utils.clip_grad_norm_</code>) every N steps. A sudden grad-norm spike often precedes NaN loss — catch it before the whole run is useless.</li>
+<li><strong>Checkpoint resume contract.</strong> Save <code>model</code>, <code>optimizer</code>, <code>scheduler</code>, <code>epoch</code>, and <code>scaler</code> (if AMP). Resume must restore all five or “continued” training silently restarts the LR schedule and looks like a regression.</li>
 </ul>
 <h2>Decision guide</h2>
 <table><thead>
@@ -424,6 +426,26 @@ for epoch in range(EPOCHS):
 <tr><td>GPU OOM at batch 32</td><td>Gradient accumulation (4×8) or AMP</td><td>Blindly lowering LR — doesn’t free memory</td></tr>
 <tr><td>Publishing a reproducible run</td><td>Seed + fixed DataLoader generator + saved config</td><td>Only saving final weights with no hyperparams log</td></tr>
 </tbody></table>
+<figure><img src="assets/pytorch-training/lab-checklist.png" alt="Lab checklist: split → train → export" loading="lazy" /><figcaption>Lab checklist: split → train → export</figcaption></figure>
+<h2>Case study</h2>
+<p>Train a 3-class review classifier from scratch loop (not <code>Trainer</code>) on 8 000 train / 1 000 val examples.</p>
+<ul>
+<li><strong>Inputs:</strong> tokenized batches <code>x: [B, L]</code>, labels <code>y: [B]</code>, batch size 32 → 250 steps/epoch; model on CUDA, AdamW <code>lr=2e-5</code>, <code>CrossEntropyLoss</code>.</li>
+<li><strong>Steps:</strong> each batch <code>zero_grad → forward → loss → backward → clip_grad_norm_(1.0) → step</code>; after each epoch run <code>model.eval()</code> + <code>no_grad</code> val loop; save when val F1 improves.</li>
+<li><strong>Output:</strong> by epoch 4, train loss ~0.25 / val loss ~0.38; epoch 7 train ~0.08 / val ~0.52 → keep the epoch-4 <code>best.pt</code> (~110 MB state_dict).</li>
+<li><strong>What you'd check:</strong> forgot-<code>zero_grad</code> smoke test (loss should explode if you comment it out once); device match (<code>x.device == next(model.parameters()).device</code>); val uses <code>eval()</code>; resume from checkpoint restores optimizer step count.</li>
+</ul>
+<h2>Lab checklist</h2>
+<ul>
+<li>[ ] Implement the four-step batch loop and print loss for the first 20 steps</li>
+<li>[ ] Deliberately omit <code>zero_grad</code> once and observe gradient accumulation / loss blow-up</li>
+<li>[ ] Add a val loop with <code>model.eval()</code> + <code>torch.no_grad()</code> and plot train vs val loss</li>
+<li>[ ] Save best-val <code>state_dict</code> and reload it into a fresh model instance</li>
+<li>[ ] Move model + one batch to GPU (or MPS) and confirm no device mismatch errors</li>
+<li>[ ] Try gradient accumulation (e.g. 4× micro-batch 8) and match effective batch 32</li>
+<li>[ ] Log learning rate each epoch (even if constant) so a future schedule change is visible</li>
+<li>[ ] Compare final metrics when shipping last-epoch vs best-val weights</li>
+</ul>
 <h2>Pipeline</h2>
 <pre><code>
 dataset → DataLoader → [epoch loop: forward → loss → backward → step] → checkpoint
@@ -451,7 +473,7 @@ dataset → DataLoader → [epoch loop: forward → loss → backward → step] 
 <script src="../_shared/nav-stack.js"></script>
 <script>
 (function () {
-  const title = "Train with PyTorch";
+  const title = "Train With PyTorch";
   const num = "06";
   if (window.AiLabNav) {
     AiLabNav.enter((num ? num + " " : "") + title);

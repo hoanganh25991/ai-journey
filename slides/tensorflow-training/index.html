@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>TensorFlow training · slides</title>
+<title>Train With TensorFlow · Slides</title>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Sora:wght@400;600;700&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="../_shared/deck.css" />
 <style>
@@ -33,6 +33,10 @@
 .caption { margin-top: 14px; font-size: 20px; color: var(--muted); max-width: 92%; }
 .table-card.dense table { font-size: 16px; }
 .table-card.dense th, .table-card.dense td { padding: 9px 12px; }
+.case-dense .card { padding: 16px 18px; }
+.case-dense .card h3 { font-size: 20px; margin-bottom: 8px; }
+.case-dense .card p { font-size: 16px !important; line-height: 1.35; }
+.lab-dense .card p { font-size: 16px !important; line-height: 1.35; }
 </style>
 </head>
 <body>
@@ -42,8 +46,8 @@
 <section class="slide active">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
-    <div class="topbar reveal"><span>Concept · tensorflow-training</span><span class="pill">teaching</span></div>
-    <h1 class="reveal" style="margin-top:72px;">Train with <em>TensorFlow / Keras</em></h1>
+    <div class="topbar reveal"><span>Concept · Train With TensorFlow</span><span class="pill">teaching</span></div>
+    <h1 class="reveal" style="margin-top:72px;">Train With <em>TensorFlow / Keras</em></h1>
     <p class="lead reveal" style="margin-top:28px;">Same classifier lesson, declarative API: define the model, <code>compile</code>, then <code>fit</code>. You write the recipe; the kitchen runs it.</p>
     <div class="flow-row reveal">
       <span class="step">dataset</span><span class="arr">→</span>
@@ -218,6 +222,42 @@ model.fit(x_train, y_train, epochs=EPOCHS,
   <div class="foot"><span>12</span><span>Decision guide</span></div>
 </section>
 
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Case Study</span><span class="pill">lab</span></div>
+    <h2 class="reveal" style="font-size:40px;margin-bottom:12px;">Case Study</h2>
+    <p class="lead reveal" style="margin-top:0;margin-bottom:14px;font-size:20px;">Softmax regression / small MLP for 5-class topic labels on bag-of-embedding features (8 000 train / 2 000 val).</p>
+    <div class="cols-2 case-dense" style="gap:14px;">
+      <div class="card accent reveal" style="padding:18px 20px;"><div class="tag">inputs</div><h3>Inputs</h3><p><code>x_train</code> shape <code>[8000, 384]</code>, integer labels <code>[8000]</code>, <code>batch_size=64</code> → 125 steps/epoch; <code>NUM_CLASSES=5</code>.</p></div>
+      <div class="card cyan reveal"><div class="tag">steps</div><h3>Steps</h3><p><code>Sequential</code> Dense(64, relu) → Dense(5, softmax) → <code>compile(Adam(1e-3), sparse_categorical_crossentropy, accuracy)</code> → <code>fit</code> with EarlyStopping(<code>val_loss</code>, patience=3, restore_best_weights=True) + ModelCheckpoint.</p></div>
+      <div class="card reveal"><div class="tag">output</div><h3>Output</h3><p>best epoch ~4 with <code>val_accuracy≈0.81</code>, <code>val_loss≈0.48</code>; later epochs overfit to <code>val_loss≈0.61</code> but restore brings back epoch-4 weights automatically.</p></div>
+      <div class="card reveal"><div class="tag">check</div><h3>Verify</h3><p><code>y_train.ndim == 1</code> (sparse, not one-hot); Projector colored by class shows cluster separation; reloading <code>best.keras</code> reproduces the same val accuracy within rounding.</p></div>
+    </div>
+  </div>
+  <div class="foot"><span>13</span><span>notes/tensorflow-training.md</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Lab Checklist</span><span class="pill">do</span></div>
+    <h2 class="reveal" style="font-size:40px;margin-bottom:12px;">Lab Checklist</h2>
+    <div class="cols-2 lab-dense" style="gap:14px;">
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">01</span><p style="margin:0;font-size:18px;line-height:1.4;">Build a Sequential classifier and <code>compile</code> with the loss that matches your label encoding</p></div>
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">02</span><p style="margin:0;font-size:18px;line-height:1.4;">Run <code>fit</code> with <code>validation_data</code> and read the epoch logs for rising <code>val_loss</code></p></div>
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">03</span><p style="margin:0;font-size:18px;line-height:1.4;">Add EarlyStopping + ModelCheckpoint; confirm restore/best file beats the last epoch</p></div>
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">04</span><p style="margin:0;font-size:18px;line-height:1.4;">Swap sparse vs categorical loss once on purpose and note the error or nonsense loss scale</p></div>
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">05</span><p style="margin:0;font-size:18px;line-height:1.4;">Log with TensorBoard and open the scalar curves for train vs val</p></div>
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">06</span><p style="margin:0;font-size:18px;line-height:1.4;">(Optional) Launch Embedding Projector and color points by class label</p></div>
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">07</span><p style="margin:0;font-size:18px;line-height:1.4;">Save a <code>.keras</code> model and reload it in a fresh Python process for inference-only predict</p></div>
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">08</span><p style="margin:0;font-size:18px;line-height:1.4;">Write down one reason you would switch this baseline to an explicit PyTorch loop</p></div>
+    </div>
+  </div>
+  <div class="foot"><span>14</span><span>notes/tensorflow-training.md</span></div>
+</section>
+
 <section class="slide">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
@@ -230,7 +270,7 @@ model.fit(x_train, y_train, epochs=EPOCHS,
       <div class="card reveal"><div class="tag">viz</div><h3>Projector without labels</h3><p>Color points by class — otherwise the cloud is hard to read.</p></div>
     </div>
   </div>
-  <div class="foot"><span>13</span><span>notes/tensorflow-training.md</span></div>
+  <div class="foot"><span>15</span><span>notes/tensorflow-training.md</span></div>
 </section>
 
 <section class="slide">
@@ -247,7 +287,7 @@ model.fit(x_train, y_train, epochs=EPOCHS,
     </div>
     <p class="lead reveal" style="margin-top:36px;">Same target as pytorch-training — serving <span style="font-family:var(--font-mono);color:var(--cyan)">classification.md</span>. Monitor the metric you care about (on imbalance, accuracy can plateau while CE still moves).</p>
   </div>
-  <div class="foot"><span>14</span><span>TensorBoard for curves · Projector for vectors</span></div>
+  <div class="foot"><span>16</span><span>TensorBoard for curves · Projector for vectors</span></div>
 </section>
 
 <section class="slide">

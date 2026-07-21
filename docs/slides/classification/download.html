@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Classification · slides</title>
+<title>Classification · Slides</title>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Sora:wght@400;600;700&display=swap" rel="stylesheet" />
 <style>
 /* Shared Neural Ledger deck — fixed 1920×1080 */
@@ -199,6 +199,10 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
 .caption { margin-top: 14px; font-size: 20px; color: var(--muted); max-width: 92%; }
 .table-card.dense table { font-size: 16px; }
 .table-card.dense th, .table-card.dense td { padding: 9px 12px; }
+.case-dense .card { padding: 16px 18px; }
+.case-dense .card h3 { font-size: 20px; margin-bottom: 8px; }
+.case-dense .card p { font-size: 16px !important; line-height: 1.35; }
+.lab-dense .card p { font-size: 16px !important; line-height: 1.35; }
 </style>
 </head>
 <body>
@@ -208,7 +212,7 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
 <section class="slide active">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
-    <div class="topbar reveal"><span>Concept · classification</span><span class="pill">teaching</span></div>
+    <div class="topbar reveal"><span>Concept · Classification</span><span class="pill">teaching</span></div>
     <h1 class="reveal" style="margin-top:72px;">Classification · <em>label the input</em></h1>
     <p class="lead reveal" style="margin-top:28px;">Given text, an image, or numbers — pick one label from a fixed set. The everyday “build a model” problem, right after softmax.</p>
     <div class="flow-row reveal">
@@ -412,6 +416,51 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
   <div class="foot"><span>14</span><span>Decision guide</span></div>
 </section>
 
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Picture</span><span class="pill">Case map</span></div>
+    <h2 class="reveal" style="font-size:36px;margin-bottom:12px;">Support-ticket triage at a glance</h2>
+    <img class="shot shot-md reveal" src="../assets/classification-case.png" alt="Support-ticket triage at a glance" />
+  </div>
+  <div class="foot"><span>15</span><span>classification-case.png</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Case Study</span><span class="pill">lab</span></div>
+    <h2 class="reveal" style="font-size:40px;margin-bottom:12px;">Case Study</h2>
+    <p class="lead reveal" style="margin-top:0;margin-bottom:14px;font-size:20px;">Support-ticket triage for a SaaS inbox with three intents: <code>billing</code>, <code>bug</code>, <code>how-to</code> (~12 000 labeled tickets, ~70% how-to).</p>
+    <div class="cols-2 case-dense" style="gap:14px;">
+      <div class="card accent reveal" style="padding:18px 20px;"><div class="tag">inputs</div><h3>Inputs</h3><p>ticket subject + body (truncated to 256 tokens), integer labels <code>0..2</code>, stratified 80/10/10 split; class weights ≈ <code>[1.4, 2.1, 0.7]</code> because bugs are rare.</p></div>
+      <div class="card cyan reveal"><div class="tag">steps</div><h3>Steps</h3><p>load a small Hub encoder → freeze backbone for 2 epochs (head LR <code>1e-3</code>) → unfreeze with AdamW <code>2e-5</code> for 3 more → early-stop on <strong>macro-F1</strong> (not accuracy).</p></div>
+      <div class="card reveal"><div class="tag">output</div><h3>Output</h3><p>checkpoint with val macro-F1 ≈ 0.78, accuracy ≈ 0.88; confusion matrix shows <code>bug</code> recall ≈ 0.71 — still the weak class.</p></div>
+      <div class="card reveal"><div class="tag">check</div><h3>Verify</h3><p>(1) majority baseline accuracy (~0.70) so 0.88 is real lift; (2) per-class recall, especially <code>bug</code>; (3) no duplicate ticket IDs across splits; (4) threshold / abstain for low-max-prob tickets before routing to humans.</p></div>
+    </div>
+  </div>
+  <div class="foot"><span>16</span><span>notes/classification.md</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Lab Checklist</span><span class="pill">do</span></div>
+    <h2 class="reveal" style="font-size:40px;margin-bottom:12px;">Lab Checklist</h2>
+    <div class="cols-2 lab-dense" style="gap:14px;">
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">01</span><p style="margin:0;font-size:18px;line-height:1.4;">Plot the label histogram and write down the majority-class accuracy baseline</p></div>
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">02</span><p style="margin:0;font-size:18px;line-height:1.4;">Train a tiny head-only classifier, then compare macro-F1 vs accuracy on the same val set</p></div>
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">03</span><p style="margin:0;font-size:18px;line-height:1.4;">Build a 3×3 confusion matrix and identify the worst-recall class</p></div>
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">04</span><p style="margin:0;font-size:18px;line-height:1.4;">Sweep a binary threshold (or max-prob abstain) and record precision/recall at two operating points</p></div>
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">05</span><p style="margin:0;font-size:18px;line-height:1.4;">Induce label noise on 5% of train labels and measure how much val F1 drops</p></div>
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">06</span><p style="margin:0;font-size:18px;line-height:1.4;">Export the best-val checkpoint and re-run inference with <code>eval()</code> / no-grad only</p></div>
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">07</span><p style="margin:0;font-size:18px;line-height:1.4;">Document which metric you would ship on (accuracy vs macro-F1) and why</p></div>
+    </div>
+  </div>
+  <div class="foot"><span>17</span><span>notes/classification.md</span></div>
+</section>
+
 <section class="slide">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
@@ -424,7 +473,7 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
       <div class="card reveal"><div class="tag">threshold</div><h3>Threshold blindness</h3><p>Binary default 0.5 may be wrong — tune on validation.</p></div>
     </div>
   </div>
-  <div class="foot"><span>15</span><span>notes/classification.md</span></div>
+  <div class="foot"><span>18</span><span>notes/classification.md</span></div>
 </section>
 
 <section class="slide">
@@ -441,7 +490,7 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
     </div>
     <p class="lead reveal" style="margin-top:36px;">Train with <span style="font-family:var(--font-mono);color:var(--cyan)">pytorch-training.md</span> or <span style="font-family:var(--font-mono);color:var(--cyan)">tensorflow-training.md</span>. See it live in sentiment / car-nn demos.</p>
   </div>
-  <div class="foot"><span>16</span><span>train: cross-entropy</span></div>
+  <div class="foot"><span>19</span><span>train: cross-entropy</span></div>
 </section>
 
 <section class="slide">

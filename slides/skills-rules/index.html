@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Skills · Rules · Commands · slides</title>
+<title>Skills & Rules · Slides</title>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Sora:wght@400;600;700&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="../_shared/deck.css" />
 <style>
@@ -33,6 +33,10 @@
 .table-card.dense table { font-size: 16px; }
 .table-card.dense th, .table-card.dense td { padding: 8px 12px; }
 .card p, .card li { font-size: 19px; }
+.case-dense .card { padding: 16px 18px; }
+.case-dense .card h3 { font-size: 20px; margin-bottom: 8px; }
+.case-dense .card p { font-size: 16px !important; line-height: 1.35; }
+.lab-dense .card p { font-size: 16px !important; line-height: 1.35; }
 </style>
 </head>
 <body>
@@ -42,7 +46,7 @@
 <section class="slide active">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
-    <div class="topbar reveal"><span>Concept · skills-rules</span><span class="pill">teaching</span></div>
+    <div class="topbar reveal"><span>Concept · Skills & Rules</span><span class="pill">teaching</span></div>
     <h1 class="reveal" style="margin-top:72px;">Skills · Rules · Commands · <em>configure the agent</em></h1>
     <p class="lead reveal" style="margin-top:28px;">Three layers teach a coding agent: toolboxes on demand, house laws always on, and buttons you press.</p>
     <div class="flow-row reveal"><span class="step">task</span><span class="arr">→</span><span class="step">rules</span><span class="arr">+</span><span class="step">skills</span><span class="arr">+</span><span class="step">/command</span></div>
@@ -230,6 +234,42 @@ description: Use when X/Y/Z (artifacts: .pptx). Do not use for ordinary notes.
 </section>
 
 
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Case Study</span><span class="pill">lab</span></div>
+    <h2 class="reveal" style="font-size:40px;margin-bottom:12px;">Case Study</h2>
+    <p class="lead reveal" style="margin-top:0;margin-bottom:14px;font-size:20px;">Keep AI Lab notes English and structured without pasting the same instructions every chat.</p>
+    <div class="cols-2 case-dense" style="gap:14px;">
+      <div class="card accent reveal" style="padding:18px 20px;"><div class="tag">inputs</div><h3>Inputs</h3><p>project glob rule on <code>notes/**</code>; global skills in <code>~/.agents/skills</code> (<code>frontend-slides</code>, <code>graphify</code>, …); occasional <code>/graphify .</code> command.</p></div>
+      <div class="card cyan reveal"><div class="tag">steps</div><h3>Steps</h3><p>author a short glob rule (section order, English-only, don’t invent slide assets) → tighten skill descriptions with positive + negative triggers → ask “build a vector-DB deck” and confirm only <code>frontend-slides</code> loads → use <code>/graphify .</code> when you want an intentional graph rebuild.</p></div>
+      <div class="card reveal"><div class="tag">output</div><h3>Output</h3><p>agents follow notes conventions when editing markdown; slide requests don’t fight a vague “docs” skill; graph rebuilds are explicit and rare.</p></div>
+      <div class="card reveal"><div class="tag">check</div><h3>Verify</h3><p>always-rule token size; skill description false positives in real chats; no duplicate trees under <code>~/.cursor/skills</code>; secrets never pasted into rules.</p></div>
+    </div>
+  </div>
+  <div class="foot"><span>14</span><span>notes/skills-rules.md</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Lab Checklist</span><span class="pill">do</span></div>
+    <h2 class="reveal" style="font-size:40px;margin-bottom:12px;">Lab Checklist</h2>
+    <div class="cols-2 lab-dense" style="gap:14px;">
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">01</span><p style="margin:0;font-size:18px;line-height:1.4;">Open one <code>SKILL.md</code> and rewrite its description with “use when” + “do not use when”</p></div>
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">02</span><p style="margin:0;font-size:18px;line-height:1.4;">Add or inspect a short glob rule that applies only to a folder you care about</p></div>
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">03</span><p style="margin:0;font-size:18px;line-height:1.4;">Trigger a skill via natural language and confirm the agent read the skill body</p></div>
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">04</span><p style="margin:0;font-size:18px;line-height:1.4;">Run one intentional <code>/command</code> workflow and note why it should not auto-fire</p></div>
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">05</span><p style="margin:0;font-size:18px;line-height:1.4;">Measure rough line count of always-on rules; move any novel-length block into a skill</p></div>
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">06</span><p style="margin:0;font-size:18px;line-height:1.4;">Verify skills live under <code>~/.agents/skills</code> (not duplicated per client)</p></div>
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">07</span><p style="margin:0;font-size:18px;line-height:1.4;">Create a deliberate overlap between two skill descriptions, then resolve precedence</p></div>
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">08</span><p style="margin:0;font-size:18px;line-height:1.4;">Scan rules/skills for secrets or personal tokens and remove any found</p></div>
+    </div>
+  </div>
+  <div class="foot"><span>15</span><span>notes/skills-rules.md</span></div>
+</section>
+
 <section class="slide">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
@@ -241,7 +281,7 @@ description: Use when X/Y/Z (artifacts: .pptx). Do not use for ordinary notes.
       <div class="card reveal"><div class="tag">drift</div><h3>Duplicate trees</h3><p>Copying into Cursor/Claude folders → drift and conflicts.</p></div>
     </div>
   </div>
-  <div class="foot"><span>14</span><span>notes/skills-rules.md</span></div>
+  <div class="foot"><span>16</span><span>notes/skills-rules.md</span></div>
 </section>
 
 <section class="slide">
@@ -252,7 +292,7 @@ description: Use when X/Y/Z (artifacts: .pptx). Do not use for ordinary notes.
     <div class="flow-row reveal" style="margin-top:48px;"><span class="step">task</span><span class="arr">→</span><span class="step">rules (always/glob)</span><span class="arr">+</span><span class="step">matching skills</span><span class="arr">+</span><span class="step">/command?</span><span class="arr">→</span><span class="step">tools</span></div>
     <p class="lead reveal" style="margin-top:36px;">Agent acts with MCP/tools under the loaded configuration — not a blank model.</p>
   </div>
-  <div class="foot"><span>15</span><span>notes/skills-rules.md</span></div>
+  <div class="foot"><span>17</span><span>notes/skills-rules.md</span></div>
 </section>
 
 <section class="slide">
@@ -266,7 +306,7 @@ description: Use when X/Y/Z (artifacts: .pptx). Do not use for ordinary notes.
       <div class="card reveal"><div class="tag">demo</div><h3>MCP app</h3><p>See tool calling in the browser demo.</p></div>
     </div>
   </div>
-  <div class="foot"><span>16</span><span>related notes</span></div>
+  <div class="foot"><span>18</span><span>related notes</span></div>
 </section>
 
 <section class="slide">

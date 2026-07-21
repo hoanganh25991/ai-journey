@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Train with TensorFlow / Keras · AI Lab</title>
+<title>Train With TensorFlow / Keras · AI Lab</title>
 <script>
 (function () {
   try {
@@ -329,14 +329,14 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
   </div>
   <div data-lab-stack></div>
   <article class="doc">
-    <h1>Train with TensorFlow / Keras</h1>
+    <h1>Train With TensorFlow / Keras</h1>
     <p class="summary">compile + fit: declare the model, let Keras run the epoch loop.</p>
     <div class="actions"><a class="primary" href="../slides/tensorflow-training/index.html">Slides ↗</a>
 <a href="tensorflow-training.md" id="labDownload" download="tensorflow-training.md">Download</a>
 <button type="button" id="labShare">Share</button></div>
     <div class="topics"><span>#tensorflow</span><span>#keras</span><span>#training</span><span>#epoch</span></div>
     <hr class="sep" />
-    <div class="body"><h1>Train with TensorFlow / Keras</h1>
+    <div class="body"><h1>Train With TensorFlow / Keras</h1>
 <blockquote>Same classifier lesson, but with TensorFlow (Keras API): define the model, <code>compile</code>, then <code>fit</code> over many epochs. More concise than PyTorch thanks to the built-in training loop. Everyday metaphor: you write the recipe (<code>compile</code>); the kitchen runs it (<code>fit</code>).</blockquote>
 <h2>Why it matters</h2>
 <p>TensorFlow (via Keras) is <strong>declarative</strong> training: you describe the model and settings, the framework runs the epoch loop. Contrasting with <a href="pytorch-training.html">PyTorch</a> (where you write the loop yourself) shows the same learning idea in two API styles — pick the one that fits the project.</p>
@@ -415,6 +415,8 @@ model.fit(
 <li><strong><code>tf.data</code> beats giant NumPy.</strong> <code>ds = tf.data.Dataset.from_tensor_slices((x, y)).shuffle(10_000).batch(64).prefetch(tf.data.AUTOTUNE)</code> keeps the GPU fed. Failure mode: feeding full <code>x_train</code> that doesn’t fit RAM, or no <code>prefetch</code> → GPU idle between steps.</li>
 <li><strong>Custom training with <code>GradientTape</code>.</strong> When <code>fit</code> is too rigid: <code>with tf.GradientTape() as tape: loss = ...; grads = tape.gradient(loss, model.trainable_weights); opt.apply_gradients(zip(grads, model.trainable_weights))</code>. Same four steps as PyTorch, TF-flavored.</li>
 <li><strong>Keras vs PyTorch choice.</strong> Keras <code>fit</code>: fastest path to a baseline + TensorBoard. PyTorch loop: research flexibility, HF <code>Trainer</code> ecosystem. Same CE math; different knobs and error messages.</li>
+<li><strong>Metric vs loss disagreement.</strong> Accuracy can plateau while <code>val_loss</code> still improves rare classes — or the reverse on skewed data. Always decide the <em>monitor</em> for EarlyStopping before the run, and stick to it when comparing experiments.</li>
+<li><strong>SavedModel vs weights-only.</strong> <code>model.save("best.keras")</code> keeps architecture + weights; <code>save_weights</code> alone needs identical code to rebuild. For lab demos, prefer a single <code>.keras</code> / SavedModel so reload does not depend on recreating layers by hand.</li>
 </ul>
 <h2>Decision guide</h2>
 <table><thead>
@@ -427,6 +429,25 @@ model.fit(
 <tr><td>Need non-standard loss / multi-optimizer</td><td><code>GradientTape</code> custom loop (or PyTorch)</td><td>Stretching <code>fit</code> with opaque callback hacks</td></tr>
 <tr><td>Embedding debugging / teaching</td><td>TensorBoard Projector colored by class</td><td>Projector with unlabeled gray clouds</td></tr>
 </tbody></table>
+<h2>Case study</h2>
+<p>Softmax regression / small MLP for 5-class topic labels on bag-of-embedding features (8 000 train / 2 000 val).</p>
+<ul>
+<li><strong>Inputs:</strong> <code>x_train</code> shape <code>[8000, 384]</code>, integer labels <code>[8000]</code>, <code>batch_size=64</code> → 125 steps/epoch; <code>NUM_CLASSES=5</code>.</li>
+<li><strong>Steps:</strong> <code>Sequential</code> Dense(64, relu) → Dense(5, softmax) → <code>compile(Adam(1e-3), sparse_categorical_crossentropy, accuracy)</code> → <code>fit</code> with EarlyStopping(<code>val_loss</code>, patience=3, restore_best_weights=True) + ModelCheckpoint.</li>
+<li><strong>Output:</strong> best epoch ~4 with <code>val_accuracy≈0.81</code>, <code>val_loss≈0.48</code>; later epochs overfit to <code>val_loss≈0.61</code> but restore brings back epoch-4 weights automatically.</li>
+<li><strong>What you'd check:</strong> <code>y_train.ndim == 1</code> (sparse, not one-hot); Projector colored by class shows cluster separation; reloading <code>best.keras</code> reproduces the same val accuracy within rounding.</li>
+</ul>
+<h2>Lab checklist</h2>
+<ul>
+<li>[ ] Build a Sequential classifier and <code>compile</code> with the loss that matches your label encoding</li>
+<li>[ ] Run <code>fit</code> with <code>validation_data</code> and read the epoch logs for rising <code>val_loss</code></li>
+<li>[ ] Add EarlyStopping + ModelCheckpoint; confirm restore/best file beats the last epoch</li>
+<li>[ ] Swap sparse vs categorical loss once on purpose and note the error or nonsense loss scale</li>
+<li>[ ] Log with TensorBoard and open the scalar curves for train vs val</li>
+<li>[ ] (Optional) Launch Embedding Projector and color points by class label</li>
+<li>[ ] Save a <code>.keras</code> model and reload it in a fresh Python process for inference-only predict</li>
+<li>[ ] Write down one reason you would switch this baseline to an explicit PyTorch loop</li>
+</ul>
 <h2>Pipeline</h2>
 <pre><code>
 dataset → model (Keras) → compile → fit (epochs) → checkpoint
@@ -454,7 +475,7 @@ dataset → model (Keras) → compile → fit (epochs) → checkpoint
 <script src="../_shared/nav-stack.js"></script>
 <script>
 (function () {
-  const title = "Train with TensorFlow / Keras";
+  const title = "Train With TensorFlow / Keras";
   const num = "07";
   if (window.AiLabNav) {
     AiLabNav.enter((num ? num + " " : "") + title);

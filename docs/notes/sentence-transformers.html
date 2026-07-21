@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>sentence-transformers — sentence embeddings · AI Lab</title>
+<title>Sentence-Transformers — Sentence Embeddings · AI Lab</title>
 <script>
 (function () {
   try {
@@ -329,14 +329,14 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
   </div>
   <div data-lab-stack></div>
   <article class="doc">
-    <h1>sentence-transformers — sentence embeddings</h1>
+    <h1>Sentence-Transformers — Sentence Embeddings</h1>
     <p class="summary">Sentence → vector in a few lines; classification and similarity made fast and simple.</p>
     <div class="actions"><a class="primary" href="../slides/sentence-transformers/index.html">Slides ↗</a>
 <a href="sentence-transformers.md" id="labDownload" download="sentence-transformers.md">Download</a>
 <button type="button" id="labShare">Share</button></div>
     <div class="topics"><span>#sentence-transformers</span><span>#sbert</span><span>#embedding</span><span>#similarity</span><span>#classification</span></div>
     <hr class="sep" />
-    <div class="body"><h1>sentence-transformers — sentence embedding in a few lines</h1>
+    <div class="body"><h1>Sentence-Transformers — Sentence Embedding In A Few Lines</h1>
 <blockquote>A Hugging Face library that turns a whole sentence into a high-quality vector in just a few lines. Classification and similarity tasks become fast and simple. Everyday metaphor: instead of weighing every letter, you stamp the whole postcard into one coordinate on a meaning map.</blockquote>
 <h2>Why it matters</h2>
 <p>Training an embedding model yourself takes serious effort. <code>sentence-transformers</code> packages pretrained models (e.g. <code>all-MiniLM</code>, <code>paraphrase-mpnet</code>) so <code>encode()</code> returns vectors ready to use. For many problems, good embeddings plus a light classifier are enough — no need to fine-tune a large network.</p>
@@ -410,6 +410,8 @@ print(util.cos_sim(emb[0], emb[2]))  # lower — different topic (~0.0–0.3)
 <li><strong>Failure mode — domain shift:</strong> general MiniLM on legal/medical jargon clusters poorly. Fix: domain fine-tune with MultipleNegativesRankingLoss on your query–passage pairs, or pick a domain checkpoint.</li>
 <li><strong>Asymmetric retrieval:</strong> short query vs long passage — models trained with <code>MultipleNegativesRankingLoss</code> on QA pairs beat symmetric paraphrase models on FAQ search; the reverse is true for “find duplicate sentences.”</li>
 <li><strong>Multilingual pitfall:</strong> <code>paraphrase-multilingual-<em></code> shares one space across languages, but quality is uneven by language; always measure Recall@k on </em>your* language pair, not only English MTEB headlines.</li>
+<li><strong>Batch and length knobs.</strong> <code>encode(..., batch_size=...)</code> and tokenizer max length dominate wall-clock more than micro-optimizing NumPy casts. Cap sequences to the length you actually indexed — encoding 512-token chunks when FAQs are 80 tokens wastes ~6× compute.</li>
+<li><strong>Unit test for the index.</strong> Keep 20 hand-labeled query→doc pairs; after every model or normalize change, assert Recall@5 does not collapse. This catches “forgot normalize,” “wrong prefix,” and “mixed checkpoints” faster than eyeballing demos.</li>
 </ul>
 <h2>Decision guide</h2>
 <table><thead>
@@ -422,6 +424,25 @@ print(util.cos_sim(emb[0], emb[2]))  # lower — different topic (~0.0–0.3)
 <tr><td>Real-time embed on every keystroke</td><td>MiniLM + batch/cache; or smaller distilled embedder</td><td>Re-encoding the full corpus per keystroke</td></tr>
 <tr><td>Metric in DB is inner product</td><td>L2-normalize in <code>encode</code> (cosine ≡ dot)</td><td>Raw unnormalized vectors with IP — magnitude dominates</td></tr>
 </tbody></table>
+<h2>Case study</h2>
+<p>Build a FAQ retriever for 5 000 support answers (~80–200 tokens) used by a RAG bot.</p>
+<ul>
+<li><strong>Inputs:</strong> FAQ strings + ids; <code>SentenceTransformer("all-MiniLM-L6-v2")</code>; queries from a 100-example gold set.</li>
+<li><strong>Steps:</strong> offline <code>encode(faqs, batch_size=64, normalize_embeddings=True)</code> → <code>5000×384</code> matrix (~7.3 MB) → FAISS <code>IndexFlatIP</code> → at query time encode one vector → top-5 → pass texts to the LLM.</li>
+<li><strong>Output:</strong> p50 retrieve &amp;lt;50 ms on CPU for this size; gold Recall@5 target ≥0.85 before wiring RAG.</li>
+<li><strong>What you'd check:</strong> cosine(<code>Hello</code>,<code>Hi there</code>) ≫ cosine(<code>Hello</code>, unrelated FAQ); no second model mixed into the index; if switching to multilingual FAQs, rebuild the entire index with one multilingual checkpoint.</li>
+</ul>
+<h2>Lab checklist</h2>
+<ul>
+<li>[ ] <code>encode</code> three sentences and print pairwise cosine similarities</li>
+<li>[ ] Toggle <code>normalize_embeddings</code> and compare rankings under dot product</li>
+<li>[ ] Embed a small corpus (≥100 docs) and retrieve top-5 for two paraphrased queries</li>
+<li>[ ] Measure encode throughput (docs/sec) for your typical chunk length</li>
+<li>[ ] Swap MiniLM vs mpnet (or E5) on the same gold queries and compare Recall@5</li>
+<li>[ ] Document the embedding dim and metric you will store in the vector DB</li>
+<li>[ ] (If using E5/BGE) verify query vs passage prefixes match the model card</li>
+<li>[ ] Rebuild once after a model change and confirm old vectors are discarded</li>
+</ul>
 <h2>Pipeline</h2>
 <pre><code>
 sentence → SentenceTransformer.encode → vector → { cos_sim | light classifier | vector DB }
@@ -449,7 +470,7 @@ sentence → SentenceTransformer.encode → vector → { cos_sim | light classif
 <script src="../_shared/nav-stack.js"></script>
 <script>
 (function () {
-  const title = "sentence-transformers — sentence embeddings";
+  const title = "Sentence-Transformers — Sentence Embeddings";
   const num = "11";
   if (window.AiLabNav) {
     AiLabNav.enter((num ? num + " " : "") + title);

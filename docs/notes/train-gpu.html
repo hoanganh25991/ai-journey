@@ -336,7 +336,7 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 <button type="button" id="labShare">Share</button></div>
     <div class="topics"><span>#pytorch</span><span>#tensorflow</span><span>#GPU</span><span>#huggingface</span><span>#kaggle</span></div>
     <hr class="sep" />
-    <div class="body"><h1>Train · PyTorch / TensorFlow · GPU notebooks</h1>
+    <div class="body"><h1>Train · PyTorch / TensorFlow · GPU Notebooks</h1>
 <blockquote>Where models <em>actually learn</em>: data from Hugging Face / Kaggle, code in PyTorch or TensorFlow, many epochs on a GPU (Colab/cloud) until good enough, then export weights. Everyday metaphor: the gym (GPU) is where muscles (weights) grow; the phone app (browser demo) only shows the flex.</blockquote>
 <h2>Why it matters</h2>
 <p>Lab demos illustrate inference only. To get a model you can plug in, you must train somewhere with a GPU. This note collects the practical stack — which tools, where data lives, where to run — so you do not rebuild the checklist every time.</p>
@@ -408,6 +408,8 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 <li><strong>Framework pick in this lab:</strong> PyTorch for anything you will debug by hand; TensorFlow/Keras when you want Embedding Projector or an existing TF notebook. Don’t dual-maintain both for one demo.</li>
 <li><strong>Export targets:</strong> browser demos often want a small JSON/<code>state_dict</code> or ONNX; Spaces want a Hub repo. Convert once after metrics are good — don’t retrain just to change packaging.</li>
 <li><strong>Colab/Kaggle gotchas:</strong> session disconnect wipes <code>/content</code> — push checkpoints to Drive/Hub every N epochs. Free GPUs throttle; profile one epoch time × planned epochs before overnight runs.</li>
+<li><strong>Smoke-test gate (mandatory):</strong> one CPU batch printing shapes + finite loss before <code>.cuda()</code> / accelerator on. Most “GPU is broken” tickets are shape bugs discovered after burning quota.</li>
+<li><strong>Demo packaging budget.</strong> After metrics clear the bar, measure artifact size and cold-load time in the target demo. A great notebook checkpoint that is 2 GB fails the lab’s browser/UX constraint — distill or shrink before polish.</li>
 </ul>
 <h2>Decision guide</h2>
 <table><thead>
@@ -420,6 +422,26 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 <tr><td>Large model, limited VRAM</td><td>LoRA / PEFT or smaller backbone</td><td>Full fine-tune of huge models on free Colab</td></tr>
 <tr><td>Demo must load in browser quickly</td><td>Small classifier / MiniLM export</td><td>Shipping a multi-GB chat checkpoint into static HTML</td></tr>
 </tbody></table>
+<figure><img src="assets/train-gpu/lab-checklist.png" alt="Lab checklist for GPU training" loading="lazy" /><figcaption>Lab checklist for GPU training</figcaption></figure>
+<h2>Case study</h2>
+<p>Produce weights for the lab sentiment demo (neg / neu / pos) without training in the browser.</p>
+<ul>
+<li><strong>Inputs:</strong> Hub (or Kaggle) labeled reviews, 80/10/10 split; MiniLM sequence-classification head; Colab/Kaggle GPU session.</li>
+<li><strong>Steps:</strong> CPU smoke batch → GPU fine-tune 3–5 epochs, AdamW, batch 16–32 → track val F1 + confusion matrix → save <code>best.pt</code> on improvement → export into demo assets → browser only runs forward passes.</li>
+<li><strong>Output:</strong> demo loads once at startup; clicks stay low-latency; notebook holds the reproducible train script + seed + dataset revision.</li>
+<li><strong>What you'd check:</strong> val F1 not stalled while train accuracy → 99%; best-val not last-epoch; artifact size fit for the demo; GPU disabled while debugging prints.</li>
+</ul>
+<h2>Lab checklist</h2>
+<ul>
+<li>[ ] Pick a labeled dataset and write down train/val/test sizes</li>
+<li>[ ] Run a 1-batch CPU smoke test (shapes + finite loss)</li>
+<li>[ ] Fine-tune on GPU for a few epochs while logging val metrics</li>
+<li>[ ] Save the best validation checkpoint (not only the final epoch)</li>
+<li>[ ] Export weights + label map into a demo or Hub folder</li>
+<li>[ ] Load the export in an inference-only path and predict on 5 held-out examples</li>
+<li>[ ] Record seed, LR, and dataset revision next to the checkpoint</li>
+<li>[ ] Estimate artifact size / load time against the demo’s constraints</li>
+</ul>
 <h2>Pipeline</h2>
 <pre><code>
 HF/Kaggle data → notebook (PyTorch/TF) → GPU epochs → checkpoint → demo inference

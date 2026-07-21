@@ -1,4 +1,4 @@
-# Demo: Car NN — from sensors to action
+# Demo: Car NN — From Sensors To Action
 
 > A toy car with three distance sensors. A small fully connected network reads those three numbers and picks an action: forward, backward, turn left, or turn right. A visible example of classification.
 

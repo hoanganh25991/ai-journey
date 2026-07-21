@@ -1,4 +1,4 @@
-# Classification — label the input
+# Classification — Label The Input
 
 > Given an input (text, image, numbers), the model picks one label from a fixed set. Everyday example: a review arrives → the model says *positive*, *neutral*, or *negative*. This is the most common “build a model” problem — right after [softmax](./softmax.md).
 
@@ -63,6 +63,8 @@ Confusion-matrix sketch for a tiny val set of 100 reviews (true → predicted): 
 - **Thresholds and operating points.** For binary spam, lower the threshold (e.g. 0.3 instead of 0.5) to raise recall at the cost of precision. Plot a precision–recall curve on validation; pick the point that matches cost (false negative vs false positive).
 - **Head-only vs full fine-tune.** Freeze the encoder and train only the classification head when you have &lt;1k labels or little GPU — fast, less overfitting. Unfreeze top Transformer layers (or full model with small LR `2e-5`) when you have more data and need domain shift.
 - **Failure modes to expect.** (1) Confidence on OOD inputs (out-of-vocab slang, new product names) stays high — add an abstain / “unknown” path. (2) Label schema drift (3-class → 5-class) invalidates the old head. (3) Metric hacking: optimizing accuracy while the product needs per-class recall.
+- **Confusion-matrix triage order.** When overall accuracy looks fine, sort classes by recall ascending and inspect the worst row first — that is usually where label noise, class imbalance, or a too-aggressive threshold hides. Fix one class schema issue before retuning the whole LR.
+- **Softmax temperature at serve time.** Temperature `T > 1` flattens probs (better calibration / softer thresholds); `T < 1` sharpens (more confident argmax). Apply only after training; retuning `T` on validation is cheaper than full retrain when the ranking is already good.
 
 ## Decision guide
 
@@ -74,6 +76,27 @@ Confusion-matrix sketch for a tiny val set of 100 reviews (true → predicted): 
 | Need a deployable cutoff (spam filter) | Tune threshold on val PR curve | Fixed 0.5 — rarely matches business cost |
 | &lt;1k labeled examples, strong pretrained encoder | Freeze backbone, train head (or LoRA) | Full scratch train — overfits and wastes compute |
 | Probabilities used as risk scores | Check calibration; temperature scale if needed | Trusting raw softmax as true probability |
+
+![Case study: review → logits → softmax → neg](assets/classification/classification-case.png)
+
+## Case study
+
+Support-ticket triage for a SaaS inbox with three intents: `billing`, `bug`, `how-to` (~12 000 labeled tickets, ~70% how-to).
+
+- **Inputs:** ticket subject + body (truncated to 256 tokens), integer labels `0..2`, stratified 80/10/10 split; class weights ≈ `[1.4, 2.1, 0.7]` because bugs are rare.
+- **Steps:** load a small Hub encoder → freeze backbone for 2 epochs (head LR `1e-3`) → unfreeze with AdamW `2e-5` for 3 more → early-stop on **macro-F1** (not accuracy).
+- **Output:** checkpoint with val macro-F1 ≈ 0.78, accuracy ≈ 0.88; confusion matrix shows `bug` recall ≈ 0.71 — still the weak class.
+- **What you'd check:** (1) majority baseline accuracy (~0.70) so 0.88 is real lift; (2) per-class recall, especially `bug`; (3) no duplicate ticket IDs across splits; (4) threshold / abstain for low-max-prob tickets before routing to humans.
+
+## Lab checklist
+
+- [ ] Plot the label histogram and write down the majority-class accuracy baseline
+- [ ] Train a tiny head-only classifier, then compare macro-F1 vs accuracy on the same val set
+- [ ] Build a 3×3 confusion matrix and identify the worst-recall class
+- [ ] Sweep a binary threshold (or max-prob abstain) and record precision/recall at two operating points
+- [ ] Induce label noise on 5% of train labels and measure how much val F1 drops
+- [ ] Export the best-val checkpoint and re-run inference with `eval()` / no-grad only
+- [ ] Document which metric you would ship on (accuracy vs macro-F1) and why
 
 ## Pipeline
 

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Hugging Face · slides</title>
+<title>Hugging Face · Slides</title>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Sora:wght@400;600;700&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="../_shared/deck.css" />
 <style>
@@ -33,6 +33,10 @@
 .caption { margin-top: 14px; font-size: 20px; color: var(--muted); max-width: 92%; }
 .table-card.dense table { font-size: 16px; }
 .table-card.dense th, .table-card.dense td { padding: 9px 12px; }
+.case-dense .card { padding: 16px 18px; }
+.case-dense .card h3 { font-size: 20px; margin-bottom: 8px; }
+.case-dense .card p { font-size: 16px !important; line-height: 1.35; }
+.lab-dense .card p { font-size: 16px !important; line-height: 1.35; }
 </style>
 </head>
 <body>
@@ -42,7 +46,7 @@
 <section class="slide active">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
-    <div class="topbar reveal"><span>Concept · huggingface</span><span class="pill">teaching</span></div>
+    <div class="topbar reveal"><span>Concept · Hugging Face</span><span class="pill">teaching</span></div>
     <h1 class="reveal" style="margin-top:72px;">Hugging Face · <em>dataset + Space → usable model</em></h1>
     <p class="lead reveal" style="margin-top:28px;">“GitHub for AI”: datasets, pretrained models, and Spaces demos. Don’t forge steel — borrow a good knife, sharpen it on your wood, then show others how it cuts.</p>
     <div class="flow-row reveal">
@@ -208,6 +212,42 @@ model = AutoModelForSequenceClassification.from_pretrained(
   <div class="foot"><span>11</span><span>Decision guide</span></div>
 </section>
 
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Case Study</span><span class="pill">lab</span></div>
+    <h2 class="reveal" style="font-size:40px;margin-bottom:12px;">Case Study</h2>
+    <p class="lead reveal" style="margin-top:0;margin-bottom:14px;font-size:20px;">Ship a binary IMDb sentiment classifier from Hub assets to a Gradio Space in one afternoon.</p>
+    <div class="cols-2 case-dense" style="gap:14px;">
+      <div class="card accent reveal" style="padding:18px 20px;"><div class="tag">inputs</div><h3>Inputs</h3><p><code>load_dataset("imdb")</code> (~25k train), <code>bert-base-uncased</code> tokenizer + <code>AutoModelForSequenceClassification(..., num_labels=2)</code>, <code>max_length=256</code>.</p></div>
+      <div class="card cyan reveal"><div class="tag">steps</div><h3>Steps</h3><p>map tokenize with padding/truncation → <code>TrainingArguments(lr=2e-5, batch=16, epochs=3, eval each epoch, load_best_model_at_end)</code> → <code>Trainer.train()</code> on a free GPU → <code>push_to_hub("you/imdb-clf")</code> → Space wraps <code>pipeline("sentiment-analysis", model="you/imdb-clf")</code>.</p></div>
+      <div class="card reveal"><div class="tag">output</div><h3>Output</h3><p>val accuracy typically mid–high 80s to ~90%; Hub repo contains <code>config.json</code>, weights, and tokenizer; Space URL is the shareable demo.</p></div>
+      <div class="card reveal"><div class="tag">check</div><h3>Verify</h3><p>model card license allows your use; tokenizer files are present beside weights; private holdout (not only Hub test peek); Space cold-start still returns a label after wake.</p></div>
+    </div>
+  </div>
+  <div class="foot"><span>12</span><span>notes/huggingface.md</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Lab Checklist</span><span class="pill">do</span></div>
+    <h2 class="reveal" style="font-size:40px;margin-bottom:12px;">Lab Checklist</h2>
+    <div class="cols-2 lab-dense" style="gap:14px;">
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">01</span><p style="margin:0;font-size:18px;line-height:1.4;">Load a Hub dataset and print split sizes + one labeled example</p></div>
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">02</span><p style="margin:0;font-size:18px;line-height:1.4;">Load matching <code>AutoTokenizer</code> + task model from the same checkpoint id</p></div>
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">03</span><p style="margin:0;font-size:18px;line-height:1.4;">Fine-tune with <code>Trainer</code> for ≥1 epoch and log a val metric</p></div>
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">04</span><p style="margin:0;font-size:18px;line-height:1.4;">Enable <code>load_best_model_at_end</code> (or manually save best) before export</p></div>
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">05</span><p style="margin:0;font-size:18px;line-height:1.4;">Push model <em>and</em> tokenizer to a Hub repo (or save a complete local folder)</p></div>
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">06</span><p style="margin:0;font-size:18px;line-height:1.4;">Read the model card license and intended-use section before sharing</p></div>
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">07</span><p style="margin:0;font-size:18px;line-height:1.4;">Call the model via <code>pipeline</code> or a tiny Gradio UI once</p></div>
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">08</span><p style="margin:0;font-size:18px;line-height:1.4;">(Optional) Retry the same fine-tune with LoRA and compare VRAM / quality</p></div>
+    </div>
+  </div>
+  <div class="foot"><span>13</span><span>notes/huggingface.md</span></div>
+</section>
+
 <section class="slide">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
@@ -220,7 +260,7 @@ model = AutoModelForSequenceClassification.from_pretrained(
       <div class="card reveal"><div class="tag">eval</div><h3>Peeking at Hub test</h3><p>Keep a private holdout after exploring public splits. Wrong <code>num_labels</code> silently mis-shapes the head.</p></div>
     </div>
   </div>
-  <div class="foot"><span>12</span><span>notes/huggingface.md</span></div>
+  <div class="foot"><span>14</span><span>notes/huggingface.md</span></div>
 </section>
 
 <section class="slide">
@@ -234,7 +274,7 @@ model = AutoModelForSequenceClassification.from_pretrained(
       <div class="card reveal"><div class="tag">lab</div><h3>Export → demo</h3><p>Checkpoint into inference / Spaces / sentiment apps.</p></div>
     </div>
   </div>
-  <div class="foot"><span>13</span><span>see kaggle.md · train-gpu.md</span></div>
+  <div class="foot"><span>15</span><span>see kaggle.md · train-gpu.md</span></div>
 </section>
 
 <section class="slide">
@@ -251,7 +291,7 @@ model = AutoModelForSequenceClassification.from_pretrained(
     </div>
     <p class="lead reveal" style="margin-top:36px;">Data source and runtime partner for pytorch-training / tensorflow-training.</p>
   </div>
-  <div class="foot"><span>14</span><span>notes/huggingface.md</span></div>
+  <div class="foot"><span>16</span><span>notes/huggingface.md</span></div>
 </section>
 
 <section class="slide">

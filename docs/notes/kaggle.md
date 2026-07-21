@@ -1,4 +1,4 @@
-# Kaggle — free dataset + notebook + GPU
+# Kaggle — Free Dataset + Notebook + GPU
 
 > ML learning and competition platform: huge **dataset** library, **notebooks** with free **GPU/TPU**, and **competitions** to practice. Similar to Hugging Face but tilted toward hands-on work and leaderboards. Everyday metaphor: a shared workshop with free tools, wood piles (datasets), and contests on the wall.
 
@@ -56,6 +56,8 @@ Numbers to expect: ~10k labeled images, 120 breeds, EfficientNet-B0 fine-tune wi
 - **HF + Kaggle bridge.** `from_pretrained` needs network (or a pre-downloaded model Dataset). In offline comps, attach a Dataset that already contains the weights folder and point `from_pretrained("/kaggle/input/.../model")`. Tokenizer files must travel with the weights.
 - **Export checklist.** Save: (1) `state_dict` / `.keras` / safetensors, (2) tokenizer / label map JSON, (3) preprocessing config (image size, normalize mean/std). Version them as a Kaggle Dataset. Without (2)–(3), the demo loads weights but predicts garbage.
 - **CV discipline.** Prefer stratified *k*-fold or a fixed GroupKFold when related rows leak (same patient / same product). Report mean±std of the competition metric across folds before trusting a single public submit.
+- **Session hygiene.** Name notebooks clearly, pin dataset versions, and write the accelerator + package pins in the first cell. Future-you (or a teammate) should reproduce the run without archaeology in `/kaggle/working`.
+- **Submit vs local gap.** If local CV and public LB disagree by a large margin, suspect leakage, wrong metric implementation, or train/test distribution shift — not “need a bigger model” first.
 
 ## Decision guide
 
@@ -67,6 +69,26 @@ Numbers to expect: ~10k labeled images, 120 breeds, EfficientNet-B0 fine-tune wi
 | Offline / no-internet code comp | Bundle model+tokenizer as a Dataset input | Runtime `pip install` / Hub download mid-submit |
 | Keeping work across sessions | Versioned Kaggle Dataset of checkpoints | Relying on ephemeral `/kaggle/working` alone |
 | Climbing the leaderboard | One change at a time + solid local CV | Mega-ensembles copied blindly before you understand the metric |
+
+## Case study
+
+Dog-breed image competition: ~10k images, 120 classes, scored by multi-class log-loss.
+
+- **Inputs:** competition train folder + labels CSV; Hub vision backbone; notebook with GPU enabled only for training cells.
+- **Steps:** CPU EDA + 1% sample sanity check → enable GPU → fine-tune EfficientNet-B0 (head LR `1e-3`, then full `1e-4`), batch 32, 5 epochs → local stratified CV log-loss → write `submission.csv` → download checkpoint Dataset for the lab demo.
+- **Output:** public LB log-loss competitive with a simple baseline; artifact Dataset holds weights + label map + image size/normalize config.
+- **What you'd check:** `nvidia-smi` before long runs; GPU off while debugging plots; local metric matches host log-loss (not only accuracy); private-LB risk if you overfit public notebooks blindly.
+
+## Lab checklist
+
+- [ ] Create a notebook, attach a dataset, and verify paths under `/kaggle/input`
+- [ ] Run a CPU dry-run on a tiny sample before enabling the GPU accelerator
+- [ ] Confirm GPU with `nvidia-smi` or `torch.cuda.is_available()` once
+- [ ] Train ≥1 real epoch and record the **competition metric** locally
+- [ ] Save checkpoint + tokenizer/label map as a versioned Kaggle Dataset
+- [ ] Disable the accelerator when finished to protect weekly quota
+- [ ] Fork one public notebook, delete unused cells, and change exactly one hyperparameter
+- [ ] Export weights to your machine or Hub for use outside Kaggle
 
 ## Pipeline
 

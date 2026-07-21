@@ -1,4 +1,4 @@
-# Transformer — core architecture of LLMs
+# Transformer — Core Architecture Of LLMs
 
 > Stack many [attention](./attention.md) blocks and process a whole sentence in parallel instead of step by step. The framework behind BERT, GPT, and nearly every modern language model. Everyday metaphor: instead of reading word-by-word with a bookmark, every word glances at every other word at once — then you deepen that glance across many floors of the building.
 
@@ -65,6 +65,8 @@ Sentence: `"The cat sat on the mat."` (6 tokens after simple whitespace split; r
 - **Parameter intuition:** attention projections are `4 · d²` per layer (Q,K,V,O); FFN is often `8 · d²` (up and down). FFN usually dominates parameter count; attention dominates **memory** at long *n*.
 - **Failure mode — context stuffing:** past the trained context window, quality drops sharply unless the model uses RoPE scaling / YaRN / sliding window. Silent truncation of the *beginning* of a prompt is a common production bug.
 - **Encoder-vs-decoder choice API-wise:** Hugging Face `AutoModel` (encoder body), `AutoModelForMaskedLM`, `AutoModelForCausalLM`, `AutoModelForSeq2SeqLM` — picking the wrong head class is a frequent beginner error.
+- **Attention pattern sanity check.** Visualize one head’s weights on a short sentence (attention demo / seaborn heatmap). If every query puts mass only on the first token or uniform noise, suspect masking, positional bugs, or an untrained head — not “Transformers don’t work.”
+- **Width vs depth trade.** Holding compute roughly fixed, very deep narrow stacks and shallow wide stacks behave differently for transfer; for lab classifiers, a distilled 6-layer MiniLM often beats a poorly fine-tuned full 24-layer model on latency and overfitting.
 
 ## Decision guide
 
@@ -76,6 +78,26 @@ Sentence: `"The cat sat on the mat."` (6 tokens after simple whitespace split; r
 | Need >4k–8k tokens of context | Models with RoPE/ALiBi + long-context training; or chunk + retrieve | Naively extending sinusoidal absolute positions — poor extrapolation |
 | On-device / low latency classify | DistilBERT / MiniLM-class encoders | Full 70B decoder “just to label sentiment” — cost without benefit |
 | Debugging “model ignores word order” | Check positional encodings / RoPE applied | Assuming attention alone encodes position — it does not |
+
+## Case study
+
+Explain why a chat model and a classifier need different Transformer “shapes” on the same English sentence.
+
+- **Inputs:** sentence `"The cat sat on the mat."` tokenized to ~6–8 BPE ids; compare BERT-base encoder vs a small causal GPT-style decoder.
+- **Steps:** encoder builds bidirectional states (token `"sat"` may attend to `"mat"`); pool `[CLS]`/mean → classification logits. Decoder at position of `"sat"` **masks** future `"mat"`; LM head predicts the *next* token distribution over the vocab (~50k).
+- **Output:** encoder path → sentiment/topic label; decoder path → continuation text. Same attention math, different mask + head.
+- **What you'd check:** causal mask off-by-one (future leak); context length truncation of the prompt start; wrong HF class (`ForCausalLM` vs `ForSequenceClassification`); O(n²) memory if you paste a huge PDF into one forward.
+
+## Lab checklist
+
+- [ ] Sketch one encoder block: attention → residual → FFN → residual
+- [ ] Write the causal mask rule in one sentence and give a 4-token example matrix
+- [ ] Load an encoder checkpoint and a causal LM checkpoint; note which task heads exist
+- [ ] Run a short sentence through an attention visualization (lab demo or notebook)
+- [ ] Measure what happens when input length approaches the model max position
+- [ ] Compare parameter count of attention projections vs FFN for one layer (order-of-magnitude)
+- [ ] Pick encoder vs decoder for: (a) spam classify, (b) chat reply — justify in one line each
+- [ ] Read the positional encoding type on a modern LLM card (RoPE / ALiBi / absolute)
 
 ## Pipeline
 

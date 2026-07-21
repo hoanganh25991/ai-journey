@@ -1,4 +1,4 @@
-# Personal Knowledge-base — videos · docs · GitHub
+# Personal Knowledge-Base — Videos · Docs · GitHub
 
 > **Separate repo:** [`~/work-station/personal-kb`](../../personal-kb)  
 > Will attach to ai-lab as a **git submodule** (not added yet — run tooling from the sibling path).

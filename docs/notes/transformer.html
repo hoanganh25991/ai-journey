@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Transformer — core LLM architecture · AI Lab</title>
+<title>Transformer — Core LLM Architecture · AI Lab</title>
 <script>
 (function () {
   try {
@@ -329,14 +329,14 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
   </div>
   <div data-lab-stack></div>
   <article class="doc">
-    <h1>Transformer — core LLM architecture</h1>
+    <h1>Transformer — Core LLM Architecture</h1>
     <p class="summary">Stack attention blocks + positional encoding; encoder (BERT) / decoder (GPT).</p>
     <div class="actions"><a class="primary" href="../slides/transformer/index.html">Slides ↗</a>
 <a href="transformer.md" id="labDownload" download="transformer.md">Download</a>
 <button type="button" id="labShare">Share</button></div>
     <div class="topics"><span>#transformer</span><span>#attention</span><span>#encoder</span><span>#decoder</span><span>#positional-encoding</span></div>
     <hr class="sep" />
-    <div class="body"><h1>Transformer — core architecture of LLMs</h1>
+    <div class="body"><h1>Transformer — Core Architecture Of LLMs</h1>
 <blockquote>Stack many <a href="attention.html">attention</a> blocks and process a whole sentence in parallel instead of step by step. The framework behind BERT, GPT, and nearly every modern language model. Everyday metaphor: instead of reading word-by-word with a bookmark, every word glances at every other word at once — then you deepen that glance across many floors of the building.</blockquote>
 <h2>Why it matters</h2>
 <p>Before Transformers, models read sentences sequentially (RNN/LSTM) — slow and prone to forgetting early context. The Transformer (2017, “Attention Is All You Need”) drops sequential processing: every word attends to every other word at once → faster GPU training and better long-range links. That pivot opened the LLM era.</p>
@@ -388,6 +388,8 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 <li><strong>Parameter intuition:</strong> attention projections are <code>4 · d²</code> per layer (Q,K,V,O); FFN is often <code>8 · d²</code> (up and down). FFN usually dominates parameter count; attention dominates <strong>memory</strong> at long <em>n</em>.</li>
 <li><strong>Failure mode — context stuffing:</strong> past the trained context window, quality drops sharply unless the model uses RoPE scaling / YaRN / sliding window. Silent truncation of the <em>beginning</em> of a prompt is a common production bug.</li>
 <li><strong>Encoder-vs-decoder choice API-wise:</strong> Hugging Face <code>AutoModel</code> (encoder body), <code>AutoModelForMaskedLM</code>, <code>AutoModelForCausalLM</code>, <code>AutoModelForSeq2SeqLM</code> — picking the wrong head class is a frequent beginner error.</li>
+<li><strong>Attention pattern sanity check.</strong> Visualize one head’s weights on a short sentence (attention demo / seaborn heatmap). If every query puts mass only on the first token or uniform noise, suspect masking, positional bugs, or an untrained head — not “Transformers don’t work.”</li>
+<li><strong>Width vs depth trade.</strong> Holding compute roughly fixed, very deep narrow stacks and shallow wide stacks behave differently for transfer; for lab classifiers, a distilled 6-layer MiniLM often beats a poorly fine-tuned full 24-layer model on latency and overfitting.</li>
 </ul>
 <h2>Decision guide</h2>
 <table><thead>
@@ -400,6 +402,25 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 <tr><td>On-device / low latency classify</td><td>DistilBERT / MiniLM-class encoders</td><td>Full 70B decoder “just to label sentiment” — cost without benefit</td></tr>
 <tr><td>Debugging “model ignores word order”</td><td>Check positional encodings / RoPE applied</td><td>Assuming attention alone encodes position — it does not</td></tr>
 </tbody></table>
+<h2>Case study</h2>
+<p>Explain why a chat model and a classifier need different Transformer “shapes” on the same English sentence.</p>
+<ul>
+<li><strong>Inputs:</strong> sentence <code>"The cat sat on the mat."</code> tokenized to ~6–8 BPE ids; compare BERT-base encoder vs a small causal GPT-style decoder.</li>
+<li><strong>Steps:</strong> encoder builds bidirectional states (token <code>"sat"</code> may attend to <code>"mat"</code>); pool <code>[CLS]</code>/mean → classification logits. Decoder at position of <code>"sat"</code> <strong>masks</strong> future <code>"mat"</code>; LM head predicts the <em>next</em> token distribution over the vocab (~50k).</li>
+<li><strong>Output:</strong> encoder path → sentiment/topic label; decoder path → continuation text. Same attention math, different mask + head.</li>
+<li><strong>What you'd check:</strong> causal mask off-by-one (future leak); context length truncation of the prompt start; wrong HF class (<code>ForCausalLM</code> vs <code>ForSequenceClassification</code>); O(n²) memory if you paste a huge PDF into one forward.</li>
+</ul>
+<h2>Lab checklist</h2>
+<ul>
+<li>[ ] Sketch one encoder block: attention → residual → FFN → residual</li>
+<li>[ ] Write the causal mask rule in one sentence and give a 4-token example matrix</li>
+<li>[ ] Load an encoder checkpoint and a causal LM checkpoint; note which task heads exist</li>
+<li>[ ] Run a short sentence through an attention visualization (lab demo or notebook)</li>
+<li>[ ] Measure what happens when input length approaches the model max position</li>
+<li>[ ] Compare parameter count of attention projections vs FFN for one layer (order-of-magnitude)</li>
+<li>[ ] Pick encoder vs decoder for: (a) spam classify, (b) chat reply — justify in one line each</li>
+<li>[ ] Read the positional encoding type on a modern LLM card (RoPE / ALiBi / absolute)</li>
+</ul>
 <h2>Pipeline</h2>
 <pre><code>
 tokens → embedding + positional → [N × (multi-head attention + feed-forward)] → representation
@@ -430,7 +451,7 @@ tokens → embedding + positional → [N × (multi-head attention + feed-forward
 <script src="../_shared/nav-stack.js"></script>
 <script>
 (function () {
-  const title = "Transformer — core LLM architecture";
+  const title = "Transformer — Core LLM Architecture";
   const num = "10";
   if (window.AiLabNav) {
     AiLabNav.enter((num ? num + " " : "") + title);

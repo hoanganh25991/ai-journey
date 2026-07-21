@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Kaggle · slides</title>
+<title>Kaggle · Slides</title>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Sora:wght@400;600;700&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="../_shared/deck.css" />
 <style>
@@ -33,6 +33,10 @@
 .caption { margin-top: 14px; font-size: 20px; color: var(--muted); max-width: 92%; }
 .table-card.dense table { font-size: 16px; }
 .table-card.dense th, .table-card.dense td { padding: 9px 12px; }
+.case-dense .card { padding: 16px 18px; }
+.case-dense .card h3 { font-size: 20px; margin-bottom: 8px; }
+.case-dense .card p { font-size: 16px !important; line-height: 1.35; }
+.lab-dense .card p { font-size: 16px !important; line-height: 1.35; }
 </style>
 </head>
 <body>
@@ -42,7 +46,7 @@
 <section class="slide active">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
-    <div class="topbar reveal"><span>Concept · kaggle</span><span class="pill">teaching</span></div>
+    <div class="topbar reveal"><span>Concept · Kaggle</span><span class="pill">teaching</span></div>
     <h1 class="reveal" style="margin-top:72px;">Kaggle · <em>free dataset + notebook + GPU</em></h1>
     <p class="lead reveal" style="margin-top:28px;">ML workshop with wood piles (datasets), free tools (GPU notebooks), and contests on the wall. Similar to Hugging Face, tilted toward hands-on work and leaderboards.</p>
     <div class="flow-row reveal">
@@ -212,6 +216,42 @@
   <div class="foot"><span>11</span><span>Decision guide</span></div>
 </section>
 
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Case Study</span><span class="pill">lab</span></div>
+    <h2 class="reveal" style="font-size:40px;margin-bottom:12px;">Case Study</h2>
+    <p class="lead reveal" style="margin-top:0;margin-bottom:14px;font-size:20px;">Dog-breed image competition: ~10k images, 120 classes, scored by multi-class log-loss.</p>
+    <div class="cols-2 case-dense" style="gap:14px;">
+      <div class="card accent reveal" style="padding:18px 20px;"><div class="tag">inputs</div><h3>Inputs</h3><p>competition train folder + labels CSV; Hub vision backbone; notebook with GPU enabled only for training cells.</p></div>
+      <div class="card cyan reveal"><div class="tag">steps</div><h3>Steps</h3><p>CPU EDA + 1% sample sanity check → enable GPU → fine-tune EfficientNet-B0 (head LR <code>1e-3</code>, then full <code>1e-4</code>), batch 32, 5 epochs → local stratified CV log-loss → write <code>submission.csv</code> → download checkpoint Dataset for the lab demo.</p></div>
+      <div class="card reveal"><div class="tag">output</div><h3>Output</h3><p>public LB log-loss competitive with a simple baseline; artifact Dataset holds weights + label map + image size/normalize config.</p></div>
+      <div class="card reveal"><div class="tag">check</div><h3>Verify</h3><p><code>nvidia-smi</code> before long runs; GPU off while debugging plots; local metric matches host log-loss (not only accuracy); private-LB risk if you overfit public notebooks blindly.</p></div>
+    </div>
+  </div>
+  <div class="foot"><span>12</span><span>notes/kaggle.md</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Lab Checklist</span><span class="pill">do</span></div>
+    <h2 class="reveal" style="font-size:40px;margin-bottom:12px;">Lab Checklist</h2>
+    <div class="cols-2 lab-dense" style="gap:14px;">
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">01</span><p style="margin:0;font-size:18px;line-height:1.4;">Create a notebook, attach a dataset, and verify paths under <code>/kaggle/input</code></p></div>
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">02</span><p style="margin:0;font-size:18px;line-height:1.4;">Run a CPU dry-run on a tiny sample before enabling the GPU accelerator</p></div>
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">03</span><p style="margin:0;font-size:18px;line-height:1.4;">Confirm GPU with <code>nvidia-smi</code> or <code>torch.cuda.is_available()</code> once</p></div>
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">04</span><p style="margin:0;font-size:18px;line-height:1.4;">Train ≥1 real epoch and record the <strong>competition metric</strong> locally</p></div>
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">05</span><p style="margin:0;font-size:18px;line-height:1.4;">Save checkpoint + tokenizer/label map as a versioned Kaggle Dataset</p></div>
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">06</span><p style="margin:0;font-size:18px;line-height:1.4;">Disable the accelerator when finished to protect weekly quota</p></div>
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">07</span><p style="margin:0;font-size:18px;line-height:1.4;">Fork one public notebook, delete unused cells, and change exactly one hyperparameter</p></div>
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">08</span><p style="margin:0;font-size:18px;line-height:1.4;">Export weights to your machine or Hub for use outside Kaggle</p></div>
+    </div>
+  </div>
+  <div class="foot"><span>13</span><span>notes/kaggle.md</span></div>
+</section>
+
 <section class="slide">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
@@ -224,7 +264,7 @@
       <div class="card reveal"><div class="tag">export</div><h3>No offline export plan</h3><p>Session dies with the kernel; save artifacts deliberately. Fit scalers on train only.</p></div>
     </div>
   </div>
-  <div class="foot"><span>12</span><span>notes/kaggle.md</span></div>
+  <div class="foot"><span>14</span><span>notes/kaggle.md</span></div>
 </section>
 
 <section class="slide">
@@ -238,7 +278,7 @@
       <div class="card reveal"><div class="tag">submit</div><h3>Feedback loop</h3><p>Leaderboard is the teacher; iterate deliberately. Public ≠ private.</p></div>
     </div>
   </div>
-  <div class="foot"><span>13</span><span>Kaggle Learn for structured courses</span></div>
+  <div class="foot"><span>15</span><span>Kaggle Learn for structured courses</span></div>
 </section>
 
 <section class="slide">
@@ -255,7 +295,7 @@
     </div>
     <p class="lead reveal" style="margin-top:36px;">Same role as “data + GPU” alongside Hugging Face; stack overview in train-gpu.md.</p>
   </div>
-  <div class="foot"><span>14</span><span>notes/kaggle.md</span></div>
+  <div class="foot"><span>16</span><span>notes/kaggle.md</span></div>
 </section>
 
 <section class="slide">

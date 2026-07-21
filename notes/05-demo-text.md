@@ -1,4 +1,4 @@
-# Demo: Sentiment & Complexity routing
+# Demo: Sentiment & Complexity Routing
 
 > Two text demos share one idea: read a sentence and *label* it. Sentiment labels emotion; the complexity router labels easy vs hard to pick how to handle the request.
 

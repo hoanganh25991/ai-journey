@@ -1,4 +1,4 @@
-# Train · PyTorch / TensorFlow · GPU notebooks
+# Train · PyTorch / TensorFlow · GPU Notebooks
 
 > Where models *actually learn*: data from Hugging Face / Kaggle, code in PyTorch or TensorFlow, many epochs on a GPU (Colab/cloud) until good enough, then export weights. Everyday metaphor: the gym (GPU) is where muscles (weights) grow; the phone app (browser demo) only shows the flex.
 
@@ -76,6 +76,8 @@ If val F1 stalls below ~0.7 while train accuracy soars, stop: you are overfittin
 - **Framework pick in this lab:** PyTorch for anything you will debug by hand; TensorFlow/Keras when you want Embedding Projector or an existing TF notebook. Don’t dual-maintain both for one demo.
 - **Export targets:** browser demos often want a small JSON/`state_dict` or ONNX; Spaces want a Hub repo. Convert once after metrics are good — don’t retrain just to change packaging.
 - **Colab/Kaggle gotchas:** session disconnect wipes `/content` — push checkpoints to Drive/Hub every N epochs. Free GPUs throttle; profile one epoch time × planned epochs before overnight runs.
+- **Smoke-test gate (mandatory):** one CPU batch printing shapes + finite loss before `.cuda()` / accelerator on. Most “GPU is broken” tickets are shape bugs discovered after burning quota.
+- **Demo packaging budget.** After metrics clear the bar, measure artifact size and cold-load time in the target demo. A great notebook checkpoint that is 2 GB fails the lab’s browser/UX constraint — distill or shrink before polish.
 
 ## Decision guide
 
@@ -87,6 +89,28 @@ If val F1 stalls below ~0.7 while train accuracy soars, stop: you are overfittin
 | Need vectors for Projector / softmax lab | TensorFlow path already in [tensorflow-training.md](./tensorflow-training.md) | Rewriting the whole stack in PyTorch “for purity” |
 | Large model, limited VRAM | LoRA / PEFT or smaller backbone | Full fine-tune of huge models on free Colab |
 | Demo must load in browser quickly | Small classifier / MiniLM export | Shipping a multi-GB chat checkpoint into static HTML |
+
+![Lab checklist for GPU training](assets/train-gpu/lab-checklist.png)
+
+## Case study
+
+Produce weights for the lab sentiment demo (neg / neu / pos) without training in the browser.
+
+- **Inputs:** Hub (or Kaggle) labeled reviews, 80/10/10 split; MiniLM sequence-classification head; Colab/Kaggle GPU session.
+- **Steps:** CPU smoke batch → GPU fine-tune 3–5 epochs, AdamW, batch 16–32 → track val F1 + confusion matrix → save `best.pt` on improvement → export into demo assets → browser only runs forward passes.
+- **Output:** demo loads once at startup; clicks stay low-latency; notebook holds the reproducible train script + seed + dataset revision.
+- **What you'd check:** val F1 not stalled while train accuracy → 99%; best-val not last-epoch; artifact size fit for the demo; GPU disabled while debugging prints.
+
+## Lab checklist
+
+- [ ] Pick a labeled dataset and write down train/val/test sizes
+- [ ] Run a 1-batch CPU smoke test (shapes + finite loss)
+- [ ] Fine-tune on GPU for a few epochs while logging val metrics
+- [ ] Save the best validation checkpoint (not only the final epoch)
+- [ ] Export weights + label map into a demo or Hub folder
+- [ ] Load the export in an inference-only path and predict on 5 held-out examples
+- [ ] Record seed, LR, and dataset revision next to the checkpoint
+- [ ] Estimate artifact size / load time against the demo’s constraints
 
 ## Pipeline
 

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>AI timeline · slides</title>
+<title>AI Timeline · Slides</title>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Sora:wght@400;600;700&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="../_shared/deck.css" />
 <style>
@@ -31,6 +31,10 @@
 .code-block .k { color: #5ec8d4; }
 .code-block .s { color: #f0a35e; }
 .caption { margin-top: 14px; font-size: 20px; color: var(--muted); max-width: 92%; }
+.case-dense .card { padding: 16px 18px; }
+.case-dense .card h3 { font-size: 20px; margin-bottom: 8px; }
+.case-dense .card p { font-size: 16px !important; line-height: 1.35; }
+.lab-dense .card p { font-size: 16px !important; line-height: 1.35; }
 </style>
 </head>
 <body>
@@ -40,8 +44,8 @@
 <section class="slide active">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
-    <div class="topbar reveal"><span>Field notes · ai-timeline</span><span class="pill">teaching</span></div>
-    <h1 class="reveal" style="margin-top:72px;">AI timeline · <em>my journey</em></h1>
+    <div class="topbar reveal"><span>Concept · AI Timeline</span><span class="pill">teaching</span></div>
+    <h1 class="reveal" style="margin-top:72px;">AI Timeline · <em>my journey</em></h1>
     <p class="lead reveal" style="margin-top:28px;">2023 → present: first LLM exposure → foundations → RAG → agents / automation — anchored to real milestones. Academic roots (Transformer 2017…) underpin concepts; <em>this</em> journey starts in 2023.</p>
     <div class="flow-row reveal"><span class="step">2023 basics</span><span class="arr">→</span><span class="step">2024 coding agents</span><span class="arr">→</span><span class="step">MCP hinge</span><span class="arr">→</span><span class="step">2026 automation</span></div>
   </div>
@@ -228,6 +232,42 @@
   <div class="foot"><span>13</span><span>Decision guide</span></div>
 </section>
 
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Case Study</span><span class="pill">lab</span></div>
+    <h2 class="reveal" style="font-size:40px;margin-bottom:12px;">Case Study</h2>
+    <p class="lead reveal" style="margin-top:0;margin-bottom:14px;font-size:20px;">Use the timeline to diagnose “our agent can’t find the docs” in a 2026 stack.</p>
+    <div class="cols-2 case-dense" style="gap:14px;">
+      <div class="card accent reveal" style="padding:18px 20px;"><div class="tag">inputs</div><h3>Inputs</h3><p>tool-using coding agent, RAG over internal markdown, recent model upgrade, MCP-enabled editor.</p></div>
+      <div class="card cyan reveal"><div class="tag">steps</div><h3>Steps</h3><p>classify the failure — retrieval (Stage 1: embedding/RAG/semantic-search) vs tool protocol (Stage 3: MCP) vs harness loop (Stage 3: permissions/skills) vs model choice (Stage 4). Check chunking/index freshness before swapping Grok↔Opus. Confirm MCP tools actually list and run. Only then tune model field notes.</p></div>
+      <div class="card reveal"><div class="tag">output</div><h3>Output</h3><p>fix is usually reindex + correct embedding model, or MCP auth — not a full rewrite for the latest LLM launch.</p></div>
+      <div class="card reveal"><div class="tag">check</div><h3>Verify</h3><p>Nov 2024 hinge literacy (shared tool protocol); foundations still linked from agent bugs; one layer changed at a time; automation (OpenClaw/Hermess) not given prod secrets “to try.”</p></div>
+    </div>
+  </div>
+  <div class="foot"><span>14</span><span>notes/10-ai-timeline.md</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Lab Checklist</span><span class="pill">do</span></div>
+    <h2 class="reveal" style="font-size:40px;margin-bottom:12px;">Lab Checklist</h2>
+    <div class="cols-2 lab-dense" style="gap:14px;">
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">01</span><p style="margin:0;font-size:18px;line-height:1.4;">Walk Stage 1 notes in order (tokenize → embedding → attention → softmax → RAG) once</p></div>
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">02</span><p style="margin:0;font-size:18px;line-height:1.4;">Mark which stage you are <em>actually</em> working in this week</p></div>
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">03</span><p style="margin:0;font-size:18px;line-height:1.4;">Read [mcp.md](./mcp.md) and state in one sentence why Nov 2024 is a hinge</p></div>
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">04</span><p style="margin:0;font-size:18px;line-height:1.4;">Open harness vs model notes and label your last pain as one or the other</p></div>
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">05</span><p style="margin:0;font-size:18px;line-height:1.4;">Add two personal dates to the milestone table (your firsts)</p></div>
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">06</span><p style="margin:0;font-size:18px;line-height:1.4;">Pick a news headline and classify it: science / model / protocol / automation</p></div>
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">07</span><p style="margin:0;font-size:18px;line-height:1.4;">For one agent bug, name the foundation note that would explain it</p></div>
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">08</span><p style="margin:0;font-size:18px;line-height:1.4;">List what must stay human-approved before any unattended automation</p></div>
+    </div>
+  </div>
+  <div class="foot"><span>15</span><span>notes/10-ai-timeline.md</span></div>
+</section>
+
 <section class="slide">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
@@ -240,7 +280,7 @@
       <div class="card reveal"><div class="tag">pitfall</div><h3>Collapse three layers</h3><p>Model vs harness vs automation — swap one layer at a time.</p></div>
     </div>
   </div>
-  <div class="foot"><span>14</span><span>pitfalls</span></div>
+  <div class="foot"><span>16</span><span>pitfalls</span></div>
 </section>
 
 <section class="slide">
@@ -254,7 +294,7 @@
       <div class="card reveal"><div class="tag">watch</div><h3>Now</h3><p>Harnesses · model waves · OpenClaw / Hermess. 2023 concepts still underpin every agent.</p></div>
     </div>
   </div>
-  <div class="foot"><span>15</span><span>takeaways</span></div>
+  <div class="foot"><span>17</span><span>takeaways</span></div>
 </section>
 
 <section class="slide">
@@ -265,7 +305,7 @@
     <p class="lead reveal" style="margin-top:28px;">notes/10-ai-timeline.md — stages, MCP hinge, decision guide. → agents · model-notes · Hermess.</p>
     <a class="app-cta reveal" href="../../notes/ai-timeline.html">Open note →</a>
   </div>
-  <div class="foot"><span>16</span><span>AI Lab</span></div>
+  <div class="foot"><span>18</span><span>AI Lab</span></div>
 </section>
 
 </main>

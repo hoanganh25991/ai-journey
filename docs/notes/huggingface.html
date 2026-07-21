@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Hugging Face — dataset + Space · AI Lab</title>
+<title>Hugging Face — Dataset + Space · AI Lab</title>
 <script>
 (function () {
   try {
@@ -329,14 +329,14 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
   </div>
   <div data-lab-stack></div>
   <article class="doc">
-    <h1>Hugging Face — dataset + Space</h1>
+    <h1>Hugging Face — Dataset + Space</h1>
     <p class="summary">GitHub for AI: Datasets + pretrained Models + Spaces → a usable model fast.</p>
     <div class="actions"><a class="primary" href="../slides/huggingface/index.html">Slides ↗</a>
 <a href="huggingface.md" id="labDownload" download="huggingface.md">Download</a>
 <button type="button" id="labShare">Share</button></div>
     <div class="topics"><span>#huggingface</span><span>#datasets</span><span>#spaces</span><span>#transformers</span><span>#fine-tune</span></div>
     <hr class="sep" />
-    <div class="body"><h1>Hugging Face — dataset + Space → usable model</h1>
+    <div class="body"><h1>Hugging Face — Dataset + Space → Usable Model</h1>
 <blockquote>“GitHub for AI”: get <strong>datasets</strong>, <strong>pretrained models</strong>, and host demos with <strong>Spaces</strong>. Shortens the path from idea to a model you can actually use. Everyday metaphor: don’t forge steel — borrow a good knife, sharpen it on your wood, then show others how it cuts.</blockquote>
 <h2>Why it matters</h2>
 <p>Training from scratch is expensive. Hugging Face lets you stand on others’ work: download a labeled dataset, grab a pretrained model, fine-tune lightly, and deploy a demo in minutes. It is the fastest route from <a href="pytorch-training.html">training</a> to a shareable model.</p>
@@ -396,6 +396,8 @@ model = AutoModelForSequenceClassification.from_pretrained("bert-base-uncased", 
 <li><strong>Dataset map and cache.</strong> <code>ds.map(tokenize, batched=True)</code> caches tokenized Arrow tables. Failure mode: changing the tokenize function but reusing a stale cache — pass a new <code>cache_file_name</code> or <code>load_from_cache_file=False</code> when debugging.</li>
 <li><strong>Spaces runtime.</strong> Free CPU Spaces are fine for tiny models; GPU Spaces cost quota. Gradio <code>Interface</code> can call <code>pipeline("sentiment-analysis", model="you/model")</code>. Cold starts and sleep on free tiers — not an SLA. For production, export ONNX/TorchScript or host your own endpoint.</li>
 <li><strong>Safety and cards.</strong> Check <code>license</code>, <code>datasets</code> used for training, and bias notes. Gated models need <code>huggingface-cli login</code> + accepting terms. Shipping without reading the card is a legal/product risk, not just a style issue.</li>
+<li><strong>Eval during Trainer.</strong> Set <code>evaluation_strategy="epoch"</code> (or steps) and <code>load_best_model_at_end=True</code> with <code>metric_for_best_model</code> — otherwise <code>train()</code> happily returns the last overfit weights even when logs showed a better midpoint.</li>
+<li><strong>Hub as the glue.</strong> Treat <code>push_to_hub</code> of <em>model + tokenizer + a tiny model card</em> as the end of training, not “weights somewhere on disk.” Consumers (Spaces, classmates, demos) should clone one repo id, not three mismatched folders.</li>
 </ul>
 <h2>Decision guide</h2>
 <table><thead>
@@ -408,6 +410,25 @@ model = AutoModelForSequenceClassification.from_pretrained("bert-base-uncased", 
 <tr><td>Embeddings for RAG / search</td><td><a href="sentence-transformers.html">sentence-transformers</a> models on the Hub</td><td>Raw LM CLS without pooling/normalization</td></tr>
 <tr><td>Commercial product</td><td>Models with clear commercial license + private holdout eval</td><td>Research-only weights; Hub test set as your only metric</td></tr>
 </tbody></table>
+<h2>Case study</h2>
+<p>Ship a binary IMDb sentiment classifier from Hub assets to a Gradio Space in one afternoon.</p>
+<ul>
+<li><strong>Inputs:</strong> <code>load_dataset("imdb")</code> (~25k train), <code>bert-base-uncased</code> tokenizer + <code>AutoModelForSequenceClassification(..., num_labels=2)</code>, <code>max_length=256</code>.</li>
+<li><strong>Steps:</strong> map tokenize with padding/truncation → <code>TrainingArguments(lr=2e-5, batch=16, epochs=3, eval each epoch, load_best_model_at_end)</code> → <code>Trainer.train()</code> on a free GPU → <code>push_to_hub("you/imdb-clf")</code> → Space wraps <code>pipeline("sentiment-analysis", model="you/imdb-clf")</code>.</li>
+<li><strong>Output:</strong> val accuracy typically mid–high 80s to ~90%; Hub repo contains <code>config.json</code>, weights, and tokenizer; Space URL is the shareable demo.</li>
+<li><strong>What you'd check:</strong> model card license allows your use; tokenizer files are present beside weights; private holdout (not only Hub test peek); Space cold-start still returns a label after wake.</li>
+</ul>
+<h2>Lab checklist</h2>
+<ul>
+<li>[ ] Load a Hub dataset and print split sizes + one labeled example</li>
+<li>[ ] Load matching <code>AutoTokenizer</code> + task model from the same checkpoint id</li>
+<li>[ ] Fine-tune with <code>Trainer</code> for ≥1 epoch and log a val metric</li>
+<li>[ ] Enable <code>load_best_model_at_end</code> (or manually save best) before export</li>
+<li>[ ] Push model <em>and</em> tokenizer to a Hub repo (or save a complete local folder)</li>
+<li>[ ] Read the model card license and intended-use section before sharing</li>
+<li>[ ] Call the model via <code>pipeline</code> or a tiny Gradio UI once</li>
+<li>[ ] (Optional) Retry the same fine-tune with LoRA and compare VRAM / quality</li>
+</ul>
 <h2>Pipeline</h2>
 <pre><code>
 HF Datasets → pretrained model (Hub) → fine-tune (PyTorch/TF) → push to Hub / Spaces → use
@@ -435,7 +456,7 @@ HF Datasets → pretrained model (Hub) → fine-tune (PyTorch/TF) → push to Hu
 <script src="../_shared/nav-stack.js"></script>
 <script>
 (function () {
-  const title = "Hugging Face — dataset + Space";
+  const title = "Hugging Face — Dataset + Space";
   const num = "08";
   if (window.AiLabNav) {
     AiLabNav.enter((num ? num + " " : "") + title);

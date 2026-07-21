@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>sentence-transformers · slides</title>
+<title>Sentence-Transformers · Slides</title>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Sora:wght@400;600;700&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="../_shared/deck.css" />
 <style>
@@ -33,6 +33,10 @@
 .table-card.dense table { font-size: 16px; }
 .table-card.dense th, .table-card.dense td { padding: 8px 12px; }
 .card p, .card li { font-size: 19px; }
+.case-dense .card { padding: 16px 18px; }
+.case-dense .card h3 { font-size: 20px; margin-bottom: 8px; }
+.case-dense .card p { font-size: 16px !important; line-height: 1.35; }
+.lab-dense .card p { font-size: 16px !important; line-height: 1.35; }
 </style>
 </head>
 <body>
@@ -42,8 +46,8 @@
 <section class="slide active">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
-    <div class="topbar reveal"><span>Concept · sentence-transformers</span><span class="pill">teaching</span></div>
-    <h1 class="reveal" style="margin-top:72px;">sentence-transformers · <em>one vector per sentence</em></h1>
+    <div class="topbar reveal"><span>Concept · Sentence-Transformers</span><span class="pill">teaching</span></div>
+    <h1 class="reveal" style="margin-top:72px;">Sentence-Transformers · <em>encode meaning</em></h1>
     <p class="lead reveal" style="margin-top:28px;">A few lines of code turn a whole sentence into a meaning vector — ready for similarity, search, and RAG.</p>
     <div class="flow-row reveal"><span class="step">sentence</span><span class="arr">→</span><span class="step">encode()</span><span class="arr">→</span><span class="step">vector</span><span class="arr">→</span><span class="step">cos_sim / DB</span></div>
   </div>
@@ -205,6 +209,42 @@ print(util.cos_sim(emb[0], emb[2]))  <span class="c"># ~0.0–0.3 different topi
 </section>
 
 
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Case Study</span><span class="pill">lab</span></div>
+    <h2 class="reveal" style="font-size:40px;margin-bottom:12px;">Case Study</h2>
+    <p class="lead reveal" style="margin-top:0;margin-bottom:14px;font-size:20px;">Build a FAQ retriever for 5 000 support answers (~80–200 tokens) used by a RAG bot.</p>
+    <div class="cols-2 case-dense" style="gap:14px;">
+      <div class="card accent reveal" style="padding:18px 20px;"><div class="tag">inputs</div><h3>Inputs</h3><p>FAQ strings + ids; <code>SentenceTransformer("all-MiniLM-L6-v2")</code>; queries from a 100-example gold set.</p></div>
+      <div class="card cyan reveal"><div class="tag">steps</div><h3>Steps</h3><p>offline <code>encode(faqs, batch_size=64, normalize_embeddings=True)</code> → <code>5000×384</code> matrix (~7.3 MB) → FAISS <code>IndexFlatIP</code> → at query time encode one vector → top-5 → pass texts to the LLM.</p></div>
+      <div class="card reveal"><div class="tag">output</div><h3>Output</h3><p>p50 retrieve &lt;50 ms on CPU for this size; gold Recall@5 target ≥0.85 before wiring RAG.</p></div>
+      <div class="card reveal"><div class="tag">check</div><h3>Verify</h3><p>cosine(<code>Hello</code>,<code>Hi there</code>) ≫ cosine(<code>Hello</code>, unrelated FAQ); no second model mixed into the index; if switching to multilingual FAQs, rebuild the entire index with one multilingual checkpoint.</p></div>
+    </div>
+  </div>
+  <div class="foot"><span>12</span><span>notes/sentence-transformers.md</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Lab Checklist</span><span class="pill">do</span></div>
+    <h2 class="reveal" style="font-size:40px;margin-bottom:12px;">Lab Checklist</h2>
+    <div class="cols-2 lab-dense" style="gap:14px;">
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">01</span><p style="margin:0;font-size:18px;line-height:1.4;"><code>encode</code> three sentences and print pairwise cosine similarities</p></div>
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">02</span><p style="margin:0;font-size:18px;line-height:1.4;">Toggle <code>normalize_embeddings</code> and compare rankings under dot product</p></div>
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">03</span><p style="margin:0;font-size:18px;line-height:1.4;">Embed a small corpus (≥100 docs) and retrieve top-5 for two paraphrased queries</p></div>
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">04</span><p style="margin:0;font-size:18px;line-height:1.4;">Measure encode throughput (docs/sec) for your typical chunk length</p></div>
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">05</span><p style="margin:0;font-size:18px;line-height:1.4;">Swap MiniLM vs mpnet (or E5) on the same gold queries and compare Recall@5</p></div>
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">06</span><p style="margin:0;font-size:18px;line-height:1.4;">Document the embedding dim and metric you will store in the vector DB</p></div>
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">07</span><p style="margin:0;font-size:18px;line-height:1.4;">(If using E5/BGE) verify query vs passage prefixes match the model card</p></div>
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">08</span><p style="margin:0;font-size:18px;line-height:1.4;">Rebuild once after a model change and confirm old vectors are discarded</p></div>
+    </div>
+  </div>
+  <div class="foot"><span>13</span><span>notes/sentence-transformers.md</span></div>
+</section>
+
 <section class="slide">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
@@ -216,7 +256,7 @@ print(util.cos_sim(emb[0], emb[2]))  <span class="c"># ~0.0–0.3 different topi
       <div class="card reveal"><div class="tag">domain</div><h3>Domain shift</h3><p>General MiniLM on legal/medical clusters poorly — fine-tune or pick domain model.</p></div>
     </div>
   </div>
-  <div class="foot"><span>12</span><span>notes/sentence-transformers.md</span></div>
+  <div class="foot"><span>14</span><span>notes/sentence-transformers.md</span></div>
 </section>
 
 <section class="slide">
@@ -227,7 +267,7 @@ print(util.cos_sim(emb[0], emb[2]))  <span class="c"># ~0.0–0.3 different topi
     <div class="flow-row reveal" style="margin-top:48px;"><span class="step">sentence</span><span class="arr">→</span><span class="step">encode()</span><span class="arr">→</span><span class="step">vector</span><span class="arr">→</span><span class="step">cos_sim</span><span class="arr">→</span><span class="step">classifier / DB</span></div>
     <p class="lead reveal" style="margin-top:36px;">Bridge from embedding.md into semantic-search, vector-database, and RAG.</p>
   </div>
-  <div class="foot"><span>13</span><span>notes/sentence-transformers.md</span></div>
+  <div class="foot"><span>15</span><span>notes/sentence-transformers.md</span></div>
 </section>
 
 <section class="slide">
@@ -241,7 +281,7 @@ print(util.cos_sim(emb[0], emb[2]))  <span class="c"># ~0.0–0.3 different topi
       <div class="card reveal"><div class="tag">demo</div><h3>Embedding app</h3><p>Try similarity in the browser.</p></div>
     </div>
   </div>
-  <div class="foot"><span>14</span><span>related notes</span></div>
+  <div class="foot"><span>16</span><span>related notes</span></div>
 </section>
 
 <section class="slide">

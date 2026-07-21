@@ -1,4 +1,4 @@
-# AI timeline — my journey (2023 → present)
+# AI Timeline — My Journey (2023 → Present)
 
 > Starting point: **2023** — first time learning about LLMs, then background concepts (tokenize, embedding, attention, softmax, RAG). This timeline anchors lab notes to real AI milestones and shows why focus now shifts to **agents / automation**.
 
@@ -88,6 +88,8 @@ You can enter the lab at any stage, but the timeline shows *why* MCP and harness
 - **2026 model wave discipline:** Grok 4.5 / Opus 4.8 / GPT-5.6 arrive close together — update [08-model-notes.md](./08-model-notes.md), don’t rewrite RAG or train pipelines for each launch.
 - **Automation layer:** OpenClaw → Hermess is about *unattended* loops. Ask what must stay human-approved (prod deploys, secrets) vs what can run on a schedule ([09-agent-automation.md](./09-agent-automation.md)).
 - **How to read industry news with this timeline:** classify each headline as foundation science, model release, protocol/harness, or automation product — then open the matching lab note instead of doomscrolling.
+- **Layered upgrade discipline.** When something breaks after a “new model” week, ask which layer moved: weights, harness, protocol, or automation scope. Changing two layers at once makes root cause impossible.
+- **Personal milestone markers.** Add *your* dates beside industry ones (first RAG demo, first MCP server, first unattended job). The note becomes a learning journal, not only a news scrapbook.
 
 ## Decision guide
 
@@ -99,6 +101,26 @@ You can enter the lab at any stage, but the timeline shows *why* MCP and harness
 | Agent fails on retrieval-heavy tasks | Revisit embedding / RAG / semantic-search notes | Only swapping to a bigger chat model |
 | Want unattended runs | [09-agent-automation.md](./09-agent-automation.md) + clear approvals | Giving a harness prod credentials “to try OpenClaw” |
 | Confused model vs harness pain | Read [07-agents.md](./07-agents.md) axes first | Blaming Grok/Opus for missing shell/MCP |
+
+## Case study
+
+Use the timeline to diagnose “our agent can’t find the docs” in a 2026 stack.
+
+- **Inputs:** tool-using coding agent, RAG over internal markdown, recent model upgrade, MCP-enabled editor.
+- **Steps:** classify the failure — retrieval (Stage 1: embedding/RAG/semantic-search) vs tool protocol (Stage 3: MCP) vs harness loop (Stage 3: permissions/skills) vs model choice (Stage 4). Check chunking/index freshness before swapping Grok↔Opus. Confirm MCP tools actually list and run. Only then tune model field notes.
+- **Output:** fix is usually reindex + correct embedding model, or MCP auth — not a full rewrite for the latest LLM launch.
+- **What you'd check:** Nov 2024 hinge literacy (shared tool protocol); foundations still linked from agent bugs; one layer changed at a time; automation (OpenClaw/Hermess) not given prod secrets “to try.”
+
+## Lab checklist
+
+- [ ] Walk Stage 1 notes in order (tokenize → embedding → attention → softmax → RAG) once
+- [ ] Mark which stage you are *actually* working in this week
+- [ ] Read [mcp.md](./mcp.md) and state in one sentence why Nov 2024 is a hinge
+- [ ] Open harness vs model notes and label your last pain as one or the other
+- [ ] Add two personal dates to the milestone table (your firsts)
+- [ ] Pick a news headline and classify it: science / model / protocol / automation
+- [ ] For one agent bug, name the foundation note that would explain it
+- [ ] List what must stay human-approved before any unattended automation
 
 ## Slides & demo
 

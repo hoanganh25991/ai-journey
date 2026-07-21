@@ -1,4 +1,4 @@
-# Train with PyTorch
+# Train With PyTorch
 
 > A hands-on lesson: use PyTorch to train a classifier — epoch loop, compute loss, backprop, update weights until the model is good enough. Everyday metaphor: each batch is one practice set; each epoch is one full pass through the textbook.
 
@@ -72,6 +72,8 @@ Concrete numbers: batch size 32, LR `1e-3`, Adam. If `loss` drops from ~0.69 (ra
 - **AMP and grad scaling.** `with autocast(): loss = ...` then `scaler.scale(loss).backward(); scaler.step(opt); scaler.update()`. Failure mode: unscaled underflow → silent zero grads; the GradScaler exists to prevent that.
 - **DataLoader knobs that matter.** `num_workers=2–4`, `pin_memory=True` (CUDA), and `persistent_workers=True` often matter more than micro-optimizing the model once GPU util is &lt;50%. Shuffle train, not val. Set `torch.manual_seed` + `generator` for reproducible splits.
 - **Compare to Keras.** Same math; PyTorch makes the loop explicit (easier custom losses, GANs, RL). Cost: you own `train()`/`eval()`, device moves, and checkpointing. Prefer PyTorch when you need non-standard training; prefer Keras `fit` for fast baselines ([tensorflow-training.md](./tensorflow-training.md)).
+- **Logging that pays off.** Log `loss`, LR, and grad norm (`torch.nn.utils.clip_grad_norm_`) every N steps. A sudden grad-norm spike often precedes NaN loss — catch it before the whole run is useless.
+- **Checkpoint resume contract.** Save `model`, `optimizer`, `scheduler`, `epoch`, and `scaler` (if AMP). Resume must restore all five or “continued” training silently restarts the LR schedule and looks like a regression.
 
 ## Decision guide
 
@@ -83,6 +85,28 @@ Concrete numbers: batch size 32, LR `1e-3`, Adam. If `loss` drops from ~0.69 (ra
 | Custom loss / multi-task / RL | Explicit PyTorch loop | Fighting Keras `fit` with awkward callbacks |
 | GPU OOM at batch 32 | Gradient accumulation (4×8) or AMP | Blindly lowering LR — doesn’t free memory |
 | Publishing a reproducible run | Seed + fixed DataLoader generator + saved config | Only saving final weights with no hyperparams log |
+
+![Lab checklist: split → train → export](assets/pytorch-training/lab-checklist.png)
+
+## Case study
+
+Train a 3-class review classifier from scratch loop (not `Trainer`) on 8 000 train / 1 000 val examples.
+
+- **Inputs:** tokenized batches `x: [B, L]`, labels `y: [B]`, batch size 32 → 250 steps/epoch; model on CUDA, AdamW `lr=2e-5`, `CrossEntropyLoss`.
+- **Steps:** each batch `zero_grad → forward → loss → backward → clip_grad_norm_(1.0) → step`; after each epoch run `model.eval()` + `no_grad` val loop; save when val F1 improves.
+- **Output:** by epoch 4, train loss ~0.25 / val loss ~0.38; epoch 7 train ~0.08 / val ~0.52 → keep the epoch-4 `best.pt` (~110 MB state_dict).
+- **What you'd check:** forgot-`zero_grad` smoke test (loss should explode if you comment it out once); device match (`x.device == next(model.parameters()).device`); val uses `eval()`; resume from checkpoint restores optimizer step count.
+
+## Lab checklist
+
+- [ ] Implement the four-step batch loop and print loss for the first 20 steps
+- [ ] Deliberately omit `zero_grad` once and observe gradient accumulation / loss blow-up
+- [ ] Add a val loop with `model.eval()` + `torch.no_grad()` and plot train vs val loss
+- [ ] Save best-val `state_dict` and reload it into a fresh model instance
+- [ ] Move model + one batch to GPU (or MPS) and confirm no device mismatch errors
+- [ ] Try gradient accumulation (e.g. 4× micro-batch 8) and match effective batch 32
+- [ ] Log learning rate each epoch (even if constant) so a future schedule change is visible
+- [ ] Compare final metrics when shipping last-epoch vs best-val weights
 
 ## Pipeline
 

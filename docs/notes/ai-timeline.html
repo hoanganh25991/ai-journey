@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>AI timeline — my journey · AI Lab</title>
+<title>AI Timeline — My Journey · AI Lab</title>
 <script>
 (function () {
   try {
@@ -329,14 +329,14 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
   </div>
   <div data-lab-stack></div>
   <article class="doc">
-    <h1>AI timeline — my journey</h1>
+    <h1>AI Timeline — My Journey</h1>
     <p class="summary">Journey from 2023 (first LLM exposure) → embedding… → agents → automation, anchored to real AI milestones.</p>
     <div class="actions"><a class="primary" href="../slides/ai-timeline/index.html">Slides ↗</a>
 <a href="10-ai-timeline.md" id="labDownload" download="10-ai-timeline.md">Download</a>
 <button type="button" id="labShare">Share</button></div>
     <div class="topics"><span>#timeline</span><span>#history</span><span>#milestone</span><span>#mcp</span><span>#grok</span></div>
     <hr class="sep" />
-    <div class="body"><h1>AI timeline — my journey (2023 → present)</h1>
+    <div class="body"><h1>AI Timeline — My Journey (2023 → Present)</h1>
 <blockquote>Starting point: <strong>2023</strong> — first time learning about LLMs, then background concepts (tokenize, embedding, attention, softmax, RAG). This timeline anchors lab notes to real AI milestones and shows why focus now shifts to <strong>agents / automation</strong>.</blockquote>
 <blockquote>Academic roots (Transformer 2017, BERT 2018, GPT-3 2020) underpin the concepts — see <a href="attention.html">attention.md</a>, <a href="embedding.html">embedding.md</a>. <em>My journey</em> starts in 2023.</blockquote>
 <h2>Why it matters</h2>
@@ -417,6 +417,8 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 <li><strong>2026 model wave discipline:</strong> Grok 4.5 / Opus 4.8 / GPT-5.6 arrive close together — update <a href="model-notes.html">08-model-notes.md</a>, don’t rewrite RAG or train pipelines for each launch.</li>
 <li><strong>Automation layer:</strong> OpenClaw → Hermess is about <em>unattended</em> loops. Ask what must stay human-approved (prod deploys, secrets) vs what can run on a schedule (<a href="agent-automation.html">09-agent-automation.md</a>).</li>
 <li><strong>How to read industry news with this timeline:</strong> classify each headline as foundation science, model release, protocol/harness, or automation product — then open the matching lab note instead of doomscrolling.</li>
+<li><strong>Layered upgrade discipline.</strong> When something breaks after a “new model” week, ask which layer moved: weights, harness, protocol, or automation scope. Changing two layers at once makes root cause impossible.</li>
+<li><strong>Personal milestone markers.</strong> Add <em>your</em> dates beside industry ones (first RAG demo, first MCP server, first unattended job). The note becomes a learning journal, not only a news scrapbook.</li>
 </ul>
 <h2>Decision guide</h2>
 <table><thead>
@@ -429,6 +431,25 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 <tr><td>Want unattended runs</td><td><a href="agent-automation.html">09-agent-automation.md</a> + clear approvals</td><td>Giving a harness prod credentials “to try OpenClaw”</td></tr>
 <tr><td>Confused model vs harness pain</td><td>Read <a href="agents.html">07-agents.md</a> axes first</td><td>Blaming Grok/Opus for missing shell/MCP</td></tr>
 </tbody></table>
+<h2>Case study</h2>
+<p>Use the timeline to diagnose “our agent can’t find the docs” in a 2026 stack.</p>
+<ul>
+<li><strong>Inputs:</strong> tool-using coding agent, RAG over internal markdown, recent model upgrade, MCP-enabled editor.</li>
+<li><strong>Steps:</strong> classify the failure — retrieval (Stage 1: embedding/RAG/semantic-search) vs tool protocol (Stage 3: MCP) vs harness loop (Stage 3: permissions/skills) vs model choice (Stage 4). Check chunking/index freshness before swapping Grok↔Opus. Confirm MCP tools actually list and run. Only then tune model field notes.</li>
+<li><strong>Output:</strong> fix is usually reindex + correct embedding model, or MCP auth — not a full rewrite for the latest LLM launch.</li>
+<li><strong>What you'd check:</strong> Nov 2024 hinge literacy (shared tool protocol); foundations still linked from agent bugs; one layer changed at a time; automation (OpenClaw/Hermess) not given prod secrets “to try.”</li>
+</ul>
+<h2>Lab checklist</h2>
+<ul>
+<li>[ ] Walk Stage 1 notes in order (tokenize → embedding → attention → softmax → RAG) once</li>
+<li>[ ] Mark which stage you are <em>actually</em> working in this week</li>
+<li>[ ] Read <a href="mcp.html">mcp.md</a> and state in one sentence why Nov 2024 is a hinge</li>
+<li>[ ] Open harness vs model notes and label your last pain as one or the other</li>
+<li>[ ] Add two personal dates to the milestone table (your firsts)</li>
+<li>[ ] Pick a news headline and classify it: science / model / protocol / automation</li>
+<li>[ ] For one agent bug, name the foundation note that would explain it</li>
+<li>[ ] List what must stay human-approved before any unattended automation</li>
+</ul>
 <h2>Slides &amp; demo</h2>
 <table><thead>
 <tr><th></th><th>Link</th></tr>
@@ -446,7 +467,7 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 <script src="../_shared/nav-stack.js"></script>
 <script>
 (function () {
-  const title = "AI timeline — my journey";
+  const title = "AI Timeline — My Journey";
   const num = "24";
   if (window.AiLabNav) {
     AiLabNav.enter((num ? num + " " : "") + title);

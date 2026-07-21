@@ -1,4 +1,4 @@
-# Vector database
+# Vector Database
 
 > Store millions of embedding vectors and answer “which vectors are closest to this one?” in milliseconds. The infrastructure under RAG and semantic search. Everyday metaphor: a library that shelves books by *meaning coordinates*, not only by title keywords — and can point to the nearest shelves instantly.
 
@@ -63,6 +63,8 @@
 - **Latency budget sketch:** embed query 2–20 ms + ANN 1–30 ms + fetch payloads 1–10 ms is a common comfortable band for interactive RAG; p99 spikes usually come from cold caches, huge `k`, or heavy metadata filters.
 - **CRUD reality:** deleting a document means deleting *all* its chunk vectors; partial updates need stable `chunk_id`s. Re-embedding after model upgrade means **full reindex**, not a hot swap of one row.
 - **Hybrid join:** many stacks run BM25 and HNSW separately then fuse scores (RRF — reciprocal rank fusion). Pure vector DB alone will miss exact SKUs/IDs that keyword search catches.
+- **Recall@k vs latency curve.** Plot Recall@10 against `efSearch`/`nprobe` on a fixed gold set; pick the knee that meets your SLA. Shipping “default ANN knobs” without this curve is guessing.
+- **Idempotent upserts.** Use stable `chunk_id = hash(source + offsets + model_id)`. Re-ingesting the same doc should replace vectors, not duplicate neighbors that pollute top-k.
 
 ## Decision guide
 
@@ -74,6 +76,26 @@
 | Need BM25 + vectors + CRUD | Elasticsearch/OpenSearch kNN | FAISS alone — you will reinvent ops and keyword search |
 | App data already in Postgres | pgvector (HNSW/IVFFlat) | Extra DB just for vectors unless scale demands it |
 | Cosine-trained embeddings | Cosine space, or normalize + IP | L2 on raw SBERT vectors — ranking distortion |
+
+## Case study
+
+Index an internal wiki (~8 000 chunks of 200–400 tokens) for RAG answer support.
+
+- **Inputs:** markdown pages → chunker → MiniLM 384-d normalized embeddings; metadata `{source, date, product_area}`.
+- **Steps:** upsert into HNSW (or pgvector/Chroma for the lab) → gold 50 questions with known passages → tune `efSearch` until Recall@10 ≥ 0.9 vs flat baseline → query path: embed question → ANN top-8 → filter `date >= 2024` → return payloads to the LLM.
+- **Output:** interactive retrieve ~10–40 ms ANN + embed; RAG context pack of 8 chunks; ops runbook for full reindex when the embedding model changes.
+- **What you'd check:** dim/metric match at write and read; deleting a page removes all its chunk ids; ANN recall not silently tanked by tiny `efSearch`; hybrid BM25 still available for SKU/error-code queries.
+
+## Lab checklist
+
+- [ ] Chunk a small document set and embed with a fixed sentence-transformer
+- [ ] Insert vectors + metadata into one store (FAISS, Chroma, or pgvector)
+- [ ] Query with a paraphrase and inspect top-k texts (not only scores)
+- [ ] Compare flat/exact search vs ANN on the same gold queries (Recall@10)
+- [ ] Raise/lower `efSearch` or `nprobe` and record latency vs recall
+- [ ] Apply a metadata filter and note empty-result behavior
+- [ ] Delete or update one source document and verify stale chunks are gone
+- [ ] Write the reindex rule: new embedding model ⇒ rebuild all vectors
 
 ## Pipeline
 

@@ -1,4 +1,4 @@
-# AI Agents · harness comparison
+# AI Agents · Harness Comparison
 
 > **Harness ≠ model.** Harness = orchestration software (UI, tool calling, context, agent loop). Model = the brain plugged in. The same model on different harnesses feels very different. Compare models at [08-model-notes.md](./08-model-notes.md). Everyday metaphor: the same chef in different kitchens — tools, mise en place, and service rhythm change the meal.
 
@@ -74,6 +74,8 @@ Same bug report: “tests fail on CI.”
 - **Routing transparency:** Auto that silently switches mid-task breaks reproducibility. For long refactors, pin the model and note it in the PR description.
 - **Multi-agent / first-mate patterns:** worth it when subtasks are isolatable (explore vs edit vs review). Wasteful when the harness can’t share a single filesystem truth — then you get conflicting patches.
 - **Security axis:** harnesses that auto-approve network and secret reads feel fast until they leak. Prefer explicit approvals for prod credentials; keep `.env` out of prompts.
+- **Observability of the loop.** Prefer harnesses that show tool calls, command output, and which model ran. Without that trace, “quality feels worse today” is undebuggable — could be routing, MCP, or context drop.
+- **Bootstrap checklist for a new harness:** (1) can it see the repo, (2) can it run a test, (3) can it apply a patch, (4) does it load `~/.agents` / AGENTS.md. Fail any one and fix that before A/B testing models.
 
 ## Decision guide
 
@@ -85,6 +87,26 @@ Same bug report: “tests fail on CI.”
 | Testing many OpenRouter models quickly | OpenCode / Cline-style open harness | Judging model quality inside a broken tool setup |
 | “Model is dumb today” but shell/MCP denied | Fix harness permissions / MCP health | Immediately swapping to a bigger model |
 | Reproducible long task | Pin model + AGENTS.md + skills | Auto routing with no log of which model ran |
+
+## Case study
+
+Same bug report — “CI tests fail” — across three harness thicknesses.
+
+- **Inputs:** failing CI log, local repo, MCP/shell permissions, project skills + AGENTS.md.
+- **Steps:** **Thick (Cursor):** run tests → read log → patch → re-run → summarize. **Claude Code:** slower, stronger ask-back on flake vs deterministic failure before editing. **Thin chat:** model only *describes* `pytest -q`; you paste everything.
+- **Output:** thick harnesses produce a verified fix; thin harnesses produce advice. Model card unchanged.
+- **What you'd check:** shell/MCP not denied; skills actually loaded; Auto vs pinned model logged; don’t swap to a bigger model until the harness can execute and observe.
+
+## Lab checklist
+
+- [ ] Pick two harnesses and run the same small repo task on both
+- [ ] Deny shell once on purpose; note how the session degrades to chatbot mode
+- [ ] Pin a model vs Auto on a multi-step task; record which felt more stable
+- [ ] Confirm `~/.agents` or project skills are visible to the client you use
+- [ ] Add or update AGENTS.md with one non-negotiable project convention
+- [ ] Trace one agent loop: plan → tool call → observe → retry
+- [ ] Debug one MCP server with a tiny ping/`list_tools` before blaming the model
+- [ ] Write which harness axis failed last time you “blamed the model”
 
 ## Slides & demo
 

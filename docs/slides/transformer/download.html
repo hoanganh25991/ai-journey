@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Transformer · slides</title>
+<title>Transformer · Slides</title>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Sora:wght@400;600;700&display=swap" rel="stylesheet" />
 <style>
 /* Shared Neural Ledger deck — fixed 1920×1080 */
@@ -199,6 +199,10 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
 .table-card.dense table { font-size: 16px; }
 .table-card.dense th, .table-card.dense td { padding: 8px 12px; }
 .card p, .card li { font-size: 19px; }
+.case-dense .card { padding: 16px 18px; }
+.case-dense .card h3 { font-size: 20px; margin-bottom: 8px; }
+.case-dense .card p { font-size: 16px !important; line-height: 1.35; }
+.lab-dense .card p { font-size: 16px !important; line-height: 1.35; }
 </style>
 </head>
 <body>
@@ -208,7 +212,7 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
 <section class="slide active">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
-    <div class="topbar reveal"><span>Concept · transformer</span><span class="pill">teaching</span></div>
+    <div class="topbar reveal"><span>Concept · Transformer</span><span class="pill">teaching</span></div>
     <h1 class="reveal" style="margin-top:72px;">Transformer · <em>attention, stacked</em></h1>
     <p class="lead reveal" style="margin-top:28px;">Many attention blocks in parallel — the frame behind BERT, GPT, and nearly every modern language model.</p>
     <div class="flow-row reveal"><span class="step">tokens</span><span class="arr">→</span><span class="step">embed + position</span><span class="arr">→</span><span class="step">N × blocks</span><span class="arr">→</span><span class="step">head</span></div>
@@ -385,6 +389,42 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
 </section>
 
 
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Case Study</span><span class="pill">lab</span></div>
+    <h2 class="reveal" style="font-size:40px;margin-bottom:12px;">Case Study</h2>
+    <p class="lead reveal" style="margin-top:0;margin-bottom:14px;font-size:20px;">Explain why a chat model and a classifier need different Transformer “shapes” on the same English sentence.</p>
+    <div class="cols-2 case-dense" style="gap:14px;">
+      <div class="card accent reveal" style="padding:18px 20px;"><div class="tag">inputs</div><h3>Inputs</h3><p>sentence <code>"The cat sat on the mat."</code> tokenized to ~6–8 BPE ids; compare BERT-base encoder vs a small causal GPT-style decoder.</p></div>
+      <div class="card cyan reveal"><div class="tag">steps</div><h3>Steps</h3><p>encoder builds bidirectional states (token <code>"sat"</code> may attend to <code>"mat"</code>); pool <code>[CLS]</code>/mean → classification logits. Decoder at position of <code>"sat"</code> <strong>masks</strong> future <code>"mat"</code>; LM head predicts the <em>next</em> token distribution over the vocab (~50k).</p></div>
+      <div class="card reveal"><div class="tag">output</div><h3>Output</h3><p>encoder path → sentiment/topic label; decoder path → continuation text. Same attention math, different mask + head.</p></div>
+      <div class="card reveal"><div class="tag">check</div><h3>Verify</h3><p>causal mask off-by-one (future leak); context length truncation of the prompt start; wrong HF class (<code>ForCausalLM</code> vs <code>ForSequenceClassification</code>); O(n²) memory if you paste a huge PDF into one forward.</p></div>
+    </div>
+  </div>
+  <div class="foot"><span>14</span><span>notes/transformer.md</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Lab Checklist</span><span class="pill">do</span></div>
+    <h2 class="reveal" style="font-size:40px;margin-bottom:12px;">Lab Checklist</h2>
+    <div class="cols-2 lab-dense" style="gap:14px;">
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">01</span><p style="margin:0;font-size:18px;line-height:1.4;">Sketch one encoder block: attention → residual → FFN → residual</p></div>
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">02</span><p style="margin:0;font-size:18px;line-height:1.4;">Write the causal mask rule in one sentence and give a 4-token example matrix</p></div>
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">03</span><p style="margin:0;font-size:18px;line-height:1.4;">Load an encoder checkpoint and a causal LM checkpoint; note which task heads exist</p></div>
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">04</span><p style="margin:0;font-size:18px;line-height:1.4;">Run a short sentence through an attention visualization (lab demo or notebook)</p></div>
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">05</span><p style="margin:0;font-size:18px;line-height:1.4;">Measure what happens when input length approaches the model max position</p></div>
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">06</span><p style="margin:0;font-size:18px;line-height:1.4;">Compare parameter count of attention projections vs FFN for one layer (order-of-magnitude)</p></div>
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">07</span><p style="margin:0;font-size:18px;line-height:1.4;">Pick encoder vs decoder for: (a) spam classify, (b) chat reply — justify in one line each</p></div>
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">08</span><p style="margin:0;font-size:18px;line-height:1.4;">Read the positional encoding type on a modern LLM card (RoPE / ALiBi / absolute)</p></div>
+    </div>
+  </div>
+  <div class="foot"><span>15</span><span>notes/transformer.md</span></div>
+</section>
+
 <section class="slide">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
@@ -396,7 +436,7 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
       <div class="card reveal"><div class="tag">order</div><h3>Dropping position</h3><p>Hack without positional info and order sensitivity breaks.</p></div>
     </div>
   </div>
-  <div class="foot"><span>14</span><span>notes/transformer.md</span></div>
+  <div class="foot"><span>16</span><span>notes/transformer.md</span></div>
 </section>
 
 <section class="slide">
@@ -407,7 +447,7 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
     <div class="flow-row reveal" style="margin-top:48px;"><span class="step">tokens</span><span class="arr">→</span><span class="step">embed + pos</span><span class="arr">→</span><span class="step">N × (attn + FFN)</span><span class="arr">→</span><span class="step">repr</span><span class="arr">→</span><span class="step">head</span></div>
     <p class="lead reveal" style="margin-top:36px;">Wraps attention, embedding, and softmax into one complete model house-frame.</p>
   </div>
-  <div class="foot"><span>15</span><span>classification / generation</span></div>
+  <div class="foot"><span>17</span><span>classification / generation</span></div>
 </section>
 
 <section class="slide">
@@ -421,7 +461,7 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
       <div class="card reveal"><div class="tag">hub</div><h3>Hugging Face</h3><p>Pretrained Transformer checkpoints to load.</p></div>
     </div>
   </div>
-  <div class="foot"><span>16</span><span>related notes</span></div>
+  <div class="foot"><span>18</span><span>related notes</span></div>
 </section>
 
 <section class="slide">

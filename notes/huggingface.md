@@ -1,4 +1,4 @@
-# Hugging Face — dataset + Space → usable model
+# Hugging Face — Dataset + Space → Usable Model
 
 > “GitHub for AI”: get **datasets**, **pretrained models**, and host demos with **Spaces**. Shortens the path from idea to a model you can actually use. Everyday metaphor: don’t forge steel — borrow a good knife, sharpen it on your wood, then show others how it cuts.
 
@@ -64,6 +64,8 @@ Concrete path: `load_dataset("imdb")` → ~25k train reviews → tokenize with `
 - **Dataset map and cache.** `ds.map(tokenize, batched=True)` caches tokenized Arrow tables. Failure mode: changing the tokenize function but reusing a stale cache — pass a new `cache_file_name` or `load_from_cache_file=False` when debugging.
 - **Spaces runtime.** Free CPU Spaces are fine for tiny models; GPU Spaces cost quota. Gradio `Interface` can call `pipeline("sentiment-analysis", model="you/model")`. Cold starts and sleep on free tiers — not an SLA. For production, export ONNX/TorchScript or host your own endpoint.
 - **Safety and cards.** Check `license`, `datasets` used for training, and bias notes. Gated models need `huggingface-cli login` + accepting terms. Shipping without reading the card is a legal/product risk, not just a style issue.
+- **Eval during Trainer.** Set `evaluation_strategy="epoch"` (or steps) and `load_best_model_at_end=True` with `metric_for_best_model` — otherwise `train()` happily returns the last overfit weights even when logs showed a better midpoint.
+- **Hub as the glue.** Treat `push_to_hub` of *model + tokenizer + a tiny model card* as the end of training, not “weights somewhere on disk.” Consumers (Spaces, classmates, demos) should clone one repo id, not three mismatched folders.
 
 ## Decision guide
 
@@ -75,6 +77,26 @@ Concrete path: `load_dataset("imdb")` → ~25k train reviews → tokenize with `
 | Reproducible paper / course hand-in | Pin `revision` + save `TrainingArguments` | Floating `main` tags that change under you |
 | Embeddings for RAG / search | [sentence-transformers](./sentence-transformers.md) models on the Hub | Raw LM CLS without pooling/normalization |
 | Commercial product | Models with clear commercial license + private holdout eval | Research-only weights; Hub test set as your only metric |
+
+## Case study
+
+Ship a binary IMDb sentiment classifier from Hub assets to a Gradio Space in one afternoon.
+
+- **Inputs:** `load_dataset("imdb")` (~25k train), `bert-base-uncased` tokenizer + `AutoModelForSequenceClassification(..., num_labels=2)`, `max_length=256`.
+- **Steps:** map tokenize with padding/truncation → `TrainingArguments(lr=2e-5, batch=16, epochs=3, eval each epoch, load_best_model_at_end)` → `Trainer.train()` on a free GPU → `push_to_hub("you/imdb-clf")` → Space wraps `pipeline("sentiment-analysis", model="you/imdb-clf")`.
+- **Output:** val accuracy typically mid–high 80s to ~90%; Hub repo contains `config.json`, weights, and tokenizer; Space URL is the shareable demo.
+- **What you'd check:** model card license allows your use; tokenizer files are present beside weights; private holdout (not only Hub test peek); Space cold-start still returns a label after wake.
+
+## Lab checklist
+
+- [ ] Load a Hub dataset and print split sizes + one labeled example
+- [ ] Load matching `AutoTokenizer` + task model from the same checkpoint id
+- [ ] Fine-tune with `Trainer` for ≥1 epoch and log a val metric
+- [ ] Enable `load_best_model_at_end` (or manually save best) before export
+- [ ] Push model *and* tokenizer to a Hub repo (or save a complete local folder)
+- [ ] Read the model card license and intended-use section before sharing
+- [ ] Call the model via `pipeline` or a tiny Gradio UI once
+- [ ] (Optional) Retry the same fine-tune with LoRA and compare VRAM / quality
 
 ## Pipeline
 

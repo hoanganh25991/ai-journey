@@ -1,4 +1,4 @@
-# Agent automation — OpenClaw · Hermess
+# Agent Automation — OpenClaw · Hermess
 
 > Personal notes on the wave of "AI agents that do things on their own": from chatbot answers → agents **hands-on** with the machine (run commands, edit files, control tools). Two I use: **OpenClaw** and **Hermess**.
 

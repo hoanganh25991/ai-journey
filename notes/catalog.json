@@ -6,7 +6,7 @@
       "id": "tokenize",
       "file": "notes/tokenize.md",
       "title": "Tokenize",
-      "summary": "Split text into tokens and map them to IDs \u2014 machines read numbers, not words. BPE vs WordPiece.",
+      "summary": "Split text into tokens and map them to IDs — machines read numbers, not words. BPE vs WordPiece.",
       "topics": [
         "tokenize",
         "BPE",
@@ -20,7 +20,7 @@
       "id": "embedding",
       "file": "notes/embedding.md",
       "title": "Embedding",
-      "summary": "Turn IDs into vectors: similar meaning \u2192 nearby points, measured with cosine similarity.",
+      "summary": "Turn IDs into vectors: similar meaning → nearby points, measured with cosine similarity.",
       "topics": [
         "embedding",
         "cosine",
@@ -34,7 +34,7 @@
       "id": "attention",
       "file": "notes/attention.md",
       "title": "Attention",
-      "summary": "Each word decides which other words to attend to \u2014 the Q\u00b7K\u00b7V mechanism behind Transformers.",
+      "summary": "Each word decides which other words to attend to — the Q·K·V mechanism behind Transformers.",
       "topics": [
         "attention",
         "QKV",
@@ -62,7 +62,7 @@
       "id": "classification",
       "file": "notes/classification.md",
       "title": "Classification",
-      "summary": "Assign a label to input \u2014 the most common model-building task, right after softmax.",
+      "summary": "Assign a label to input — the most common model-building task, right after softmax.",
       "topics": [
         "classification",
         "cross-entropy",
@@ -76,8 +76,8 @@
     {
       "id": "pytorch-training",
       "file": "notes/pytorch-training.md",
-      "title": "Train with PyTorch",
-      "summary": "Epoch loop: forward \u2192 loss \u2192 backward \u2192 step. Train a classifier by hand.",
+      "title": "Train With PyTorch",
+      "summary": "Epoch loop: forward → loss → backward → step. Train a classifier by hand.",
       "topics": [
         "pytorch",
         "training",
@@ -92,7 +92,7 @@
     {
       "id": "tensorflow-training",
       "file": "notes/tensorflow-training.md",
-      "title": "Train with TensorFlow / Keras",
+      "title": "Train With TensorFlow / Keras",
       "summary": "compile + fit: declare the model, let Keras run the epoch loop.",
       "topics": [
         "tensorflow",
@@ -107,8 +107,8 @@
     {
       "id": "huggingface",
       "file": "notes/huggingface.md",
-      "title": "Hugging Face \u2014 dataset + Space",
-      "summary": "GitHub for AI: Datasets + pretrained Models + Spaces \u2192 a usable model fast.",
+      "title": "Hugging Face — Dataset + Space",
+      "summary": "GitHub for AI: Datasets + pretrained Models + Spaces → a usable model fast.",
       "topics": [
         "huggingface",
         "datasets",
@@ -123,7 +123,7 @@
     {
       "id": "kaggle",
       "file": "notes/kaggle.md",
-      "title": "Kaggle \u2014 dataset + GPU notebook",
+      "title": "Kaggle — Dataset + GPU Notebook",
       "summary": "Dataset library + free GPU/TPU notebooks + competitions to practice.",
       "topics": [
         "kaggle",
@@ -139,7 +139,7 @@
     {
       "id": "transformer",
       "file": "notes/transformer.md",
-      "title": "Transformer \u2014 core LLM architecture",
+      "title": "Transformer — Core LLM Architecture",
       "summary": "Stack attention blocks + positional encoding; encoder (BERT) / decoder (GPT).",
       "topics": [
         "transformer",
@@ -155,8 +155,8 @@
     {
       "id": "sentence-transformers",
       "file": "notes/sentence-transformers.md",
-      "title": "sentence-transformers \u2014 sentence embeddings",
-      "summary": "Sentence \u2192 vector in a few lines; classification and similarity made fast and simple.",
+      "title": "Sentence-Transformers — Sentence Embeddings",
+      "summary": "Sentence → vector in a few lines; classification and similarity made fast and simple.",
       "topics": [
         "sentence-transformers",
         "sbert",
@@ -185,7 +185,7 @@
     {
       "id": "vector-database",
       "file": "notes/vector-database.md",
-      "title": "Vector database",
+      "title": "Vector Database",
       "summary": "Store vectors and find top-k nearest neighbors (ANN). Infrastructure for RAG and semantic search.",
       "topics": [
         "vector-db",
@@ -201,7 +201,7 @@
     {
       "id": "semantic-search",
       "file": "notes/semantic-search.md",
-      "title": "Semantic search \u2014 hybrid \u00b7 tiered \u00b7 fallback",
+      "title": "Semantic Search — Hybrid · Tiered · Fallback",
       "summary": "Search by meaning: combine inverted index (Elastic) + semantic index (embeddings). My hands-on RAG learning project.",
       "topics": [
         "semantic-search",
@@ -215,7 +215,7 @@
       "demo": null,
       "extra_links": [
         {
-          "label": "GitHub \u2014 semantic-search",
+          "label": "GitHub — semantic-search",
           "href": "https://github.com/hoanganh25991/semantic-search"
         }
       ]
@@ -224,7 +224,7 @@
       "id": "mcp",
       "file": "notes/mcp.md",
       "title": "MCP",
-      "summary": "Common standard for agents to call external tools \u2014 USB-C for AI. Host \u2194 server \u2194 tools with schema.",
+      "summary": "Common standard for agents to call external tools — USB-C for AI. Host ↔ server ↔ tools with schema.",
       "topics": [
         "MCP",
         "tools",
@@ -238,7 +238,7 @@
     {
       "id": "skills-rules",
       "file": "notes/skills-rules.md",
-      "title": "Skills \u00b7 Rules \u00b7 Commands",
+      "title": "Skills · Rules · Commands",
       "summary": "Agent know-how: SKILL.md, rules, commands; global ~/.agents.",
       "topics": [
         "skills",
@@ -254,8 +254,8 @@
     {
       "id": "train-gpu",
       "file": "notes/train-gpu.md",
-      "title": "Train \u00b7 PyTorch / TensorFlow \u00b7 GPU",
-      "summary": "HF/Kaggle datasets, PyTorch and TensorFlow, GPU notebooks, train \u2192 inference.",
+      "title": "Train · PyTorch / TensorFlow · GPU",
+      "summary": "HF/Kaggle datasets, PyTorch and TensorFlow, GPU notebooks, train → inference.",
       "topics": [
         "pytorch",
         "tensorflow",
@@ -270,8 +270,8 @@
     {
       "id": "car-nn",
       "file": "notes/04-demo-car.md",
-      "title": "Car NN \u2014 sensor to action",
-      "summary": "3 sensors \u2192 fully connected network \u2192 forward / back / left / right. A visible classification example.",
+      "title": "Car NN — Sensor To Action",
+      "summary": "3 sensors → fully connected network → forward / back / left / right. A visible classification example.",
       "topics": [
         "fully-connected",
         "classification",
@@ -284,7 +284,7 @@
     {
       "id": "sentiment-routing",
       "file": "notes/05-demo-text.md",
-      "title": "Sentiment & complexity routing",
+      "title": "Sentiment & Complexity Routing",
       "summary": "Read a sentence and label it: sentiment (neg/neu/pos) and easy/hard routing.",
       "topics": [
         "sentiment",
@@ -308,7 +308,7 @@
     {
       "id": "train-infer",
       "file": "notes/06-train-infer.md",
-      "title": "Train \u2192 Inference",
+      "title": "Train → Inference",
       "summary": "Two lives of a model: learn weights once (train), then use lightly many times (infer).",
       "topics": [
         "train",
@@ -322,8 +322,8 @@
     {
       "id": "agents",
       "file": "notes/07-agents.md",
-      "title": "AI Agents \u00b7 harness comparison",
-      "summary": "Harness \u2260 model: Cursor, Claude Code, Pi, Cline/Kilo, OpenCode, Zed.",
+      "title": "AI Agents · Harness Comparison",
+      "summary": "Harness ≠ model: Cursor, Claude Code, Pi, Cline/Kilo, OpenCode, Zed.",
       "topics": [
         "agents",
         "harness",
@@ -339,8 +339,8 @@
     {
       "id": "model-notes",
       "file": "notes/08-model-notes.md",
-      "title": "Model field notes",
-      "summary": "Model \u2260 harness: Grok 4.5, Composer, Anthropic, DeepSeek, Qwen, Kimi/GLM.",
+      "title": "Model Field Notes",
+      "summary": "Model ≠ harness: Grok 4.5, Composer, Anthropic, DeepSeek, Qwen, Kimi/GLM.",
       "topics": [
         "grok",
         "openrouter",
@@ -356,8 +356,8 @@
     {
       "id": "agent-automation",
       "file": "notes/09-agent-automation.md",
-      "title": "Agent automation \u2014 OpenClaw \u00b7 Hermess",
-      "summary": "Story arc: OpenClaw (pi harness) opened the feel of agent control \u2192 Hermess polished it.",
+      "title": "Agent Automation — OpenClaw · Hermess",
+      "summary": "Story arc: OpenClaw (pi harness) opened the feel of agent control → Hermess polished it.",
       "topics": [
         "openclaw",
         "hermess",
@@ -372,8 +372,8 @@
     {
       "id": "ai-timeline",
       "file": "notes/10-ai-timeline.md",
-      "title": "AI timeline \u2014 my journey",
-      "summary": "Journey from 2023 (first LLM exposure) \u2192 embedding\u2026 \u2192 agents \u2192 automation, anchored to real AI milestones.",
+      "title": "AI Timeline — My Journey",
+      "summary": "Journey from 2023 (first LLM exposure) → embedding… → agents → automation, anchored to real AI milestones.",
       "topics": [
         "timeline",
         "history",
@@ -388,7 +388,7 @@
     {
       "id": "personal-knowledge-base",
       "file": "notes/personal-knowledge-base.md",
-      "title": "Personal Knowledge-base \u2014 videos \u00b7 docs \u00b7 GitHub",
+      "title": "Personal Knowledge-Base — Videos · Docs · GitHub",
       "summary": "Separate repo ~/work-station/personal-kb: FTS search + Graph RAG keywords. Submodule planned.",
       "topics": [
         "knowledge-base",

@@ -1,4 +1,4 @@
-# Train with TensorFlow / Keras
+# Train With TensorFlow / Keras
 
 > Same classifier lesson, but with TensorFlow (Keras API): define the model, `compile`, then `fit` over many epochs. More concise than PyTorch thanks to the built-in training loop. Everyday metaphor: you write the recipe (`compile`); the kitchen runs it (`fit`).
 
@@ -74,6 +74,8 @@ Numeric sketch: 8 000 train / 2 000 val reviews, `batch_size=64` → 125 ste
 - **`tf.data` beats giant NumPy.** `ds = tf.data.Dataset.from_tensor_slices((x, y)).shuffle(10_000).batch(64).prefetch(tf.data.AUTOTUNE)` keeps the GPU fed. Failure mode: feeding full `x_train` that doesn’t fit RAM, or no `prefetch` → GPU idle between steps.
 - **Custom training with `GradientTape`.** When `fit` is too rigid: `with tf.GradientTape() as tape: loss = ...; grads = tape.gradient(loss, model.trainable_weights); opt.apply_gradients(zip(grads, model.trainable_weights))`. Same four steps as PyTorch, TF-flavored.
 - **Keras vs PyTorch choice.** Keras `fit`: fastest path to a baseline + TensorBoard. PyTorch loop: research flexibility, HF `Trainer` ecosystem. Same CE math; different knobs and error messages.
+- **Metric vs loss disagreement.** Accuracy can plateau while `val_loss` still improves rare classes — or the reverse on skewed data. Always decide the *monitor* for EarlyStopping before the run, and stick to it when comparing experiments.
+- **SavedModel vs weights-only.** `model.save("best.keras")` keeps architecture + weights; `save_weights` alone needs identical code to rebuild. For lab demos, prefer a single `.keras` / SavedModel so reload does not depend on recreating layers by hand.
 
 ## Decision guide
 
@@ -85,6 +87,26 @@ Numeric sketch: 8 000 train / 2 000 val reviews, `batch_size=64` → 125 ste
 | Val loss rising after epoch 5 | EarlyStopping + restore best + Checkpoint | Running fixed 50 epochs “just in case” |
 | Need non-standard loss / multi-optimizer | `GradientTape` custom loop (or PyTorch) | Stretching `fit` with opaque callback hacks |
 | Embedding debugging / teaching | TensorBoard Projector colored by class | Projector with unlabeled gray clouds |
+
+## Case study
+
+Softmax regression / small MLP for 5-class topic labels on bag-of-embedding features (8 000 train / 2 000 val).
+
+- **Inputs:** `x_train` shape `[8000, 384]`, integer labels `[8000]`, `batch_size=64` → 125 steps/epoch; `NUM_CLASSES=5`.
+- **Steps:** `Sequential` Dense(64, relu) → Dense(5, softmax) → `compile(Adam(1e-3), sparse_categorical_crossentropy, accuracy)` → `fit` with EarlyStopping(`val_loss`, patience=3, restore_best_weights=True) + ModelCheckpoint.
+- **Output:** best epoch ~4 with `val_accuracy≈0.81`, `val_loss≈0.48`; later epochs overfit to `val_loss≈0.61` but restore brings back epoch-4 weights automatically.
+- **What you'd check:** `y_train.ndim == 1` (sparse, not one-hot); Projector colored by class shows cluster separation; reloading `best.keras` reproduces the same val accuracy within rounding.
+
+## Lab checklist
+
+- [ ] Build a Sequential classifier and `compile` with the loss that matches your label encoding
+- [ ] Run `fit` with `validation_data` and read the epoch logs for rising `val_loss`
+- [ ] Add EarlyStopping + ModelCheckpoint; confirm restore/best file beats the last epoch
+- [ ] Swap sparse vs categorical loss once on purpose and note the error or nonsense loss scale
+- [ ] Log with TensorBoard and open the scalar curves for train vs val
+- [ ] (Optional) Launch Embedding Projector and color points by class label
+- [ ] Save a `.keras` model and reload it in a fresh Python process for inference-only predict
+- [ ] Write down one reason you would switch this baseline to an explicit PyTorch loop
 
 ## Pipeline
 

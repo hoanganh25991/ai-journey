@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>AI Agents · slides</title>
+<title>Agents · Slides</title>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Sora:wght@400;600;700&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="../_shared/deck.css" />
 <style>
@@ -31,6 +31,10 @@
 .code-block .k { color: #5ec8d4; }
 .code-block .s { color: #f0a35e; }
 .caption { margin-top: 14px; font-size: 20px; color: var(--muted); max-width: 92%; }
+.case-dense .card { padding: 16px 18px; }
+.case-dense .card h3 { font-size: 20px; margin-bottom: 8px; }
+.case-dense .card p { font-size: 16px !important; line-height: 1.35; }
+.lab-dense .card p { font-size: 16px !important; line-height: 1.35; }
 </style>
 </head>
 <body>
@@ -40,7 +44,7 @@
 <section class="slide active">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
-    <div class="topbar reveal"><span>Concept · agents</span><span class="pill">teaching</span></div>
+    <div class="topbar reveal"><span>Concept · Agents</span><span class="pill">teaching</span></div>
     <h1 class="reveal" style="margin-top:72px;">AI Agents · <em>harness comparison</em></h1>
     <p class="lead reveal" style="margin-top:28px;">Harness ≠ model. Same brain, different kitchens — tools, mise en place, and service rhythm change the meal.</p>
     <div class="flow-row reveal"><span class="step">model</span><span class="arr">→</span><span class="step">harness</span><span class="arr">→</span><span class="step">tools / MCP</span><span class="arr">→</span><span class="step">agent loop</span></div>
@@ -224,6 +228,42 @@
   <div class="foot"><span>12</span><span>Decision guide</span></div>
 </section>
 
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Case Study</span><span class="pill">lab</span></div>
+    <h2 class="reveal" style="font-size:40px;margin-bottom:12px;">Case Study</h2>
+    <p class="lead reveal" style="margin-top:0;margin-bottom:14px;font-size:20px;">Same bug report — “CI tests fail” — across three harness thicknesses.</p>
+    <div class="cols-2 case-dense" style="gap:14px;">
+      <div class="card accent reveal" style="padding:18px 20px;"><div class="tag">inputs</div><h3>Inputs</h3><p>failing CI log, local repo, MCP/shell permissions, project skills + AGENTS.md.</p></div>
+      <div class="card cyan reveal"><div class="tag">steps</div><h3>Steps</h3><p><strong>Thick (Cursor):</strong> run tests → read log → patch → re-run → summarize. <strong>Claude Code:</strong> slower, stronger ask-back on flake vs deterministic failure before editing. <strong>Thin chat:</strong> model only <em>describes</em> <code>pytest -q</code>; you paste everything.</p></div>
+      <div class="card reveal"><div class="tag">output</div><h3>Output</h3><p>thick harnesses produce a verified fix; thin harnesses produce advice. Model card unchanged.</p></div>
+      <div class="card reveal"><div class="tag">check</div><h3>Verify</h3><p>shell/MCP not denied; skills actually loaded; Auto vs pinned model logged; don’t swap to a bigger model until the harness can execute and observe.</p></div>
+    </div>
+  </div>
+  <div class="foot"><span>13</span><span>notes/07-agents.md</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Lab Checklist</span><span class="pill">do</span></div>
+    <h2 class="reveal" style="font-size:40px;margin-bottom:12px;">Lab Checklist</h2>
+    <div class="cols-2 lab-dense" style="gap:14px;">
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">01</span><p style="margin:0;font-size:18px;line-height:1.4;">Pick two harnesses and run the same small repo task on both</p></div>
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">02</span><p style="margin:0;font-size:18px;line-height:1.4;">Deny shell once on purpose; note how the session degrades to chatbot mode</p></div>
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">03</span><p style="margin:0;font-size:18px;line-height:1.4;">Pin a model vs Auto on a multi-step task; record which felt more stable</p></div>
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">04</span><p style="margin:0;font-size:18px;line-height:1.4;">Confirm <code>~/.agents</code> or project skills are visible to the client you use</p></div>
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">05</span><p style="margin:0;font-size:18px;line-height:1.4;">Add or update AGENTS.md with one non-negotiable project convention</p></div>
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">06</span><p style="margin:0;font-size:18px;line-height:1.4;">Trace one agent loop: plan → tool call → observe → retry</p></div>
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">07</span><p style="margin:0;font-size:18px;line-height:1.4;">Debug one MCP server with a tiny ping/<code>list_tools</code> before blaming the model</p></div>
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">08</span><p style="margin:0;font-size:18px;line-height:1.4;">Write which harness axis failed last time you “blamed the model”</p></div>
+    </div>
+  </div>
+  <div class="foot"><span>14</span><span>notes/07-agents.md</span></div>
+</section>
+
 <section class="slide">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
@@ -236,7 +276,7 @@
       <div class="card reveal"><div class="tag">pitfall</div><h3>Ignore permissions</h3><p>Denying shell/MCP turns a capable harness into a chatbot.</p></div>
     </div>
   </div>
-  <div class="foot"><span>13</span><span>pitfalls</span></div>
+  <div class="foot"><span>15</span><span>pitfalls</span></div>
 </section>
 
 <section class="slide">
@@ -251,7 +291,7 @@
     </div>
     <p class="lead reveal" style="margin-top:24px;font-size:20px;"><a class="app-cta" href="../../demos/mcp/app/index.html" style="display:inline-block;margin-top:8px;">Open MCP demo →</a></p>
   </div>
-  <div class="foot"><span>14</span><span>homes · demos/mcp</span></div>
+  <div class="foot"><span>16</span><span>homes · demos/mcp</span></div>
 </section>
 
 <section class="slide">
@@ -262,7 +302,7 @@
     <div class="flow-row reveal" style="margin-top:48px;"><span class="step">task</span><span class="arr">→</span><span class="step">harness loop</span><span class="arr">→</span><span class="step">tools / MCP</span><span class="arr">→</span><span class="step">skills / rules</span><span class="arr">→</span><span class="step">result</span></div>
     <p class="lead reveal" style="margin-top:40px;">Pair with model-notes (engines) · mcp.md · skills-rules. Complexity-router demo for routing intuition.</p>
   </div>
-  <div class="foot"><span>15</span><span>pipeline</span></div>
+  <div class="foot"><span>17</span><span>pipeline</span></div>
 </section>
 
 <section class="slide">
@@ -273,7 +313,7 @@
     <p class="lead reveal" style="margin-top:28px;">notes/07-agents.md — axes, Auto vs fixed, decision guide.</p>
     <a class="app-cta reveal" href="../../notes/agents.html">Open note →</a>
   </div>
-  <div class="foot"><span>16</span><span>AI Lab</span></div>
+  <div class="foot"><span>18</span><span>AI Lab</span></div>
 </section>
 
 </main>

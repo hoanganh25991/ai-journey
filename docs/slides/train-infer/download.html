@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Train → Inference · slides</title>
+<title>Train vs Infer · Slides</title>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Sora:wght@400;600;700&display=swap" rel="stylesheet" />
 <style>
 /* Shared Neural Ledger deck — fixed 1920×1080 */
@@ -197,6 +197,10 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
 .code-block .k { color: #5ec8d4; }
 .code-block .s { color: #f0a35e; }
 .caption { margin-top: 14px; font-size: 20px; color: var(--muted); max-width: 92%; }
+.case-dense .card { padding: 16px 18px; }
+.case-dense .card h3 { font-size: 20px; margin-bottom: 8px; }
+.case-dense .card p { font-size: 16px !important; line-height: 1.35; }
+.lab-dense .card p { font-size: 16px !important; line-height: 1.35; }
 </style>
 </head>
 <body>
@@ -206,8 +210,8 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
 <section class="slide active">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
-    <div class="topbar reveal"><span>Concept · train-infer</span><span class="pill">teaching</span></div>
-    <h1 class="reveal" style="margin-top:72px;">Train → <em>Inference</em></h1>
+    <div class="topbar reveal"><span>Concept · Train vs Infer</span><span class="pill">teaching</span></div>
+    <h1 class="reveal" style="margin-top:72px;">Train vs Infer · <em>two lives of a model</em></h1>
     <p class="lead reveal" style="margin-top:28px;">Every model lives two lives: learning (heavy, once) and using (light, forever). Years at school vs answering one exam question.</p>
     <div class="flow-row reveal"><span class="step">data</span><span class="arr">→</span><span class="step">train</span><span class="arr">→</span><span class="step">checkpoint</span><span class="arr">→</span><span class="step">load</span><span class="arr">→</span><span class="step">infer</span></div>
   </div>
@@ -364,6 +368,52 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
   <div class="foot"><span>11</span><span>Decision guide</span></div>
 </section>
 
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Case Study</span><span class="pill">lab</span></div>
+    <h2 class="reveal" style="font-size:40px;margin-bottom:12px;">Case Study</h2>
+    <p class="lead reveal" style="margin-top:0;margin-bottom:14px;font-size:20px;">Car-nn and sentiment demos both follow the same two-life pattern.</p>
+    <div class="cols-2 case-dense" style="gap:14px;">
+      <div class="card accent reveal" style="padding:18px 20px;"><div class="tag">inputs</div><h3>Inputs (train)</h3><p>labeled sensor→action pairs or review→sentiment labels; GPU notebook; val split for checkpoint selection.</p></div>
+      <div class="card cyan reveal"><div class="tag">steps</div><h3>Steps</h3><p>many epochs of forward→loss→backward→step → keep best-val weights → export to static demo assets → UI path loads weights once, runs <code>eval()</code>/<code>no_grad</code> forward per click.</p></div>
+      <div class="card reveal"><div class="tag">output</div><h3>Output</h3><p>users feel realtime inference; you paid GPU hours once. Sentiment clicks are <code>argmax(softmax(logits))</code> only — never an optimizer.</p></div>
+      <div class="card reveal"><div class="tag">check</div><h3>Verify</h3><p>dropout off at serve; label-map order matches training; demo cannot “learn” from clicks; if outputs flicker on identical input, suspect train mode left on.</p></div>
+    </div>
+  </div>
+  <div class="foot"><span>12</span><span>notes/06-train-infer.md</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Lab Checklist</span><span class="pill">do</span></div>
+    <h2 class="reveal" style="font-size:40px;margin-bottom:12px;">Lab Checklist</h2>
+    <div class="cols-2 lab-dense" style="gap:14px;">
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">01</span><p style="margin:0;font-size:18px;line-height:1.4;">Draw the train vs infer table (work, cost, output) from memory</p></div>
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">02</span><p style="margin:0;font-size:18px;line-height:1.4;">Train a tiny model for ≥2 epochs and save a checkpoint file</p></div>
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">03</span><p style="margin:0;font-size:18px;line-height:1.4;">Reload weights in a fresh process with <code>eval()</code> + <code>no_grad</code></p></div>
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">04</span><p style="margin:0;font-size:18px;line-height:1.4;">Feed the same input twice and confirm deterministic outputs (dropout off)</p></div>
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">05</span><p style="margin:0;font-size:18px;line-height:1.4;">Compare metrics of last-epoch vs best-val checkpoint</p></div>
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">06</span><p style="margin:0;font-size:18px;line-height:1.4;">List three artifacts that must match between train and serve (tokenizer, labels, preprocess)</p></div>
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">07</span><p style="margin:0;font-size:18px;line-height:1.4;">Explain in one sentence why a browser demo should not run <code>loss.backward()</code></p></div>
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">08</span><p style="margin:0;font-size:18px;line-height:1.4;">Optional: note one serve optimization (quantize/distill/smaller model) that does not replace training</p></div>
+    </div>
+  </div>
+  <div class="foot"><span>13</span><span>notes/06-train-infer.md</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Picture</span><span class="pill">Lab</span></div>
+    <h2 class="reveal" style="font-size:36px;margin-bottom:12px;">Lab checklist — train once, serve many</h2>
+    <img class="shot shot-md reveal" src="../assets/lab-checklist.png" alt="Lab checklist — train once, serve many" />
+  </div>
+  <div class="foot"><span>14</span><span>lab-checklist.png</span></div>
+</section>
+
 <section class="slide">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
@@ -376,7 +426,7 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
       <div class="card reveal"><div class="tag">pitfall</div><h3>Train from scratch always</h3><p>Hub model + light fine-tune often beats reinventing training.</p></div>
     </div>
   </div>
-  <div class="foot"><span>12</span><span>pitfalls</span></div>
+  <div class="foot"><span>15</span><span>pitfalls</span></div>
 </section>
 
 <section class="slide">
@@ -387,7 +437,7 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
     <div class="flow-row reveal" style="margin-top:48px;"><span class="step">data</span><span class="arr">→</span><span class="step">train (GPU epochs)</span><span class="arr">→</span><span class="step">checkpoint</span><span class="arr">→</span><span class="step">load</span><span class="arr">→</span><span class="step">infer</span></div>
     <p class="lead reveal" style="margin-top:40px;">In AI Lab: protonx / Kaggle / Colab notebooks → export → embed in UI. See train-gpu.md for the stack.</p>
   </div>
-  <div class="foot"><span>13</span><span>pipeline</span></div>
+  <div class="foot"><span>16</span><span>pipeline</span></div>
 </section>
 
 <section class="slide">
@@ -401,7 +451,7 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
       <div class="card reveal"><div class="tag">demo</div><h3>car-nn / sentiment</h3><p>See inference-only demos in the browser.</p></div>
     </div>
   </div>
-  <div class="foot"><span>14</span><span>related</span></div>
+  <div class="foot"><span>17</span><span>related</span></div>
 </section>
 
 <section class="slide">
@@ -412,7 +462,7 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
     <p class="lead reveal" style="margin-top:28px;">notes/06-train-infer.md — then train-gpu for the practical stack.</p>
     <a class="app-cta reveal" href="../../notes/train-infer.html">Open note →</a>
   </div>
-  <div class="foot"><span>15</span><span>AI Lab</span></div>
+  <div class="foot"><span>18</span><span>AI Lab</span></div>
 </section>
 
 </main>

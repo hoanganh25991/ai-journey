@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Semantic search · slides</title>
+<title>Semantic Search · Slides</title>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Sora:wght@400;600;700&display=swap" rel="stylesheet" />
 <style>
 /* Shared Neural Ledger deck — fixed 1920×1080 */
@@ -199,6 +199,10 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
 .table-card.dense table { font-size: 16px; }
 .table-card.dense th, .table-card.dense td { padding: 8px 12px; }
 .card p, .card li { font-size: 19px; }
+.case-dense .card { padding: 16px 18px; }
+.case-dense .card h3 { font-size: 20px; margin-bottom: 8px; }
+.case-dense .card p { font-size: 16px !important; line-height: 1.35; }
+.lab-dense .card p { font-size: 16px !important; line-height: 1.35; }
 </style>
 </head>
 <body>
@@ -208,8 +212,8 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
 <section class="slide active">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
-    <div class="topbar reveal"><span>Concept · semantic-search</span><span class="pill">teaching</span></div>
-    <h1 class="reveal" style="margin-top:72px;">Semantic search · <em>hybrid · tiered · fallback</em></h1>
+    <div class="topbar reveal"><span>Concept · Semantic Search</span><span class="pill">teaching</span></div>
+    <h1 class="reveal" style="margin-top:72px;">Semantic Search · <em>hybrid · tiered · fallback</em></h1>
     <p class="lead reveal" style="margin-top:28px;">Search by meaning, not just keywords — combine inverted index speed with embedding rank.</p>
     <div class="flow-row reveal"><span class="step">question</span><span class="arr">→</span><span class="step">keyword / semantic</span><span class="arr">→</span><span class="step">merge</span><span class="arr">→</span><span class="step">top-k</span></div>
   </div>
@@ -392,6 +396,52 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
 </section>
 
 
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Picture</span><span class="pill">Case map</span></div>
+    <h2 class="reveal" style="font-size:36px;margin-bottom:12px;">Hybrid · tiered · fallback case</h2>
+    <img class="shot shot-md reveal" src="../assets/semantic-case.png" alt="Hybrid · tiered · fallback case" />
+  </div>
+  <div class="foot"><span>14</span><span>semantic-case.png</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Case Study</span><span class="pill">lab</span></div>
+    <h2 class="reveal" style="font-size:40px;margin-bottom:12px;">Case Study</h2>
+    <p class="lead reveal" style="margin-top:0;margin-bottom:14px;font-size:20px;">MS MARCO-style how-to query: <code>"How do I jump-start a car?"</code> on a corpus that often says <code>"boost a vehicle battery"</code>.</p>
+    <div class="cols-2 case-dense" style="gap:14px;">
+      <div class="card accent reveal" style="padding:18px 20px;"><div class="tag">inputs</div><h3>Inputs</h3><p>dual indexes (Elastic BM25 + embedding kNN), optional easy/hard classifier, gold judgments for MRR@10 / Recall@50.</p></div>
+      <div class="card cyan reveal"><div class="tag">steps</div><h3>Steps</h3><p><strong>Hybrid</strong> — BM25 retrieves ~100 candidates with <code>car|battery|vehicle</code> → embed query once → cosine rerank → top-10. <strong>Tiered</strong> — classifier marks how-to as hard → semantic/hybrid path; <code>"error code E42"</code> stays keyword-only (~&lt;20 ms). <strong>Fallback</strong> — if top semantic score &lt; 0.25, return BM25 so the UI is never empty.</p></div>
+      <div class="card reveal"><div class="tag">output</div><h3>Output</h3><p>paraphrase queries gain MRR; exact error codes stay cheap; dashboards show % traffic per path and p95 latency.</p></div>
+      <div class="card reveal"><div class="tag">check</div><h3>Verify</h3><p>empty BM25 candidate sets; classifier false negatives on hard paraphrases; Fallback threshold thrash; RRF dedupe by doc id; private holdout not only public MS MARCO leaderboard.</p></div>
+    </div>
+  </div>
+  <div class="foot"><span>15</span><span>notes/semantic-search.md</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Lab Checklist</span><span class="pill">do</span></div>
+    <h2 class="reveal" style="font-size:40px;margin-bottom:12px;">Lab Checklist</h2>
+    <div class="cols-2 lab-dense" style="gap:14px;">
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">01</span><p style="margin:0;font-size:18px;line-height:1.4;">Run the same query through keyword-only and embedding-only; compare top-5</p></div>
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">02</span><p style="margin:0;font-size:18px;line-height:1.4;">Implement a simple hybrid (filter/retrieve then rerank) on a toy corpus</p></div>
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">03</span><p style="margin:0;font-size:18px;line-height:1.4;">Compute MRR@10 or Precision@5 on ≥20 labeled queries</p></div>
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">04</span><p style="margin:0;font-size:18px;line-height:1.4;">Add a Fallback rule when top score or hit count is too low</p></div>
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">05</span><p style="margin:0;font-size:18px;line-height:1.4;">Log which path ran (keyword / hybrid / semantic / fallback) for each query</p></div>
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">06</span><p style="margin:0;font-size:18px;line-height:1.4;">Measure p50 and p95 latency with and without embedding</p></div>
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">07</span><p style="margin:0;font-size:18px;line-height:1.4;">Fuse two ranked lists with RRF (or weighted sum) and dedupe ids</p></div>
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">08</span><p style="margin:0;font-size:18px;line-height:1.4;">Write one paragraph on when Tiered would beat Hybrid for your traffic mix</p></div>
+    </div>
+  </div>
+  <div class="foot"><span>16</span><span>notes/semantic-search.md</span></div>
+</section>
+
 <section class="slide">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
@@ -403,7 +453,7 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
       <div class="card reveal"><div class="tag">eval</div><h3>MRR-only trap</h3><p>Strong MRR@10 with weak Recall@50 hurts RAG needing many chunks.</p></div>
     </div>
   </div>
-  <div class="foot"><span>14</span><span>notes/semantic-search.md</span></div>
+  <div class="foot"><span>17</span><span>notes/semantic-search.md</span></div>
 </section>
 
 <section class="slide">
@@ -414,7 +464,7 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
     <div class="flow-row reveal" style="margin-top:48px;"><span class="step">question</span><span class="arr">→</span><span class="step">classify?</span><span class="arr">→</span><span class="step">keyword | semantic</span><span class="arr">→</span><span class="step">merge</span><span class="arr">→</span><span class="step">RAG</span></div>
     <p class="lead reveal" style="margin-top:36px;">Stands on embedding + vector-database; teaches the retrieve lesson of RAG.</p>
   </div>
-  <div class="foot"><span>15</span><span>notes/semantic-search.md</span></div>
+  <div class="foot"><span>18</span><span>notes/semantic-search.md</span></div>
 </section>
 
 <section class="slide">

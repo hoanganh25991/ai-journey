@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Kaggle — dataset + GPU notebook · AI Lab</title>
+<title>Kaggle — Dataset + GPU Notebook · AI Lab</title>
 <script>
 (function () {
   try {
@@ -329,14 +329,14 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
   </div>
   <div data-lab-stack></div>
   <article class="doc">
-    <h1>Kaggle — dataset + GPU notebook</h1>
+    <h1>Kaggle — Dataset + GPU Notebook</h1>
     <p class="summary">Dataset library + free GPU/TPU notebooks + competitions to practice.</p>
     <div class="actions"><a class="primary" href="../slides/kaggle/index.html">Slides ↗</a>
 <a href="kaggle.md" id="labDownload" download="kaggle.md">Download</a>
 <button type="button" id="labShare">Share</button></div>
     <div class="topics"><span>#kaggle</span><span>#dataset</span><span>#gpu</span><span>#notebook</span><span>#competition</span></div>
     <hr class="sep" />
-    <div class="body"><h1>Kaggle — free dataset + notebook + GPU</h1>
+    <div class="body"><h1>Kaggle — Free Dataset + Notebook + GPU</h1>
 <blockquote>ML learning and competition platform: huge <strong>dataset</strong> library, <strong>notebooks</strong> with free <strong>GPU/TPU</strong>, and <strong>competitions</strong> to practice. Similar to Hugging Face but tilted toward hands-on work and leaderboards. Everyday metaphor: a shared workshop with free tools, wood piles (datasets), and contests on the wall.</blockquote>
 <h2>Why it matters</h2>
 <p>When learning, two things are often missing: <em>good data</em> and <em>enough compute</em>. Kaggle offers both for free — diverse datasets and GPU notebooks in the browser. Competitions add leaderboards and public solutions so you can learn from what top performers do.</p>
@@ -384,6 +384,8 @@ pick dataset (or competition) → new notebook → enable GPU
 <li><strong>HF + Kaggle bridge.</strong> <code>from_pretrained</code> needs network (or a pre-downloaded model Dataset). In offline comps, attach a Dataset that already contains the weights folder and point <code>from_pretrained("/kaggle/input/.../model")</code>. Tokenizer files must travel with the weights.</li>
 <li><strong>Export checklist.</strong> Save: (1) <code>state_dict</code> / <code>.keras</code> / safetensors, (2) tokenizer / label map JSON, (3) preprocessing config (image size, normalize mean/std). Version them as a Kaggle Dataset. Without (2)–(3), the demo loads weights but predicts garbage.</li>
 <li><strong>CV discipline.</strong> Prefer stratified <em>k</em>-fold or a fixed GroupKFold when related rows leak (same patient / same product). Report mean±std of the competition metric across folds before trusting a single public submit.</li>
+<li><strong>Session hygiene.</strong> Name notebooks clearly, pin dataset versions, and write the accelerator + package pins in the first cell. Future-you (or a teammate) should reproduce the run without archaeology in <code>/kaggle/working</code>.</li>
+<li><strong>Submit vs local gap.</strong> If local CV and public LB disagree by a large margin, suspect leakage, wrong metric implementation, or train/test distribution shift — not “need a bigger model” first.</li>
 </ul>
 <h2>Decision guide</h2>
 <table><thead>
@@ -396,6 +398,25 @@ pick dataset (or competition) → new notebook → enable GPU
 <tr><td>Keeping work across sessions</td><td>Versioned Kaggle Dataset of checkpoints</td><td>Relying on ephemeral <code>/kaggle/working</code> alone</td></tr>
 <tr><td>Climbing the leaderboard</td><td>One change at a time + solid local CV</td><td>Mega-ensembles copied blindly before you understand the metric</td></tr>
 </tbody></table>
+<h2>Case study</h2>
+<p>Dog-breed image competition: ~10k images, 120 classes, scored by multi-class log-loss.</p>
+<ul>
+<li><strong>Inputs:</strong> competition train folder + labels CSV; Hub vision backbone; notebook with GPU enabled only for training cells.</li>
+<li><strong>Steps:</strong> CPU EDA + 1% sample sanity check → enable GPU → fine-tune EfficientNet-B0 (head LR <code>1e-3</code>, then full <code>1e-4</code>), batch 32, 5 epochs → local stratified CV log-loss → write <code>submission.csv</code> → download checkpoint Dataset for the lab demo.</li>
+<li><strong>Output:</strong> public LB log-loss competitive with a simple baseline; artifact Dataset holds weights + label map + image size/normalize config.</li>
+<li><strong>What you'd check:</strong> <code>nvidia-smi</code> before long runs; GPU off while debugging plots; local metric matches host log-loss (not only accuracy); private-LB risk if you overfit public notebooks blindly.</li>
+</ul>
+<h2>Lab checklist</h2>
+<ul>
+<li>[ ] Create a notebook, attach a dataset, and verify paths under <code>/kaggle/input</code></li>
+<li>[ ] Run a CPU dry-run on a tiny sample before enabling the GPU accelerator</li>
+<li>[ ] Confirm GPU with <code>nvidia-smi</code> or <code>torch.cuda.is_available()</code> once</li>
+<li>[ ] Train ≥1 real epoch and record the <strong>competition metric</strong> locally</li>
+<li>[ ] Save checkpoint + tokenizer/label map as a versioned Kaggle Dataset</li>
+<li>[ ] Disable the accelerator when finished to protect weekly quota</li>
+<li>[ ] Fork one public notebook, delete unused cells, and change exactly one hyperparameter</li>
+<li>[ ] Export weights to your machine or Hub for use outside Kaggle</li>
+</ul>
 <h2>Pipeline</h2>
 <pre><code>
 Kaggle dataset → notebook (enable GPU) → train (epochs) → export model → inference
@@ -423,7 +444,7 @@ Kaggle dataset → notebook (enable GPU) → train (epochs) → export model →
 <script src="../_shared/nav-stack.js"></script>
 <script>
 (function () {
-  const title = "Kaggle — dataset + GPU notebook";
+  const title = "Kaggle — Dataset + GPU Notebook";
   const num = "09";
   if (window.AiLabNav) {
     AiLabNav.enter((num ? num + " " : "") + title);

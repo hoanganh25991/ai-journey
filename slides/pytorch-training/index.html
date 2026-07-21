@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>PyTorch training · slides</title>
+<title>Train With PyTorch · Slides</title>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Sora:wght@400;600;700&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="../_shared/deck.css" />
 <style>
@@ -33,6 +33,10 @@
 .caption { margin-top: 14px; font-size: 20px; color: var(--muted); max-width: 92%; }
 .table-card.dense table { font-size: 16px; }
 .table-card.dense th, .table-card.dense td { padding: 9px 12px; }
+.case-dense .card { padding: 16px 18px; }
+.case-dense .card h3 { font-size: 20px; margin-bottom: 8px; }
+.case-dense .card p { font-size: 16px !important; line-height: 1.35; }
+.lab-dense .card p { font-size: 16px !important; line-height: 1.35; }
 </style>
 </head>
 <body>
@@ -42,8 +46,8 @@
 <section class="slide active">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
-    <div class="topbar reveal"><span>Concept · pytorch-training</span><span class="pill">teaching</span></div>
-    <h1 class="reveal" style="margin-top:72px;">Train with <em>PyTorch</em></h1>
+    <div class="topbar reveal"><span>Concept · Train With PyTorch</span><span class="pill">teaching</span></div>
+    <h1 class="reveal" style="margin-top:72px;">Train With <em>PyTorch</em></h1>
     <p class="lead reveal" style="margin-top:28px;">You write the epoch loop: forward → loss → backward → step until the model is good enough. Each batch is one practice set; each epoch is one full pass through the textbook.</p>
     <div class="flow-row reveal">
       <span class="step">dataset</span><span class="arr">→</span>
@@ -205,6 +209,52 @@
   <div class="foot"><span>11</span><span>Decision guide</span></div>
 </section>
 
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Case Study</span><span class="pill">lab</span></div>
+    <h2 class="reveal" style="font-size:40px;margin-bottom:12px;">Case Study</h2>
+    <p class="lead reveal" style="margin-top:0;margin-bottom:14px;font-size:20px;">Train a 3-class review classifier from scratch loop (not <code>Trainer</code>) on 8 000 train / 1 000 val examples.</p>
+    <div class="cols-2 case-dense" style="gap:14px;">
+      <div class="card accent reveal" style="padding:18px 20px;"><div class="tag">inputs</div><h3>Inputs</h3><p>tokenized batches <code>x: [B, L]</code>, labels <code>y: [B]</code>, batch size 32 → 250 steps/epoch; model on CUDA, AdamW <code>lr=2e-5</code>, <code>CrossEntropyLoss</code>.</p></div>
+      <div class="card cyan reveal"><div class="tag">steps</div><h3>Steps</h3><p>each batch <code>zero_grad → forward → loss → backward → clip_grad_norm_(1.0) → step</code>; after each epoch run <code>model.eval()</code> + <code>no_grad</code> val loop; save when val F1 improves.</p></div>
+      <div class="card reveal"><div class="tag">output</div><h3>Output</h3><p>by epoch 4, train loss ~0.25 / val loss ~0.38; epoch 7 train ~0.08 / val ~0.52 → keep the epoch-4 <code>best.pt</code> (~110 MB state_dict).</p></div>
+      <div class="card reveal"><div class="tag">check</div><h3>Verify</h3><p>forgot-<code>zero_grad</code> smoke test (loss should explode if you comment it out once); device match (<code>x.device == next(model.parameters()).device</code>); val uses <code>eval()</code>; resume from checkpoint restores optimizer step count.</p></div>
+    </div>
+  </div>
+  <div class="foot"><span>12</span><span>notes/pytorch-training.md</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Lab Checklist</span><span class="pill">do</span></div>
+    <h2 class="reveal" style="font-size:40px;margin-bottom:12px;">Lab Checklist</h2>
+    <div class="cols-2 lab-dense" style="gap:14px;">
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">01</span><p style="margin:0;font-size:18px;line-height:1.4;">Implement the four-step batch loop and print loss for the first 20 steps</p></div>
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">02</span><p style="margin:0;font-size:18px;line-height:1.4;">Deliberately omit <code>zero_grad</code> once and observe gradient accumulation / loss blow-up</p></div>
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">03</span><p style="margin:0;font-size:18px;line-height:1.4;">Add a val loop with <code>model.eval()</code> + <code>torch.no_grad()</code> and plot train vs val loss</p></div>
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">04</span><p style="margin:0;font-size:18px;line-height:1.4;">Save best-val <code>state_dict</code> and reload it into a fresh model instance</p></div>
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">05</span><p style="margin:0;font-size:18px;line-height:1.4;">Move model + one batch to GPU (or MPS) and confirm no device mismatch errors</p></div>
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">06</span><p style="margin:0;font-size:18px;line-height:1.4;">Try gradient accumulation (e.g. 4× micro-batch 8) and match effective batch 32</p></div>
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">07</span><p style="margin:0;font-size:18px;line-height:1.4;">Log learning rate each epoch (even if constant) so a future schedule change is visible</p></div>
+      <div class="card reveal" style="padding:16px 20px;display:flex;gap:14px;align-items:flex-start;"><span style="font-family:var(--font-mono);color:var(--amber);font-size:14px;letter-spacing:0.06em;flex-shrink:0;">08</span><p style="margin:0;font-size:18px;line-height:1.4;">Compare final metrics when shipping last-epoch vs best-val weights</p></div>
+    </div>
+  </div>
+  <div class="foot"><span>13</span><span>notes/pytorch-training.md</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Picture</span><span class="pill">Lab</span></div>
+    <h2 class="reveal" style="font-size:36px;margin-bottom:12px;">Lab checklist — ship the loop</h2>
+    <img class="shot shot-md reveal" src="../assets/lab-checklist.png" alt="Lab checklist — ship the loop" />
+  </div>
+  <div class="foot"><span>14</span><span>lab-checklist.png</span></div>
+</section>
+
 <section class="slide">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
@@ -217,7 +267,7 @@
       <div class="card reveal"><div class="tag">leak</div><h3>Leaky validation</h3><p>Tuning on the test set — keep a true held-out test.</p></div>
     </div>
   </div>
-  <div class="foot"><span>12</span><span>notes/pytorch-training.md</span></div>
+  <div class="foot"><span>15</span><span>notes/pytorch-training.md</span></div>
 </section>
 
 <section class="slide">
@@ -232,7 +282,7 @@
     </div>
     <p class="lead reveal" style="margin-top:28px;">GPU: <code>.to("cuda")</code> or <code>"mps"</code> for model <em>and</em> each batch — see train-gpu.md. DataLoader: <code>num_workers</code>, <code>pin_memory</code> often beat micro-optimizing the net.</p>
   </div>
-  <div class="foot"><span>13</span><span>related: tensorflow-training</span></div>
+  <div class="foot"><span>16</span><span>related: tensorflow-training</span></div>
 </section>
 
 <section class="slide">
@@ -251,7 +301,7 @@
     </div>
     <p class="lead reveal" style="margin-top:36px;"><code>torch.save(model.state_dict(), "ckpt.pt")</code> — prefer the best val checkpoint for inference. Save optimizer state if you plan to resume.</p>
   </div>
-  <div class="foot"><span>14</span><span>implements classification.md</span></div>
+  <div class="foot"><span>17</span><span>implements classification.md</span></div>
 </section>
 
 <section class="slide">
