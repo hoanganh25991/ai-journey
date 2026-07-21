@@ -1,5 +1,5 @@
 {
-  "built_at": "2026-07-21T03:58:56Z",
+  "built_at": "2026-07-21T05:03:44Z",
   "synonyms": [
     [
       "tokenize",
@@ -132,11 +132,11 @@
       ],
       "group": "concept",
       "page": "notes/tokenize.html",
-      "slides": "demos/tokenize/slides/index.html",
+      "slides": "slides/tokenize/index.html",
       "demo": "demos/tokenize/app/index.html",
       "extra_links": [],
-      "search_text": "tokenize text → tokens / subwords → ids. bpe vs wordpiece. tokenize bpe vocabulary tokenize text → tokens → ids. model không đọc chữ — nó đọc số. slides & demo link slides demos/tokenize/slides working app demos/tokenize/app ý chính word / subword (bpe, wordpiece, sentencepiece) / char vocabulary cố định → mỗi token một id sai tokenizer = sai input cho mọi bước sau protonx , ảnh: , , related demos embedding , sentiment",
-      "body_text": "Tokenize Text → tokens → IDs. Model không đọc chữ — nó đọc số. Slides & demo Link Slides demos/tokenize/slides Working app demos/tokenize/app Ý chính Word / subword (BPE, WordPiece, SentencePiece) / char Vocabulary cố định → mỗi token một ID Sai tokenizer = sai input cho mọi bước sau Protonx , Ảnh: , , Related demos embedding , sentiment"
+      "search_text": "tokenize text → tokens / subwords → ids. bpe vs wordpiece. tokenize bpe vocabulary tokenize text → tokens → ids. model không đọc chữ — nó đọc số. slides & demo link slides slides/tokenize working app demos/tokenize/app ý chính word / subword (bpe, wordpiece, sentencepiece) / char vocabulary cố định → mỗi token một id sai tokenizer = sai input cho mọi bước sau protonx , ảnh: , , related demos embedding , sentiment",
+      "body_text": "Tokenize Text → tokens → IDs. Model không đọc chữ — nó đọc số. Slides & demo Link Slides slides/tokenize Working app demos/tokenize/app Ý chính Word / subword (BPE, WordPiece, SentencePiece) / char Vocabulary cố định → mỗi token một ID Sai tokenizer = sai input cho mọi bước sau Protonx , Ảnh: , , Related demos embedding , sentiment"
     },
     {
       "id": "embedding",
@@ -149,11 +149,11 @@
       ],
       "group": "concept",
       "page": "notes/embedding.html",
-      "slides": "demos/embedding/slides/index.html",
+      "slides": "slides/embedding/index.html",
       "demo": "demos/embedding/app/index.html",
       "extra_links": [],
-      "search_text": "embedding token ids → dense vectors; cosine similarity in vector space. embedding cosine cbow embedding token id → vector dày đặc. gần nghĩa → gần trong không gian. slides & demo link slides demos/embedding/slides working app demos/embedding/app ý chính lookup table / learned matrix cosine / dot product similarity nền cho classification, rag, taxonomy semantic protonx ảnh: embeddings function, cbow, tf projector, cosine related demos tokenize , rag , sentiment",
-      "body_text": "Embedding Token ID → vector dày đặc. Gần nghĩa → gần trong không gian. Slides & demo Link Slides demos/embedding/slides Working app demos/embedding/app Ý chính Lookup table / learned matrix Cosine / dot product similarity Nền cho classification, RAG, taxonomy semantic Protonx Ảnh: embeddings function, cbow, TF Projector, cosine Related demos tokenize , rag , sentiment"
+      "search_text": "embedding token ids → dense vectors; cosine similarity in vector space. embedding cosine cbow embedding token id → vector dày đặc. gần nghĩa → gần trong không gian. slides & demo link slides slides/embedding working app demos/embedding/app ý chính lookup table / learned matrix cosine / dot product similarity nền cho classification, rag, taxonomy semantic protonx ảnh: embeddings function, cbow, tf projector, cosine related demos tokenize , rag , sentiment",
+      "body_text": "Embedding Token ID → vector dày đặc. Gần nghĩa → gần trong không gian. Slides & demo Link Slides slides/embedding Working app demos/embedding/app Ý chính Lookup table / learned matrix Cosine / dot product similarity Nền cho classification, RAG, taxonomy semantic Protonx Ảnh: embeddings function, cbow, TF Projector, cosine Related demos tokenize , rag , sentiment"
     },
     {
       "id": "attention",
@@ -166,11 +166,11 @@
       ],
       "group": "concept",
       "page": "notes/attention.html",
-      "slides": "demos/attention/slides/index.html",
+      "slides": "slides/attention/index.html",
       "demo": "demos/attention/app/index.html",
       "extra_links": [],
-      "search_text": "attention query · key · value — which tokens matter for context. attention qkv transformer attention token hiện tại nên “nhìn” token nào khác? → q, k, v. slides & demo link slides demos/attention/slides working app demos/attention/app ý chính self attention / cross attention multi head = nhiều góc nhìn scores → softmax → weighted sum(v) protonx ảnh: self attention, bảng attention, cross attention related demos softmax , embedding",
-      "body_text": "Attention Token hiện tại nên “nhìn” token nào khác? → Q, K, V. Slides & demo Link Slides demos/attention/slides Working app demos/attention/app Ý chính Self attention / cross attention Multi head = nhiều góc nhìn Scores → softmax → weighted sum(V) Protonx Ảnh: self attention, bảng attention, cross attention Related demos softmax , embedding"
+      "search_text": "attention query · key · value — which tokens matter for context. attention qkv transformer attention token hiện tại nên “nhìn” token nào khác? → q, k, v. slides & demo link slides slides/attention working app demos/attention/app ý chính self attention / cross attention multi head = nhiều góc nhìn scores → softmax → weighted sum(v) protonx ảnh: self attention, bảng attention, cross attention related demos softmax , embedding",
+      "body_text": "Attention Token hiện tại nên “nhìn” token nào khác? → Q, K, V. Slides & demo Link Slides slides/attention Working app demos/attention/app Ý chính Self attention / cross attention Multi head = nhiều góc nhìn Scores → softmax → weighted sum(V) Protonx Ảnh: self attention, bảng attention, cross attention Related demos softmax , embedding"
     },
     {
       "id": "softmax",
@@ -183,11 +183,11 @@
       ],
       "group": "concept",
       "page": "notes/softmax.html",
-      "slides": "demos/softmax/slides/index.html",
+      "slides": "slides/softmax/index.html",
       "demo": "demos/softmax/app/index.html",
       "extra_links": [],
-      "search_text": "softmax logits → probability distribution (sum = 1). softmax logits classification softmax logits → phân phối xác suất (tổng = 1). slides & demo link slides demos/softmax/slides working app demos/softmax/app ý chính classification head (sentiment 3 lớp) attention weights cặp với cross entropy khi train protonx , related demos sentiment , attention",
-      "body_text": "Softmax Logits → phân phối xác suất (tổng = 1). Slides & demo Link Slides demos/softmax/slides Working app demos/softmax/app Ý chính Classification head (sentiment 3 lớp) Attention weights Cặp với cross entropy khi train Protonx , Related demos sentiment , attention"
+      "search_text": "softmax logits → probability distribution (sum = 1). softmax logits classification softmax logits → phân phối xác suất (tổng = 1). slides & demo link slides slides/softmax working app demos/softmax/app ý chính classification head (sentiment 3 lớp) attention weights cặp với cross entropy khi train protonx , related demos sentiment , attention",
+      "body_text": "Softmax Logits → phân phối xác suất (tổng = 1). Slides & demo Link Slides slides/softmax Working app demos/softmax/app Ý chính Classification head (sentiment 3 lớp) Attention weights Cặp với cross entropy khi train Protonx , Related demos sentiment , attention"
     },
     {
       "id": "rag",
@@ -200,11 +200,11 @@
       ],
       "group": "concept",
       "page": "notes/rag.html",
-      "slides": "demos/rag/slides/index.html",
+      "slides": "slides/rag/index.html",
       "demo": "demos/rag/app/index.html",
       "extra_links": [],
-      "search_text": "rag retrieve top k chunks then generate grounded answers. rag vector db retrieve rag query → embed → top k chunks → llm + citations. slides & demo link slides demos/rag/slides working app demos/rag/app ý chính vector db + metadata filters khác pure chat: neo vào corpus (video/docs/repos) personal kb của lab = hướng rag protonx , , graph rag day 21 related demos embedding , lab ui",
-      "body_text": "RAG Query → embed → top k chunks → LLM + citations. Slides & demo Link Slides demos/rag/slides Working app demos/rag/app Ý chính Vector DB + metadata filters Khác pure chat: neo vào corpus (video/docs/repos) Personal KB của lab = hướng RAG Protonx , , Graph RAG day 21 Related demos embedding , Lab UI"
+      "search_text": "rag retrieve top k chunks then generate grounded answers. rag vector db retrieve rag query → embed → top k chunks → llm + citations. slides & demo link slides slides/rag working app demos/rag/app ý chính vector db + metadata filters khác pure chat: neo vào corpus (video/docs/repos) personal kb của lab = hướng rag protonx , , graph rag day 21 related demos embedding , lab ui",
+      "body_text": "RAG Query → embed → top k chunks → LLM + citations. Slides & demo Link Slides slides/rag Working app demos/rag/app Ý chính Vector DB + metadata filters Khác pure chat: neo vào corpus (video/docs/repos) Personal KB của lab = hướng RAG Protonx , , Graph RAG day 21 Related demos embedding , Lab UI"
     },
     {
       "id": "mcp",
@@ -218,11 +218,11 @@
       ],
       "group": "concept",
       "page": "notes/mcp.html",
-      "slides": "demos/mcp/slides/index.html",
+      "slides": "slides/mcp/index.html",
       "demo": "demos/mcp/app/index.html",
       "extra_links": [],
-      "search_text": "mcp model context protocol — host ↔ server ↔ tools có schema. mcp tools protocol server mcp — model context protocol host (cursor / claude / pi) ↔ mcp server ↔ tools có schema. cách chuẩn để agent thực thi ra ngoài mô hình. slides & demo link slides demos/mcp/slides working app demos/mcp/app kiến trúc host : nơi model chạy (cursor, claude code, pi…). server : process expose danh sách tool + input schema (json schema). tool : một hành động cụ thể — navigate browser, query db, render blender, search web. giao tiếp qua stdio hoặc http; mỗi tool tự mô tả tham số → model gọi đúng. ý chính chuẩn hoá \"gọi tool\": thay vì mỗi app một cách tích hợp, mcp là một protocol chung. model discover tool (list) rồi invoke (call) — không hardcode. kết quả trả json có schema → dễ parse, dễ chain nhiều tool. mcp ≠ skills mcp skills là gì tool có thể thực thi hướng dẫn (markdown) để model làm đúng dạng server + schema + script khi nào cần chạy action ra ngoài cần know how / quy trình lặp lại xem thêm: skills rules.md . ví dụ mcp server đang dùng browser (playwright / chrome devtools) — navigate, click, screenshot, đọc console. blender — chạy , inspect scene, render. tavily — web search / extract / crawl khi kiến thức local không đủ. homes — global skills (cursor/claude/pi tự load) — nơi thử nghiệm nhiều skill / lính cursor settings → mcp — khai báo server related 07 agents.md , skills rules.md , rag.md",
-      "body_text": "MCP — Model Context Protocol Host (Cursor / Claude / Pi) ↔ MCP server ↔ tools có schema. Cách chuẩn để agent thực thi ra ngoài mô hình. Slides & demo Link Slides demos/mcp/slides Working app demos/mcp/app Kiến trúc Host : nơi model chạy (Cursor, Claude Code, Pi…). Server : process expose danh sách tool + input schema (JSON Schema). Tool : một hành động cụ thể — navigate browser, query DB, render Blender, search web. Giao tiếp qua stdio hoặc HTTP; mỗi tool tự mô tả tham số → model gọi đúng. Ý chính Chuẩn hoá \"gọi tool\": thay vì mỗi app một cách tích hợp, MCP là một protocol chung. Model discover tool (list) rồi invoke (call) — không hardcode. Kết quả trả JSON có schema → dễ parse, dễ chain nhiều tool. MCP ≠ Skills MCP Skills Là gì tool có thể thực thi hướng dẫn (markdown) để model làm đúng Dạng server + schema + script Khi nào cần chạy action ra ngoài cần know how / quy trình lặp lại Xem thêm: skills rules.md . Ví dụ MCP server đang dùng browser (Playwright / Chrome DevTools) — navigate, click, screenshot, đọc console. blender — chạy , inspect scene, render. tavily — web search / extract / crawl khi kiến thức local không đủ. Homes — global skills (Cursor/Claude/Pi tự load) — nơi thử nghiệm nhiều skill / lính Cursor Settings → MCP — khai báo server Related 07 agents.md , skills rules.md , rag.md"
+      "search_text": "mcp model context protocol — host ↔ server ↔ tools có schema. mcp tools protocol server mcp — model context protocol host (cursor / claude / pi) ↔ mcp server ↔ tools có schema. cách chuẩn để agent thực thi ra ngoài mô hình. slides & demo link slides slides/mcp working app demos/mcp/app kiến trúc host : nơi model chạy (cursor, claude code, pi…). server : process expose danh sách tool + input schema (json schema). tool : một hành động cụ thể — navigate browser, query db, render blender, search web. giao tiếp qua stdio hoặc http; mỗi tool tự mô tả tham số → model gọi đúng. ý chính chuẩn hoá \"gọi tool\": thay vì mỗi app một cách tích hợp, mcp là một protocol chung. model discover tool (list) rồi invoke (call) — không hardcode. kết quả trả json có schema → dễ parse, dễ chain nhiều tool. mcp ≠ skills mcp skills là gì tool có thể thực thi hướng dẫn (markdown) để model làm đúng dạng server + schema + script khi nào cần chạy action ra ngoài cần know how / quy trình lặp lại xem thêm: skills rules.md . ví dụ mcp server đang dùng browser (playwright / chrome devtools) — navigate, click, screenshot, đọc console. blender — chạy , inspect scene, render. tavily — web search / extract / crawl khi kiến thức local không đủ. homes — global skills (cursor/claude/pi tự load) — nơi thử nghiệm nhiều skill / lính cursor settings → mcp — khai báo server related 07 agents.md , skills rules.md , rag.md",
+      "body_text": "MCP — Model Context Protocol Host (Cursor / Claude / Pi) ↔ MCP server ↔ tools có schema. Cách chuẩn để agent thực thi ra ngoài mô hình. Slides & demo Link Slides slides/mcp Working app demos/mcp/app Kiến trúc Host : nơi model chạy (Cursor, Claude Code, Pi…). Server : process expose danh sách tool + input schema (JSON Schema). Tool : một hành động cụ thể — navigate browser, query DB, render Blender, search web. Giao tiếp qua stdio hoặc HTTP; mỗi tool tự mô tả tham số → model gọi đúng. Ý chính Chuẩn hoá \"gọi tool\": thay vì mỗi app một cách tích hợp, MCP là một protocol chung. Model discover tool (list) rồi invoke (call) — không hardcode. Kết quả trả JSON có schema → dễ parse, dễ chain nhiều tool. MCP ≠ Skills MCP Skills Là gì tool có thể thực thi hướng dẫn (markdown) để model làm đúng Dạng server + schema + script Khi nào cần chạy action ra ngoài cần know how / quy trình lặp lại Xem thêm: skills rules.md . Ví dụ MCP server đang dùng browser (Playwright / Chrome DevTools) — navigate, click, screenshot, đọc console. blender — chạy , inspect scene, render. tavily — web search / extract / crawl khi kiến thức local không đủ. Homes — global skills (Cursor/Claude/Pi tự load) — nơi thử nghiệm nhiều skill / lính Cursor Settings → MCP — khai báo server Related 07 agents.md , skills rules.md , rag.md"
     },
     {
       "id": "skills-rules",
@@ -273,11 +273,11 @@
       ],
       "group": "concept",
       "page": "notes/car-nn.html",
-      "slides": "demos/car-nn/slides/index.html",
+      "slides": "slides/car-nn/index.html",
       "demo": "demos/car-nn/app/index.html",
       "extra_links": [],
-      "search_text": "car nn — sensor to action 3 sensors → fully connected → forward / back / left / right. fully connected classification sensors demo: car nn — fully connected slides & app link slides demos/car nn/slides app demos/car nn/app architecture obstacle → sensor < 1. related softmax.md , train gpu.md",
-      "body_text": "Demo: Car NN — Fully Connected Slides & app Link Slides demos/car nn/slides App demos/car nn/app Architecture Obstacle → sensor < 1. Related softmax.md , train gpu.md"
+      "search_text": "car nn — sensor to action 3 sensors → fully connected → forward / back / left / right. fully connected classification sensors demo: car nn — fully connected slides & app link slides slides/car nn app demos/car nn/app architecture obstacle → sensor < 1. related softmax.md , train gpu.md",
+      "body_text": "Demo: Car NN — Fully Connected Slides & app Link Slides slides/car nn App demos/car nn/app Architecture Obstacle → sensor < 1. Related softmax.md , train gpu.md"
     },
     {
       "id": "sentiment-routing",
@@ -290,12 +290,12 @@
       ],
       "group": "concept",
       "page": "notes/sentiment-routing.html",
-      "slides": "demos/sentiment/slides/index.html",
+      "slides": "slides/sentiment/index.html",
       "demo": "demos/sentiment/app/index.html",
       "extra_links": [
         {
           "label": "Complexity router slides",
-          "href": "demos/complexity-router/slides/index.html"
+          "href": "slides/complexity-router/index.html"
         },
         {
           "label": "Complexity router app",
@@ -375,11 +375,11 @@
       ],
       "group": "concept",
       "page": "notes/agent-automation.html",
-      "slides": "demos/hermess/slides/index.html",
+      "slides": "slides/hermess/index.html",
       "demo": null,
       "extra_links": [],
-      "search_text": "agent automation — openclaw · hermess câu chuyện: openclaw (pi harness) mở màn cảm giác agent control mọi thứ → hermess làm tốt. openclaw hermess pi automation harness agent automation — openclaw · hermess câu chuyện cá nhân về làn sóng \"ai agent tự chạy việc\": từ chatbot trả lời → agent cầm tay làm (chạy lệnh, đụng file, điều khiển máy). hai con mình dùng qua: openclaw và hermess . bối cảnh trước đây ai chỉ trả lời : hỏi — đáp, còn làm là việc của mình. bước ngoặt là khi agent bắt đầu tích hợp vào máy và control mọi thứ : tự mở terminal, sửa file, gọi tool, chạy cả một chuỗi task mà không cần mình bấm từng bước. openclaw — con đầu tiên cho cảm giác đó dùng làm harness: đơn giản, nhanh, gọn, nhẹ — cắm vào là chạy task ngay. điểm khiến nó đáng nhớ: nó là thằng đầu tiên cho người ta cảm giác \"ai agent integrate sâu, control giúp mọi thứ\". không chỉ gợi ý — nó thực sự làm : đọc/ghi file, chạy shell, tự nối các bước. lần đầu thấy một agent \"cầm lái\" thay vì chỉ ngồi cạnh nhắc bài. triết lý: harness mỏng, ít ma sát → thử nghiệm automation cực nhanh. đây là phần cần nổi bật : openclaw = khoảnh khắc \"à, agent có thể tự điều khiển cả cái máy này\". hermess — đến sau, làm tốt sau openclaw, hermess hoàn thiện trải nghiệm: mượt, chắc tay hơn khi chạy automation thật. xem slide riêng: demos/hermess/slides . rút ra openclaw hermess harness — mỏng, nhanh gọn nhẹ hoàn thiện hơn vai trò mở màn cảm giác agent control mọi thứ làm tốt , dùng thật ổn khi nào cảm nhận nhanh, prototype automation chạy automation chỉn chu harness nhẹ ( / openclaw) = đường ngắn nhất để cảm được sức mạnh agent automation. con làm tốt (hermess) = khi cần chạy thật, ổn định. related 07 agents.md — so sánh harness (cursor, claude code, pi…) mcp.md — cách agent thực thi tool skills rules.md , 08 model notes.md",
-      "body_text": "Agent automation — OpenClaw · Hermess Câu chuyện cá nhân về làn sóng \"AI agent tự chạy việc\": từ chatbot trả lời → agent cầm tay làm (chạy lệnh, đụng file, điều khiển máy). Hai con mình dùng qua: OpenClaw và Hermess . Bối cảnh Trước đây AI chỉ trả lời : hỏi — đáp, còn làm là việc của mình. Bước ngoặt là khi agent bắt đầu tích hợp vào máy và control mọi thứ : tự mở terminal, sửa file, gọi tool, chạy cả một chuỗi task mà không cần mình bấm từng bước. OpenClaw — con đầu tiên cho cảm giác đó Dùng làm harness: đơn giản, nhanh, gọn, nhẹ — cắm vào là chạy task ngay. Điểm khiến nó đáng nhớ: nó là thằng đầu tiên cho người ta cảm giác \"AI agent integrate sâu, control giúp mọi thứ\". Không chỉ gợi ý — nó thực sự làm : đọc/ghi file, chạy shell, tự nối các bước. Lần đầu thấy một agent \"cầm lái\" thay vì chỉ ngồi cạnh nhắc bài. Triết lý: harness mỏng, ít ma sát → thử nghiệm automation cực nhanh. Đây là phần cần nổi bật : OpenClaw = khoảnh khắc \"à, agent có thể tự điều khiển cả cái máy này\". Hermess — đến sau, làm tốt Sau OpenClaw, Hermess hoàn thiện trải nghiệm: mượt, chắc tay hơn khi chạy automation thật. Xem slide riêng: demos/hermess/slides . Rút ra OpenClaw Hermess Harness — mỏng, nhanh gọn nhẹ hoàn thiện hơn Vai trò mở màn cảm giác agent control mọi thứ làm tốt , dùng thật ổn Khi nào cảm nhận nhanh, prototype automation chạy automation chỉn chu Harness nhẹ ( / OpenClaw) = đường ngắn nhất để cảm được sức mạnh agent automation. Con làm tốt (Hermess) = khi cần chạy thật, ổn định. Related 07 agents.md — so sánh harness (Cursor, Claude Code, Pi…) mcp.md — cách agent thực thi tool skills rules.md , 08 model notes.md"
+      "search_text": "agent automation — openclaw · hermess câu chuyện: openclaw (pi harness) mở màn cảm giác agent control mọi thứ → hermess làm tốt. openclaw hermess pi automation harness agent automation — openclaw · hermess câu chuyện cá nhân về làn sóng \"ai agent tự chạy việc\": từ chatbot trả lời → agent cầm tay làm (chạy lệnh, đụng file, điều khiển máy). hai con mình dùng qua: openclaw và hermess . bối cảnh trước đây ai chỉ trả lời : hỏi — đáp, còn làm là việc của mình. bước ngoặt là khi agent bắt đầu tích hợp vào máy và control mọi thứ : tự mở terminal, sửa file, gọi tool, chạy cả một chuỗi task mà không cần mình bấm từng bước. openclaw — con đầu tiên cho cảm giác đó dùng làm harness: đơn giản, nhanh, gọn, nhẹ — cắm vào là chạy task ngay. điểm khiến nó đáng nhớ: nó là thằng đầu tiên cho người ta cảm giác \"ai agent integrate sâu, control giúp mọi thứ\". không chỉ gợi ý — nó thực sự làm : đọc/ghi file, chạy shell, tự nối các bước. lần đầu thấy một agent \"cầm lái\" thay vì chỉ ngồi cạnh nhắc bài. triết lý: harness mỏng, ít ma sát → thử nghiệm automation cực nhanh. đây là phần cần nổi bật : openclaw = khoảnh khắc \"à, agent có thể tự điều khiển cả cái máy này\". hermess — đến sau, làm tốt sau openclaw, hermess hoàn thiện trải nghiệm: mượt, chắc tay hơn khi chạy automation thật. xem slide riêng: slides/hermess . rút ra openclaw hermess harness — mỏng, nhanh gọn nhẹ hoàn thiện hơn vai trò mở màn cảm giác agent control mọi thứ làm tốt , dùng thật ổn khi nào cảm nhận nhanh, prototype automation chạy automation chỉn chu harness nhẹ ( / openclaw) = đường ngắn nhất để cảm được sức mạnh agent automation. con làm tốt (hermess) = khi cần chạy thật, ổn định. related 07 agents.md — so sánh harness (cursor, claude code, pi…) mcp.md — cách agent thực thi tool skills rules.md , 08 model notes.md",
+      "body_text": "Agent automation — OpenClaw · Hermess Câu chuyện cá nhân về làn sóng \"AI agent tự chạy việc\": từ chatbot trả lời → agent cầm tay làm (chạy lệnh, đụng file, điều khiển máy). Hai con mình dùng qua: OpenClaw và Hermess . Bối cảnh Trước đây AI chỉ trả lời : hỏi — đáp, còn làm là việc của mình. Bước ngoặt là khi agent bắt đầu tích hợp vào máy và control mọi thứ : tự mở terminal, sửa file, gọi tool, chạy cả một chuỗi task mà không cần mình bấm từng bước. OpenClaw — con đầu tiên cho cảm giác đó Dùng làm harness: đơn giản, nhanh, gọn, nhẹ — cắm vào là chạy task ngay. Điểm khiến nó đáng nhớ: nó là thằng đầu tiên cho người ta cảm giác \"AI agent integrate sâu, control giúp mọi thứ\". Không chỉ gợi ý — nó thực sự làm : đọc/ghi file, chạy shell, tự nối các bước. Lần đầu thấy một agent \"cầm lái\" thay vì chỉ ngồi cạnh nhắc bài. Triết lý: harness mỏng, ít ma sát → thử nghiệm automation cực nhanh. Đây là phần cần nổi bật : OpenClaw = khoảnh khắc \"à, agent có thể tự điều khiển cả cái máy này\". Hermess — đến sau, làm tốt Sau OpenClaw, Hermess hoàn thiện trải nghiệm: mượt, chắc tay hơn khi chạy automation thật. Xem slide riêng: slides/hermess . Rút ra OpenClaw Hermess Harness — mỏng, nhanh gọn nhẹ hoàn thiện hơn Vai trò mở màn cảm giác agent control mọi thứ làm tốt , dùng thật ổn Khi nào cảm nhận nhanh, prototype automation chạy automation chỉn chu Harness nhẹ ( / OpenClaw) = đường ngắn nhất để cảm được sức mạnh agent automation. Con làm tốt (Hermess) = khi cần chạy thật, ổn định. Related 07 agents.md — so sánh harness (Cursor, Claude Code, Pi…) mcp.md — cách agent thực thi tool skills rules.md , 08 model notes.md"
     },
     {
       "id": "ai-timeline",

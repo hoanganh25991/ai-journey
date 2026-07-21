@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Demo · RAG</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Sora:wght@400;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="../_shared/deck.css" />
+<style>
+.shot {
+  width: 100%; height: 420px; object-fit: contain; border-radius: 14px;
+  border: 1px solid var(--line); background: #e6edf5;
+}
+.shot-lg { height: 520px; }
+</style>
+</head>
+<body>
+<div class="deck-viewport">
+<main class="deck-stage" id="deckStage">
+
+<section class="slide active">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Concept · rag</span><span class="pill">slides + app</span></div>
+    <h1 class="reveal" style="margin-top:100px;">RAG · <em>retrieve then generate</em></h1>
+    <p class="lead reveal" style="margin-top:28px;">Embed query → top-k chunks → LLM answer with citations.</p>
+    <div class="flow-row reveal">
+      <span class="step">notes/rag.md</span><span class="arr">→</span>
+      <span class="step">slides</span><span class="arr">→</span>
+      <span class="step">working app</span>
+    </div>
+  </div>
+  <div class="foot"><span>01</span><span>protonx-nlp3 + AI Lab</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>RAG</span><span class="pill">idea</span></div>
+    <h2 class="reveal">Ý chính</h2>
+    <div class="cols-2">
+      <div class="card reveal"><div class="tag">remember</div><h3>RAG</h3><p>Embed query → top-k chunks → LLM answer with citations.</p></div>
+      <div class="card cyan reveal"><div class="tag">topics</div><h3>Keywords</h3><p>RAG, vector-db, retrieve</p>
+        <p style="margin-top:12px">Nguồn học: <span style="color:var(--amber);font-family:var(--font-mono);font-size:16px">~/work-station/ai-learning-protonx-nlp3</span></p>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>02</span><span>notes/rag.md</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>From protonx</span><span class="pill">graph-rag.jpg</span></div>
+    <h2 class="reveal" style="font-size:36px;margin-bottom:16px;">Hình minh họa</h2>
+    <img class="shot shot-lg reveal" src="../../notes/assets/protonx/graph-rag.jpg" alt="graph-rag.jpg" />
+  </div>
+  <div class="foot"><span>03</span><span>ai-learning-protonx-nlp3</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>From protonx</span><span class="pill">embed-then-query.jpg</span></div>
+    <h2 class="reveal" style="font-size:36px;margin-bottom:16px;">Hình minh họa</h2>
+    <img class="shot shot-lg reveal" src="../../notes/assets/protonx/embed-then-query.jpg" alt="embed-then-query.jpg" />
+  </div>
+  <div class="foot"><span>04</span><span>ai-learning-protonx-nlp3</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>From protonx</span><span class="pill">rag-advanced.jpg</span></div>
+    <h2 class="reveal" style="font-size:36px;margin-bottom:16px;">Hình minh họa</h2>
+    <img class="shot shot-lg reveal" src="../../notes/assets/protonx/rag-advanced.jpg" alt="rag-advanced.jpg" />
+  </div>
+  <div class="foot"><span>05</span><span>ai-learning-protonx-nlp3</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Next</span><span class="pill">app</span></div>
+    <h1 class="reveal" style="margin-top:120px;font-size:64px;">Mở working app<br /><em>thử tay.</em></h1>
+    <p class="lead reveal" style="margin-top:28px;">demos/rag/app — interactive, không cần GPU.</p>
+    <a class="app-cta reveal" href="../../demos/rag/app/index.html">Mở working app →</a>
+  </div>
+  <div class="foot"><span>end</span><span>demos/rag/app</span></div>
+</section>
+</main>
+</div>
+<nav class="deck-controls">
+  <button type="button" id="prevBtn">←</button>
+  <span id="pageLabel">1</span>
+  <button type="button" id="nextBtn">→</button>
+</nav>
+<script src="../_shared/deck.js"></script>
+</body>
+</html>

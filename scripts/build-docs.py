@@ -1,17 +1,18 @@
 #!/usr/bin/env python3
 """Build the AI Lab docs site.
 
-Source of truth:
-    notes/*.md + notes/catalog.json   (knowledge)
-    demos/** + slides/**              (decks / working apps)
+Source of truth (3 siblings):
+    notes/*.md + notes/catalog.json   knowledge (primary)
+    slides/<topic>/index.html         presentation decks
+    demos/<topic>/app/index.html      interactive apps
 
 Output (the only place you open / serve):
     docs/index.html                   search-first hub, list view
     docs/notes/<id>.html              full document page per note
-    docs/demos/**  docs/slides/**     copied decks / apps
+    docs/slides/**  docs/demos/**     copied decks / apps
     docs/search-index.json            client search payload
 
-Re-run after editing notes/, catalog.json, or demos/:
+Re-run after editing notes/, catalog.json, slides/, or demos/:
 
     python3 scripts/build-docs.py
 """
@@ -22,6 +23,7 @@ import json
 import posixpath
 import re
 import shutil
+import zipfile
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -250,8 +252,9 @@ def build_payload() -> tuple[dict, list[dict]]:
                 # note-page links (context: docs/notes)
                 "slides": rewrite_href(slides, VROOT, "/R/docs/notes", file2id) if slides else None,
                 "demo": rewrite_href(demo, VROOT, "/R/docs/notes", file2id) if demo else None,
-                # raw points at the *source* .md, not the generated page
-                "raw": posixpath.relpath(_resolve(VROOT, entry["file"]), "/R/docs/notes"),
+                # raw.md is copied next to the note page for Download
+                "raw": posixpath.basename(entry["file"]),
+                "raw_src": entry["file"],
                 "extra_links": [
                     {
                         "label": l["label"],
@@ -332,11 +335,14 @@ HUB_HTML = r"""<!DOCTYPE html>
 @@THEME@@
 .shell { max-width: 880px; margin: 0 auto; padding: 56px 22px 96px; }
 .brand {
-  font-family: var(--serif); font-size: 40px; letter-spacing: -.02em;
-  color: var(--ink); line-height: 1;
+  display: block; text-decoration: none; color: inherit;
+  line-height: 0;
 }
-.brand em { font-style: italic; color: var(--teal); }
-.tagline { margin-top: 10px; color: var(--muted); font-size: 15px; max-width: 560px; line-height: 1.5; }
+.brand img {
+  display: block; height: 64px; width: auto; max-width: min(420px, 100%);
+  object-fit: contain; object-position: left center;
+}
+.tagline { margin-top: 14px; color: var(--muted); font-size: 15px; max-width: 560px; line-height: 1.5; }
 .search-wrap { position: relative; margin: 30px 0 10px; }
 #q {
   width: 100%; background: var(--surface); border: 1px solid var(--line);
@@ -398,7 +404,9 @@ footer { margin-top: 40px; font: 12px var(--mono); color: var(--muted); }
 </head>
 <body>
 <div class="shell">
-  <div class="brand">AI <em>Lab</em></div>
+  <a class="brand" href="./index.html" aria-label="AI Lab">
+    <img src="notes/assets/ai-lab-logo.png" alt="AI Lab" width="420" height="120" />
+  </a>
   <p class="tagline">Notes are the source of truth. Search first — mở note dạng document, slides &amp; demo hiện khi có.</p>
 
   <form class="search-wrap" id="searchForm" autocomplete="off">
@@ -636,13 +644,21 @@ NOTE_HTML = r"""<!DOCTYPE html>
 .doc h1 { font-size: 30px; letter-spacing: -.02em; margin: 8px 0 6px; }
 .summary { color: var(--muted); font-size: 15px; line-height: 1.55; }
 .actions { display: flex; flex-wrap: wrap; gap: 8px; margin: 18px 0 4px; }
-.actions a {
+.actions a, .actions button {
   text-decoration: none; font: 500 12px var(--mono); padding: 9px 14px; border-radius: 10px;
   border: 1px solid var(--line); color: var(--ink); background: transparent; transition: all .15s;
+  cursor: pointer;
 }
 .actions a.primary { background: var(--teal); border-color: var(--teal); color: #fff; }
-.actions a:hover { border-color: var(--teal); color: var(--teal); }
+.actions a:hover, .actions button:hover { border-color: var(--teal); color: var(--teal); }
 .actions a.primary:hover { color: #fff; opacity: .9; }
+.lab-toast {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+  background: var(--ink); color: #fff; font: 500 12px var(--mono);
+  padding: 10px 16px; border-radius: 999px; z-index: 1100;
+  opacity: 0; pointer-events: none; transition: opacity .2s;
+}
+.lab-toast.on { opacity: 1; }
 .topics { display: flex; flex-wrap: wrap; gap: 7px; margin: 14px 0 4px; }
 .topics span { font: 500 11px var(--mono); color: var(--amber); }
 hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
@@ -678,6 +694,24 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
     <div class="body">@@BODY@@</div>
   </article>
 </div>
+<script>
+(function () {
+  const title = @@TITLE_JS@@;
+  function toast(msg) {
+    let el = document.querySelector(".lab-toast");
+    if (!el) { el = document.createElement("div"); el.className = "lab-toast"; document.body.appendChild(el); }
+    el.textContent = msg; el.classList.add("on");
+    clearTimeout(el._t); el._t = setTimeout(() => el.classList.remove("on"), 1600);
+  }
+  document.getElementById("labShare")?.addEventListener("click", async () => {
+    const url = location.href;
+    try { if (navigator.share) { await navigator.share({ title, url }); return; } }
+    catch (err) { if (err && err.name === "AbortError") return; }
+    try { await navigator.clipboard.writeText(url); toast("Copied link"); }
+    catch { window.prompt("Copy link:", url); }
+  });
+})();
+</script>
 </body>
 </html>
 """
@@ -699,10 +733,14 @@ def render_note_page(n: dict) -> str:
         actions.append(f'<a class="primary" href="{esc(n["slides"])}">Slides ↗</a>')
     if n.get("demo"):
         actions.append(f'<a href="{esc(n["demo"])}">Demo ↗</a>')
-    actions.append(f'<a href="{esc(n["raw"])}">Raw .md</a>')
+    # download = raw.md (copied next to the page); share = current URL
+    raw_name = posixpath.basename(n["raw"])
+    actions.append(f'<a href="{esc(raw_name)}" id="labDownload" download="{esc(raw_name)}">Download</a>')
+    actions.append('<button type="button" id="labShare">Share</button>')
     for l in n.get("extra_links") or []:
         actions.append(f'<a href="{esc(l["href"])}">{esc(l["label"])} ↗</a>')
     topics = "".join(f"<span>#{esc(t)}</span>" for t in n.get("topics") or [])
+    title_js = json.dumps(n["title"], ensure_ascii=False)
     return (
         NOTE_HTML.replace("@@THEME@@", THEME_CSS)
         .replace("@@TITLE@@", esc(n["title"]))
@@ -710,6 +748,7 @@ def render_note_page(n: dict) -> str:
         .replace("@@ACTIONS@@", "\n".join(actions))
         .replace("@@TOPICS@@", topics)
         .replace("@@BODY@@", n["body_html"])
+        .replace("@@TITLE_JS@@", title_js)
     )
 
 
@@ -719,7 +758,7 @@ def render_hub(payload: dict) -> str:
 
 
 # --------------------------------------------------------------------------- #
-# Asset copy                                                                   #
+# Asset copy + demos/slides chrome (download / share)                          #
 # --------------------------------------------------------------------------- #
 def copy_assets() -> None:
     # top-level dirs copied verbatim into docs/
@@ -742,6 +781,179 @@ def copy_assets() -> None:
         shutil.copytree(assets_src, assets_dst, ignore=shutil.ignore_patterns(".DS_Store"))
 
 
+def _inject_before_body_end(html: str, snippet: str) -> str:
+    if snippet.strip() in html:
+        return html
+    if "</body>" in html:
+        return html.replace("</body>", snippet + "\n</body>", 1)
+    return html + snippet
+
+
+def _make_standalone_slide(index_html: Path, shared: Path) -> str:
+    """Inline deck.css + deck.js into one static HTML file for Download."""
+    html = index_html.read_text(encoding="utf-8")
+    css = (shared / "deck.css").read_text(encoding="utf-8")
+    js = (shared / "deck.js").read_text(encoding="utf-8")
+
+    html = re.sub(
+        r'<link[^>]+href="[^"]*deck\.css"[^>]*/?>',
+        f"<style>\n{css}\n</style>",
+        html,
+        count=1,
+    )
+    # drop external deck.js; LAB + inlined deck.js appended before </body>
+    html = re.sub(r'<script[^>]+src="[^"]*deck\.js"[^>]*>\s*</script>', "", html)
+    html = re.sub(r'<script[^>]+src="[^"]*deck\.js"[^>]*/>', "", html)
+
+    # keep window.LAB if already present; else add a minimal one for share-only
+    lab_snip = ""
+    if "window.LAB" not in html:
+        title = re.search(r"<title>([^<]+)</title>", html)
+        t = title.group(1).strip() if title else "AI Lab Slides"
+        lab_snip = f"<script>window.LAB={json.dumps({'title': t, 'download': 'download.html', 'downloadName': index_html.parent.name + '-slides.html'})};</script>\n"
+
+    inline = f"{lab_snip}<script>\n{js}\n</script>\n"
+    return _inject_before_body_end(html, inline)
+
+
+def _zip_demo(demo_dir: Path, zip_path: Path, shared: Path | None = None) -> None:
+    """Zip one demo folder (app + slides + readme) + shared assets for Download."""
+    if zip_path.exists():
+        zip_path.unlink()
+    with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as zf:
+        for f in sorted(demo_dir.rglob("*")):
+            if not f.is_file():
+                continue
+            if f.name == ".DS_Store" or f.suffix == ".zip":
+                continue
+            if f.name == "download.html":
+                continue
+            arc = f"{demo_dir.name}/{f.relative_to(demo_dir).as_posix()}"
+            zf.write(f, arc)
+        # apps/slides resolve ../../_shared from demo/app → include sibling _shared/
+        if shared and shared.is_dir():
+            for f in sorted(shared.rglob("*")):
+                if not f.is_file() or f.name == ".DS_Store":
+                    continue
+                zf.write(f, f"_shared/{f.relative_to(shared).as_posix()}")
+
+
+def enhance_demos_and_slides() -> None:
+    """After copy: inject Download/Share, build standalone slides, zip demos.
+
+    Layout (sibling trees):
+        docs/demos/<id>/app/     working apps
+        docs/slides/<id>/        decks (shared CSS/JS in docs/slides/_shared/)
+    """
+    demos_root = DOCS / "demos"
+    slides_root = DOCS / "slides"
+    demo_shared = demos_root / "_shared"
+    slide_shared = slides_root / "_shared"
+
+    # --- demos: chrome + zip ---
+    if demos_root.is_dir():
+        for demo_dir in sorted(demos_root.iterdir()):
+            if not demo_dir.is_dir() or demo_dir.name.startswith("_"):
+                continue
+            demo_id = demo_dir.name
+            title = demo_id.replace("-", " ").title()
+            zip_name = f"{demo_id}.zip"
+
+            app_html = demo_dir / "app" / "index.html"
+            if app_html.is_file():
+                lab = {
+                    "kind": "app",
+                    "title": f"{title} · Demo",
+                    "download": f"../{zip_name}",
+                    "downloadName": zip_name,
+                }
+                snip = (
+                    f"<script>window.LAB={json.dumps(lab, ensure_ascii=False)};</script>\n"
+                    f'<script src="../../_shared/chrome.js"></script>\n'
+                )
+                text = app_html.read_text(encoding="utf-8")
+                if "window.LAB" not in text:
+                    app_html.write_text(_inject_before_body_end(text, snip), encoding="utf-8")
+
+            _zip_demo(
+                demo_dir,
+                demo_dir / zip_name,
+                demo_shared if demo_shared.is_dir() else None,
+            )
+
+    # --- slides/<id>/index.html: Download (standalone HTML) + Share ---
+    if slides_root.is_dir() and slide_shared.is_dir():
+        for slide_dir in sorted(slides_root.iterdir()):
+            if not slide_dir.is_dir() or slide_dir.name.startswith("_"):
+                continue
+            slides_html = slide_dir / "index.html"
+            if not slides_html.is_file():
+                continue
+            slide_id = slide_dir.name
+            title = slide_id.replace("-", " ").title()
+            lab = {
+                "kind": "slides",
+                "title": f"{title} · Slides",
+                "download": "download.html",
+                "downloadName": f"{slide_id}-slides.html",
+            }
+            lab_script = f"<script>window.LAB={json.dumps(lab, ensure_ascii=False)};</script>\n"
+            text = slides_html.read_text(encoding="utf-8")
+            if "window.LAB" not in text:
+                if re.search(r'src="[^"]*deck\.js"', text):
+                    text = re.sub(
+                        r'(<script[^>]+src="[^"]*deck\.js"[^>]*>)',
+                        lab_script + r"\1",
+                        text,
+                        count=1,
+                    )
+                else:
+                    text = _inject_before_body_end(text, lab_script)
+                slides_html.write_text(text, encoding="utf-8")
+
+            standalone = _make_standalone_slide(slides_html, slide_shared)
+            (slide_dir / "download.html").write_text(standalone, encoding="utf-8")
+
+    # --- top-level slides/*.html (e.g. ai-lab-notes.html) ---
+    if not slides_root.is_dir():
+        return
+    for html_path in sorted(slides_root.glob("*.html")):
+        if html_path.name.endswith("-download.html"):
+            continue
+        text = html_path.read_text(encoding="utf-8")
+        if "window.LAB" in text:
+            continue
+        dl_name = html_path.stem + "-download.html"
+        src_clean = ROOT / "slides" / html_path.name
+        if src_clean.is_file():
+            shutil.copy2(src_clean, slides_root / dl_name)
+        else:
+            (slides_root / dl_name).write_text(text, encoding="utf-8")
+
+        lab = {
+            "kind": "slides",
+            "title": html_path.stem,
+            "download": dl_name,
+            "downloadName": html_path.name,
+        }
+        css = """
+<style>
+.lab-chrome{position:fixed;right:22px;top:22px;z-index:1000;display:inline-flex;gap:8px}
+.lab-chrome button,.lab-chrome a{display:inline-flex;align-items:center;gap:6px;font-family:"IBM Plex Mono",monospace;font-size:13px;letter-spacing:.06em;color:#16202e;text-decoration:none;cursor:pointer;background:rgba(255,255,255,.92);border:1px solid rgba(20,32,46,.14);box-shadow:0 4px 16px rgba(20,32,46,.1);padding:9px 15px;border-radius:999px}
+.lab-chrome button:hover,.lab-chrome a:hover{color:#0f8a9b;border-color:#0f8a9b}
+.lab-toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:#16202e;color:#fff;font:500 12px "IBM Plex Mono",monospace;padding:10px 16px;border-radius:999px;z-index:1100;opacity:0;pointer-events:none;transition:opacity .2s}
+.lab-toast.on{opacity:1}
+</style>
+"""
+        if ".lab-chrome" not in text:
+            text = text.replace("</head>", css + "</head>", 1)
+        snip = (
+            f"<script>window.LAB={json.dumps(lab, ensure_ascii=False)};</script>\n"
+            '<script src="../demos/_shared/chrome.js"></script>\n'
+        )
+        html_path.write_text(_inject_before_body_end(text, snip), encoding="utf-8")
+
+
 # --------------------------------------------------------------------------- #
 # Main                                                                         #
 # --------------------------------------------------------------------------- #
@@ -756,13 +968,18 @@ def main() -> None:
 
     for n in page_notes:
         (NOTES_OUT / f"{n['id']}.html").write_text(render_note_page(n), encoding="utf-8")
+        # copy source .md next to the page for Download
+        src = ROOT / n["raw_src"]
+        if src.is_file():
+            shutil.copy2(src, NOTES_OUT / n["raw"])
 
     copy_assets()
+    enhance_demos_and_slides()
 
     print(f"OK {len(page_notes)} notes")
     print(f"    hub        → {DOCS / 'index.html'}")
     print(f"    note pages → {NOTES_OUT}/<id>.html")
-    print(f"    copied     → docs/demos, docs/slides")
+    print(f"    copied     → docs/demos, docs/slides (+ zip / download.html)")
     print(f"    built_at   {payload['built_at']}")
 
 

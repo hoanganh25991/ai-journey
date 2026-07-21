@@ -3,15 +3,16 @@
 <title>Attention · App</title>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Sora:wght@400;600;700&display=swap" rel="stylesheet"/>
 <style>
-:root{--bg:#0c1118;--ink:#e8eef7;--muted:#8b97a8;--amber:#f0a35e;--cyan:#5ec8d4;--line:rgba(232,238,247,.12)}
+:root{--bg:#eef3f9;--ink:#16202e;--muted:#5a6b80;--amber:#c2703a;--cyan:#0f8a9b;--line:rgba(20,32,46,.12)}
 *{box-sizing:border-box;margin:0;padding:0}body{min-height:100vh;background:var(--bg);color:var(--ink);font-family:Sora,sans-serif;padding:28px 32px}
 header{display:flex;justify-content:space-between;margin-bottom:16px}a{color:var(--cyan);font:13px "IBM Plex Mono",monospace;text-decoration:none}
-input{width:100%;max-width:640px;background:#15202e;border:1px solid var(--line);border-radius:10px;color:var(--ink);padding:12px;font:16px Sora,sans-serif}
+input{width:100%;max-width:640px;background:#ffffff;border:1px solid var(--line);border-radius:10px;color:var(--ink);padding:12px;font:16px Sora,sans-serif}
 table{border-collapse:collapse;margin-top:20px;font:12px "IBM Plex Mono",monospace}
 td,th{border:1px solid var(--line);padding:8px;min-width:52px;text-align:center}
 th{color:var(--muted)} .hint{margin-top:14px;color:var(--muted);font-size:14px;max-width:700px;line-height:1.5}
-</style></head><body>
-<header><h1>Attention · app</h1><div><a href="../slides/">Slides</a> · <a href="../../../index.html">Lab UI</a></div></header>
+</style><link rel="stylesheet" href="../../_shared/app.css" />
+</head><body>
+<header><h1>Attention · app</h1><div><a href="../../../slides/attention/">Slides</a> · <a href="../../../index.html">Lab UI</a></div></header>
 <input id="t" value="the cat sat on the mat"/>
 <div id="grid"></div>
 <p class="hint">Heatmap toy: token i nhin token j theo do giong chu / vi tri. Production: Q K^T / sqrt(d) → softmax → V. Xem protonx self-attention slides.</p>
@@ -32,10 +33,13 @@ function run(){
     }
     const w=softmax(scores);
     html+=`<tr><th>${toks[i]}</th>`+w.map(p=>{
-      const a=0.15+p*0.85; return `<td style="background:rgba(94,200,212,${a})">${p.toFixed(2)}</td>`;
+      const a=0.15+p*0.85; return `<td style="background:rgba(15,138,155,${a})">${p.toFixed(2)}</td>`;
     }).join("")+"</tr>";
   }
   grid.innerHTML=html+"</table>";
 }
 t.oninput=run; run();
-</script></body></html>
+</script><script>window.LAB={"kind": "app", "title": "Attention · Demo", "download": "../attention.zip", "downloadName": "attention.zip"};</script>
+<script src="../../_shared/chrome.js"></script>
+
+</body></html>

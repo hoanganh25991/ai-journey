@@ -11,7 +11,7 @@
     "notes": [
       "notes/tokenize.md"
     ],
-    "slides": "demos/tokenize/slides/index.html",
+    "slides": "slides/tokenize/index.html",
     "app": "demos/tokenize/app/index.html",
     "kind": "concept"
   },
@@ -27,7 +27,7 @@
     "notes": [
       "notes/embedding.md"
     ],
-    "slides": "demos/embedding/slides/index.html",
+    "slides": "slides/embedding/index.html",
     "app": "demos/embedding/app/index.html",
     "kind": "concept"
   },
@@ -43,7 +43,7 @@
     "notes": [
       "notes/attention.md"
     ],
-    "slides": "demos/attention/slides/index.html",
+    "slides": "slides/attention/index.html",
     "app": "demos/attention/app/index.html",
     "kind": "concept"
   },
@@ -59,7 +59,7 @@
     "notes": [
       "notes/softmax.md"
     ],
-    "slides": "demos/softmax/slides/index.html",
+    "slides": "slides/softmax/index.html",
     "app": "demos/softmax/app/index.html",
     "kind": "concept"
   },
@@ -75,7 +75,7 @@
     "notes": [
       "notes/rag.md"
     ],
-    "slides": "demos/rag/slides/index.html",
+    "slides": "slides/rag/index.html",
     "app": "demos/rag/app/index.html",
     "kind": "concept"
   },
@@ -91,7 +91,7 @@
     "notes": [
       "notes/mcp.md"
     ],
-    "slides": "demos/mcp/slides/index.html",
+    "slides": "slides/mcp/index.html",
     "app": "demos/mcp/app/index.html",
     "kind": "concept"
   },
@@ -109,7 +109,7 @@
       "notes/04-demo-car.md",
       "notes/06-train-infer.md"
     ],
-    "slides": "demos/car-nn/slides/index.html",
+    "slides": "slides/car-nn/index.html",
     "app": "demos/car-nn/app/index.html",
     "kind": "project"
   },
@@ -128,7 +128,7 @@
       "notes/01-tokenize-embed.md",
       "notes/03-classify-rag.md"
     ],
-    "slides": "demos/sentiment/slides/index.html",
+    "slides": "slides/sentiment/index.html",
     "app": "demos/sentiment/app/index.html",
     "kind": "project"
   },
@@ -146,7 +146,7 @@
       "notes/05-demo-text.md",
       "notes/07-agents.md"
     ],
-    "slides": "demos/complexity-router/slides/index.html",
+    "slides": "slides/complexity-router/index.html",
     "app": "demos/complexity-router/app/index.html",
     "kind": "project"
   }

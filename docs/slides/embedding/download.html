@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Demo · Embedding</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Sora:wght@400;600;700&display=swap" rel="stylesheet" />
+<style>
+/* Shared Neural Ledger deck — fixed 1920×1080 */
+:root {
+  --stage-bg: #dde5ee;
+  --slide-bg: #f4f7fb;
+  --ink: #16202e;
+  --muted: #5a6b80;
+  --amber: #c2703a;
+  --cyan: #0f8a9b;
+  --line: rgba(20, 32, 46, 0.14);
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --font-display: "Sora", sans-serif;
+  --font-serif: "Instrument Serif", serif;
+  --font-mono: "IBM Plex Mono", monospace;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body {
+  width: 100%; height: 100%; margin: 0; overflow: hidden;
+  background: var(--stage-bg);
+}
+.deck-viewport { position: fixed; inset: 0; overflow: hidden; background: var(--stage-bg); }
+.deck-stage {
+  position: absolute; left: 0; top: 0; width: 1920px; height: 1080px;
+  overflow: hidden; transform-origin: 0 0; background: var(--slide-bg);
+}
+.slide {
+  position: absolute; inset: 0; width: 1920px; height: 1080px;
+  overflow: hidden; display: block; visibility: hidden; opacity: 0;
+  pointer-events: none; background: var(--slide-bg);
+  font-family: var(--font-display); color: var(--ink);
+}
+.slide.active, .slide.visible {
+  visibility: visible; opacity: 1; pointer-events: auto; z-index: 1;
+}
+.slide-bg {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 85% 12%, rgba(194,112,58,0.10), transparent 55%),
+    radial-gradient(ellipse 50% 50% at 8% 92%, rgba(15,138,155,0.10), transparent 50%),
+    linear-gradient(180deg, #f7fafd 0%, #eef3f9 55%, #e6edf5 100%);
+}
+.grid-overlay {
+  position: absolute; inset: 0; opacity: 0.28; pointer-events: none;
+  background-image:
+    linear-gradient(var(--line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-size: 80px 80px;
+  mask-image: radial-gradient(ellipse 75% 70% at 50% 40%, black, transparent);
+}
+.pad { position: absolute; inset: 72px 96px; }
+.topbar {
+  display: flex; justify-content: space-between; align-items: center;
+  font-family: var(--font-mono); font-size: 16px; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--muted); margin-bottom: 36px;
+}
+.topbar .pill {
+  color: var(--amber); border: 1px solid rgba(240,163,94,0.4);
+  padding: 6px 14px; border-radius: 999px;
+}
+h1 { font-size: 88px; font-weight: 700; letter-spacing: -0.035em; line-height: 1; }
+h1 em, h2 em { font-family: var(--font-serif); font-style: italic; font-weight: 400; color: var(--cyan); }
+h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 28px; }
+.lead { font-size: 28px; line-height: 1.5; color: var(--muted); max-width: 1100px; }
+.foot {
+  position: absolute; left: 96px; right: 96px; bottom: 56px;
+  display: flex; justify-content: space-between;
+  font-family: var(--font-mono); font-size: 15px; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--muted);
+}
+.cols-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 36px; }
+.cols-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+.card {
+  background: rgba(255,255,255,0.75); border: 1px solid var(--line);
+  border-radius: 16px; padding: 28px;
+  box-shadow: 0 1px 2px rgba(20,32,46,.05), 0 10px 30px rgba(20,32,46,.06);
+}
+.card h3 { font-size: 24px; margin-bottom: 12px; }
+.card p, .card li { font-size: 20px; line-height: 1.45; color: var(--muted); }
+.card ul { padding-left: 20px; }
+.card .tag {
+  font-family: var(--font-mono); font-size: 13px; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--cyan); margin-bottom: 10px;
+}
+.card.accent { border-color: rgba(240,163,94,0.45); }
+.card.cyan { border-color: rgba(94,200,212,0.45); }
+.flow-row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-top: 28px; }
+.flow-row .step {
+  font-family: var(--font-mono); font-size: 18px; padding: 14px 20px;
+  border: 1px solid var(--line); border-radius: 10px; background: rgba(255,255,255,0.65);
+}
+.flow-row .arr { color: var(--amber); font-size: 22px; }
+.reveal {
+  opacity: 0; transform: translateY(22px);
+  transition: opacity 0.55s var(--ease), transform 0.55s var(--ease);
+}
+.slide.visible .reveal { opacity: 1; transform: none; }
+.slide.visible .reveal:nth-child(1) { transition-delay: 0.05s; }
+.slide.visible .reveal:nth-child(2) { transition-delay: 0.14s; }
+.slide.visible .reveal:nth-child(3) { transition-delay: 0.24s; }
+.slide.visible .reveal:nth-child(4) { transition-delay: 0.34s; }
+.deck-controls {
+  position: fixed; left: 50%; bottom: 22px; transform: translateX(-50%);
+  z-index: 1000; display: flex; gap: 12px; align-items: center;
+  font-family: var(--font-mono); font-size: 13px; color: var(--muted);
+  background: rgba(255,255,255,0.92); border: 1px solid var(--line);
+  box-shadow: 0 4px 16px rgba(20,32,46,.1);
+  padding: 10px 18px; border-radius: 999px;
+}
+.deck-controls button {
+  background: transparent; border: 1px solid var(--line); color: var(--ink);
+  width: 36px; height: 36px; border-radius: 50%; cursor: pointer;
+}
+.deck-controls a {
+  color: var(--cyan); text-decoration: none; font-size: 12px; letter-spacing: 0.06em;
+  margin-left: 8px;
+}
+/* fixed top-left home → search hub (injected by deck.js) */
+.deck-home {
+  position: fixed; left: 22px; top: 22px; z-index: 1000;
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: var(--font-mono); font-size: 13px; letter-spacing: 0.06em;
+  color: var(--ink); text-decoration: none;
+  background: rgba(255,255,255,0.92); border: 1px solid var(--line);
+  box-shadow: 0 4px 16px rgba(20,32,46,.1);
+  padding: 9px 15px; border-radius: 999px;
+}
+.deck-home:hover { color: var(--cyan); border-color: var(--cyan); }
+.deck-home svg { width: 15px; height: 15px; }
+/* Download / Share — top-right (injected by deck.js) */
+.lab-chrome {
+  position: fixed; right: 22px; top: 22px; z-index: 1000;
+  display: inline-flex; gap: 8px;
+}
+.lab-chrome button, .lab-chrome a {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: var(--font-mono); font-size: 13px; letter-spacing: 0.06em;
+  color: var(--ink); text-decoration: none; cursor: pointer;
+  background: rgba(255,255,255,0.92); border: 1px solid var(--line);
+  box-shadow: 0 4px 16px rgba(20,32,46,.1);
+  padding: 9px 15px; border-radius: 999px;
+}
+.lab-chrome button:hover, .lab-chrome a:hover { color: var(--cyan); border-color: var(--cyan); }
+.lab-toast {
+  position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%);
+  background: var(--ink); color: #fff; font: 500 12px var(--font-mono);
+  padding: 10px 16px; border-radius: 999px; z-index: 1100;
+  opacity: 0; pointer-events: none; transition: opacity .2s;
+}
+.lab-toast.on { opacity: 1; }
+/* inline app link that lives inside a slide */
+.app-cta {
+  display: inline-flex; align-items: center; gap: 12px;
+  margin-top: 40px; padding: 22px 40px; border-radius: 16px;
+  background: var(--cyan); color: #fff; text-decoration: none;
+  font-family: var(--font-mono); font-size: 26px; letter-spacing: 0.01em;
+  box-shadow: 0 10px 30px rgba(15,138,155,.28);
+  transition: transform .15s var(--ease), box-shadow .15s var(--ease);
+}
+.app-cta:hover { transform: translateY(-2px); box-shadow: 0 14px 36px rgba(15,138,155,.36); }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.2s !important; }
+}
+
+</style>
+<style>
+.shot {
+  width: 100%; height: 420px; object-fit: contain; border-radius: 14px;
+  border: 1px solid var(--line); background: #e6edf5;
+}
+.shot-lg { height: 520px; }
+</style>
+</head>
+<body>
+<div class="deck-viewport">
+<main class="deck-stage" id="deckStage">
+
+<section class="slide active">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Concept · embedding</span><span class="pill">slides + app</span></div>
+    <h1 class="reveal" style="margin-top:100px;">Embedding · <em>IDs become vectors</em></h1>
+    <p class="lead reveal" style="margin-top:28px;">Token IDs → dense vectors; similarity in vector space.</p>
+    <div class="flow-row reveal">
+      <span class="step">notes/embedding.md</span><span class="arr">→</span>
+      <span class="step">slides</span><span class="arr">→</span>
+      <span class="step">working app</span>
+    </div>
+  </div>
+  <div class="foot"><span>01</span><span>protonx-nlp3 + AI Lab</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Embedding</span><span class="pill">idea</span></div>
+    <h2 class="reveal">Ý chính</h2>
+    <div class="cols-2">
+      <div class="card reveal"><div class="tag">remember</div><h3>Embedding</h3><p>Token IDs → dense vectors; similarity in vector space.</p></div>
+      <div class="card cyan reveal"><div class="tag">topics</div><h3>Keywords</h3><p>embedding, cosine, CBOW</p>
+        <p style="margin-top:12px">Nguồn học: <span style="color:var(--amber);font-family:var(--font-mono);font-size:16px">~/work-station/ai-learning-protonx-nlp3</span></p>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>02</span><span>notes/embedding.md</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>From protonx</span><span class="pill">embeddings-function.jpg</span></div>
+    <h2 class="reveal" style="font-size:36px;margin-bottom:16px;">Hình minh họa</h2>
+    <img class="shot shot-lg reveal" src="../../notes/assets/protonx/embeddings-function.jpg" alt="embeddings-function.jpg" />
+  </div>
+  <div class="foot"><span>03</span><span>ai-learning-protonx-nlp3</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>From protonx</span><span class="pill">cbow-embedding.jpg</span></div>
+    <h2 class="reveal" style="font-size:36px;margin-bottom:16px;">Hình minh họa</h2>
+    <img class="shot shot-lg reveal" src="../../notes/assets/protonx/cbow-embedding.jpg" alt="cbow-embedding.jpg" />
+  </div>
+  <div class="foot"><span>04</span><span>ai-learning-protonx-nlp3</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>From protonx</span><span class="pill">tf-projector.jpg</span></div>
+    <h2 class="reveal" style="font-size:36px;margin-bottom:16px;">Hình minh họa</h2>
+    <img class="shot shot-lg reveal" src="../../notes/assets/protonx/tf-projector.jpg" alt="tf-projector.jpg" />
+  </div>
+  <div class="foot"><span>05</span><span>ai-learning-protonx-nlp3</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Next</span><span class="pill">app</span></div>
+    <h1 class="reveal" style="margin-top:120px;font-size:64px;">Mở working app<br /><em>thử tay.</em></h1>
+    <p class="lead reveal" style="margin-top:28px;">demos/embedding/app — interactive, không cần GPU.</p>
+    <a class="app-cta reveal" href="../../demos/embedding/app/index.html">Mở working app →</a>
+  </div>
+  <div class="foot"><span>end</span><span>demos/embedding/app</span></div>
+</section>
+</main>
+</div>
+<nav class="deck-controls">
+  <button type="button" id="prevBtn">←</button>
+  <span id="pageLabel">1</span>
+  <button type="button" id="nextBtn">→</button>
+</nav>
+<script>window.LAB={"kind": "slides", "title": "Embedding · Slides", "download": "download.html", "downloadName": "embedding-slides.html"};</script>
+
+<script>
+(function () {
+  const stage = document.getElementById("deckStage");
+  const slides = Array.from(document.querySelectorAll(".slide"));
+  let index = 0;
+  const lab = window.LAB || {};
+
+  // top-left home → back to search hub
+  if (!document.querySelector(".deck-home")) {
+    const home = document.createElement("a");
+    home.className = "deck-home";
+    home.href = "../../index.html";
+    home.innerHTML =
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg><span>Home</span>';
+    document.body.appendChild(home);
+  }
+
+  function toast(msg) {
+    let el = document.querySelector(".lab-toast");
+    if (!el) {
+      el = document.createElement("div");
+      el.className = "lab-toast";
+      document.body.appendChild(el);
+    }
+    el.textContent = msg;
+    el.classList.add("on");
+    clearTimeout(el._t);
+    el._t = setTimeout(() => el.classList.remove("on"), 1600);
+  }
+
+  async function share() {
+    const title = lab.title || document.title || "AI Lab";
+    const url = location.href;
+    try {
+      if (navigator.share) {
+        await navigator.share({ title, url });
+        return;
+      }
+    } catch (e) {
+      if (e && e.name === "AbortError") return;
+    }
+    try {
+      await navigator.clipboard.writeText(url);
+      toast("Copied link");
+    } catch {
+      window.prompt("Copy link:", url);
+    }
+  }
+
+  if (!document.querySelector(".lab-chrome")) {
+    const bar = document.createElement("div");
+    bar.className = "lab-chrome";
+    if (lab.download) {
+      const a = document.createElement("a");
+      a.href = lab.download;
+      if (lab.downloadName) a.download = lab.downloadName;
+      a.textContent = "Download";
+      bar.appendChild(a);
+    }
+    const shareBtn = document.createElement("button");
+    shareBtn.type = "button";
+    shareBtn.textContent = "Share";
+    shareBtn.addEventListener("click", share);
+    bar.appendChild(shareBtn);
+    document.body.appendChild(bar);
+  }
+
+  function fit() {
+    const s = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
+    const x = (window.innerWidth - 1920 * s) / 2;
+    const y = (window.innerHeight - 1080 * s) / 2;
+    stage.style.transform = `translate(${x}px, ${y}px) scale(${s})`;
+  }
+
+  function show(i) {
+    index = Math.max(0, Math.min(slides.length - 1, i));
+    slides.forEach((slide, n) => {
+      const on = n === index;
+      slide.classList.toggle("active", on);
+      slide.classList.toggle("visible", on);
+    });
+    const label = document.getElementById("pageLabel");
+    if (label) label.textContent = `${index + 1} / ${slides.length}`;
+  }
+
+  document.getElementById("nextBtn")?.addEventListener("click", () => show(index + 1));
+  document.getElementById("prevBtn")?.addEventListener("click", () => show(index - 1));
+  window.addEventListener("keydown", (e) => {
+    if (e.key === "ArrowRight" || e.key === " ") {
+      e.preventDefault();
+      show(index + 1);
+    } else if (e.key === "ArrowLeft") {
+      e.preventDefault();
+      show(index - 1);
+    }
+  });
+
+  fit();
+  show(0);
+  window.addEventListener("resize", fit);
+})();
+
+</script>
+
+</body>
+</html>

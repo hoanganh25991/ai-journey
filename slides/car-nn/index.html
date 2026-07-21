@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Demo · Car NN</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Sora:wght@400;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="../_shared/deck.css" />
+<style>
+.shot {
+  width: 100%; height: 420px; object-fit: contain; border-radius: 14px;
+  border: 1px solid var(--line); background: #e6edf5;
+}
+.shot-lg { height: 560px; }
+</style>
+</head>
+<body>
+<div class="deck-viewport">
+<main class="deck-stage" id="deckStage">
+
+<section class="slide active">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Demo · car-nn</span><span class="pill">slides + app</span></div>
+    <h1 class="reveal" style="margin-top:100px;">Sensor → <em>action</em></h1>
+    <p class="lead reveal" style="margin-top:28px;">Fully connected NN: 3 hướng cảm biến điều khiển xe tiến / lùi / trái / phải.</p>
+    <div class="flow-row reveal">
+      <span class="step">L · M · R</span><span class="arr">→</span>
+      <span class="step">hidden FC</span><span class="arr">→</span>
+      <span class="step">4 actions</span>
+    </div>
+  </div>
+  <div class="foot"><span>01</span><span>notes/04-demo-car.md</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Architecture</span><span class="pill">3 layers</span></div>
+    <h2 class="reveal">Input · Hidden · <em>Output</em></h2>
+    <div class="cols-3">
+      <div class="card reveal"><div class="tag">input</div><h3>Sensors</h3><p>Trái · Giữa · Phải ∈ [0, 1]. Vật cản → giá trị &lt; 1.</p></div>
+      <div class="card cyan reveal"><div class="tag">hidden</div><h3>Fully connected</h3><p>Lớp đệm học tổ hợp tín hiệu môi trường.</p></div>
+      <div class="card accent reveal"><div class="tag">output</div><h3>Actions</h3><p>forward · back · left · right (argmax).</p></div>
+    </div>
+  </div>
+  <div class="foot"><span>02</span><span>fully connected classifier</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Picture</span><span class="pill">sense → think → act</span></div>
+    <h2 class="reveal" style="font-size:36px;margin-bottom:16px;">Hình minh họa</h2>
+    <img class="shot shot-lg reveal" src="../assets/car-nn-sensors.png" alt="Car NN: sensors to neural net to actions" />
+  </div>
+  <div class="foot"><span>03</span><span>slides/assets/car-nn-sensors.png</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Lifecycle</span><span class="pill">train → infer</span></div>
+    <h2 class="reveal">Hai lớp tư duy</h2>
+    <div class="cols-2">
+      <div class="card reveal"><div class="tag">train</div><h3>Học</h3><p>Thu cặp (sensor, action) → nhiều epoch → lưu weights.</p></div>
+      <div class="card accent reveal"><div class="tag">infer</div><h3>Dùng</h3><p>Realtime: đọc sensor → model → lệnh điều khiển.</p></div>
+    </div>
+    <p class="lead reveal" style="margin-top:36px;">App demo dùng weights đã tinh chỉnh (rule-trained) để bạn xoay sensor và xem action.</p>
+  </div>
+  <div class="foot"><span>04</span><span>notes/06-train-infer.md</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Next</span><span class="pill">working app</span></div>
+    <h1 class="reveal" style="margin-top:120px;font-size:72px;">Mở app · kéo sensor<br /><em>xem action.</em></h1>
+    <p class="lead reveal" style="margin-top:32px;">Kéo sensor L/M/R rồi xem mạng chọn action — chạy thẳng trong trình duyệt.</p>
+    <a class="app-cta reveal" href="../../demos/car-nn/app/index.html">Mở working app →</a>
+  </div>
+  <div class="foot"><span>05</span><span>demos/car-nn/app</span></div>
+</section>
+
+</main>
+</div>
+<nav class="deck-controls">
+  <button type="button" id="prevBtn">←</button>
+  <span id="pageLabel">1 / 4</span>
+  <button type="button" id="nextBtn">→</button>
+</nav>
+<script src="../_shared/deck.js"></script>
+</body>
+</html>

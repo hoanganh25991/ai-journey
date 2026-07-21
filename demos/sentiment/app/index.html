@@ -7,18 +7,18 @@
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Sora:wght@400;600;700&display=swap" rel="stylesheet" />
 <style>
 :root {
-  --bg:#0c1118; --ink:#e8eef7; --muted:#8b97a8; --amber:#f0a35e; --cyan:#5ec8d4; --line:rgba(232,238,247,.12);
+  --bg:#eef3f9; --ink:#16202e; --muted:#5a6b80; --amber:#c2703a; --cyan:#0f8a9b; --line:rgba(20,32,46,.12);
 }
 * { box-sizing:border-box; margin:0; padding:0; }
 body {
-  min-height:100vh; background:radial-gradient(ellipse at 10% 90%, rgba(94,200,212,.1), transparent 45%), var(--bg);
+  min-height:100vh; background:radial-gradient(ellipse at 10% 90%, rgba(15,138,155,.10), transparent 45%), var(--bg);
   color:var(--ink); font-family:Sora,sans-serif; padding:32px 40px;
 }
 header { display:flex; justify-content:space-between; margin-bottom:24px; }
 header a { color:var(--cyan); font-family:"IBM Plex Mono",monospace; font-size:13px; text-decoration:none; }
 .wrap { max-width:720px; }
 textarea {
-  width:100%; min-height:140px; background:#15202e; border:1px solid var(--line); border-radius:14px;
+  width:100%; min-height:140px; background:#ffffff; border:1px solid var(--line); border-radius:14px;
   color:var(--ink); padding:16px; font:16px/1.5 Sora,sans-serif; resize:vertical;
 }
 button {
@@ -27,22 +27,23 @@ button {
 }
 .bars { margin-top:28px; display:grid; gap:14px; }
 .row { display:grid; grid-template-columns:100px 1fr 56px; gap:12px; align-items:center; font-family:"IBM Plex Mono",monospace; font-size:13px; }
-.track { height:12px; background:#15202e; border-radius:999px; overflow:hidden; border:1px solid var(--line); }
+.track { height:12px; background:#ffffff; border-radius:999px; overflow:hidden; border:1px solid var(--line); }
 .fill { height:100%; width:0; background:var(--cyan); transition:width .25s ease; }
 .fill.neg { background:#e85d5d; }
 .fill.neu { background:var(--muted); }
-.fill.pos { background:#5ec8d4; }
+.fill.pos { background:#0f8a9b; }
 .badge {
   margin-top:20px; display:inline-block; padding:10px 16px; border-radius:999px;
   border:1px solid var(--amber); color:var(--amber); font-family:"IBM Plex Mono",monospace; font-size:13px;
 }
 .tokens { margin-top:18px; color:var(--muted); font-size:14px; line-height:1.6; }
 </style>
+<link rel="stylesheet" href="../../_shared/app.css" />
 </head>
 <body>
 <header>
   <h1>Sentiment · working app</h1>
-  <div><a href="../slides/index.html">Slides</a> · <a href="../../../index.html">Lab UI</a></div>
+  <div><a href="../../../slides/sentiment/">Slides</a> · <a href="../../../index.html">Lab UI</a></div>
 </header>
 <div class="wrap">
   <textarea id="t" placeholder="Type a sentence… e.g. I love this demo but the bug is annoying.">I love this demo but the bug is annoying.</textarea>

@@ -7,12 +7,12 @@
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Sora:wght@400;600;700&display=swap" rel="stylesheet" />
 <style>
 :root {
-  --bg: #0c1118; --ink: #e8eef7; --muted: #8b97a8; --amber: #f0a35e; --cyan: #5ec8d4; --line: rgba(232,238,247,.12);
+  --bg: #eef3f9; --ink: #16202e; --muted: #5a6b80; --amber: #c2703a; --cyan: #0f8a9b; --line: rgba(20,32,46,.12);
   --font: Sora, sans-serif; --mono: "IBM Plex Mono", monospace;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
-  min-height: 100vh; background: radial-gradient(ellipse at 80% 0%, rgba(240,163,94,.12), transparent 50%), var(--bg);
+  min-height: 100vh; background: radial-gradient(ellipse at 80% 0%, rgba(194,112,58,.10), transparent 50%), var(--bg);
   color: var(--ink); font-family: var(--font); padding: 32px 40px 48px;
 }
 header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 28px; }
@@ -20,10 +20,10 @@ header h1 { font-size: 28px; }
 header a { color: var(--cyan); font-family: var(--mono); font-size: 13px; text-decoration: none; }
 .grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: 28px; max-width: 1100px; }
 canvas {
-  width: 100%; height: 360px; background: #15202e; border: 1px solid var(--line);
+  width: 100%; height: 360px; background: #ffffff; border: 1px solid var(--line);
   border-radius: 16px; display: block;
 }
-.panel { border: 1px solid var(--line); border-radius: 16px; padding: 22px; background: rgba(21,32,46,.7); }
+.panel { border: 1px solid var(--line); border-radius: 16px; padding: 22px; background: rgba(255,255,255,.88); }
 .panel h2 { font-size: 14px; font-family: var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--amber); margin-bottom: 16px; }
 label { display: block; font-size: 14px; color: var(--muted); margin: 14px 0 6px; font-family: var(--mono); }
 input[type=range] { width: 100%; accent-color: var(--cyan); }
@@ -33,16 +33,17 @@ input[type=range] { width: 100%; accent-color: var(--cyan); }
   text-align: center; padding: 14px 8px; border-radius: 12px; border: 1px solid var(--line);
   font-family: var(--mono); font-size: 12px; color: var(--muted);
 }
-.actions div.on { border-color: var(--amber); color: var(--amber); background: rgba(240,163,94,.12); }
+.actions div.on { border-color: var(--amber); color: var(--amber); background: rgba(194,112,58,.10); }
 .hint { margin-top: 18px; font-size: 14px; color: var(--muted); line-height: 1.5; }
 @media (max-width: 800px) { .grid { grid-template-columns: 1fr; } }
 </style>
+<link rel="stylesheet" href="../../_shared/app.css" />
 </head>
 <body>
 <header>
   <h1>Car NN · working app</h1>
   <div>
-    <a href="../slides/index.html">Slides</a>
+    <a href="../../../slides/car-nn/">Slides</a>
     ·
     <a href="../../../index.html">Lab UI</a>
   </div>
@@ -113,9 +114,9 @@ function draw(L, M, R, action) {
   const w = canvas.width, h = canvas.height;
   ctx.clearRect(0, 0, w, h);
   // road
-  ctx.fillStyle = "#1a2838";
+  ctx.fillStyle = "#dde5ee";
   ctx.fillRect(0, 0, w, h);
-  ctx.strokeStyle = "rgba(232,238,247,.12)";
+  ctx.strokeStyle = "rgba(20,32,46,.14)";
   ctx.beginPath(); ctx.moveTo(w/2, 0); ctx.lineTo(w/2, h); ctx.stroke();
   // obstacles as bars at sensor directions
   const sensors = [
@@ -128,19 +129,19 @@ function draw(L, M, R, action) {
     const dist = 40 + s.v * 180;
     const x = cx + Math.sin(s.ang) * dist;
     const y = cy - Math.cos(s.ang) * dist;
-    ctx.strokeStyle = s.v < 0.5 ? "#f0a35e" : "#5ec8d4";
+    ctx.strokeStyle = s.v < 0.5 ? "#c2703a" : "#0f8a9b";
     ctx.lineWidth = 2;
     ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(x, y); ctx.stroke();
-    ctx.fillStyle = s.v < 0.5 ? "#f0a35e" : "#5ec8d4";
+    ctx.fillStyle = s.v < 0.5 ? "#c2703a" : "#0f8a9b";
     ctx.beginPath(); ctx.arc(x, y, 8 + (1-s.v)*10, 0, Math.PI*2); ctx.fill();
-    ctx.fillStyle = "#8b97a8";
+    ctx.fillStyle = "#5a6b80";
     ctx.font = "12px IBM Plex Mono";
     ctx.fillText(`${s.label}:${s.v.toFixed(2)}`, x - 18, y - 14);
   });
   // car
-  ctx.fillStyle = "#e8eef7";
+  ctx.fillStyle = "#16202e";
   ctx.fillRect(cx - 18, cy - 12, 36, 28);
-  ctx.fillStyle = "#f0a35e";
+  ctx.fillStyle = "#c2703a";
   ctx.font = "bold 14px Sora";
   ctx.fillText(action.toUpperCase(), 24, 36);
 }

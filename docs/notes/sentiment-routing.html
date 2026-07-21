@@ -40,13 +40,21 @@ a { color: var(--teal); }
 .doc h1 { font-size: 30px; letter-spacing: -.02em; margin: 8px 0 6px; }
 .summary { color: var(--muted); font-size: 15px; line-height: 1.55; }
 .actions { display: flex; flex-wrap: wrap; gap: 8px; margin: 18px 0 4px; }
-.actions a {
+.actions a, .actions button {
   text-decoration: none; font: 500 12px var(--mono); padding: 9px 14px; border-radius: 10px;
   border: 1px solid var(--line); color: var(--ink); background: transparent; transition: all .15s;
+  cursor: pointer;
 }
 .actions a.primary { background: var(--teal); border-color: var(--teal); color: #fff; }
-.actions a:hover { border-color: var(--teal); color: var(--teal); }
+.actions a:hover, .actions button:hover { border-color: var(--teal); color: var(--teal); }
 .actions a.primary:hover { color: #fff; opacity: .9; }
+.lab-toast {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+  background: var(--ink); color: #fff; font: 500 12px var(--mono);
+  padding: 10px 16px; border-radius: 999px; z-index: 1100;
+  opacity: 0; pointer-events: none; transition: opacity .2s;
+}
+.lab-toast.on { opacity: 1; }
 .topics { display: flex; flex-wrap: wrap; gap: 7px; margin: 14px 0 4px; }
 .topics span { font: 500 11px var(--mono); color: var(--amber); }
 hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
@@ -76,10 +84,11 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
   <article class="doc">
     <h1>Sentiment &amp; complexity routing</h1>
     <p class="summary">Text classifiers: polarity labels and simple/complex routing.</p>
-    <div class="actions"><a class="primary" href="../demos/sentiment/slides/index.html">Slides ↗</a>
+    <div class="actions"><a class="primary" href="../slides/sentiment/index.html">Slides ↗</a>
 <a href="../demos/sentiment/app/index.html">Demo ↗</a>
-<a href="../../notes/05-demo-text.md">Raw .md</a>
-<a href="../demos/complexity-router/slides/index.html">Complexity router slides ↗</a>
+<a href="05-demo-text.md" id="labDownload" download="05-demo-text.md">Download</a>
+<button type="button" id="labShare">Share</button>
+<a href="../slides/complexity-router/index.html">Complexity router slides ↗</a>
 <a href="../demos/complexity-router/app/index.html">Complexity router app ↗</a></div>
     <div class="topics"><span>#sentiment</span><span>#routing</span><span>#classification</span></div>
     <hr class="sep" />
@@ -87,8 +96,8 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 <h2>Slides &amp; apps</h2>
 <table><tbody>
 <tr><th>Demo</th><th>Slides</th><th>App</th></tr>
-<tr><td>Sentiment</td><td><a href="../demos/sentiment/slides">slides</a></td><td><a href="../demos/sentiment/app">app</a></td></tr>
-<tr><td>Complexity router</td><td><a href="../demos/complexity-router/slides">slides</a></td><td><a href="../demos/complexity-router/app">app</a></td></tr>
+<tr><td>Sentiment</td><td><a href="../slides/sentiment/index.html">slides</a></td><td><a href="../demos/sentiment/app">app</a></td></tr>
+<tr><td>Complexity router</td><td><a href="../slides/complexity-router/index.html">slides</a></td><td><a href="../demos/complexity-router/app">app</a></td></tr>
 </tbody></table>
 <h2>Pipelines</h2>
 <pre><code>
@@ -105,5 +114,23 @@ text → complexity → simple(fast) | complex(crew / first-mate)
 </ul></div>
   </article>
 </div>
+<script>
+(function () {
+  const title = "Sentiment & complexity routing";
+  function toast(msg) {
+    let el = document.querySelector(".lab-toast");
+    if (!el) { el = document.createElement("div"); el.className = "lab-toast"; document.body.appendChild(el); }
+    el.textContent = msg; el.classList.add("on");
+    clearTimeout(el._t); el._t = setTimeout(() => el.classList.remove("on"), 1600);
+  }
+  document.getElementById("labShare")?.addEventListener("click", async () => {
+    const url = location.href;
+    try { if (navigator.share) { await navigator.share({ title, url }); return; } }
+    catch (err) { if (err && err.name === "AbortError") return; }
+    try { await navigator.clipboard.writeText(url); toast("Copied link"); }
+    catch { window.prompt("Copy link:", url); }
+  });
+})();
+</script>
 </body>
 </html>

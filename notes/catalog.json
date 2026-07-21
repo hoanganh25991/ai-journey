@@ -9,7 +9,7 @@
       "summary": "Text → tokens / subwords → IDs. BPE vs WordPiece.",
       "topics": ["tokenize", "BPE", "vocabulary"],
       "group": "concept",
-      "slides": "demos/tokenize/slides/index.html",
+      "slides": "slides/tokenize/index.html",
       "demo": "demos/tokenize/app/index.html"
     },
     {
@@ -19,7 +19,7 @@
       "summary": "Token IDs → dense vectors; cosine similarity in vector space.",
       "topics": ["embedding", "cosine", "CBOW"],
       "group": "concept",
-      "slides": "demos/embedding/slides/index.html",
+      "slides": "slides/embedding/index.html",
       "demo": "demos/embedding/app/index.html"
     },
     {
@@ -29,7 +29,7 @@
       "summary": "Query · Key · Value — which tokens matter for context.",
       "topics": ["attention", "QKV", "transformer"],
       "group": "concept",
-      "slides": "demos/attention/slides/index.html",
+      "slides": "slides/attention/index.html",
       "demo": "demos/attention/app/index.html"
     },
     {
@@ -39,7 +39,7 @@
       "summary": "Logits → probability distribution (sum = 1).",
       "topics": ["softmax", "logits", "classification"],
       "group": "concept",
-      "slides": "demos/softmax/slides/index.html",
+      "slides": "slides/softmax/index.html",
       "demo": "demos/softmax/app/index.html"
     },
     {
@@ -49,7 +49,7 @@
       "summary": "Retrieve top-k chunks then generate grounded answers.",
       "topics": ["RAG", "vector-db", "retrieve"],
       "group": "concept",
-      "slides": "demos/rag/slides/index.html",
+      "slides": "slides/rag/index.html",
       "demo": "demos/rag/app/index.html"
     },
     {
@@ -59,7 +59,7 @@
       "summary": "Model Context Protocol — host ↔ server ↔ tools có schema.",
       "topics": ["MCP", "tools", "protocol", "server"],
       "group": "concept",
-      "slides": "demos/mcp/slides/index.html",
+      "slides": "slides/mcp/index.html",
       "demo": "demos/mcp/app/index.html"
     },
     {
@@ -89,7 +89,7 @@
       "summary": "3 sensors → fully connected → forward / back / left / right.",
       "topics": ["fully-connected", "classification", "sensors"],
       "group": "concept",
-      "slides": "demos/car-nn/slides/index.html",
+      "slides": "slides/car-nn/index.html",
       "demo": "demos/car-nn/app/index.html"
     },
     {
@@ -99,10 +99,10 @@
       "summary": "Text classifiers: polarity labels and simple/complex routing.",
       "topics": ["sentiment", "routing", "classification"],
       "group": "concept",
-      "slides": "demos/sentiment/slides/index.html",
+      "slides": "slides/sentiment/index.html",
       "demo": "demos/sentiment/app/index.html",
       "extra_links": [
-        { "label": "Complexity router slides", "href": "demos/complexity-router/slides/index.html" },
+        { "label": "Complexity router slides", "href": "slides/complexity-router/index.html" },
         { "label": "Complexity router app", "href": "demos/complexity-router/app/index.html" }
       ]
     },
@@ -143,7 +143,7 @@
       "summary": "Câu chuyện: OpenClaw (pi harness) mở màn cảm giác agent control mọi thứ → Hermess làm tốt.",
       "topics": ["openclaw", "hermess", "pi", "automation", "harness"],
       "group": "concept",
-      "slides": "demos/hermess/slides/index.html",
+      "slides": "slides/hermess/index.html",
       "demo": null
     },
     {

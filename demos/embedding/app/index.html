@@ -3,16 +3,17 @@
 <title>Embedding · App</title>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Sora:wght@400;600;700&display=swap" rel="stylesheet"/>
 <style>
-:root{--bg:#0c1118;--ink:#e8eef7;--muted:#8b97a8;--amber:#f0a35e;--cyan:#5ec8d4;--line:rgba(232,238,247,.12)}
+:root{--bg:#eef3f9;--ink:#16202e;--muted:#5a6b80;--amber:#c2703a;--cyan:#0f8a9b;--line:rgba(20,32,46,.12)}
 *{box-sizing:border-box;margin:0;padding:0}body{min-height:100vh;background:var(--bg);color:var(--ink);font-family:Sora,sans-serif;padding:28px 32px}
 header{display:flex;justify-content:space-between;margin-bottom:20px}a{color:var(--cyan);font:13px "IBM Plex Mono",monospace;text-decoration:none}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:960px}
-canvas{width:100%;height:360px;background:#15202e;border:1px solid var(--line);border-radius:14px}
-select,button{background:#15202e;border:1px solid var(--line);color:var(--ink);padding:10px 12px;border-radius:8px;font:13px "IBM Plex Mono",monospace;margin:6px 6px 6px 0}
+canvas{width:100%;height:360px;background:#ffffff;border:1px solid var(--line);border-radius:14px}
+select,button{background:#ffffff;border:1px solid var(--line);color:var(--ink);padding:10px 12px;border-radius:8px;font:13px "IBM Plex Mono",monospace;margin:6px 6px 6px 0}
 .meta{color:var(--muted);font:13px "IBM Plex Mono",monospace;line-height:1.6;margin-top:12px}
 @media(max-width:800px){.grid{grid-template-columns:1fr}}
-</style></head><body>
-<header><h1>Embedding · app</h1><div><a href="../slides/">Slides</a> · <a href="../../../index.html">Lab UI</a></div></header>
+</style><link rel="stylesheet" href="../../_shared/app.css" />
+</head><body>
+<header><h1>Embedding · app</h1><div><a href="../../../slides/embedding/">Slides</a> · <a href="../../../index.html">Lab UI</a></div></header>
 <div class="grid">
   <canvas id="c" width="480" height="360"></canvas>
   <div>
@@ -37,15 +38,15 @@ function cos(u,v){const d=Math.hypot(...u)*Math.hypot(...v)||1; return (u[0]*v[0
 function draw(){
   const ctx=c.getContext("2d"), w=c.width, h=c.height;
   ctx.clearRect(0,0,w,h);
-  ctx.strokeStyle="rgba(232,238,247,.12)";
+  ctx.strokeStyle="rgba(20,32,46,.14)";
   ctx.beginPath(); ctx.moveTo(w/2,0); ctx.lineTo(w/2,h); ctx.moveTo(0,h/2); ctx.lineTo(w,h/2); ctx.stroke();
   const toXY=([x,y])=>[w/2+x*140, h/2-y*140];
   for(const [k,vec] of Object.entries(V)){
     const [x,y]=toXY(vec);
     const hi=k===a.value||k===b.value;
-    ctx.fillStyle=hi?"#f0a35e":"#5ec8d4";
+    ctx.fillStyle=hi?"#c2703a":"#0f8a9b";
     ctx.beginPath(); ctx.arc(x,y,hi?7:4,0,Math.PI*2); ctx.fill();
-    ctx.fillStyle="#8b97a8"; ctx.font="11px IBM Plex Mono"; ctx.fillText(k,x+8,y-6);
+    ctx.fillStyle="#5a6b80"; ctx.font="11px IBM Plex Mono"; ctx.fillText(k,x+8,y-6);
   }
   const u=V[a.value], v=V[b.value];
   const s=cos(u,v);

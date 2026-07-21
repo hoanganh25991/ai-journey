@@ -40,13 +40,21 @@ a { color: var(--teal); }
 .doc h1 { font-size: 30px; letter-spacing: -.02em; margin: 8px 0 6px; }
 .summary { color: var(--muted); font-size: 15px; line-height: 1.55; }
 .actions { display: flex; flex-wrap: wrap; gap: 8px; margin: 18px 0 4px; }
-.actions a {
+.actions a, .actions button {
   text-decoration: none; font: 500 12px var(--mono); padding: 9px 14px; border-radius: 10px;
   border: 1px solid var(--line); color: var(--ink); background: transparent; transition: all .15s;
+  cursor: pointer;
 }
 .actions a.primary { background: var(--teal); border-color: var(--teal); color: #fff; }
-.actions a:hover { border-color: var(--teal); color: var(--teal); }
+.actions a:hover, .actions button:hover { border-color: var(--teal); color: var(--teal); }
 .actions a.primary:hover { color: #fff; opacity: .9; }
+.lab-toast {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+  background: var(--ink); color: #fff; font: 500 12px var(--mono);
+  padding: 10px 16px; border-radius: 999px; z-index: 1100;
+  opacity: 0; pointer-events: none; transition: opacity .2s;
+}
+.lab-toast.on { opacity: 1; }
 .topics { display: flex; flex-wrap: wrap; gap: 7px; margin: 14px 0 4px; }
 .topics span { font: 500 11px var(--mono); color: var(--amber); }
 hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
@@ -77,7 +85,8 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
     <h1>Skills · Rules · Commands</h1>
     <p class="summary">Know-how của AI agent: SKILL.md, rules, commands; global ~/.agents.</p>
     <div class="actions"><a href="../demos/mcp/app/index.html">Demo ↗</a>
-<a href="../../notes/skills-rules.md">Raw .md</a></div>
+<a href="skills-rules.md" id="labDownload" download="skills-rules.md">Download</a>
+<button type="button" id="labShare">Share</button></div>
     <div class="topics"><span>#skills</span><span>#rules</span><span>#commands</span><span>#agents-md</span><span>#dot-agents</span></div>
     <hr class="sep" />
     <div class="body"><h1>Skills · Rules · Commands</h1>
@@ -137,5 +146,23 @@ description: khi nào dùng skill này  ← model dựa vào đây để tự k�
 </ul></div>
   </article>
 </div>
+<script>
+(function () {
+  const title = "Skills · Rules · Commands";
+  function toast(msg) {
+    let el = document.querySelector(".lab-toast");
+    if (!el) { el = document.createElement("div"); el.className = "lab-toast"; document.body.appendChild(el); }
+    el.textContent = msg; el.classList.add("on");
+    clearTimeout(el._t); el._t = setTimeout(() => el.classList.remove("on"), 1600);
+  }
+  document.getElementById("labShare")?.addEventListener("click", async () => {
+    const url = location.href;
+    try { if (navigator.share) { await navigator.share({ title, url }); return; } }
+    catch (err) { if (err && err.name === "AbortError") return; }
+    try { await navigator.clipboard.writeText(url); toast("Copied link"); }
+    catch { window.prompt("Copy link:", url); }
+  });
+})();
+</script>
 </body>
 </html>
