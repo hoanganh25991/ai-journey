@@ -177,7 +177,7 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
   width: 100%; height: 420px; object-fit: contain; border-radius: 14px;
   border: 1px solid var(--line); background: #e6edf5;
 }
-.shot-lg { height: 520px; }
+.shot-lg { height: 500px; }
 .shot-md { height: 380px; }
 .mini { font-size: 18px !important; }
 .table-card { overflow: hidden; }
@@ -189,13 +189,14 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
 .table-card th { color: var(--ink); font-family: var(--font-mono); font-size: 14px;
   letter-spacing: 0.06em; text-transform: uppercase; }
 .code-block {
-  font-family: var(--font-mono); font-size: 18px; line-height: 1.55;
-  background: rgba(22,32,46,0.92); color: #e8eef7; padding: 24px 28px;
+  font-family: var(--font-mono); font-size: 16px; line-height: 1.5;
+  background: rgba(22,32,46,0.92); color: #e8eef7; padding: 22px 26px;
   border-radius: 14px; white-space: pre; overflow: hidden;
 }
 .code-block .c { color: #8b97a8; }
 .code-block .k { color: #5ec8d4; }
 .code-block .s { color: #f0a35e; }
+.caption { margin-top: 14px; font-size: 20px; color: var(--muted); max-width: 92%; }
 </style>
 </head>
 <body>
@@ -206,9 +207,14 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
     <div class="topbar reveal"><span>Concept · huggingface</span><span class="pill">teaching</span></div>
-    <h1 class="reveal" style="margin-top:72px;">Hugging Face · <em>dataset + Space</em></h1>
-    <p class="lead reveal" style="margin-top:28px;">GitHub for AI: Datasets, pretrained Models, and Spaces — shorten the path from idea to a usable model.</p>
-    <div class="flow-row reveal"><span class="step">Datasets</span><span class="arr">→</span><span class="step">Hub model</span><span class="arr">→</span><span class="step">fine-tune</span><span class="arr">→</span><span class="step">Spaces</span></div>
+    <h1 class="reveal" style="margin-top:72px;">Hugging Face · <em>dataset + Space → usable model</em></h1>
+    <p class="lead reveal" style="margin-top:28px;">“GitHub for AI”: datasets, pretrained models, and Spaces demos. Don’t forge steel — borrow a good knife, sharpen it on your wood, then show others how it cuts.</p>
+    <div class="flow-row reveal">
+      <span class="step">Datasets</span><span class="arr">→</span>
+      <span class="step">Hub model</span><span class="arr">→</span>
+      <span class="step">fine-tune</span><span class="arr">→</span>
+      <span class="step">Spaces</span>
+    </div>
   </div>
   <div class="foot"><span>01</span><span>AI Lab</span></div>
 </section>
@@ -217,8 +223,12 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
     <div class="topbar reveal"><span>Why</span><span class="pill">matters</span></div>
-    <h2 class="reveal">Standing on others' work</h2>
-    <div class="cols-3"><div class="card accent reveal"><div class="tag">cost</div><h3>Scratch is expensive</h3><p>Pretrained + light fine-tune beats training from zero.</p></div><div class="card cyan reveal"><div class="tag">data</div><h3>Labeled data ready</h3><p>load_dataset(...) — one line to a training set.</p></div><div class="card reveal"><div class="tag">share</div><h3>Demo in minutes</h3><p>Spaces host Gradio/Streamlit with optional GPU.</p></div></div>
+    <h2 class="reveal">Fastest path from idea to a shareable model</h2>
+    <div class="cols-3">
+      <div class="card accent reveal"><div class="tag">cost</div><h3>Skip scratch training</h3><p>Download labeled data + pretrained weights; fine-tune lightly.</p></div>
+      <div class="card cyan reveal"><div class="tag">lab</div><h3>Where lab models live</h3><p>Sentence-transformers, tokenizer cards, RAG embedding checkpoints.</p></div>
+      <div class="card reveal"><div class="tag">ship</div><h3>Demo in minutes</h3><p>Push to a Space → UI + optional API endpoint.</p></div>
+    </div>
   </div>
   <div class="foot"><span>02</span><span>notes/huggingface.md</span></div>
 </section>
@@ -226,10 +236,14 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
 <section class="slide">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
-    <div class="topbar reveal"><span>Hub</span><span class="pill">ideas</span></div>
-    <h2 class="reveal">Key ideas</h2>
-    <div class="cols-3"><div class="card reveal"><div class="tag">data</div><h3>Datasets</h3><p>Labeled corpora ready for Trainer or your own loop.</p></div><div class="card cyan reveal"><div class="tag">models</div><h3>Models</h3><p>BERT, GPT, ViT… fine-tune instead of scratch.</p></div><div class="card reveal"><div class="tag">spaces</div><h3>Spaces</h3><p>Push a demo → UI + API endpoint.</p></div></div>
-    <p class="lead reveal" style="margin-top:24px;font-size:20px;">Keywords: huggingface · datasets · spaces · fine-tune · Read: <span style="color:var(--amber);font-family:var(--font-mono)">notes/huggingface.md</span></p>
+    <div class="topbar reveal"><span>Ideas</span><span class="pill">core</span></div>
+    <h2 class="reveal">Three main pieces</h2>
+    <div class="cols-3">
+      <div class="card reveal"><div class="tag">data</div><h3>Datasets</h3><p>Labeled data in one line: <code>load_dataset("imdb")</code>.</p></div>
+      <div class="card cyan reveal"><div class="tag">models</div><h3>Hub models</h3><p>BERT, GPT, ViT, MiniLM — fine-tune instead of training from zero.</p></div>
+      <div class="card reveal"><div class="tag">spaces</div><h3>Spaces</h3><p>Gradio/Streamlit demos, optional GPU, simple API endpoint.</p></div>
+    </div>
+    <p class="lead reveal" style="margin-top:24px;font-size:20px;">Also: model card + license · matching tokenizer · Trainer or your own loop. Read: <span style="color:var(--amber);font-family:var(--font-mono)">notes/huggingface.md</span></p>
   </div>
   <div class="foot"><span>03</span><span>notes/huggingface.md</span></div>
 </section>
@@ -237,30 +251,53 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
 <section class="slide">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
-    <div class="topbar reveal"><span>Illustration</span><span class="pill">huggingface-hub.png</span></div>
+    <div class="topbar reveal"><span>Picture</span><span class="pill">hub</span></div>
+    <h2 class="reveal" style="font-size:36px;margin-bottom:12px;">Hub map: Datasets · Models · Spaces</h2>
+    <img class="shot shot-lg reveal" src="../assets/huggingface-hub.png" alt="Hugging Face Hub Datasets Models Spaces" />
+    <p class="caption reveal">One ecosystem: pull data, grab a checkpoint, fine-tune, then host a demo — without standing up infra yourself.</p>
+  </div>
+  <div class="foot"><span>04</span><span>slides/assets/huggingface-hub.png</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Illustration</span><span class="pill">fine-tune path</span></div>
     <h2 class="reveal" style="font-size:36px;margin-bottom:16px;">Illustration</h2>
-    <img class="shot shot-lg reveal" src="../assets/huggingface-hub.png" alt="Three pillars" />
-    
+    <img class="shot shot-lg reveal" src="../assets/hf-finetune-flow.png" alt="Fine-tune path" />
+    <p class="lead reveal" style="margin-top:14px;font-size:20px;">Datasets → pretrained checkpoint → Trainer fine-tune → Hub / Spaces.</p>
   </div>
-  <div class="foot"><span>04</span><span>AI Lab · illustration</span></div>
+  <div class="foot"><span>05b</span><span>AI Lab · illustration</span></div>
+</section>
+
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Stack</span><span class="pill">libraries</span></div>
+    <h2 class="reveal">transformers + datasets</h2>
+    <div class="cols-2">
+      <div class="card accent reveal"><div class="tag">load</div><h3>A few lines</h3><p>AutoTokenizer + AutoModelForSequenceClassification + load_dataset — then Trainer or a PyTorch/TF loop.</p></div>
+      <div class="card cyan reveal"><div class="tag">fine-tune</div><h3>Beats scratch</h3><p>Leverage large-model knowledge. A few thousand labeled examples often beat a huge from-zero train.</p></div>
+    </div>
+    <p class="lead reveal" style="margin-top:32px;">Output is a checkpoint or endpoint ready for inference (train-infer).</p>
+  </div>
+  <div class="foot"><span>05</span><span>fine-tune, don’t forge</span></div>
 </section>
 
 <section class="slide">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
-    <div class="topbar reveal"><span>Workflow</span><span class="pill">path</span></div>
-    <h2 class="reveal">Typical fine-tune path</h2>
-    <div class="cols-2"><div class="card reveal"><div class="tag">1</div><h3>Load data</h3><p>datasets.load_dataset(...)</p></div><div class="card cyan reveal"><div class="tag">2</div><h3>Load model</h3><p>transformers AutoModel + tokenizer</p></div><div class="card reveal"><div class="tag">3</div><h3>Train</h3><p>Trainer API or PyTorch/TF loop</p></div><div class="card cyan reveal"><div class="tag">4</div><h3>Publish</h3><p>push to Hub / deploy Space</p></div></div>
-  </div>
-  <div class="foot"><span>05</span><span>notes/huggingface.md</span></div>
-</section>
+    <div class="topbar reveal"><span>Code</span><span class="pill">typical path</span></div>
+    <h2 class="reveal">IMDb sentiment in a few lines</h2>
+    <div class="code-block reveal"><span class="k">from</span> datasets <span class="k">import</span> load_dataset
+<span class="k">from</span> transformers <span class="k">import</span> AutoTokenizer, AutoModelForSequenceClassification, Trainer
 
-<section class="slide">
-  <div class="slide-bg"></div><div class="grid-overlay"></div>
-  <div class="pad">
-    <div class="topbar reveal"><span>Fine-tune</span><span class="pill">vs scratch</span></div>
-    <h2 class="reveal">Fine-tune beats scratch</h2>
-    <div class="cols-3"><div class="card accent reveal"><div class="tag">less</div><h3>Less data</h3><p>Reuse knowledge from large pretraining.</p></div><div class="card cyan reveal"><div class="tag">time</div><h3>Less time</h3><p>Hours instead of weeks on a GPU.</p></div><div class="card reveal"><div class="tag">card</div><h3>Read the card</h3><p>License + intended use before commercial work.</p></div></div>
+ds = load_dataset(<span class="s">"imdb"</span>)
+tok = AutoTokenizer.from_pretrained(<span class="s">"bert-base-uncased"</span>)
+model = AutoModelForSequenceClassification.from_pretrained(
+    <span class="s">"bert-base-uncased"</span>, num_labels=2)
+<span class="c"># tokenize → Trainer(...).train() → model.push_to_hub("my-imdb-clf")</span></div>
   </div>
   <div class="foot"><span>06</span><span>notes/huggingface.md</span></div>
 </section>
@@ -268,30 +305,48 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
 <section class="slide">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
-    <div class="topbar reveal"><span>Pipeline</span><span class="pill">pipeline</span></div>
-    <h2 class="reveal">From Hub to use</h2>
-    <div class="flow-row reveal" style="margin-top:48px;"><span class="step">HF Datasets</span><span class="arr">→</span><span class="step">pretrained</span><span class="arr">→</span><span class="step">fine-tune</span><span class="arr">→</span><span class="step">Hub / Spaces</span><span class="arr">→</span><span class="step">infer</span></div>
-    
+    <div class="topbar reveal"><span>Worked</span><span class="pill">example</span></div>
+    <h2 class="reveal">Vietnamese sentiment without training from zero</h2>
+    <div class="cols-3">
+      <div class="card accent reveal"><div class="tag">1</div><h3>Search the Hub</h3><p>Multilingual or vi checkpoint + a small labeled set.</p></div>
+      <div class="card cyan reveal"><div class="tag">2</div><h3>Fine-tune 2–3 epochs</h3><p>Free GPU on Kaggle / Colab is enough for a small clf.</p></div>
+      <div class="card reveal"><div class="tag">3</div><h3>Push to a Space</h3><p>Instant UI — you never trained a Transformer from random weights.</p></div>
+    </div>
   </div>
-  <div class="foot"><span>07</span><span>notes/huggingface.md</span></div>
+  <div class="foot"><span>07</span><span>pair with kaggle.md for free GPU</span></div>
 </section>
 
 <section class="slide">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
-    <div class="topbar reveal"><span>Pair</span><span class="pill">kaggle</span></div>
-    <h2 class="reveal">HF + Kaggle</h2>
-    <div class="cols-3"><div class="card accent reveal"><div class="tag">hf</div><h3>Hugging Face</h3><p>Models + datasets + Spaces.</p></div><div class="card cyan reveal"><div class="tag">kg</div><h3>Kaggle</h3><p>Free GPU notebooks + competitions.</p></div><div class="card reveal"><div class="tag">combo</div><h3>Often combined</h3><p>HF model + Kaggle GPU notebook.</p></div></div>
+    <div class="topbar reveal"><span>Compare</span><span class="pill">table</span></div>
+    <h2 class="reveal">Fine-tune vs train from scratch</h2>
+    <div class="card table-card reveal">
+      <table>
+        <thead><tr><th></th><th>From scratch</th><th>Fine-tune Hub model</th></tr></thead>
+        <tbody>
+          <tr><td>Data needed</td><td>Huge labeled set</td><td>Often thousands of examples</td></tr>
+          <tr><td>Compute</td><td>Weeks / big GPU farm</td><td>Hours on a free notebook</td></tr>
+          <tr><td>Risk</td><td>You invent everything</td><td>Read license + model card first</td></tr>
+          <tr><td>Tokenizer</td><td>You build vocab</td><td>Must match the checkpoint</td></tr>
+        </tbody>
+      </table>
+    </div>
   </div>
-  <div class="foot"><span>08</span><span>related</span></div>
+  <div class="foot"><span>08</span><span>mismatch tokenizer → every ID is wrong</span></div>
 </section>
 
 <section class="slide">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
     <div class="topbar reveal"><span>Pitfalls</span><span class="pill">watch</span></div>
-    <h2 class="reveal">Before you ship</h2>
-    <div class="cols-3"><div class="card accent reveal"><div class="tag">lic</div><h3>License</h3><p>Check commercial restrictions on the model card.</p></div><div class="card cyan reveal"><div class="tag">tok</div><h3>Tokenizer match</h3><p>Always use the tokenizer that matches the model.</p></div><div class="card reveal"><div class="tag">leak</div><h3>Eval leak</h3><p>Don't fine-tune on your test set.</p></div></div>
+    <h2 class="reveal">Easy ways to go wrong</h2>
+    <div class="cols-2">
+      <div class="card accent reveal"><div class="tag">card</div><h3>Ignoring the model card</h3><p>Wrong license or unsafe intended use — especially commercial.</p></div>
+      <div class="card cyan reveal"><div class="tag">tok</div><h3>Tokenizer mismatch</h3><p>Different vocab than the checkpoint corrupts every ID.</p></div>
+      <div class="card reveal"><div class="tag">lora</div><h3>Full fine-tune when LoRA would do</h3><p>Wasted GPU and money for small tasks.</p></div>
+      <div class="card reveal"><div class="tag">eval</div><h3>Peeking at Hub test</h3><p>Keep a private holdout after exploring public splits.</p></div>
+    </div>
   </div>
   <div class="foot"><span>09</span><span>notes/huggingface.md</span></div>
 </section>
@@ -299,9 +354,40 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
 <section class="slide">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
+    <div class="topbar reveal"><span>With Kaggle</span><span class="pill">stack</span></div>
+    <h2 class="reveal">HF model · Kaggle GPU · lab demo</h2>
+    <div class="cols-3">
+      <div class="card accent reveal"><div class="tag">hf</div><h3>Hub checkpoint</h3><p>Pretrained weights + tokenizer.</p></div>
+      <div class="card cyan reveal"><div class="tag">kg</div><h3>Kaggle notebook</h3><p>Free GPU hours to fine-tune.</p></div>
+      <div class="card reveal"><div class="tag">lab</div><h3>Export → demo</h3><p>Checkpoint into inference / Spaces / sentiment apps.</p></div>
+    </div>
+  </div>
+  <div class="foot"><span>10</span><span>see kaggle.md · train-gpu.md</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Pipeline</span><span class="pill">end-to-end</span></div>
+    <h2 class="reveal">From Hub to usable model</h2>
+    <div class="flow-row reveal" style="margin-top:48px;">
+      <span class="step">Datasets</span><span class="arr">→</span>
+      <span class="step">pretrained</span><span class="arr">→</span>
+      <span class="step">fine-tune</span><span class="arr">→</span>
+      <span class="step">Hub / Spaces</span><span class="arr">→</span>
+      <span class="step">use</span>
+    </div>
+    <p class="lead reveal" style="margin-top:36px;">Data source and runtime partner for pytorch-training / tensorflow-training.</p>
+  </div>
+  <div class="foot"><span>11</span><span>notes/huggingface.md</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
     <div class="topbar reveal"><span>Next</span><span class="pill">continue</span></div>
-    <h1 class="reveal" style="margin-top:100px;font-size:64px;">Borrow, fine-tune,<br /><em>share.</em></h1>
-    <p class="lead reveal" style="margin-top:28px;">notes/huggingface.md — then kaggle.md for free GPU hours.</p>
+    <h1 class="reveal" style="margin-top:100px;font-size:64px;">Borrow,<br /><em>sharpen, share.</em></h1>
+    <p class="lead reveal" style="margin-top:28px;">notes/huggingface.md — then kaggle.md for free GPU, or pytorch-training for the loop underneath.</p>
     <a class="app-cta reveal" href="../../notes/huggingface.html">Open note →</a>
   </div>
   <div class="foot"><span>end</span><span>AI Lab</span></div>

@@ -6,7 +6,9 @@
 
 ## Why it matters
 
-Concepts and tools arrive in a order that made sense for me. Mapping that order against industry milestones explains why the lab went from fundamentals → RAG → agents — and which older notes still matter.
+Concepts and tools arrive in an order that made sense for me. Mapping that order against industry milestones explains why the lab went from fundamentals → RAG → agents — and which older notes still matter.
+
+You can enter the lab at any stage, but the timeline shows *why* MCP and harness notes sit on top of tokenize/attention rather than replacing them.
 
 ## Key ideas
 
@@ -33,7 +35,7 @@ Concepts and tools arrive in a order that made sense for me. Mapping that order 
   - Focus: [08-model-notes.md](./08-model-notes.md), [09-agent-automation.md](./09-agent-automation.md).
   - **April 2026** — GPT-5.5. **May 28, 2026** — Claude Opus 4.8. **June 2026** — Claude Fable 5 · Sonnet 5.
   - **July 8, 2026** — **Grok 4.5** (trained with Cursor): fast, token-efficient, cheap. **July 9, 2026** — GPT-5.6.
-  - Parallel: **OpenClaw** (`pi` harness) opens "agent controls everything" → **Hermess** polishes it.
+  - Parallel: **OpenClaw** (`pi` harness) opens “agent controls everything” → **Hermess** polishes it.
 
 - **Milestone table:**
 
@@ -48,6 +50,30 @@ Concepts and tools arrive in a order that made sense for me. Mapping that order 
 
 - **Takeaways:** journey goes from **understanding models** (2023–2024) → **steering agents** (late 2024 onward). MCP (November 2024) is the hinge. 2023 concepts are not outdated — tokenize / attention / RAG still underpin every agent. Watch harnesses (Cursor / Claude Code / pi), model waves (Grok 4.5…), automation (OpenClaw / Hermess).
 
+## Worked example (how to use this note)
+
+New to the lab? Follow 2023 order (tokenize → … → RAG). Already building agents? Start at MCP + skills-rules + agents, but keep fundamentals as the substrate when retrieval or tokenization bugs appear.
+
+## Common pitfalls
+
+- **Skipping foundations because “agents are the new thing”** — bad retrieve / bad tokenize still break agent apps.
+- **Treating every model launch as a full rewrite** — update field notes; keep pipelines stable.
+- **Timeline as dogma** — this is *my* path; yours may start at RAG or harnesses.
+
+## Illustrations
+
+![AI timeline hero 2023–2026](assets/ai-timeline/ai-timeline-hero.png)
+
+![Timeline strip with MCP hinge](assets/ai-timeline/ai-timeline-strip.svg)
+
+## Slides & demo
+
+| | Link |
+|--|------|
+| Slides | [slides/ai-timeline](../slides/ai-timeline/index.html) |
+| Related | [Hermess slides](../slides/hermess/index.html) |
+
 ## Related
 
 - [07-agents.md](./07-agents.md), [08-model-notes.md](./08-model-notes.md), [09-agent-automation.md](./09-agent-automation.md), [mcp.md](./mcp.md)
+- Foundations: [tokenize.md](./tokenize.md), [embedding.md](./embedding.md), [attention.md](./attention.md), [rag.md](./rag.md)

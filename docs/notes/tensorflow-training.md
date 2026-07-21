@@ -57,7 +57,7 @@ You stack a small dense net ending in `softmax` with `NUM_CLASSES` units. After 
 
 ![TensorFlow Embedding Projector: vectors projected into 3D](assets/protonx/tf-projector.jpg)
 
-![Keras compile → fit flow](../slides/assets/tensorflow-keras.png)
+![Keras compile → fit flow](assets/tensorflow-training/tensorflow-keras.png)
 
 ## Pipeline
 

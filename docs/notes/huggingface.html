@@ -381,7 +381,8 @@ model = AutoModelForSequenceClassification.from_pretrained("bert-base-uncased", 
 <li><strong>Eval on the Hub’s test split after peeking</strong> — keep a private holdout.</li>
 </ul>
 <h2>Illustrations</h2>
-<figure><img src="../slides/assets/huggingface-hub.png" alt="Hugging Face Hub: Datasets, Models, Spaces" loading="lazy" /><figcaption>Hugging Face Hub: Datasets, Models, Spaces</figcaption></figure>
+<figure><img src="assets/huggingface/huggingface-hub.png" alt="Hugging Face Hub: Datasets, Models, Spaces" loading="lazy" /><figcaption>Hugging Face Hub: Datasets, Models, Spaces</figcaption></figure>
+<figure><img src="assets/huggingface/hf-finetune-flow.png" alt="Fine-tune path on the Hub" loading="lazy" /><figcaption>Fine-tune path on the Hub</figcaption></figure>
 <h2>Pipeline</h2>
 <pre><code>
 HF Datasets → pretrained model (Hub) → fine-tune (PyTorch/TF) → push to Hub / Spaces → use

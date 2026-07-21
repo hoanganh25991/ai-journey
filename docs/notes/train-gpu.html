@@ -337,7 +337,7 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
     <div class="topics"><span>#pytorch</span><span>#tensorflow</span><span>#GPU</span><span>#huggingface</span><span>#kaggle</span></div>
     <hr class="sep" />
     <div class="body"><h1>Train · PyTorch / TensorFlow · GPU notebooks</h1>
-<blockquote>Where models <em>actually learn</em>: data from Hugging Face / Kaggle, code in PyTorch or TensorFlow, many epochs on a GPU (Colab/cloud) until good enough, then export weights.</blockquote>
+<blockquote>Where models <em>actually learn</em>: data from Hugging Face / Kaggle, code in PyTorch or TensorFlow, many epochs on a GPU (Colab/cloud) until good enough, then export weights. Everyday metaphor: the gym (GPU) is where muscles (weights) grow; the phone app (browser demo) only shows the flex.</blockquote>
 <h2>Why it matters</h2>
 <p>Lab demos illustrate inference only. To get a model you can plug in, you must train somewhere with a GPU. This note collects the practical stack — which tools, where data lives, where to run — so you do not rebuild the checklist every time.</p>
 <h2>Key ideas</h2>
@@ -353,10 +353,10 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 <p>See <a href="train-infer.html">06-train-infer.md</a> for the two-phase mental model.</p>
 <ul>
 <li><strong>Stack used in practice:</strong></li>
-<li><strong>PyTorch</strong> — flexible; most training code in the lab.</li>
-<li><strong>TensorFlow</strong> — softmax regression and Embedding Projector for visualizing vectors.</li>
+<li><strong>PyTorch</strong> — flexible; most training code in the lab (<a href="pytorch-training.html">pytorch-training.md</a>).</li>
+<li><strong>TensorFlow</strong> — softmax regression and Embedding Projector for visualizing vectors (<a href="tensorflow-training.html">tensorflow-training.md</a>).</li>
 <li><strong>Data:</strong> Hugging Face Datasets and Kaggle — pre-labeled, ready to download.</li>
-<li><strong>GPU online:</strong> Google Colab / cloud notebooks — train to ~95%+ accuracy, then export.</li>
+<li><strong>GPU online:</strong> Google Colab / Kaggle / cloud notebooks — train to ~95%+ accuracy when the task allows, then export.</li>
 </ul>
 <ul>
 <li><strong>Short workflow:</strong></li>
@@ -364,17 +364,39 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 <pre><code>
   pick dataset (HF/Kaggle) → write notebook (PyTorch/TF) → train on GPU
 
-  → watch loss/accuracy → export checkpoint → plug into demo (inference)
+  → watch loss/accuracy (and val!) → export checkpoint → plug into demo (inference)
 
 </code></pre>
 <ul>
 <li><strong>In AI Lab:</strong> browser demos show the flow; they do <strong>not</strong> replace GPU training. Train in a notebook / Kaggle / Colab, then embed weights in UI demos (car-nn, sentiment…).</li>
 </ul>
+<ul>
+<li><strong>What “good enough” means:</strong> for teaching demos, stable val accuracy and sane confusion matrix beat chasing 0.1% leaderboard gains.</li>
+</ul>
+<h2>Worked example (intuition)</h2>
+<p>Sentiment three-class task: download a Hub dataset → fine-tune MiniLM or a small classifier in a Kaggle GPU notebook for a few epochs → export <code>state_dict</code> → load in the sentiment demo for live inference. Users never wait for training; you already paid that cost once.</p>
+<h2>Common pitfalls</h2>
+<ul>
+<li><strong>Training in the browser demo</strong> — demos are for inference; don’t expect on-device epoch loops.</li>
+<li><strong>No validation split</strong> — you ship an overfit checkpoint.</li>
+<li><strong>Forgetting to export</strong> — notebook session ends, weights gone.</li>
+<li><strong>GPU quota waste</strong> — debug shapes on CPU/small data first.</li>
+</ul>
+<h2>Illustrations</h2>
+<figure><img src="assets/train-gpu/train-gpu-stack.png" alt="GPU training stack: data → GPU epochs → checkpoint" loading="lazy" /><figcaption>GPU training stack: data → GPU epochs → checkpoint</figcaption></figure>
+<figure><img src="assets/train-gpu/train-infer-split.png" alt="Train vs inference split" loading="lazy" /><figcaption>Train vs inference split</figcaption></figure>
 <h2>Pipeline</h2>
 <pre><code>
 HF/Kaggle data → notebook (PyTorch/TF) → GPU epochs → checkpoint → demo inference
 
 </code></pre>
+<h2>Slides &amp; demo</h2>
+<table><thead>
+<tr><th></th><th>Link</th></tr>
+</thead><tbody>
+<tr><td>Slides</td><td><a href="../slides/train-gpu/index.html">slides/train-gpu</a></td></tr>
+<tr><td>Related demos</td><td><a href="../demos/car-nn/app/index.html">car-nn</a> · <a href="../demos/sentiment/app/index.html">sentiment</a></td></tr>
+</tbody></table>
 <h2>References</h2>
 <ul>
 <li><a href="https://pytorch.org/tutorials/beginner/blitz/cifar10_tutorial.html">PyTorch — Training a classifier</a></li>
@@ -383,7 +405,8 @@ HF/Kaggle data → notebook (PyTorch/TF) → GPU epochs → checkpoint → demo 
 <h2>Related</h2>
 <ul>
 <li><a href="train-infer.html">06-train-infer.md</a> — train vs infer</li>
-<li>Demo: <a href="car-nn.html">04-demo-car.md</a>, <a href="sentiment-routing.html">05-demo-text.md</a>, <a href="softmax.html">softmax.md</a></li>
+<li><a href="pytorch-training.html">pytorch-training.md</a>, <a href="tensorflow-training.html">tensorflow-training.md</a>, <a href="huggingface.html">huggingface.md</a>, <a href="kaggle.html">kaggle.md</a></li>
+<li>Demo notes: <a href="car-nn.html">04-demo-car.md</a>, <a href="sentiment-routing.html">05-demo-text.md</a></li>
 </ul></div>
   </article>
 </div>

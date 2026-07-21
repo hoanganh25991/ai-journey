@@ -337,23 +337,40 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
     <div class="topics"><span>#vector-db</span><span>#ANN</span><span>#faiss</span><span>#elasticsearch</span><span>#pgvector</span></div>
     <hr class="sep" />
     <div class="body"><h1>Vector database</h1>
-<blockquote>Store millions of embedding vectors and answer "which vectors are closest to this one?" in milliseconds. The infrastructure under RAG and semantic search.</blockquote>
+<blockquote>Store millions of embedding vectors and answer “which vectors are closest to this one?” in milliseconds. The infrastructure under RAG and semantic search. Everyday metaphor: a library that shelves books by <em>meaning coordinates</em>, not only by title keywords — and can point to the nearest shelves instantly.</blockquote>
 <h2>Why it matters</h2>
 <p><a href="embedding.html">Embedding</a> turns everything into vectors — but where do you store them, and how do you search? Scanning every vector one by one (brute force) is too slow at scale. A vector database stores vectors with their source data and finds top-k nearest neighbors fast via approximate indexes. Without it, <a href="rag.html">RAG</a> and <a href="semantic-search.html">semantic search</a> cannot run at real-world scale.</p>
 <h2>Key ideas</h2>
 <ul>
 <li><strong>Core problem — nearest neighbor:</strong> given a query vector, find the k closest by cosine or dot product (<a href="embedding.html">embedding.md</a>).</li>
 <li><strong>ANN instead of brute force:</strong> approximate indexes (HNSW, IVF…) trade a little accuracy for orders-of-magnitude speed — good enough for search.</li>
-<li><strong>More than vectors:</strong> each record carries <em>metadata</em> (source, date, tags) for <strong>filtering</strong> before or after search; needs CRUD when data changes.</li>
+<li><strong>More than vectors:</strong> each record carries <em>metadata</em> (source, date, tags) for <strong>filtering</strong> before or after search; needs CRUD when documents change.</li>
+<li><strong>Chunking first:</strong> you rarely embed a whole book as one vector — split into passages, embed each, store chunk text + vector + metadata together.</li>
 <li><strong>Common choices:</strong></li>
-<li><em>FAISS</em> — in-memory, very fast, good for experiments; lacks durable storage and CRUD.</li>
-<li><em>Elasticsearch (kNN plugin)</em> — integrates with keyword search, has CRUD, scales out.</li>
-<li><em>pgvector / Chroma</em> — Postgres extension or lightweight store for small apps.</li>
-<li><strong>Pick by need:</strong> scale + CRUD + distribution → Elastic; pure in-RAM speed → FAISS.</li>
+<li><em>FAISS</em> — in-memory, very fast, good for experiments; lacks durable storage and rich CRUD out of the box.</li>
+<li><em>Elasticsearch (kNN plugin)</em> — integrates with keyword search, has CRUD, scales out — natural fit for hybrid search.</li>
+<li><em>pgvector / Chroma</em> — Postgres extension or lightweight store for small apps and local demos.</li>
+<li><strong>Pick by need:</strong> scale + CRUD + distribution → Elastic; pure in-RAM speed / research → FAISS; simple app → pgvector/Chroma.</li>
+<li><strong>Metric must match training:</strong> if embeddings were trained with cosine, search with cosine (or normalize + dot). Wrong metric → wrong ranking.</li>
+</ul>
+<h2>Worked example (intuition)</h2>
+<p>1. Split docs into ~200–400 token chunks.</p>
+<p>2. <code>encode()</code> each chunk with <a href="sentence-transformers.html">sentence-transformers</a>.</p>
+<p>3. Upsert <code>(vector, text, source, date)</code> into the DB.</p>
+<p>4. On question: embed question → ANN top-8 → optional metadata filter (<code>date &gt; 2024</code>) → hand chunks to the LLM (<a href="rag.html">rag.md</a>).</p>
+<h2>Common pitfalls</h2>
+<ul>
+<li><strong>Stale index</strong> — docs changed but vectors not re-embedded.</li>
+<li><strong>Dimension / model mismatch</strong> — query encoder ≠ index encoder.</li>
+<li><strong>No metadata filters</strong> — retrieving irrelevant years/sources.</li>
+<li><strong>k too small or too large</strong> — miss context, or drown the LLM in noise.</li>
 </ul>
 <h2>Illustrations</h2>
 <figure><img src="assets/protonx/embed-then-query.jpg" alt="Embed the question, then query the vector store" loading="lazy" /><figcaption>Embed the question, then query the vector store</figcaption></figure>
 <figure><img src="assets/protonx/cosine-vs-dot.jpg" alt="When to use cosine vs dot product for comparing vectors" loading="lazy" /><figcaption>When to use cosine vs dot product for comparing vectors</figcaption></figure>
+<figure><img src="assets/vector-database/vector-db-ann.png" alt="ANN nearest-neighbor search visualization" loading="lazy" /><figcaption>ANN nearest-neighbor search visualization</figcaption></figure>
+<figure><img src="assets/vector-database/vector-db-flow.svg" alt="Index once, query many times" loading="lazy" /><figcaption>Index once, query many times</figcaption></figure>
+<figure><img src="assets/vector-database/vector-retrieve-detail.png" alt="Retrieve detail: chunks → ANN → top-k" loading="lazy" /><figcaption>Retrieve detail: chunks → ANN → top-k</figcaption></figure>
 <h2>Pipeline</h2>
 <pre><code>
 documents → chunk → embedding → [vector database]
@@ -361,7 +378,14 @@ documents → chunk → embedding → [vector database]
 question  → embedding → [vector database: top-k search] → RAG / semantic search
 
 </code></pre>
-<p>Vector databases receive vectors from <a href="embedding.html">embedding.md</a> and supply top-k results to <a href="rag.html">rag.md</a> and <a href="semantic-search.html">semantic-search.md</a>.</p>
+<p>Vector databases receive vectors from <a href="embedding.html">embedding.md</a> / <a href="sentence-transformers.html">sentence-transformers.md</a> and supply top-k results to <a href="rag.html">rag.md</a> and <a href="semantic-search.html">semantic-search.md</a>.</p>
+<h2>Slides &amp; demo</h2>
+<table><thead>
+<tr><th></th><th>Link</th></tr>
+</thead><tbody>
+<tr><td>Slides</td><td><a href="../slides/vector-database/index.html">slides/vector-database</a></td></tr>
+<tr><td>Related demo</td><td><a href="../demos/rag/app/index.html">demos/rag</a></td></tr>
+</tbody></table>
 <h2>References</h2>
 <ul>
 <li><a href="https://github.com/facebookresearch/faiss">FAISS (Meta)</a></li>
@@ -370,6 +394,7 @@ question  → embedding → [vector database: top-k search] → RAG / semantic s
 <h2>Related</h2>
 <ul>
 <li><a href="embedding.html">embedding.md</a>, <a href="rag.html">rag.md</a>, <a href="semantic-search.html">semantic-search.md</a></li>
+<li><a href="sentence-transformers.html">sentence-transformers.md</a></li>
 </ul></div>
   </article>
 </div>

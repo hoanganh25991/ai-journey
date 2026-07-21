@@ -50,6 +50,8 @@ Task C: “Read this screenshot of the broken UI.” → not DeepSeek; pick a vi
 
 ![Model spectrum: fast/cheap ↔ deep/slow](assets/model-notes/model-notes-spectrum.png)
 
+![Model vs harness reminder](assets/model-notes/model-vs-harness.png)
+
 ## Slides & demo
 
 | | Link |

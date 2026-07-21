@@ -338,9 +338,10 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
     <div class="topics"><span>#agents</span><span>#harness</span><span>#cursor</span><span>#claude</span><span>#pi</span><span>#first-mate</span></div>
     <hr class="sep" />
     <div class="body"><h1>AI Agents · harness comparison</h1>
-<blockquote><strong>Harness ≠ model.</strong> Harness = orchestration software (UI, tool calling, context, agent loop). Model = the brain plugged in. The same model on different harnesses feels very different. Compare models at <a href="model-notes.html">08-model-notes.md</a>.</blockquote>
+<blockquote><strong>Harness ≠ model.</strong> Harness = orchestration software (UI, tool calling, context, agent loop). Model = the brain plugged in. The same model on different harnesses feels very different. Compare models at <a href="model-notes.html">08-model-notes.md</a>. Everyday metaphor: the same chef in different kitchens — tools, mise en place, and service rhythm change the meal.</blockquote>
 <h2>Why it matters</h2>
 <p>Picking a model is only half the story. The harness decides what context the model sees, which tools it can call, and how it loops until the job is done. Two people with the same model in Cursor vs Claude Code can have opposite experiences — because the harness differs.</p>
+<p>Understanding harnesses also explains why skills/rules/MCP feel uneven across clients: loading <code>~/.agents</code>, MCP reliability, and agent-loop design are harness features.</p>
 <h2>Key ideas</h2>
 <ul>
 <li><strong>Comparison table (personal experience):</strong></li>
@@ -352,7 +353,7 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 <tr><td><strong>Claude Code</strong></td><td>excellent at clarifying context; handles complex skills/rules well</td><td>slower; session limits → wait</td><td>solid for hard tasks / many constraints</td></tr>
 <tr><td><strong>Pi</strong></td><td>loads global <code>~/.agents</code>; lightweight</td><td>smaller ecosystem</td><td>same skills as Cursor/Claude, minimal overhead</td></tr>
 <tr><td><strong>Cline / Kilo</strong></td><td>open, customizable; Kilo clones Cline</td><td>quality depends on plugged-in model</td><td>good for rapid self-directed testing</td></tr>
-<tr><td><strong>OpenCode</strong></td><td>open source, many models</td><td>fewer "smart" features than Cursor</td><td>test models via OpenRouter</td></tr>
+<tr><td><strong>OpenCode</strong></td><td>open source, many models</td><td>fewer “smart” features than Cursor</td><td>test models via OpenRouter</td></tr>
 <tr><td><strong>Zed</strong></td><td>fast editor, compact agent</td><td>agent less deep than Cursor/Claude</td><td>lightweight coding</td></tr>
 </tbody></table>
 <ul>
@@ -363,7 +364,7 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 <li><em>Context management</em> — how files get compressed and selected for the prompt.</li>
 <li><em>Tool calling</em> — MCP, shell, browser — smoothness and reliability.</li>
 <li><em>Agent loop</em> — self-correction, tests, asking back.</li>
-<li><em>Skills / rules</em> — loading global know-how from <code>~/.agents</code>.</li>
+<li><em>Skills / rules</em> — loading global know-how from <code>~/.agents</code> (<a href="skills-rules.html">skills-rules.md</a>).</li>
 </ul>
 <ul>
 <li><strong>First mate:</strong> orchestrates crew + <code>agents.md</code> — an agent that knows what to do and coordinates crewmates. Lab UI: Kun Chen video + repo <code>kunchenguid/firstmate</code>.</li>
@@ -371,10 +372,24 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 <ul>
 <li><strong>Homes:</strong> <code>~/.agents/skills</code> (global skills), <code>~/work-station/agents-setup</code> (skill trials), <code>graphify</code> (codebase link viz).</li>
 </ul>
+<h2>Worked example (intuition)</h2>
+<p>Same bugfix: “tests fail on CI.” In Cursor with MCP + repo skills, the agent runs tests, reads logs, patches, re-runs. In a thinner harness without reliable shell/MCP, it only <em>suggests</em> commands for you to paste. Same brain; different arms.</p>
+<h2>Common pitfalls</h2>
+<ul>
+<li><strong>Blaming the model for harness gaps</strong> — missing tools ≠ weak reasoning.</li>
+<li><strong>Always using Auto</strong> — convenience can hide routing regressions.</li>
+<li><strong>Skipping AGENTS.md / skills</strong> — every session re-teaches the same project facts.</li>
+<li><strong>Comparing harnesses on different tasks</strong> — hard refactors favor Claude Code; tight UI loops favor Cursor.</li>
+</ul>
+<h2>Illustrations</h2>
+<figure><img src="assets/agents/agents-harness.png" alt="Harness comparison grid" loading="lazy" /><figcaption>Harness comparison grid</figcaption></figure>
+<figure><img src="assets/agents/model-vs-harness.png" alt="Model vs harness" loading="lazy" /><figcaption>Model vs harness</figcaption></figure>
+<figure><img src="assets/agents/agent-loop-skills.png" alt="Agent loop fed by skills" loading="lazy" /><figcaption>Agent loop fed by skills</figcaption></figure>
 <h2>Slides &amp; demo</h2>
 <table><thead>
 <tr><th></th><th>Link</th></tr>
 </thead><tbody>
+<tr><td>Slides</td><td><a href="../slides/agents/index.html">slides/agents</a></td></tr>
 <tr><td>MCP demo</td><td><a href="../demos/mcp/app/index.html">demos/mcp</a></td></tr>
 <tr><td>Complexity router</td><td><a href="../demos/complexity-router/app/index.html">demos/complexity-router</a></td></tr>
 </tbody></table>

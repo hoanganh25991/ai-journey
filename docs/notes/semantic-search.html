@@ -341,7 +341,7 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 <blockquote>Search by <em>meaning</em>, not just keywords, by combining two index types: inverted index (Elastic, by keyword) and semantic index (embedding, by meaning). This is the project I built to learn RAG deeply.</blockquote>
 <blockquote>Repo: <a href="https://github.com/hoanganh25991/semantic-search">github.com/hoanganh25991/semantic-search</a> — Hybrid / Tiered / Fallback on the MS MARCO dataset.</blockquote>
 <h2>Why it matters</h2>
-<p>Keyword search (BM25 / TF-IDF in Elastic) is fast and cheap, but "car" and "automobile" are different strings — easy to miss matches. Embedding search captures meaning but is heavier to run on every query. Pragmatic semantic search <strong>combines</strong> both: use keywords to filter quickly, embeddings to rank by meaning. That is also a high-quality retrieve step for <a href="rag.html">RAG</a>.</p>
+<p>Keyword search (BM25 / TF-IDF in Elastic) is fast and cheap, but “car” and “automobile” are different strings — easy to miss matches. Embedding search captures meaning but is heavier to run on every query. Pragmatic semantic search <strong>combines</strong> both: use keywords to filter quickly, embeddings to rank by meaning. That is also a high-quality retrieve step for <a href="rag.html">RAG</a>.</p>
 <h2>Key ideas</h2>
 <ul>
 <li><strong>Two index types:</strong></li>
@@ -357,12 +357,30 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 <li><em>Hybrid:</em> inverted index <em>filters</em> candidates by keyword, semantic index <em>reranks</em> by meaning. Cost-efficient; fails when keywords miss entirely.</li>
 <li><em>Tiered:</em> classify questions as easy/hard first → easy goes keyword, hard goes semantic. Balances speed and precision (same idea as <a href="sentiment-routing.html">complexity router</a>).</li>
 <li><em>Fallback:</em> semantic first for max accuracy; if results are poor, <em>fall back</em> to keyword. Most accurate, most expensive.</li>
-<li><strong>Dataset and evaluation:</strong> MS MARCO — real user questions plus relevant passages. Metrics: <em>Precision@k</em>, <em>MRR@10</em>. Query classifier labels simple vs complex questions for the Tiered strategy.</li>
+<li><strong>Dataset and evaluation:</strong> MS MARCO — real user questions plus relevant passages. Metrics: <em>Precision@k</em>, <em>MRR@10</em>. A query classifier labels simple vs complex questions for the Tiered strategy.</li>
 <li><strong>Storage:</strong> MongoDB for raw documents; Elasticsearch for indexed data (inverted + kNN) for fast search.</li>
+<li><strong>Why this teaches RAG:</strong> retrieval quality dominates answer quality — the same lesson as <a href="rag.html">rag.md</a>, measured with ranking metrics instead of vibes.</li>
+</ul>
+<h2>Worked example (intuition)</h2>
+<p>Question: <code>"How do I jump-start a car?"</code></p>
+<ul>
+<li>Keyword alone may miss docs that only say <code>"boost a vehicle battery"</code>.</li>
+<li>Semantic alone may retrieve vaguely related automotive posts.</li>
+<li>Hybrid: keyword keeps battery/car candidates, semantic ranks the jump-start guide to the top.</li>
+</ul>
+<h2>Common pitfalls</h2>
+<ul>
+<li><strong>Hybrid with empty keyword hits</strong> — need a fallback path when BM25 returns nothing.</li>
+<li><strong>Tiered with a bad easy/hard classifier</strong> — hard queries wrongly sent to keyword.</li>
+<li><strong>Optimizing only public leaderboards</strong> — overfit MS MARCO quirks; validate on your own corpus.</li>
+<li><strong>Ignoring latency budgets</strong> — semantic-on-everything can blow SLAs.</li>
 </ul>
 <h2>Illustrations</h2>
 <figure><img src="assets/protonx/embed-then-query.jpg" alt="Embed the question, then query — the retrieve step of semantic search" loading="lazy" /><figcaption>Embed the question, then query — the retrieve step of semantic search</figcaption></figure>
 <figure><img src="assets/protonx/rag-advanced.jpg" alt="Advanced retrieval: combine filtering and reranking for higher accuracy" loading="lazy" /><figcaption>Advanced retrieval: combine filtering and reranking for higher accuracy</figcaption></figure>
+<figure><img src="assets/semantic-search/semantic-hybrid.svg" alt="Hybrid: inverted index + semantic index" loading="lazy" /><figcaption>Hybrid: inverted index + semantic index</figcaption></figure>
+<figure><img src="assets/semantic-search/search-twoway.svg" alt="Two-way search flow" loading="lazy" /><figcaption>Two-way search flow</figcaption></figure>
+<figure><img src="assets/semantic-search/semantic-strategies.png" alt="Hybrid vs Tiered vs Fallback strategies" loading="lazy" /><figcaption>Hybrid vs Tiered vs Fallback strategies</figcaption></figure>
 <h2>Pipeline</h2>
 <pre><code>
 question → (classify easy/hard) → { keyword: inverted index | meaning: semantic index }
@@ -371,6 +389,13 @@ question → (classify easy/hard) → { keyword: inverted index | meaning: seman
 
 </code></pre>
 <p>Semantic search stands on <a href="embedding.html">embedding.md</a> + <a href="vector-database.html">vector-database.md</a>, and is the retrieval step for <a href="rag.html">rag.md</a>.</p>
+<h2>Slides &amp; demo</h2>
+<table><thead>
+<tr><th></th><th>Link</th></tr>
+</thead><tbody>
+<tr><td>Slides</td><td><a href="../slides/semantic-search/index.html">slides/semantic-search</a></td></tr>
+<tr><td>GitHub</td><td><a href="https://github.com/hoanganh25991/semantic-search">hoanganh25991/semantic-search</a></td></tr>
+</tbody></table>
 <h2>References</h2>
 <ul>
 <li>Repo: <a href="https://github.com/hoanganh25991/semantic-search">hoanganh25991/semantic-search</a></li>

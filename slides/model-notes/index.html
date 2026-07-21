@@ -15,12 +15,12 @@
 .shot-md { height: 380px; }
 .mini { font-size: 18px !important; }
 .table-card { overflow: hidden; }
-.table-card table { width: 100%; border-collapse: collapse; font-size: 18px; }
+.table-card table { width: 100%; border-collapse: collapse; font-size: 16px; }
 .table-card th, .table-card td {
-  text-align: left; padding: 12px 14px; border-bottom: 1px solid var(--line);
+  text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line);
   color: var(--muted); vertical-align: top;
 }
-.table-card th { color: var(--ink); font-family: var(--font-mono); font-size: 14px;
+.table-card th { color: var(--ink); font-family: var(--font-mono); font-size: 13px;
   letter-spacing: 0.06em; text-transform: uppercase; }
 .code-block {
   font-family: var(--font-mono); font-size: 18px; line-height: 1.55;
@@ -40,9 +40,9 @@
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
     <div class="topbar reveal"><span>Field notes · model-notes</span><span class="pill">teaching</span></div>
-    <h1 class="reveal" style="margin-top:72px;">Model field notes · <em>≠ harness</em></h1>
-    <p class="lead reveal" style="margin-top:28px;">Notes on the models themselves (OpenRouter + Cursor). Harness comparison lives in agents.</p>
-    <div class="flow-row reveal"><span class="step">pick model</span><span class="arr">→</span><span class="step">task fit</span><span class="arr">→</span><span class="step">cost</span><span class="arr">→</span><span class="step">speed</span></div>
+    <h1 class="reveal" style="margin-top:72px;">Model field notes · <em>engines</em></h1>
+    <p class="lead reveal" style="margin-top:28px;">Model ≠ harness. Engines vs cars — swap engines carefully; don’t blame the engine for a missing steering wheel.</p>
+    <div class="flow-row reveal"><span class="step">task fit</span><span class="arr">→</span><span class="step">pick model</span><span class="arr">→</span><span class="step">cost / speed</span><span class="arr">→</span><span class="step">re-check prices</span></div>
   </div>
   <div class="foot"><span>01</span><span>AI Lab</span></div>
 </section>
@@ -50,9 +50,14 @@
 <section class="slide">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
-    <div class="topbar reveal"><span>Why</span><span class="pill">split</span></div>
-    <h2 class="reveal">Harness shapes workflow — model shapes reasoning</h2>
-    <div class="cols-3"><div class="card accent reveal"><div class="tag">qual</div><h3>Quality</h3><p>Reasoning depth and reliability.</p></div><div class="card cyan reveal"><div class="tag">spd</div><h3>Speed</h3><p>Tokens per second / latency.</p></div><div class="card reveal"><div class="tag">$</div><h3>Cost</h3><p>Intelligence per dollar and per minute.</p></div></div>
+    <div class="topbar reveal"><span>Why</span><span class="pill">matters</span></div>
+    <h2 class="reveal">Harness shapes workflow — model shapes quality</h2>
+    <div class="cols-3">
+      <div class="card accent reveal"><div class="tag">quality</div><h3>Reasoning</h3><p>Which brain fits greenfield vs debug vs vision?</p></div>
+      <div class="card cyan reveal"><div class="tag">speed</div><h3>Latency</h3><p>TPS and token efficiency change the feel of the loop.</p></div>
+      <div class="card reveal"><div class="tag">cost</div><h3>Budget</h3><p>Personal field notes via OpenRouter + Cursor — not eternal benchmarks.</p></div>
+    </div>
+    <p class="lead reveal" style="margin-top:28px;font-size:22px;">Starting map: greenfield vs debug, image needs, and budget change the winner.</p>
   </div>
   <div class="foot"><span>02</span><span>notes/08-model-notes.md</span></div>
 </section>
@@ -60,75 +65,171 @@
 <section class="slide">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
-    <div class="topbar reveal"><span>Illustration</span><span class="pill">model-notes-spectrum.png</span></div>
-    <h2 class="reveal" style="font-size:36px;margin-bottom:16px;">Illustration</h2>
-    <img class="shot shot-lg reveal" src="../assets/model-notes-spectrum.png" alt="Spectrum" />
-    
-  </div>
-  <div class="foot"><span>03</span><span>AI Lab · illustration</span></div>
-</section>
-
-<section class="slide">
-  <div class="slide-bg"></div><div class="grid-overlay"></div>
-  <div class="pad">
-    <div class="topbar reveal"><span>Field</span><span class="pill">table</span></div>
-    <h2 class="reveal">Personal experience (not benchmarks)</h2>
+    <div class="topbar reveal"><span>Table</span><span class="pill">personal</span></div>
+    <h2 class="reveal" style="font-size:40px;margin-bottom:18px;">Model comparison</h2>
     <div class="card table-card reveal">
-      <table><thead><tr><th>Model</th><th>Strong</th><th>Watch</th></tr></thead><tbody><tr><td>Grok 4.5</td><td>Fast · smooth · good $/task</td><td>Hallucination on unverifiable</td></tr><tr><td>Composer Fast</td><td>Very fast replies</td><td>Costs more than Auto</td></tr><tr><td>Cursor Auto</td><td>Fast feedback loop</td><td>Quality varies with routing</td></tr><tr><td>Anthropic</td><td>Clarify · skills · ask back</td><td>Slow · session limits</td></tr><tr><td>DeepSeek V4</td><td>Debug existing code</td><td>No images · weaker greenfield</td></tr><tr><td>Qwen 3</td><td>Simple tasks</td><td>Weak on large greenfield</td></tr></tbody></table>
+      <table>
+        <thead><tr><th>Model / mode</th><th>Strong</th><th>Weak / cost</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Grok 4.5</strong></td><td>fast, smooth, high quality; moderate spend</td><td>not top on every bench; more hallucination on unverifiable tasks</td></tr>
+          <tr><td><strong>Composer 2.5 Fast</strong></td><td>very fast, good replies</td><td>costs more than Auto</td></tr>
+          <tr><td><strong>Cursor Auto</strong></td><td>fast feedback loop</td><td>quality varies with routing</td></tr>
+          <tr><td><strong>Opus / Sonnet / Fable</strong></td><td>clarifying context &amp; skills; reliable interaction</td><td>slow; session limits</td></tr>
+          <tr><td><strong>DeepSeek V4</strong></td><td>strong debug / fix on existing code</td><td>no images; weaker on greenfield</td></tr>
+          <tr><td><strong>Qwen 3</strong></td><td>simple tasks</td><td>weak on complex following / large projects</td></tr>
+          <tr><td><strong>Kimi / GLM</strong></td><td>good code</td><td>expensive</td></tr>
+        </tbody>
+      </table>
     </div>
   </div>
-  <div class="foot"><span>04</span><span>notes/08-model-notes.md</span></div>
+  <div class="foot"><span>03</span><span>field notes</span></div>
 </section>
 
 <section class="slide">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
-    <div class="topbar reveal"><span>Grok 4.5</span><span class="pill">why</span></div>
-    <h2 class="reveal">Why it impresses (mid-2026)</h2>
-    <div class="cols-3"><div class="card accent reveal"><div class="tag">tps</div><h3>~80 TPS</h3><p>Optimized for coding + agentic work.</p></div><div class="card cyan reveal"><div class="tag">tok</div><h3>Fewer tokens</h3><p>~4.2× fewer output tokens vs Opus on SWE-Bench Pro.</p></div><div class="card reveal"><div class="tag">edge</div><h3>Intel / time / $</h3><p>Wins on verifiable coding tasks.</p></div></div>
+    <div class="topbar reveal"><span>Illustration</span><span class="pill">model-notes-spectrum.png</span></div>
+    <h2 class="reveal" style="font-size:36px;margin-bottom:16px;">Model spectrum</h2>
+    <img class="shot shot-md reveal" src="../assets/model-notes-spectrum.png" alt="Spectrum from fast and cheap models to deep and slow models" />
+    <p class="lead reveal" style="margin-top:14px;font-size:20px;">Fast / cheap ↔ deep / slow — pick by task, not by brand loyalty.</p>
   </div>
-  <div class="foot"><span>05</span><span>notes/08-model-notes.md</span></div>
+  <div class="foot"><span>04</span><span>AI Lab · illustration</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Illustration</span><span class="pill">model vs harness</span></div>
+    <h2 class="reveal" style="font-size:36px;margin-bottom:16px;">Illustration</h2>
+    <img class="shot shot-lg reveal" src="../assets/model-vs-harness.png" alt="Model ≠ harness" />
+    <p class="lead reveal" style="margin-top:14px;font-size:20px;">Pick the engine for the job; don’t blame the engine for a missing steering wheel.</p>
+  </div>
+  <div class="foot"><span>05b</span><span>AI Lab · illustration</span></div>
+</section>
+
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Grok 4.5</span><span class="pill">spotlight</span></div>
+    <h2 class="reveal">Why Grok 4.5 impresses</h2>
+    <div class="cols-3">
+      <div class="card accent reveal"><div class="tag">speed</div><h3>~80 TPS</h3><p>Optimized for coding + agentic work (xAI / mid-2026 context).</p></div>
+      <div class="card cyan reveal"><div class="tag">tokens</div><h3>~4.2× fewer</h3><p>Fewer output tokens than Opus 4.8 on SWE-Bench Pro → cheaper per task.</p></div>
+      <div class="card reveal"><div class="tag">edge</div><h3>Intel / time / $</h3><p>Main edge = intelligence per unit time and cost on verifiable tasks.</p></div>
+    </div>
+    <p class="lead reveal" style="margin-top:24px;font-size:20px;">Snapshot pricing: ~$2 in / $6 out per 1M · trained with Cursor · often beats Auto as default.</p>
+  </div>
+  <div class="foot"><span>05</span><span>Grok 4.5</span></div>
 </section>
 
 <section class="slide">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
     <div class="topbar reveal"><span>Principles</span><span class="pill">pick</span></div>
-    <h2 class="reveal">Match model to job</h2>
-    <div class="cols-3"><div class="card accent reveal"><div class="tag">new</div><h3>Greenfield</h3><p>Favor strong reasoning (Anthropic, Grok).</p></div><div class="card cyan reveal"><div class="tag">fix</div><h3>Debug existing</h3><p>DeepSeek V4 — effective and cheap.</p></div><div class="card reveal"><div class="tag">img</div><h3>Needs images</h3><p>Avoid DeepSeek (no image input).</p></div></div>
+    <h2 class="reveal">Task-fit principles</h2>
+    <div class="cols-2">
+      <div class="card accent reveal"><div class="tag">greenfield</div><h3>New project, thin codebase</h3><p>Favor strong reasoning (Anthropic, Grok) over DeepSeek / Qwen.</p></div>
+      <div class="card cyan reveal"><div class="tag">debug</div><h3>Fix existing code</h3><p>DeepSeek V4 is effective and cheap for local reasoning + iteration.</p></div>
+      <div class="card reveal"><div class="tag">vision</div><h3>Needs images</h3><p>Screenshots / diagrams — avoid DeepSeek (no image input).</p></div>
+      <div class="card reveal"><div class="tag">clarify</div><h3>Constraints &amp; skills</h3><p>Anthropic strongest at asking back and skill design.</p></div>
+    </div>
   </div>
-  <div class="foot"><span>06</span><span>notes/08-model-notes.md</span></div>
+  <div class="foot"><span>06</span><span>principles</span></div>
 </section>
 
 <section class="slide">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
-    <div class="topbar reveal"><span>More</span><span class="pill">rules of thumb</span></div>
-    <h2 class="reveal">Speed · clarify · budget</h2>
-    <div class="cols-3"><div class="card accent reveal"><div class="tag">fast</div><h3>Speed + low cost</h3><p>Grok 4.5 / Composer Fast.</p></div><div class="card cyan reveal"><div class="tag">ask</div><h3>Clarify constraints</h3><p>Anthropic strongest at asking back.</p></div><div class="card reveal"><div class="tag">bench</div><h3>Check boards</h3><p>OpenRouter prices · LMArena votes.</p></div></div>
+    <div class="topbar reveal"><span>Speed</span><span class="pill">budget</span></div>
+    <h2 class="reveal">When you want speed + low cost</h2>
+    <div class="cols-3">
+      <div class="card accent reveal"><div class="tag">default</div><h3>Grok 4.5</h3><p>Fast, smooth, moderate spend — strong everyday default.</p></div>
+      <div class="card cyan reveal"><div class="tag">burst</div><h3>Composer Fast</h3><p>Very fast replies when you need snappy iteration.</p></div>
+      <div class="card reveal"><div class="tag">warn</div><h3>Prices move</h3><p>OpenRouter / vendors change — treat $ numbers as snapshots.</p></div>
+    </div>
   </div>
-  <div class="foot"><span>07</span><span>references</span></div>
+  <div class="foot"><span>07</span><span>speed · cost</span></div>
 </section>
 
 <section class="slide">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
-    <div class="topbar reveal"><span>Related</span><span class="pill">links</span></div>
-    <h2 class="reveal">Keep the split clean</h2>
-    <div class="cols-3"><div class="card accent reveal"><div class="tag">harness</div><h3>07-agents.md</h3><p>Compare Cursor / Claude Code / Pi…</p></div><div class="card cyan reveal"><div class="tag">skills</div><h3>skills-rules.md</h3><p>Configure know-how.</p></div><div class="card reveal"><div class="tag">mcp</div><h3>mcp.md</h3><p>Tools the harness can call.</p></div></div>
+    <div class="topbar reveal"><span>Example</span><span class="pill">worked</span></div>
+    <h2 class="reveal">Worked example · three tasks</h2>
+    <div class="cols-3">
+      <div class="card accent reveal"><div class="tag">A</div><h3>Scaffold a docs site</h3><p>Greenfield + structure → Grok or Anthropic.</p></div>
+      <div class="card cyan reveal"><div class="tag">B</div><h3>Failing pytest, big repo</h3><p>Local fix loop → DeepSeek V4 or Grok.</p></div>
+      <div class="card reveal"><div class="tag">C</div><h3>Broken UI screenshot</h3><p>Needs vision → not DeepSeek; pick a vision-capable model.</p></div>
+    </div>
+    <p class="lead reveal" style="margin-top:28px;font-size:22px;">One model for every job wastes money or quality.</p>
   </div>
-  <div class="foot"><span>08</span><span>related</span></div>
+  <div class="foot"><span>08</span><span>worked example</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Pitfalls</span><span class="pill">watch</span></div>
+    <h2 class="reveal">Easy to go wrong</h2>
+    <div class="cols-2">
+      <div class="card accent reveal"><div class="tag">pitfall</div><h3>One model forever</h3><p>Waste money or quality — match task fit.</p></div>
+      <div class="card cyan reveal"><div class="tag">pitfall</div><h3>Marketing TPS</h3><p>Fast wrong answers still waste time — check task fit.</p></div>
+      <div class="card reveal"><div class="tag">pitfall</div><h3>Ignore image capability</h3><p>Vision tasks silently degrade on text-only models.</p></div>
+      <div class="card reveal"><div class="tag">pitfall</div><h3>Auto = a model</h3><p>Routing mode ≠ a single model’s skill.</p></div>
+    </div>
+  </div>
+  <div class="foot"><span>09</span><span>pitfalls</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Sources</span><span class="pill">re-check</span></div>
+    <h2 class="reveal">Keep the map fresh</h2>
+    <div class="cols-2">
+      <div class="card accent reveal"><div class="tag">prices</div><h3>OpenRouter</h3><p>Models &amp; prices move — re-check before budgeting a project.</p></div>
+      <div class="card cyan reveal"><div class="tag">votes</div><h3>LMArena</h3><p>Human preference ranks — useful signal, not gospel for your task.</p></div>
+    </div>
+    <p class="lead reveal" style="margin-top:28px;font-size:22px;">These are personal field notes — update when the wave moves.</p>
+  </div>
+  <div class="foot"><span>10</span><span>OpenRouter · LMArena</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Related</span><span class="pill">harness</span></div>
+    <h2 class="reveal">Don’t confuse engine and car</h2>
+    <div class="cols-3">
+      <div class="card accent reveal"><div class="tag">harness</div><h3>agents</h3><p>Compare kitchens — Cursor, Claude Code, Pi…</p></div>
+      <div class="card cyan reveal"><div class="tag">tools</div><h3>mcp</h3><p>How tools attach to any brain.</p></div>
+      <div class="card reveal"><div class="tag">skills</div><h3>skills-rules</h3><p>Global know-how the harness loads.</p></div>
+    </div>
+  </div>
+  <div class="foot"><span>11</span><span>related</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Pipeline</span><span class="pill">choose</span></div>
+    <h2 class="reveal">How to pick today</h2>
+    <div class="flow-row reveal" style="margin-top:48px;"><span class="step">name the task</span><span class="arr">→</span><span class="step">greenfield / debug / vision?</span><span class="arr">→</span><span class="step">speed vs depth</span><span class="arr">→</span><span class="step">check $</span><span class="arr">→</span><span class="step">run</span></div>
+    <p class="lead reveal" style="margin-top:40px;">Then pick the harness that can actually call the tools you need.</p>
+  </div>
+  <div class="foot"><span>12</span><span>pipeline</span></div>
 </section>
 
 <section class="slide">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
     <div class="topbar reveal"><span>Next</span><span class="pill">continue</span></div>
-    <h1 class="reveal" style="margin-top:100px;font-size:64px;">Model for the task,<br /><em>harness for the loop.</em></h1>
-    <p class="lead reveal" style="margin-top:28px;">notes/08-model-notes.md</p>
+    <h1 class="reveal" style="margin-top:100px;font-size:64px;">Match the engine<br /><em>to the job.</em></h1>
+    <p class="lead reveal" style="margin-top:28px;">notes/08-model-notes.md — table, principles, Grok spotlight.</p>
     <a class="app-cta reveal" href="../../notes/model-notes.html">Open note →</a>
   </div>
-  <div class="foot"><span>end</span><span>AI Lab</span></div>
+  <div class="foot"><span>13</span><span>AI Lab</span></div>
 </section>
 
 </main>

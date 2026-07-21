@@ -337,9 +337,10 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
     <div class="topics"><span>#train</span><span>#inference</span><span>#checkpoint</span></div>
     <hr class="sep" />
     <div class="body"><h1>Train → Inference</h1>
-<blockquote>Every model lives two lives: <strong>learning</strong> (train) — spend heavy compute once to adjust weights — and <strong>using</strong> (inference) — run lightly again and again to predict. Knowing the split clarifies what needs a GPU and what runs in the browser.</blockquote>
+<blockquote>Every model lives two lives: <strong>learning</strong> (train) — spend heavy compute once to adjust weights — and <strong>using</strong> (inference) — run lightly again and again to predict. Knowing the split clarifies what needs a GPU and what runs in the browser. Everyday metaphor: years at school (train) vs answering one exam question (infer).</blockquote>
 <h2>Why it matters</h2>
-<p>Beginners often treat "AI" as one block. Training (many GPU epochs) happens once to produce a checkpoint; inference (predict on new input) is what runs every time a user clicks. Lab demos are all inference — real training happens in notebooks / cloud GPU, then weights plug into the UI.</p>
+<p>Beginners often treat “AI” as one block. Training (many GPU epochs) happens once to produce a checkpoint; inference (predict on new input) is what runs every time a user clicks. Lab demos are all inference — real training happens in notebooks / cloud GPU, then weights plug into the UI.</p>
+<p>This mental model prevents two mistakes: (1) expecting a static HTML demo to “learn” from clicks, and (2) renting a GPU for every prediction when a CPU/GPU-light forward pass is enough.</p>
 <h2>Key ideas</h2>
 <ul>
 <li><strong>Two phases:</strong></li>
@@ -351,20 +352,41 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 <tr><td><strong>Inference</strong></td><td>load weights, feed input, get prediction</td><td>light, realtime</td><td>label / action</td></tr>
 </tbody></table>
 <ul>
-<li><strong>Learning = reducing error:</strong> each round the model predicts, measures loss (e.g. cross-entropy with <a href="softmax.html">softmax.md</a>), then nudges weights toward lower loss.</li>
-<li><strong>Checkpoint is the product:</strong> after training, save weights; inference no longer needs training data.</li>
-<li><strong>In AI Lab:</strong> browser demos show <em>inference</em> only. Heavy training in protonx / Kaggle / Colab notebooks → export → embed in UI.</li>
+<li><strong>Learning = reducing error:</strong> each round the model predicts, measures loss (e.g. cross-entropy with <a href="softmax.html">softmax.md</a>), then nudges weights toward lower loss (<a href="pytorch-training.html">pytorch-training.md</a>).</li>
+<li><strong>Checkpoint is the product:</strong> after training, save weights; inference no longer needs training data or labels.</li>
+<li><strong>Eval mode:</strong> at inference, disable dropout / use running batch-norm stats (<code>model.eval()</code>, <code>torch.no_grad()</code>).</li>
+<li><strong>In AI Lab:</strong> browser demos show <em>inference</em> only. Heavy training in protonx / Kaggle / Colab notebooks → export → embed in UI (<a href="train-gpu.html">train-gpu.md</a>).</li>
 </ul>
+<h2>Worked example (intuition)</h2>
+<p>Car-nn: sensors → network → drive action. Weeks of notebook training produced <code>weights.json</code> (or similar). The demo loads those numbers and runs forward passes in the browser. Clicking “drive” never updates weights — that would be training, and it already happened.</p>
+<h2>Common pitfalls</h2>
+<ul>
+<li><strong>Confusing fine-tune with inference</strong> — fine-tune is still training (updates weights).</li>
+<li><strong>Leaving dropout on at serve time</strong> — noisy, inconsistent predictions.</li>
+<li><strong>Shipping the last epoch blindly</strong> — prefer the best validation checkpoint.</li>
+<li><strong>Re-training from scratch when a Hub model + light fine-tune would do</strong>.</li>
+</ul>
+<h2>Illustrations</h2>
+<figure><img src="assets/train-infer/train-infer-split.png" alt="Train vs Inference: two panels" loading="lazy" /><figcaption>Train vs Inference: two panels</figcaption></figure>
+<figure><img src="assets/train-infer/train-infer-flow.svg" alt="Two lives of a model — flow diagram" loading="lazy" /><figcaption>Two lives of a model — flow diagram</figcaption></figure>
 <h2>Pipeline</h2>
 <pre><code>
 data → train (many GPU epochs) → checkpoint → load → infer (predict)
 
 </code></pre>
+<h2>Slides &amp; demo</h2>
+<table><thead>
+<tr><th></th><th>Link</th></tr>
+</thead><tbody>
+<tr><td>Slides</td><td><a href="../slides/train-infer/index.html">slides/train-infer</a></td></tr>
+<tr><td>Related demos</td><td><a href="../demos/car-nn/app/index.html">car-nn</a> · <a href="../demos/sentiment/app/index.html">sentiment</a></td></tr>
+</tbody></table>
 <h2>Related</h2>
 <ul>
 <li>Full stack (PyTorch, TensorFlow, HF, Kaggle, GPU): <a href="train-gpu.html">train-gpu.md</a></li>
 <li>Demo inference: <a href="car-nn.html">04-demo-car.md</a>, <a href="sentiment-routing.html">05-demo-text.md</a></li>
 <li><a href="softmax.html">softmax.md</a> — loss when training classifiers</li>
+<li><a href="pytorch-training.html">pytorch-training.md</a>, <a href="tensorflow-training.html">tensorflow-training.md</a></li>
 </ul></div>
   </article>
 </div>

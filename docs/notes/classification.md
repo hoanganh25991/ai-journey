@@ -41,9 +41,12 @@ Input sentence: `"The battery dies in two hours."`
 
 ![Softmax converts raw scores to probabilities for label selection](assets/protonx/softmax.jpg)
 
-![Classification pipeline: input → embedding → head → softmax → label](../slides/assets/classification-pipeline.svg)
+![Classification pipeline: input → embedding → head → softmax → label](assets/classification/classification-pipeline.svg)
 
-![Classification hero: scores become a discrete decision](../slides/assets/classification-hero.png)
+![Classification hero: scores become a discrete decision](assets/classification/classification-hero.png)
+
+
+![Worked example: logits → softmax → label](assets/classification/classification-worked.png)
 
 ## Pipeline
 

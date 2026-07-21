@@ -337,24 +337,40 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
     <div class="topics"><span>#transformer</span><span>#attention</span><span>#encoder</span><span>#decoder</span><span>#positional-encoding</span></div>
     <hr class="sep" />
     <div class="body"><h1>Transformer — core architecture of LLMs</h1>
-<blockquote>Stack many <a href="attention.html">attention</a> blocks and process a whole sentence in parallel instead of step by step. The framework behind BERT, GPT, and nearly every modern language model.</blockquote>
+<blockquote>Stack many <a href="attention.html">attention</a> blocks and process a whole sentence in parallel instead of step by step. The framework behind BERT, GPT, and nearly every modern language model. Everyday metaphor: instead of reading word-by-word with a bookmark, every word glances at every other word at once — then you deepen that glance across many floors of the building.</blockquote>
 <h2>Why it matters</h2>
-<p>Before Transformers, models read sentences sequentially (RNN/LSTM) — slow and prone to forgetting early context. The Transformer (2017, "Attention Is All You Need") drops sequential processing: every word attends to every other word at once → faster GPU training and better long-range links. That pivot opened the LLM era.</p>
+<p>Before Transformers, models read sentences sequentially (RNN/LSTM) — slow and prone to forgetting early context. The Transformer (2017, “Attention Is All You Need”) drops sequential processing: every word attends to every other word at once → faster GPU training and better long-range links. That pivot opened the LLM era.</p>
+<p>Everything in this lab that feels “modern” — chat models, embeddings from BERT-like encoders, cross-attention in translation — sits inside this frame.</p>
 <h2>Key ideas</h2>
 <ul>
-<li><strong>Stacked attention blocks:</strong> each layer has multi-head <a href="attention.html">attention</a> plus a feed-forward network; stack many layers for increasingly abstract representations.</li>
-<li><strong>Positional encoding:</strong> parallel processing has no built-in order — inject position info so the model knows word sequence.</li>
-<li><strong>Encoder / decoder:</strong></li>
+<li><strong>Stacked attention blocks:</strong> each layer has multi-head <a href="attention.html">attention</a> plus a feed-forward network; stack many layers for increasingly abstract representations (syntax → entities → discourse).</li>
+<li><strong>Positional encoding:</strong> parallel processing has no built-in order — inject position info (sinusoidal or learned) so the model knows word sequence. Without it, “dog bites man” ≈ “man bites dog.”</li>
+<li><strong>Encoder / decoder / both:</strong></li>
 <li><em>Encoder</em> (BERT): read and understand the whole sentence → good for <a href="classification.html">classification</a> and embeddings.</li>
-<li><em>Decoder</em> (GPT): generate left to right → good for text generation.</li>
-<li><em>Encoder-decoder:</em> translation, summarization (uses cross-attention).</li>
-<li><strong>Residual + layer norm:</strong> tricks that keep deep networks stable during training.</li>
+<li><em>Decoder</em> (GPT): generate left to right with causal masking → good for text generation.</li>
+<li><em>Encoder-decoder:</em> translation, summarization (uses <a href="attention.html">cross-attention</a>).</li>
+<li><strong>Residual + layer norm:</strong> skip connections and normalization keep deep stacks stable during training.</li>
+<li><strong>Multi-head = parallel views:</strong> one head may track grammar, another coreference — outputs concatenate and project.</li>
 <li><strong>Parallel = fast:</strong> no step-by-step dependency → full GPU utilization (<a href="train-gpu.html">train-gpu.md</a>).</li>
+</ul>
+<h2>Worked example (intuition)</h2>
+<p>Sentence: <code>"The cat sat on the mat."</code></p>
+<p>1. Tokens → embeddings + positional encodings.</p>
+<p>2. Layer 1 self-attention: <code>"sat"</code> strongly attends to <code>"cat"</code> (subject) and <code>"mat"</code> (location).</p>
+<p>3. Feed-forward mixes features per position.</p>
+<p>4. After N layers, a classification head (BERT-style) or next-token head (GPT-style) reads the representation.</p>
+<h2>Common pitfalls</h2>
+<ul>
+<li><strong>Confusing encoder vs decoder tasks</strong> — don’t expect a pure encoder to generate fluent chat; don’t expect a causal decoder to be the best frozen sentence embedder without pooling tricks.</li>
+<li><strong>Ignoring context length</strong> — attention is O(n²) in sequence length; long docs need chunking or efficient variants.</li>
+<li><strong>Dropping positional info when hacking</strong> — broken order sensitivity.</li>
 </ul>
 <h2>Illustrations</h2>
 <figure><img src="assets/protonx/self-attention.jpg" alt="Self-attention inside one encoder block" loading="lazy" /><figcaption>Self-attention inside one encoder block</figcaption></figure>
 <figure><img src="assets/protonx/cross-attention.jpg" alt="Cross-attention: decoder attends to encoder (machine translation)" loading="lazy" /><figcaption>Cross-attention: decoder attends to encoder (machine translation)</figcaption></figure>
 <figure><img src="assets/protonx/attention-after-softmax.jpg" alt="Attention weights after softmax inside one layer" loading="lazy" /><figcaption>Attention weights after softmax inside one layer</figcaption></figure>
+<figure><img src="assets/transformer/transformer-stack.png" alt="Transformer stack: attention + feed-forward layers" loading="lazy" /><figcaption>Transformer stack: attention + feed-forward layers</figcaption></figure>
+<figure><img src="assets/transformer/transformer-block-detail.png" alt="Encoder block internals: attention + residual + FFN" loading="lazy" /><figcaption>Encoder block internals: attention + residual + FFN</figcaption></figure>
 <h2>Pipeline</h2>
 <pre><code>
 tokens → embedding + positional → [N × (multi-head attention + feed-forward)] → representation
@@ -362,7 +378,14 @@ tokens → embedding + positional → [N × (multi-head attention + feed-forward
        → head: classification / generation
 
 </code></pre>
-<p>The Transformer is the "house frame" wrapping <a href="attention.html">attention.md</a>, <a href="embedding.html">embedding.md</a>, and <a href="softmax.html">softmax.md</a> into one complete model.</p>
+<p>The Transformer is the “house frame” wrapping <a href="attention.html">attention.md</a>, <a href="embedding.html">embedding.md</a>, and <a href="softmax.html">softmax.md</a> into one complete model.</p>
+<h2>Slides &amp; demo</h2>
+<table><thead>
+<tr><th></th><th>Link</th></tr>
+</thead><tbody>
+<tr><td>Slides</td><td><a href="../slides/transformer/index.html">slides/transformer</a></td></tr>
+<tr><td>Related demo</td><td><a href="../demos/attention/app/index.html">demos/attention</a></td></tr>
+</tbody></table>
 <h2>References</h2>
 <ul>
 <li>Vaswani et al. 2017 — <a href="https://arxiv.org/abs/1706.03762">Attention Is All You Need</a></li>

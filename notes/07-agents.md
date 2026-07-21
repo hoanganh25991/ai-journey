@@ -48,6 +48,10 @@ Same bugfix: “tests fail on CI.” In Cursor with MCP + repo skills, the agent
 
 ![Harness comparison grid](assets/agents/agents-harness.png)
 
+![Model vs harness](assets/agents/model-vs-harness.png)
+
+![Agent loop fed by skills](assets/agents/agent-loop-skills.png)
+
 ## Slides & demo
 
 | | Link |

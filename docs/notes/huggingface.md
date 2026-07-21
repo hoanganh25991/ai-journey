@@ -46,7 +46,9 @@ Want a Vietnamese sentiment demo? Search the Hub for a multilingual or vi checkp
 
 ## Illustrations
 
-![Hugging Face Hub: Datasets, Models, Spaces](../slides/assets/huggingface-hub.png)
+![Hugging Face Hub: Datasets, Models, Spaces](assets/huggingface/huggingface-hub.png)
+
+![Fine-tune path on the Hub](assets/huggingface/hf-finetune-flow.png)
 
 ## Pipeline
 

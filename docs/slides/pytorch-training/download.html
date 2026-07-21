@@ -177,7 +177,7 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
   width: 100%; height: 420px; object-fit: contain; border-radius: 14px;
   border: 1px solid var(--line); background: #e6edf5;
 }
-.shot-lg { height: 520px; }
+.shot-lg { height: 500px; }
 .shot-md { height: 380px; }
 .mini { font-size: 18px !important; }
 .table-card { overflow: hidden; }
@@ -189,13 +189,14 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
 .table-card th { color: var(--ink); font-family: var(--font-mono); font-size: 14px;
   letter-spacing: 0.06em; text-transform: uppercase; }
 .code-block {
-  font-family: var(--font-mono); font-size: 18px; line-height: 1.55;
-  background: rgba(22,32,46,0.92); color: #e8eef7; padding: 24px 28px;
+  font-family: var(--font-mono); font-size: 17px; line-height: 1.5;
+  background: rgba(22,32,46,0.92); color: #e8eef7; padding: 22px 26px;
   border-radius: 14px; white-space: pre; overflow: hidden;
 }
 .code-block .c { color: #8b97a8; }
 .code-block .k { color: #5ec8d4; }
 .code-block .s { color: #f0a35e; }
+.caption { margin-top: 14px; font-size: 20px; color: var(--muted); max-width: 92%; }
 </style>
 </head>
 <body>
@@ -207,8 +208,13 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
   <div class="pad">
     <div class="topbar reveal"><span>Concept · pytorch-training</span><span class="pill">teaching</span></div>
     <h1 class="reveal" style="margin-top:72px;">Train with <em>PyTorch</em></h1>
-    <p class="lead reveal" style="margin-top:28px;">Epoch loop you write yourself: forward → loss → backward → step until the model is good enough.</p>
-    <div class="flow-row reveal"><span class="step">dataset</span><span class="arr">→</span><span class="step">DataLoader</span><span class="arr">→</span><span class="step">epoch loop</span><span class="arr">→</span><span class="step">checkpoint</span></div>
+    <p class="lead reveal" style="margin-top:28px;">You write the epoch loop: forward → loss → backward → step until the model is good enough. Each batch is one practice set; each epoch is one full pass through the textbook.</p>
+    <div class="flow-row reveal">
+      <span class="step">dataset</span><span class="arr">→</span>
+      <span class="step">DataLoader</span><span class="arr">→</span>
+      <span class="step">epoch loop</span><span class="arr">→</span>
+      <span class="step">checkpoint</span>
+    </div>
   </div>
   <div class="foot"><span>01</span><span>AI Lab</span></div>
 </section>
@@ -218,7 +224,11 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
   <div class="pad">
     <div class="topbar reveal"><span>Why</span><span class="pill">matters</span></div>
     <h2 class="reveal">Why learn the loop by hand</h2>
-    <div class="cols-3"><div class="card accent reveal"><div class="tag">flex</div><h3>Most flexible</h3><p>You see exactly how learning happens — what high-level APIs wrap.</p></div><div class="card cyan reveal"><div class="tag">same</div><h3>Same mechanism</h3><p>Hugging Face Trainer and sentence-transformers sit on this loop.</p></div><div class="card reveal"><div class="tag">debug</div><h3>Debuggable</h3><p>When loss explodes, you know which step to inspect.</p></div></div>
+    <div class="cols-3">
+      <div class="card accent reveal"><div class="tag">flex</div><h3>Most popular flexible stack</h3><p>Build and train yourself — see exactly how learning happens.</p></div>
+      <div class="card cyan reveal"><div class="tag">wrap</div><h3>What HF wraps</h3><p>Trainer, sentence-transformers, LoRA — all sit on this loop.</p></div>
+      <div class="card reveal"><div class="tag">debug</div><h3>Debuggable</h3><p>Exploding loss, bad LR, device mismatch — you know which step to inspect.</p></div>
+    </div>
   </div>
   <div class="foot"><span>02</span><span>notes/pytorch-training.md</span></div>
 </section>
@@ -226,10 +236,14 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
 <section class="slide">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
-    <div class="topbar reveal"><span>PyTorch</span><span class="pill">ideas</span></div>
+    <div class="topbar reveal"><span>Ideas</span><span class="pill">core</span></div>
     <h2 class="reveal">Key ideas</h2>
-    <div class="cols-3"><div class="card reveal"><div class="tag">batch</div><h3>Epoch vs batch</h3><p>Epoch = one pass over all data; batch = chunk processed per step.</p></div><div class="card cyan reveal"><div class="tag">four</div><h3>Four steps</h3><p>forward → loss → backward() → step(). Always zero_grad().</p></div><div class="card reveal"><div class="tag">lr</div><h3>Optimizer + LR</h3><p>Adam/SGD; LR too high → jumps; too low → crawls.</p></div></div>
-    <p class="lead reveal" style="margin-top:24px;font-size:20px;">Keywords: pytorch · epoch · optimizer · backprop · Read: <span style="color:var(--amber);font-family:var(--font-mono)">notes/pytorch-training.md</span></p>
+    <div class="cols-3">
+      <div class="card reveal"><div class="tag">units</div><h3>Epoch vs batch</h3><p>Epoch = one pass over all data. Batch = chunk per step. Large = stabler; small = noisier, often generalizes better.</p></div>
+      <div class="card cyan reveal"><div class="tag">four</div><h3>Four steps</h3><p><code>zero_grad</code> → forward → loss → <code>backward</code> + <code>step</code>.</p></div>
+      <div class="card reveal"><div class="tag">lr</div><h3>Optimizer + LR</h3><p>Adam ~1e-3 small nets; fine-tune Transformers often 2e-5–5e-5.</p></div>
+    </div>
+    <p class="lead reveal" style="margin-top:24px;font-size:20px;">Also: val split for overfitting · <code>.to(device)</code> · save best checkpoint. Read: <span style="color:var(--amber);font-family:var(--font-mono)">notes/pytorch-training.md</span></p>
   </div>
   <div class="foot"><span>03</span><span>notes/pytorch-training.md</span></div>
 </section>
@@ -237,40 +251,39 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
 <section class="slide">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
-    <div class="topbar reveal"><span>Illustration</span><span class="pill">pytorch-loop.png</span></div>
-    <h2 class="reveal" style="font-size:36px;margin-bottom:16px;">Illustration</h2>
-    <img class="shot shot-lg reveal" src="../assets/pytorch-loop.png" alt="Training loop" />
-    
+    <div class="topbar reveal"><span>Picture</span><span class="pill">loop</span></div>
+    <h2 class="reveal" style="font-size:36px;margin-bottom:12px;">Training as a circular flowchart</h2>
+    <img class="shot shot-lg reveal" src="../assets/pytorch-loop.png" alt="PyTorch training loop circular flowchart" />
+    <p class="caption reveal">Data keeps cycling through the model: predict, measure error, adjust weights, repeat until validation says “good enough.”</p>
   </div>
-  <div class="foot"><span>04</span><span>AI Lab · illustration</span></div>
+  <div class="foot"><span>04</span><span>slides/assets/pytorch-loop.png</span></div>
 </section>
 
 <section class="slide">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
-    <div class="topbar reveal"><span>Illustration</span><span class="pill">pytorch-steps.svg</span></div>
-    <h2 class="reveal" style="font-size:36px;margin-bottom:16px;">Illustration</h2>
-    <img class="shot shot-lg reveal" src="../assets/pytorch-steps.svg" alt="Four steps" />
-    
+    <div class="topbar reveal"><span>Picture</span><span class="pill">four steps</span></div>
+    <h2 class="reveal" style="font-size:36px;margin-bottom:12px;">One batch, four moves</h2>
+    <img class="shot shot-lg reveal" src="../assets/pytorch-steps.svg" alt="Forward loss backward step" />
+    <p class="caption reveal">Forward computes logits. Loss compares to labels. Backward assigns blame. Step nudges weights. Always clear grads first.</p>
   </div>
-  <div class="foot"><span>05</span><span>AI Lab · illustration</span></div>
+  <div class="foot"><span>05</span><span>slides/assets/pytorch-steps.svg</span></div>
 </section>
 
 <section class="slide">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
     <div class="topbar reveal"><span>Code</span><span class="pill">skeleton</span></div>
-    <h2 class="reveal">The batch loop</h2>
-    <div class="cols-2">
-      <div class="code-block reveal"><span class="k">for</span> epoch <span class="k">in</span> range(EPOCHS):
+    <h2 class="reveal">The training loop</h2>
+    <div class="code-block reveal"><span class="k">for</span> epoch <span class="k">in</span> range(EPOCHS):
+    model.train()
     <span class="k">for</span> x, y <span class="k">in</span> dataloader:
-        opt.zero_grad()
-        logits = model(x)       <span class="c"># forward</span>
-        loss = loss_fn(logits, y)
-        loss.backward()         <span class="c"># gradients</span>
-        opt.step()              <span class="c"># update W</span></div>
-      <div class="card cyan reveal"><div class="tag">remember</div><h3>zero_grad()</h3><p>Without clearing gradients, updates accumulate across batches and training goes wild.</p></div>
-    </div>
+        opt.zero_grad()              <span class="c"># clear old gradients</span>
+        logits = model(x)            <span class="c"># forward</span>
+        loss = loss_fn(logits, y)    <span class="c"># CrossEntropyLoss</span>
+        loss.backward()              <span class="c"># compute gradients</span>
+        opt.step()                   <span class="c"># update weights</span>
+    <span class="c"># optional: model.eval(); measure val loss / accuracy</span></div>
   </div>
   <div class="foot"><span>06</span><span>notes/pytorch-training.md</span></div>
 </section>
@@ -278,30 +291,48 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
 <section class="slide">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
-    <div class="topbar reveal"><span>Validate</span><span class="pill">overfit</span></div>
-    <h2 class="reveal">Train vs validation</h2>
-    <div class="cols-3"><div class="card accent reveal"><div class="tag">split</div><h3>Hold out val</h3><p>Track val loss every epoch — not just train loss.</p></div><div class="card cyan reveal"><div class="tag">overfit</div><h3>Overfitting</h3><p>Train loss ↓ while val loss ↑ → memorizing, not generalizing.</p></div><div class="card reveal"><div class="tag">save</div><h3>Checkpoint</h3><p>torch.save(model.state_dict()) for inference later.</p></div></div>
+    <div class="topbar reveal"><span>Worked</span><span class="pill">intuition</span></div>
+    <h2 class="reveal">What “learning” feels like on one batch</h2>
+    <div class="cols-3">
+      <div class="card accent reveal"><div class="tag">1</div><h3>Wrong → high loss</h3><p>Tiny binary net misses the batch; cross-entropy spikes.</p></div>
+      <div class="card cyan reveal"><div class="tag">2</div><h3>Backward blames weights</h3><p>Gradients say how each parameter contributed to the error.</p></div>
+      <div class="card reveal"><div class="tag">3</div><h3>Step nudges slightly</h3><p>Next forward is a bit less wrong. Thousands of batches later: a decision boundary.</p></div>
+    </div>
   </div>
-  <div class="foot"><span>07</span><span>notes/pytorch-training.md</span></div>
+  <div class="foot"><span>07</span><span>that is the loop-level story</span></div>
 </section>
 
 <section class="slide">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
-    <div class="topbar reveal"><span>GPU</span><span class="pill">speed</span></div>
-    <h2 class="reveal">Move model and batch to device</h2>
-    <div class="cols-3"><div class="card accent reveal"><div class="tag">cuda</div><h3>.to("cuda")</h3><p>Model and each batch must live on the same device.</p></div><div class="card cyan reveal"><div class="tag">note</div><h3>train-gpu.md</h3><p>Full stack: HF/Kaggle data + Colab/cloud notebooks.</p></div><div class="card reveal"><div class="tag">export</div><h3>Then infer</h3><p>Training is heavy once; inference is light forever.</p></div></div>
+    <div class="topbar reveal"><span>Validate</span><span class="pill">table</span></div>
+    <h2 class="reveal">Train / val / LR knobs</h2>
+    <div class="card table-card reveal">
+      <table>
+        <thead><tr><th>Signal</th><th>Meaning</th><th>Action</th></tr></thead>
+        <tbody>
+          <tr><td>Train ↓, val ↓</td><td>Learning</td><td>Keep going; maybe raise capacity later</td></tr>
+          <tr><td>Train ↓, val ↑</td><td>Overfitting</td><td>Stop early; regularize; more data</td></tr>
+          <tr><td>Loss NaN / jumps</td><td>LR too high</td><td>Lower LR; check labels / devices</td></tr>
+          <tr><td>Painfully flat</td><td>LR too low</td><td>Raise LR or train longer</td></tr>
+        </tbody>
+      </table>
+    </div>
   </div>
-  <div class="foot"><span>08</span><span>notes/train-gpu.md</span></div>
+  <div class="foot"><span>08</span><span>save best val checkpoint, not only last epoch</span></div>
 </section>
 
 <section class="slide">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
-    <div class="topbar reveal"><span>Pipeline</span><span class="pill">pipeline</span></div>
-    <h2 class="reveal">Dataset → checkpoint</h2>
-    <div class="flow-row reveal" style="margin-top:48px;"><span class="step">dataset</span><span class="arr">→</span><span class="step">DataLoader</span><span class="arr">→</span><span class="step">forward</span><span class="arr">→</span><span class="step">loss</span><span class="arr">→</span><span class="step">backward</span><span class="arr">→</span><span class="step">step</span><span class="arr">→</span><span class="step">ckpt</span></div>
-    
+    <div class="topbar reveal"><span>Pitfalls</span><span class="pill">watch</span></div>
+    <h2 class="reveal">Easy ways to break training</h2>
+    <div class="cols-2">
+      <div class="card accent reveal"><div class="tag">grads</div><h3>Forgot zero_grad()</h3><p>Gradients stack across batches → wild updates.</p></div>
+      <div class="card cyan reveal"><div class="tag">mode</div><h3>Train mode at eval</h3><p>Use <code>model.eval()</code> + <code>torch.no_grad()</code> when validating.</p></div>
+      <div class="card reveal"><div class="tag">device</div><h3>Device mismatch</h3><p>Model on CUDA, batch on CPU → runtime error. Move both.</p></div>
+      <div class="card reveal"><div class="tag">leak</div><h3>Leaky validation</h3><p>Tuning on the test set — keep a true held-out test.</p></div>
+    </div>
   </div>
   <div class="foot"><span>09</span><span>notes/pytorch-training.md</span></div>
 </section>
@@ -310,10 +341,34 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
     <div class="topbar reveal"><span>Compare</span><span class="pill">vs TF</span></div>
-    <h2 class="reveal">PyTorch vs TensorFlow style</h2>
-    <div class="cols-3"><div class="card accent reveal"><div class="tag">pt</div><h3>PyTorch</h3><p>You write the loop — maximum control.</p></div><div class="card cyan reveal"><div class="tag">tf</div><h3>Keras</h3><p>compile + fit — framework runs the loop.</p></div><div class="card reveal"><div class="tag">pick</div><h3>Choose by project</h3><p>Same learning idea; different API ergonomics.</p></div></div>
+    <h2 class="reveal">PyTorch vs Keras style</h2>
+    <div class="cols-3">
+      <div class="card accent reveal"><div class="tag">pt</div><h3>PyTorch</h3><p>You write the loop — maximum control and visibility.</p></div>
+      <div class="card cyan reveal"><div class="tag">tf</div><h3>Keras</h3><p><code>compile</code> + <code>fit</code> — framework runs the same math.</p></div>
+      <div class="card reveal"><div class="tag">same</div><h3>Same learning</h3><p>Forward → loss → gradients → update. Only the API shape differs.</p></div>
+    </div>
+    <p class="lead reveal" style="margin-top:28px;">GPU: <code>.to("cuda")</code> or <code>"mps"</code> for model <em>and</em> each batch — see train-gpu.md.</p>
   </div>
-  <div class="foot"><span>10</span><span>related</span></div>
+  <div class="foot"><span>10</span><span>related: tensorflow-training</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Pipeline</span><span class="pill">end-to-end</span></div>
+    <h2 class="reveal">Dataset → checkpoint</h2>
+    <div class="flow-row reveal" style="margin-top:48px;">
+      <span class="step">dataset</span><span class="arr">→</span>
+      <span class="step">DataLoader</span><span class="arr">→</span>
+      <span class="step">forward</span><span class="arr">→</span>
+      <span class="step">loss</span><span class="arr">→</span>
+      <span class="step">backward</span><span class="arr">→</span>
+      <span class="step">step</span><span class="arr">→</span>
+      <span class="step">ckpt.pt</span>
+    </div>
+    <p class="lead reveal" style="margin-top:36px;"><code>torch.save(model.state_dict(), "ckpt.pt")</code> — prefer the best val checkpoint for inference.</p>
+  </div>
+  <div class="foot"><span>11</span><span>implements classification.md</span></div>
 </section>
 
 <section class="slide">

@@ -53,9 +53,9 @@ Suppose a tiny binary classifier is wrong on a batch. Loss is high → `backward
 
 ## Illustrations
 
-![PyTorch training loop as a circular flowchart](../slides/assets/pytorch-loop.png)
+![PyTorch training loop as a circular flowchart](assets/pytorch-training/pytorch-loop.png)
 
-![Four steps per batch: forward → loss → backward → step](../slides/assets/pytorch-steps.svg)
+![Four steps per batch: forward → loss → backward → step](assets/pytorch-training/pytorch-steps.svg)
 
 ## Pipeline
 

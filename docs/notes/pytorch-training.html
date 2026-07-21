@@ -397,8 +397,8 @@ for epoch in range(EPOCHS):
 <li><strong>Leaky validation</strong> — tuning hyperparameters on the test set; keep a true held-out test.</li>
 </ul>
 <h2>Illustrations</h2>
-<figure><img src="../slides/assets/pytorch-loop.png" alt="PyTorch training loop as a circular flowchart" loading="lazy" /><figcaption>PyTorch training loop as a circular flowchart</figcaption></figure>
-<figure><img src="../slides/assets/pytorch-steps.svg" alt="Four steps per batch: forward → loss → backward → step" loading="lazy" /><figcaption>Four steps per batch: forward → loss → backward → step</figcaption></figure>
+<figure><img src="assets/pytorch-training/pytorch-loop.png" alt="PyTorch training loop as a circular flowchart" loading="lazy" /><figcaption>PyTorch training loop as a circular flowchart</figcaption></figure>
+<figure><img src="assets/pytorch-training/pytorch-steps.svg" alt="Four steps per batch: forward → loss → backward → step" loading="lazy" /><figcaption>Four steps per batch: forward → loss → backward → step</figcaption></figure>
 <h2>Pipeline</h2>
 <pre><code>
 dataset → DataLoader → [epoch loop: forward → loss → backward → step] → checkpoint

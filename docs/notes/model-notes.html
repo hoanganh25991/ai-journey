@@ -337,9 +337,10 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
     <div class="topics"><span>#grok</span><span>#openrouter</span><span>#deepseek</span><span>#anthropic</span><span>#composer</span><span>#cursor</span></div>
     <hr class="sep" />
     <div class="body"><h1>Model field notes</h1>
-<blockquote><strong>Model ≠ harness.</strong> Notes on <em>the models themselves</em> (via OpenRouter + Cursor). Compare harnesses at <a href="agents.html">07-agents.md</a>.</blockquote>
+<blockquote><strong>Model ≠ harness.</strong> Notes on <em>the models themselves</em> (via OpenRouter + Cursor). Compare harnesses at <a href="agents.html">07-agents.md</a>. Everyday metaphor: engines (models) vs cars (harnesses) — swap engines carefully; don’t blame the engine for a missing steering wheel.</blockquote>
 <h2>Why it matters</h2>
 <p>Harness choice shapes daily workflow; model choice shapes reasoning quality, speed, and cost. These are personal field notes — not benchmarks — on what each model feels like in real coding work.</p>
+<p>Use them as a starting map: greenfield vs debug, image needs, and budget change the winner.</p>
 <h2>Key ideas</h2>
 <ul>
 <li><strong>Quick table (personal experience):</strong></li>
@@ -366,6 +367,29 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 <li><em>Speed + low cost:</em> Grok 4.5 / Composer Fast.</li>
 <li><em>Clarifying constraints and skill design:</em> Anthropic strongest at asking back.</li>
 </ul>
+<ul>
+<li><strong>Re-check prices:</strong> OpenRouter and vendor pages move — treat $ numbers as snapshots, not eternal truth.</li>
+</ul>
+<h2>Worked example (intuition)</h2>
+<p>Task A: “Scaffold a new notes-first docs site.” → Grok or Anthropic (greenfield + structure).</p>
+<p>Task B: “This failing pytest, repo already large.” → DeepSeek V4 or Grok (local reasoning + cheap iteration).</p>
+<p>Task C: “Read this screenshot of the broken UI.” → not DeepSeek; pick a vision-capable model.</p>
+<h2>Common pitfalls</h2>
+<ul>
+<li><strong>One model for every job</strong> — waste money or quality.</li>
+<li><strong>Trusting marketing TPS without task fit</strong> — fast wrong answers still waste time.</li>
+<li><strong>Ignoring image capability</strong> — vision tasks silently degrade.</li>
+<li><strong>Confusing Auto routing with a single model’s skill</strong>.</li>
+</ul>
+<h2>Illustrations</h2>
+<figure><img src="assets/model-notes/model-notes-spectrum.png" alt="Model spectrum: fast/cheap ↔ deep/slow" loading="lazy" /><figcaption>Model spectrum: fast/cheap ↔ deep/slow</figcaption></figure>
+<figure><img src="assets/model-notes/model-vs-harness.png" alt="Model vs harness reminder" loading="lazy" /><figcaption>Model vs harness reminder</figcaption></figure>
+<h2>Slides &amp; demo</h2>
+<table><thead>
+<tr><th></th><th>Link</th></tr>
+</thead><tbody>
+<tr><td>Slides</td><td><a href="../slides/model-notes/index.html">slides/model-notes</a></td></tr>
+</tbody></table>
 <h2>References</h2>
 <ul>
 <li><a href="https://openrouter.ai/models">OpenRouter — models &amp; prices</a></li>

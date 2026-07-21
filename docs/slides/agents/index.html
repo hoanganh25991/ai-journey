@@ -12,15 +12,15 @@
   border: 1px solid var(--line); background: #e6edf5;
 }
 .shot-lg { height: 520px; }
-.shot-md { height: 380px; }
+.shot-md { height: 360px; }
 .mini { font-size: 18px !important; }
 .table-card { overflow: hidden; }
-.table-card table { width: 100%; border-collapse: collapse; font-size: 18px; }
+.table-card table { width: 100%; border-collapse: collapse; font-size: 16px; }
 .table-card th, .table-card td {
-  text-align: left; padding: 12px 14px; border-bottom: 1px solid var(--line);
+  text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line);
   color: var(--muted); vertical-align: top;
 }
-.table-card th { color: var(--ink); font-family: var(--font-mono); font-size: 14px;
+.table-card th { color: var(--ink); font-family: var(--font-mono); font-size: 13px;
   letter-spacing: 0.06em; text-transform: uppercase; }
 .code-block {
   font-family: var(--font-mono); font-size: 18px; line-height: 1.55;
@@ -41,8 +41,8 @@
   <div class="pad">
     <div class="topbar reveal"><span>Concept · agents</span><span class="pill">teaching</span></div>
     <h1 class="reveal" style="margin-top:72px;">AI Agents · <em>harness comparison</em></h1>
-    <p class="lead reveal" style="margin-top:28px;">Harness ≠ model. Orchestration software (UI, tools, context, loop) shapes how the same brain feels.</p>
-    <div class="flow-row reveal"><span class="step">model</span><span class="arr">→</span><span class="step">harness</span><span class="arr">→</span><span class="step">tools</span><span class="arr">→</span><span class="step">loop</span></div>
+    <p class="lead reveal" style="margin-top:28px;">Harness ≠ model. Same brain, different kitchens — tools, mise en place, and service rhythm change the meal.</p>
+    <div class="flow-row reveal"><span class="step">model</span><span class="arr">→</span><span class="step">harness</span><span class="arr">→</span><span class="step">tools / MCP</span><span class="arr">→</span><span class="step">agent loop</span></div>
   </div>
   <div class="foot"><span>01</span><span>AI Lab</span></div>
 </section>
@@ -51,8 +51,13 @@
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
     <div class="topbar reveal"><span>Why</span><span class="pill">matters</span></div>
-    <h2 class="reveal">Half the story is the harness</h2>
-    <div class="cols-3"><div class="card accent reveal"><div class="tag">ctx</div><h3>Context</h3><p>Which files get into the prompt.</p></div><div class="card cyan reveal"><div class="tag">tools</div><h3>Tool calling</h3><p>MCP, shell, browser — smoothness differs.</p></div><div class="card reveal"><div class="tag">loop</div><h3>Agent loop</h3><p>Self-correct, test, ask back.</p></div></div>
+    <h2 class="reveal">Picking a model is only half the story</h2>
+    <div class="cols-3">
+      <div class="card accent reveal"><div class="tag">context</div><h3>What it sees</h3><p>The harness decides which files and history enter the prompt.</p></div>
+      <div class="card cyan reveal"><div class="tag">tools</div><h3>What it can call</h3><p>MCP, shell, browser — smoothness and reliability vary wildly.</p></div>
+      <div class="card reveal"><div class="tag">loop</div><h3>How it finishes</h3><p>Self-correction, tests, asking back — agent-loop design is a harness feature.</p></div>
+    </div>
+    <p class="lead reveal" style="margin-top:28px;font-size:22px;">Same model in Cursor vs Claude Code can feel opposite — because the harness differs.</p>
   </div>
   <div class="foot"><span>02</span><span>notes/07-agents.md</span></div>
 </section>
@@ -60,21 +65,24 @@
 <section class="slide">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
-    <div class="topbar reveal"><span>Harness</span><span class="pill">ideas</span></div>
+    <div class="topbar reveal"><span>Ideas</span><span class="pill">core</span></div>
     <h2 class="reveal">Key ideas</h2>
-    <div class="cols-3"><div class="card reveal"><div class="tag">def</div><h3>Harness</h3><p>UI + tools + context + agent loop.</p></div><div class="card cyan reveal"><div class="tag">model</div><h3>Model</h3><p>The brain plugged in — compare in model-notes.</p></div><div class="card reveal"><div class="tag">feel</div><h3>Same model, different feel</h3><p>Cursor vs Claude Code can feel opposite.</p></div></div>
-    <p class="lead reveal" style="margin-top:24px;font-size:20px;">Keywords: agents · harness · cursor · claude · pi · Read: <span style="color:var(--amber);font-family:var(--font-mono)">notes/07-agents.md</span></p>
+    <div class="cols-2">
+      <div class="card reveal"><div class="tag">define</div><h3>Harness = orchestration</h3><p>UI, tool calling, context management, agent loop. Not the weights.</p></div>
+      <div class="card cyan reveal"><div class="tag">define</div><h3>Model = the brain</h3><p>Plugged into the harness. Compare models in model-notes — compare kitchens here.</p></div>
+    </div>
+    <p class="lead reveal" style="margin-top:28px;font-size:20px;">Skills / rules / MCP feel uneven across clients because loading <span style="font-family:var(--font-mono);color:var(--amber)">~/.agents</span>, MCP reliability, and loops are harness features.</p>
   </div>
-  <div class="foot"><span>03</span><span>notes/07-agents.md</span></div>
+  <div class="foot"><span>03</span><span>harness ≠ model</span></div>
 </section>
 
 <section class="slide">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
     <div class="topbar reveal"><span>Illustration</span><span class="pill">agents-harness.png</span></div>
-    <h2 class="reveal" style="font-size:36px;margin-bottom:16px;">Illustration</h2>
-    <img class="shot shot-lg reveal" src="../assets/agents-harness.png" alt="Harnesses" />
-    
+    <h2 class="reveal" style="font-size:36px;margin-bottom:16px;">Harness comparison grid</h2>
+    <img class="shot shot-md reveal" src="../assets/agents-harness.png" alt="Grid comparing coding harnesses: Cursor, Claude Code, Pi, Cline, OpenCode, Zed" />
+    <p class="lead reveal" style="margin-top:14px;font-size:20px;">Personal field map — strengths, limits, and feel across everyday coding harnesses.</p>
   </div>
   <div class="foot"><span>04</span><span>AI Lab · illustration</span></div>
 </section>
@@ -82,64 +90,166 @@
 <section class="slide">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
-    <div class="topbar reveal"><span>Compare</span><span class="pill">field notes</span></div>
-    <h2 class="reveal">Personal harness notes</h2>
+    <div class="topbar reveal"><span>Illustration</span><span class="pill">model vs harness</span></div>
+    <h2 class="reveal" style="font-size:36px;margin-bottom:16px;">Illustration</h2>
+    <img class="shot shot-lg reveal" src="../assets/model-vs-harness.png" alt="Model vs harness" />
+    <p class="lead reveal" style="margin-top:14px;font-size:20px;">Same brain, different arms: tools, context, and loop live in the harness.</p>
+  </div>
+  <div class="foot"><span>05b</span><span>AI Lab · illustration</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Illustration</span><span class="pill">agent loop</span></div>
+    <h2 class="reveal" style="font-size:36px;margin-bottom:16px;">Illustration</h2>
+    <img class="shot shot-lg reveal" src="../assets/agent-loop-skills.png" alt="Agent loop + skills" />
+    <p class="lead reveal" style="margin-top:14px;font-size:20px;">Plan → Act → Observe, fed by AGENTS.md and ~/.agents skills.</p>
+  </div>
+  <div class="foot"><span>05c</span><span>AI Lab · illustration</span></div>
+</section>
+
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Table</span><span class="pill">personal</span></div>
+    <h2 class="reveal" style="font-size:40px;margin-bottom:18px;">Harness comparison</h2>
     <div class="card table-card reveal">
-      <table><thead><tr><th>Harness</th><th>Strength</th><th>Feel</th></tr></thead><tbody><tr><td>Cursor</td><td>Fast feedback · MCP · skills</td><td>Fastest loop</td></tr><tr><td>Claude Code</td><td>Clarify context · hard skills</td><td>Solid, slower</td></tr><tr><td>Pi</td><td>Global ~/.agents · light</td><td>Minimal overhead</td></tr><tr><td>Cline / Kilo</td><td>Open · customizable</td><td>Self-directed tests</td></tr><tr><td>OpenCode</td><td>Many models via OpenRouter</td><td>Open source</td></tr><tr><td>Zed</td><td>Fast editor</td><td>Lighter agent</td></tr></tbody></table>
+      <table>
+        <thead><tr><th>Harness</th><th>Strengths</th><th>Limitations</th><th>Feel</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Cursor</strong></td><td>fast feedback; Auto vs fixed; MCP + strong skills</td><td>Auto quality can be unpredictable</td><td>fastest loop; grok-4.5 cheap + strong</td></tr>
+          <tr><td><strong>Claude Code</strong></td><td>clarifies context; complex skills/rules</td><td>slower; session limits</td><td>solid for hard / constrained work</td></tr>
+          <tr><td><strong>Pi</strong></td><td>loads global ~/.agents; lightweight</td><td>smaller ecosystem</td><td>same skills, minimal overhead</td></tr>
+          <tr><td><strong>Cline / Kilo</strong></td><td>open, customizable</td><td>quality depends on plugged-in model</td><td>rapid self-directed testing</td></tr>
+          <tr><td><strong>OpenCode</strong></td><td>OSS, many models</td><td>fewer “smart” features</td><td>test via OpenRouter</td></tr>
+          <tr><td><strong>Zed</strong></td><td>fast editor, compact agent</td><td>agent less deep</td><td>lightweight coding</td></tr>
+        </tbody>
+      </table>
     </div>
   </div>
-  <div class="foot"><span>05</span><span>notes/07-agents.md</span></div>
+  <div class="foot"><span>05</span><span>field notes</span></div>
 </section>
 
 <section class="slide">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
-    <div class="topbar reveal"><span>Cursor</span><span class="pill">auto</span></div>
-    <h2 class="reveal">Auto vs fixed model</h2>
-    <div class="cols-3"><div class="card accent reveal"><div class="tag">auto</div><h3>Auto</h3><p>Fast routing — quality can vary.</p></div><div class="card cyan reveal"><div class="tag">fixed</div><h3>Fixed (e.g. Grok 4.5)</h3><p>Controllable; often better than Auto in practice.</p></div><div class="card reveal"><div class="tag">budget</div><h3>Token efficiency</h3><p>Worth watching — quality per dollar.</p></div></div>
-  </div>
-  <div class="foot"><span>06</span><span>notes/08-model-notes.md</span></div>
-</section>
-
-<section class="slide">
-  <div class="slide-bg"></div><div class="grid-overlay"></div>
-  <div class="pad">
-    <div class="topbar reveal"><span>Differs</span><span class="pill">axes</span></div>
+    <div class="topbar reveal"><span>Axes</span><span class="pill">differ</span></div>
     <h2 class="reveal">What harnesses differ on</h2>
-    <div class="cols-3"><div class="card accent reveal"><div class="tag">ctx</div><h3>Context management</h3><p>Compress / select files for the prompt.</p></div><div class="card cyan reveal"><div class="tag">mcp</div><h3>Tool calling</h3><p>MCP + shell reliability.</p></div><div class="card reveal"><div class="tag">skills</div><h3>Skills / rules</h3><p>Loading ~/.agents know-how.</p></div></div>
+    <div class="cols-2">
+      <div class="card accent reveal"><div class="tag">context</div><h3>Context management</h3><p>How files get compressed and selected for the prompt.</p></div>
+      <div class="card cyan reveal"><div class="tag">tools</div><h3>Tool calling</h3><p>MCP, shell, browser — smoothness and reliability.</p></div>
+      <div class="card reveal"><div class="tag">loop</div><h3>Agent loop</h3><p>Self-correction, tests, asking back until the job is done.</p></div>
+      <div class="card reveal"><div class="tag">skills</div><h3>Skills / rules</h3><p>Loading global know-how from ~/.agents — see skills-rules.md.</p></div>
+    </div>
   </div>
-  <div class="foot"><span>07</span><span>notes/skills-rules.md</span></div>
+  <div class="foot"><span>06</span><span>four axes</span></div>
 </section>
 
 <section class="slide">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
-    <div class="topbar reveal"><span>First mate</span><span class="pill">crew</span></div>
-    <h2 class="reveal">Orchestrating crewmates</h2>
-    <div class="cols-3"><div class="card accent reveal"><div class="tag">role</div><h3>First mate</h3><p>Agent that knows what to do and coordinates.</p></div><div class="card cyan reveal"><div class="tag">agents</div><h3>agents.md</h3><p>Declare instructions for the crew.</p></div><div class="card reveal"><div class="tag">lab</div><h3>Lab links</h3><p>MCP demo · complexity router.</p></div></div>
+    <div class="topbar reveal"><span>Cursor</span><span class="pill">routing</span></div>
+    <h2 class="reveal">Auto vs fixed model</h2>
+    <div class="cols-2">
+      <div class="card accent reveal"><div class="tag">auto</div><h3>Cursor Auto</h3><p>Fast feedback loop — but quality varies with routing. Convenience can hide regressions.</p></div>
+      <div class="card cyan reveal"><div class="tag">fixed</div><h3>Fixed (e.g. grok-4.5)</h3><p>Controllable. In practice often <em>better than Auto</em> without burning much budget.</p></div>
+    </div>
+    <p class="lead reveal" style="margin-top:28px;font-size:22px;">Worth investigating: token efficiency? routing? — treat Auto as a mode, not a model.</p>
   </div>
-  <div class="foot"><span>08</span><span>demos</span></div>
+  <div class="foot"><span>07</span><span>Auto vs fixed</span></div>
 </section>
 
 <section class="slide">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
-    <div class="topbar reveal"><span>Homes</span><span class="pill">paths</span></div>
-    <h2 class="reveal">Where know-how lives</h2>
-    <div class="cols-3"><div class="card accent reveal"><div class="tag">skills</div><h3>~/.agents/skills</h3><p>Global skills</p></div><div class="card cyan reveal"><div class="tag">setup</div><h3>agents-setup</h3><p>Skill trials</p></div><div class="card reveal"><div class="tag">graph</div><h3>graphify</h3><p>Codebase link viz</p></div></div>
+    <div class="topbar reveal"><span>Example</span><span class="pill">worked</span></div>
+    <h2 class="reveal">Same bug, different arms</h2>
+    <div class="cols-2">
+      <div class="card accent reveal"><div class="tag">rich harness</div><h3>Cursor + MCP + skills</h3><p>“Tests fail on CI” → run tests, read logs, patch, re-run. Arms that act.</p></div>
+      <div class="card cyan reveal"><div class="tag">thin harness</div><h3>No reliable shell/MCP</h3><p>Same brain only <em>suggests</em> commands for you to paste. Arms that advise.</p></div>
+    </div>
+    <p class="lead reveal" style="margin-top:28px;font-size:22px;">Don’t blame the model for missing tools — that is a harness gap.</p>
   </div>
-  <div class="foot"><span>09</span><span>related</span></div>
+  <div class="foot"><span>08</span><span>worked example</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Orchestration</span><span class="pill">first mate</span></div>
+    <h2 class="reveal">First mate &amp; homes</h2>
+    <div class="cols-3">
+      <div class="card accent reveal"><div class="tag">crew</div><h3>First mate</h3><p>Orchestrates crew + agents.md — knows what to do and coordinates crewmates.</p></div>
+      <div class="card cyan reveal"><div class="tag">skills</div><h3>~/.agents/skills</h3><p>Global skills home — shared across Cursor / Claude / Pi.</p></div>
+      <div class="card reveal"><div class="tag">graph</div><h3>graphify</h3><p>Codebase link viz — orientation before blind grep.</p></div>
+    </div>
+    <p class="lead reveal" style="margin-top:24px;font-size:20px;">Also: ~/work-station/agents-setup for skill trials · AGENTS.md standard.</p>
+  </div>
+  <div class="foot"><span>09</span><span>homes</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Pitfalls</span><span class="pill">watch</span></div>
+    <h2 class="reveal">Easy to go wrong</h2>
+    <div class="cols-2">
+      <div class="card accent reveal"><div class="tag">pitfall</div><h3>Blame the model</h3><p>Missing tools ≠ weak reasoning. Check the harness first.</p></div>
+      <div class="card cyan reveal"><div class="tag">pitfall</div><h3>Always Auto</h3><p>Convenience hides routing regressions.</p></div>
+      <div class="card reveal"><div class="tag">pitfall</div><h3>Skip AGENTS.md / skills</h3><p>Every session re-teaches the same project facts.</p></div>
+      <div class="card reveal"><div class="tag">pitfall</div><h3>Uneven comparisons</h3><p>Hard refactors favor Claude Code; tight UI loops favor Cursor.</p></div>
+    </div>
+  </div>
+  <div class="foot"><span>10</span><span>pitfalls</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Demo</span><span class="pill">MCP</span></div>
+    <h1 class="reveal" style="margin-top:100px;font-size:64px;">Try the MCP demo<br /><em>tools for agents.</em></h1>
+    <p class="lead reveal" style="margin-top:28px;">Host ↔ server ↔ tools — see how harness tool calling feels in practice.</p>
+    <a class="app-cta reveal" href="../../demos/mcp/app/index.html">Open MCP demo →</a>
+  </div>
+  <div class="foot"><span>11</span><span>demos/mcp</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Related</span><span class="pill">next</span></div>
+    <h2 class="reveal">Pair with models &amp; skills</h2>
+    <div class="cols-3">
+      <div class="card accent reveal"><div class="tag">models</div><h3>model-notes</h3><p>Engines vs cars — field notes on the brains themselves.</p></div>
+      <div class="card cyan reveal"><div class="tag">mcp</div><h3>mcp.md</h3><p>Protocol that standardized agent ↔ tool connection.</p></div>
+      <div class="card reveal"><div class="tag">skills</div><h3>skills-rules</h3><p>Global know-how loading into the harness.</p></div>
+    </div>
+  </div>
+  <div class="foot"><span>12</span><span>related</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Pipeline</span><span class="pill">mental</span></div>
+    <h2 class="reveal">How a job gets done</h2>
+    <div class="flow-row reveal" style="margin-top:48px;"><span class="step">task</span><span class="arr">→</span><span class="step">harness loop</span><span class="arr">→</span><span class="step">tools / MCP</span><span class="arr">→</span><span class="step">skills / rules</span><span class="arr">→</span><span class="step">result</span></div>
+    <p class="lead reveal" style="margin-top:40px;">Also try complexity-router demo when you want routing intuition before calling a big model.</p>
+  </div>
+  <div class="foot"><span>13</span><span>pipeline</span></div>
 </section>
 
 <section class="slide">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
     <div class="topbar reveal"><span>Next</span><span class="pill">continue</span></div>
-    <h1 class="reveal" style="margin-top:100px;font-size:64px;">Pick a harness,<br /><em>then a model.</em></h1>
-    <p class="lead reveal" style="margin-top:28px;">notes/07-agents.md · try demos/mcp</p>
-    <a class="app-cta reveal" href="../../demos/mcp/app/index.html">Open MCP demo →</a>
+    <h1 class="reveal" style="margin-top:100px;font-size:64px;">Choose the kitchen,<br /><em>then the chef.</em></h1>
+    <p class="lead reveal" style="margin-top:28px;">notes/07-agents.md — harness table, Auto vs fixed, first mate.</p>
+    <a class="app-cta reveal" href="../../notes/agents.html">Open note →</a>
   </div>
-  <div class="foot"><span>end</span><span>AI Lab</span></div>
+  <div class="foot"><span>14</span><span>AI Lab</span></div>
 </section>
 
 </main>

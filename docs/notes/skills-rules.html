@@ -338,9 +338,10 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
     <div class="topics"><span>#skills</span><span>#rules</span><span>#commands</span><span>#agents-md</span><span>#dot-agents</span></div>
     <hr class="sep" />
     <div class="body"><h1>Skills · Rules · Commands</h1>
-<blockquote>Three ways to teach a coding agent. <strong>Skill</strong> = packaged capability loaded when needed; <strong>Rule</strong> = constraint that always applies; <strong>Command</strong> = shortcut to kick off a workflow.</blockquote>
+<blockquote>Three ways to teach a coding agent. <strong>Skill</strong> = packaged capability loaded when needed; <strong>Rule</strong> = constraint that always applies; <strong>Command</strong> = shortcut to kick off a workflow. Everyday metaphor: skills are toolboxes you open for a job, rules are house laws on the wall, commands are buttons you press.</blockquote>
 <h2>Why it matters</h2>
-<p>The same model, loaded with the right know-how, works far better: it knows your process, follows project conventions, and you do not repeat instructions every turn. These three layers are how that "brain gets configured." Put mandatory things in rules, complex processes in skills.</p>
+<p>The same model, loaded with the right know-how, works far better: it knows your process, follows project conventions, and you do not repeat instructions every turn. These three layers are how that “brain gets configured.” Put mandatory things in rules, complex processes in skills, and frequent workflows in commands.</p>
+<p>Without this split, agents either ignore your conventions or burn context repeating them.</p>
 <h2>Key ideas</h2>
 <ul>
 <li><strong>Three concepts:</strong></li>
@@ -349,7 +350,7 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 <tr><th>Kind</th><th>What</th><th>When loaded</th><th>Example</th></tr>
 </thead><tbody>
 <tr><td><strong>Skill</strong></td><td>folder with <code>SKILL.md</code> (+ scripts/assets)</td><td>model reads when task matches description</td><td><code>graphify</code>, <code>frontend-slides</code>, <code>tavily-*</code></td></tr>
-<tr><td><strong>Rule</strong></td><td>instructions always on or matched by glob</td><td>every turn (always) or on file pattern</td><td>commit style, "docs = notes-first"</td></tr>
+<tr><td><strong>Rule</strong></td><td>instructions always on or matched by glob</td><td>every turn (always) or on file pattern</td><td>commit style, “docs = notes-first”</td></tr>
 <tr><td><strong>Command</strong></td><td>prompt / workflow via shortcut</td><td>user types it (e.g. <code>/deep-plan</code>)</td><td><code>/graphify .</code>, <code>/loop</code></td></tr>
 </tbody></table>
 <ul>
@@ -369,23 +370,47 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
   # step-by-step guide + script paths
 
 </code></pre>
-<p>The <strong>description</strong> is the most important field: write a clear trigger ("use when…") so the agent picks correctly. Skills can include scripts the agent runs via shell/MCP.</p>
+<p>The <strong>description</strong> is the most important field: write a clear trigger (“use when…”) so the agent picks correctly. Skills can include scripts the agent runs via shell/MCP.</p>
 <ul>
 <li><strong>Global home: <code>~/.agents</code></strong></li>
 <li>Canonical path: <code>~/.agents/skills/&lt;name&gt;/SKILL.md</code>.</li>
 <li>Cursor / Claude / Pi load from here → write once, use across clients.</li>
 <li>Do not copy skills into <code>~/.cursor/skills</code> or <code>~/.claude/skills</code> (keep empty); Pi uses <strong>symlinks</strong> to <code>~/.agents</code> only.</li>
-<li>Install GitHub skill packs: <code>~/.agents/scripts/sync-skill-repos.sh</code> (alias <code>skill-lock.sh</code>) — rsync copy with lockfile at <code>config/skill-repos.lock.json</code>. Do not use <code>npx skills</code> for <code>~/.agents</code>.</li>
+<li>Install GitHub skill packs with the custom manager (<code>skill.sh</code> / lockfile) — not <code>npx skills</code> for <code>~/.agents</code>.</li>
 </ul>
 <ul>
-<li><strong>Project-local exception:</strong> repo-specific skills may live in that repo's <code>.cursor/skills</code>. Global skills stay in <code>~/.agents/skills</code>.</li>
+<li><strong>Project-local exception:</strong> repo-specific skills may live in that repo’s <code>.cursor/skills</code>. Global skills stay in <code>~/.agents/skills</code>.</li>
 </ul>
 <ul>
-<li><strong>Rules in practice:</strong> "always" rules consume context every turn → keep them short. Glob rules (<code><em>.tsx</code>, <code>notes/</em>.md</code>) load only on matching files → cheaper. Rules for conventions; skills for complex processes.</li>
+<li><strong>Rules in practice:</strong> “always” rules consume context every turn → keep them short. Glob rules (<code><em>.tsx</code>, <code>notes/</em>.md</code>) load only on matching files → cheaper. Rules for conventions; skills for complex processes.</li>
 </ul>
 <ul>
-<li><strong>Skill interactions:</strong> when adding a skill, consider overlap with existing ones (conflicting triggers or instructions). Anthropic Opus/Sonnet is strong at asking back to clarify interactions.</li>
+<li><strong>Skill interactions:</strong> when adding a skill, consider overlap with existing ones (conflicting triggers or instructions). Strong models (Opus/Sonnet) often ask back to clarify interactions — design descriptions to reduce collisions.</li>
 </ul>
+<h2>Worked example (intuition)</h2>
+<p>You want every AI Lab change to stay notes-first. Put a short <strong>rule</strong> on <code>notes/<strong></code>. When you ask for a new deck, the agent loads </strong>frontend-slides<strong> skill because the description matches “create presentation.” You type <code>/graphify .</code> as a </strong>command** when you need a fresh knowledge graph — no essay required.</p>
+<h2>Common pitfalls</h2>
+<ul>
+<li><strong>Always-rules that are novels</strong> — waste tokens every turn; split into globs/skills.</li>
+<li><strong>Vague skill descriptions</strong> — agent never auto-triggers, or triggers on everything.</li>
+<li><strong>Duplicating skill trees</strong> into Cursor/Claude folders — drift and double maintenance.</li>
+<li><strong>Conflicting skills</strong> — two skills claim the same trigger with opposite steps.</li>
+</ul>
+<h2>Illustrations</h2>
+<figure><img src="assets/skills-rules/skills-rules-commands.png" alt="Skill vs Rule vs Command" loading="lazy" /><figcaption>Skill vs Rule vs Command</figcaption></figure>
+<figure><img src="assets/skills-rules/skills-layers.svg" alt="Three layers side by side" loading="lazy" /><figcaption>Three layers side by side</figcaption></figure>
+<h2>Pipeline</h2>
+<pre><code>
+task → (rules always/glob) + (matching skills) + (optional /command) → agent acts with MCP/tools
+
+</code></pre>
+<h2>Slides &amp; demo</h2>
+<table><thead>
+<tr><th></th><th>Link</th></tr>
+</thead><tbody>
+<tr><td>Slides</td><td><a href="../slides/skills-rules/index.html">slides/skills-rules</a></td></tr>
+<tr><td>MCP demo</td><td><a href="../demos/mcp/app/index.html">demos/mcp</a></td></tr>
+</tbody></table>
 <h2>References</h2>
 <ul>
 <li><a href="https://www.anthropic.com/news/skills">Anthropic — Agent Skills</a></li>

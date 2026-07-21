@@ -40,6 +40,8 @@ Competition: classify dog breeds from images. You fork a public EfficientNet not
 
 ![Kaggle stack: dataset → notebook → free GPU](assets/kaggle/kaggle-stack.png)
 
+![Competition loop: train, submit, learn](assets/kaggle/kaggle-loop.png)
+
 ## Pipeline
 
 ```
