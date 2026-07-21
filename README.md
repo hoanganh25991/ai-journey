@@ -1,6 +1,30 @@
 # AI Journey
 
+A personal learning hub for common AI topics — from how machines read text to RAG, demos, and coding agents — all in one searchable site.
+
 **Notes are the source of truth.** One build pipeline writes everything into `docs/` — open / serve only from there. Search is the hub focus. Theme and language default to **System**; Vietnamese is applied at runtime via a web translate API (no parallel files).
+
+## Introduction
+
+**AI Journey** collects the ideas you keep bumping into when building or learning AI — tokenize, embedding, attention, softmax, classification, training loops, RAG, vector search, MCP, skills/rules, and agent harnesses — and presents them as a single reviewable path instead of scattered notebooks and bookmarks.
+
+Each topic has up to three layers:
+
+| Layer | What you get |
+| ----- | ------------ |
+| **Note** | Short English explanation — start here |
+| **Slide** | Step-by-step deck for re-lecture or presenting |
+| **Demo** | Browser app so you can *feel* the idea |
+
+A five-stage **Journey** map (`docs/journey.html`) ties the notes together:
+
+1. **ABC** — machines read text (tokenize → embedding → attention → softmax)
+2. **Build** — train and run (classifiers, PyTorch/TF, HF/Kaggle, transformers)
+3. **Find** — ground answers in documents (RAG, vector DB, semantic search)
+4. **Demo** — see it live (car NN, sentiment routing, train → infer)
+5. **Agent** — steer the machine (agents, models, MCP, skills, automation)
+
+Open [`docs/index.html`](docs/index.html) after a build — search first, then dive into a note, slide, or demo.
 
 ## Three pillars (peers)
 
