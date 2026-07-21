@@ -4,6 +4,16 @@ A personal learning hub for common AI topics — from how machines read text to 
 
 **Notes are the source of truth.** One build pipeline writes everything into `docs/` — open / serve only from there. Search is the hub focus. Theme and language default to **System**; Vietnamese is applied at runtime via a web translate API (no parallel files).
 
+## Screenshots
+
+| Notes                                     | Slides                                       |
+| ----------------------------------------- | -------------------------------------------- |
+| ![Note — Tokenize](screenshots/notes.png) | ![Slides — Tokenize](screenshots/slides.png) |
+
+| Demos                                         | Journey map                                           |
+| --------------------------------------------- | ----------------------------------------------------- |
+| ![Demo — Tokenize-app](screenshots/demos.png) | ![Journey — five stages](screenshots/journey-map.png) |
+
 ## Introduction
 
 **AI Journey** collects the ideas you keep bumping into when building or learning AI — tokenize, embedding, attention, softmax, classification, training loops, RAG, vector search, MCP, skills/rules, and agent harnesses — and presents them as a single reviewable path instead of scattered notebooks and bookmarks.
@@ -25,16 +35,6 @@ A five-stage **Journey** map (`docs/journey.html`) ties the notes together:
 5. **Agent** — steer the machine (agents, models, MCP, skills, automation)
 
 Open [`docs/index.html`](docs/index.html) after a build — search first, then dive into a note, slide, or demo.
-
-## Screenshots
-
-| Notes                                     | Slides                                       |
-| ----------------------------------------- | -------------------------------------------- |
-| ![Note — Tokenize](screenshots/notes.png) | ![Slides — Tokenize](screenshots/slides.png) |
-
-| Demos                                         | Journey map                                           |
-| --------------------------------------------- | ----------------------------------------------------- |
-| ![Demo — Tokenize-app](screenshots/demos.png) | ![Journey — five stages](screenshots/journey-map.png) |
 
 ## Three pillars (peers)
 
