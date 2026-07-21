@@ -1,51 +1,47 @@
 # MCP — Model Context Protocol
 
-> Một chuẩn chung để agent *gọi công cụ ngoài*. Ví như cổng USB-C cho AI: thay vì mỗi app một kiểu cắm riêng, mọi tool nói cùng một "giọng" nên agent cắm vào là dùng được.
+> A common standard for agents to *call external tools* — like USB-C for AI. Instead of every app inventing its own plugin, every tool speaks the same protocol so any agent can plug in and use it.
 
-## Vì sao quan trọng
+## Why it matters
 
-Bản thân mô hình chỉ sinh chữ; muốn nó *làm* việc thật — mở trình duyệt, truy vấn DB, render Blender, search web — phải nối ra công cụ bên ngoài. Trước MCP, mỗi tích hợp là code riêng, không tái dùng. MCP chuẩn hóa cách mô tả và gọi tool, nên một server viết một lần dùng được ở Cursor, Claude, Pi… Đây chính là bản lề đưa AI từ "trả lời" sang "thực thi" (xem [10-ai-timeline.md](./10-ai-timeline.md)).
+A model only generates text. To *do* real things — open a browser, query a database, render in Blender, search the web — it must connect to external tools. Before MCP, each integration was bespoke and non-reusable. MCP standardizes how tools are described and invoked, so one server written once runs in Cursor, Claude, Pi, and more. That is the hinge from "answering" to "executing" (see [10-ai-timeline.md](./10-ai-timeline.md)).
 
-## Kiến trúc
+## Key ideas
 
-```
-Host (agent)  →  MCP client  →  MCP server  →  tool / API / process
-   ↑ context                        ↓ result (JSON có schema)
-   └──────────── tool call / tool result ─────────────┘
-```
+- **Architecture:**
 
-- **Host**: nơi model chạy (Cursor, Claude Code, Pi…).
-- **Server**: process expose danh sách tool + input schema (JSON Schema).
-- **Tool**: một hành động cụ thể — navigate browser, query DB, render Blender, search web.
-- Giao tiếp qua stdio hoặc HTTP; mỗi tool tự mô tả tham số → model gọi đúng.
+  ```
+  Host (agent)  →  MCP client  →  MCP server  →  tool / API / process
+     ↑ context                        ↓ result (JSON with schema)
+     └──────────── tool call / tool result ─────────────┘
+  ```
 
-## Ý chính
+  - *Host:* where the model runs (Cursor, Claude Code, Pi…).
+  - *Server:* process that exposes a tool list plus input schema (JSON Schema).
+  - *Tool:* one action — navigate a browser, query a DB, render Blender, search the web.
+  - Transport via stdio or HTTP; each tool declares its parameters → the model calls correctly.
 
-- **Discover rồi invoke:** model *hỏi* server có tool gì (list) rồi mới *gọi* (call) — không hardcode. Thêm tool mới không phải sửa model.
-- **Kết quả có schema:** trả JSON theo khuôn → dễ parse, dễ nối nhiều tool thành chuỗi.
-- **Một chuẩn, nhiều client:** cùng một MCP server chạy được trên mọi host hỗ trợ MCP.
-- **Ranh giới an toàn:** tool khai báo rõ tham số và quyền → host kiểm soát được model được phép làm gì.
+- **Discover then invoke:** the model *lists* available tools, then *calls* them — no hardcoding. New tools do not require editing the model.
+- **Results with schema:** JSON in a known shape → easy to parse and chain tools.
+- **One standard, many clients:** the same MCP server works on every MCP-capable host.
+- **Safety boundary:** tools declare parameters and permissions → the host controls what the model may do.
 
-## MCP ≠ Skills
+**MCP ≠ Skills**
 
 | | MCP | Skills |
 |--|-----|--------|
-| Là gì | tool có thể *thực thi* | hướng dẫn (markdown) để model làm đúng |
-| Dạng | server + schema | `SKILL.md` + script |
-| Khi nào | cần chạy action ra ngoài | cần know-how / quy trình lặp lại |
+| What | executable *tools* | markdown *instructions* for doing a job well |
+| Format | server + schema | `SKILL.md` + scripts |
+| When | need to run an external action | need know-how / repeatable process |
 
-Xem thêm: [skills-rules.md](./skills-rules.md).
+See also: [skills-rules.md](./skills-rules.md).
 
-## Ví dụ MCP server đang dùng
+Example MCP servers in use: **browser** (Playwright / Chrome DevTools), **blender** (`bpy`, scene inspect, render), **tavily** (web search / extract / crawl).
 
-- **browser** (Playwright / Chrome DevTools) — navigate, click, screenshot, đọc console.
-- **blender** — chạy `bpy`, inspect scene, render.
-- **tavily** — web search / extract / crawl khi kiến thức local không đủ.
-
-## Tham khảo
+## References
 
 - [Model Context Protocol — spec & docs](https://modelcontextprotocol.io/)
-- [Giới thiệu MCP (Anthropic)](https://www.anthropic.com/news/model-context-protocol)
+- [Introducing MCP (Anthropic)](https://www.anthropic.com/news/model-context-protocol)
 
 ## Related
 

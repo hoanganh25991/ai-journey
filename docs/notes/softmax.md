@@ -1,34 +1,34 @@
 # Softmax
 
-> Biến một dãy điểm số thô (logits) thành phần trăm: mỗi lựa chọn một xác suất, cộng tất cả lại bằng 1.
+> Turn raw scores (logits) into percentages: each choice gets a probability, and they all add up to 1.
 
-## Vì sao quan trọng
+## Why it matters
 
-Mô hình thường xuất ra vài con số thô, ví dụ điểm cho ba lớp cảm xúc: `tiêu cực 2.0, trung tính 1.0, tích cực 0.1`. Những số này khó đọc và không phải xác suất. Softmax nén chúng thành `[0.66, 0.24, 0.10]` — vừa dễ hiểu ("66% là tiêu cực"), vừa cộng lại bằng 1. Đây là bước cuối ở hầu hết bài phân loại, và cũng là bước chuẩn hóa trọng số bên trong attention.
+A model often outputs rough numbers — for three sentiment classes: `negative 2.0, neutral 1.0, positive 0.1`. Those are hard to read and not probabilities. Softmax compresses them to `[0.66, 0.24, 0.10]` — easy to interpret ("66% negative") and guaranteed to sum to 1. It is the final step in most classification tasks and the normalization step inside attention.
 
-## Ý chính
+## Key ideas
 
-- **Công thức trực giác:** lấy `e^điểm` cho từng lựa chọn rồi chia cho tổng. Mũ hóa làm điểm cao nổi bật hơn, điểm thấp bị ép nhỏ lại.
-- **Giữ thứ hạng, nới khoảng cách:** lựa chọn điểm cao nhất vẫn xác suất cao nhất, nhưng chênh lệch bị "kéo giãn" — thường ra một đỉnh rõ ràng.
-- **Hai chỗ hay gặp:**
-  - *Đầu phân loại (classification head)*: ví dụ 3 lớp cảm xúc, xem [05-demo-text.md](./05-demo-text.md).
-  - *Trọng số attention*: chuẩn hóa điểm liên quan giữa các từ, xem [attention.md](./attention.md).
-- **Đi cặp với cross-entropy khi train:** softmax cho xác suất dự đoán, cross-entropy đo nó lệch bao nhiêu so với đáp án đúng → tín hiệu để mô hình học.
-- **Softmax regression = hồi quy logistic nhiều lớp:** phiên bản mở rộng cho bài chọn 1 trong nhiều lớp.
+- **Intuitive formula:** take `e^score` for each choice and divide by the total. Exponentiation makes high scores stand out and low scores shrink.
+- **Ranking preserved, gap widened:** the highest score still wins, but the spread is stretched — often showing a clear peak.
+- **Two common uses:**
+  - *Classification head:* e.g. three emotion classes — see [05-demo-text.md](./05-demo-text.md).
+  - *Attention weights:* normalize relevance scores between words — see [attention.md](./attention.md).
+- **Paired with cross-entropy in training:** softmax gives predicted probabilities; cross-entropy measures how far they are from the correct label → the learning signal.
+- **Softmax regression = multi-class logistic regression:** the natural extension when picking one label from many classes.
 
-## Hình minh họa
+## Illustrations
 
-![Softmax biến điểm thô thành phân phối xác suất cộng bằng 1](assets/protonx/softmax.jpg)
+![Softmax turns raw scores into a probability distribution that sums to 1](assets/protonx/softmax.jpg)
 
-![Softmax regression: phân loại nhiều lớp](assets/protonx/softmax-regression.jpg)
+![Softmax regression: multi-class classification](assets/protonx/softmax-regression.jpg)
 
-## Trong pipeline
+## Pipeline
 
 ```
-logits (điểm thô) → [softmax] → xác suất → chọn lớp / trọng số attention
+logits (raw scores) → [softmax] → probabilities → pick class / attention weights
 ```
 
-Softmax là bước chốt của [05-demo-text.md](./05-demo-text.md) và bước chuẩn hóa bên trong [attention.md](./attention.md).
+Softmax is the key step in [05-demo-text.md](./05-demo-text.md) and the normalization step inside [attention.md](./attention.md).
 
 ## Slides & demo
 
@@ -37,12 +37,12 @@ Softmax là bước chốt của [05-demo-text.md](./05-demo-text.md) và bướ
 | Slides | [slides/softmax](../slides/softmax/index.html) |
 | Working app | [demos/softmax/app](../demos/softmax/app/index.html) |
 
-## Tham khảo
+## References
 
 - Google — [ML Crash Course: Softmax](https://developers.google.com/machine-learning/crash-course/multi-class-neural-networks/softmax)
 - [CS231n — Softmax classifier](https://cs231n.github.io/linear-classify/#softmax)
 
 ## Related
 
-- [classification.md](./classification.md) — bài build model ngay sau softmax
+- [classification.md](./classification.md) — model building right after softmax
 - [attention.md](./attention.md), [05-demo-text.md](./05-demo-text.md)

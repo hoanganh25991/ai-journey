@@ -1,44 +1,38 @@
 # Model field notes
 
-> **Model ≠ harness.** Đây là cảm nhận về *bản thân mô hình* (qua OpenRouter + Cursor). So sánh harness ở [07-agents.md](./07-agents.md).
+> **Model ≠ harness.** Notes on *the models themselves* (via OpenRouter + Cursor). Compare harnesses at [07-agents.md](./07-agents.md).
 
-## Bảng nhanh (kinh nghiệm cá nhân)
+## Why it matters
 
-| Model / Mode | Mạnh | Yếu / chi phí |
-|--------------|------|---------------|
-| **Grok 4.5** | Nhanh, mượt, cảm giác rất tốt; chất lượng cao; đốt ít tiền | Không dẫn đầu mọi benchmark; hallucination cao hơn ở task không verify được |
-| **Composer 2.5 Fast** | Rất nhanh, trả lời tốt | Tốn tiền hơn Auto |
-| **Cursor Auto** | Feedback loop nhanh | Chất lượng dao động theo routing |
-| **Anthropic Opus / Sonnet / Fable** | Hỏi ngược làm rõ context & skill cực tốt; tương tác chắc | Chậm; có session limit |
-| **DeepSeek V4** | Debug / fix lỗi tốt | Không nhận ảnh; yếu khi code mới (greenfield) |
-| **Qwen 3** | Task đơn giản | Yếu ở complex follow / mô tả dự án lớn không có codebase |
-| **Kimi / GLM** | Code tốt | Đắt |
+Harness choice shapes daily workflow; model choice shapes reasoning quality, speed, and cost. These are personal field notes — not benchmarks — on what each model feels like in real coding work.
 
-## Grok 4.5 — vì sao ấn tượng
+## Key ideas
 
-Trải nghiệm: **nhanh, mượt, thật sự rất tốt** — đặc biệt khi để làm default trong Cursor thì tiền không bị đốt nhiều mà chất lượng còn *tốt hơn Auto*.
+- **Quick table (personal experience):**
 
-Context công khai (xAI, 2026-07) khớp cảm nhận:
+  | Model / mode | Strong | Weak / cost |
+  |--------------|--------|-------------|
+  | **Grok 4.5** | fast, smooth, high quality; moderate spend | not top on every benchmark; more hallucination on unverifiable tasks |
+  | **Composer 2.5 Fast** | very fast, good replies | costs more than Auto |
+  | **Cursor Auto** | fast feedback loop | quality varies with routing |
+  | **Anthropic Opus / Sonnet / Fable** | best at clarifying context and skills; reliable interaction | slow; session limits |
+  | **DeepSeek V4** | strong debug / fix on existing code | no images; weaker on greenfield |
+  | **Qwen 3** | simple tasks | weak on complex following / describing large projects without codebase |
+  | **Kimi / GLM** | good code | expensive |
 
-- Tối ưu cho coding + agentic, phục vụ ở tốc độ ~**80 TPS** (fast-model).
-- **Token efficiency**: dùng ~4.2× ít output token hơn Opus 4.8 trên SWE-Bench Pro → *rẻ hơn nhiều mỗi task* (giá $2 in / $6 out /1M).
-- Benchmark ngang tầm Opus 4.8 / GPT-5.5 ở nhiều eval coding (mạnh Terminal-Bench 2.1), không dẫn đầu tuyệt đối; được train cùng Cursor.
-- Điểm mạnh chính = **intelligence trên mỗi đơn vị thời gian & chi phí**, hợp task verify được bằng máy.
+- **Grok 4.5 — why it impresses:** fast, smooth, genuinely good — especially as Cursor default; does not burn much budget yet often beats Auto. Public context (xAI, mid-2026): optimized for coding + agentic at ~**80 TPS**; ~**4.2× fewer output tokens** than Opus 4.8 on SWE-Bench Pro → much cheaper per task ($2 in / $6 out per 1M). Benchmarks competitive with Opus 4.8 / GPT-5.5 on many coding evals; trained with Cursor. Main edge = **intelligence per unit time and cost** on verifiable tasks.
 
-→ Đây chính là lý do "chạy tốt hơn Auto mà đốt ít tiền": tốc độ cao + ít token.
+- **Principles:**
+  - *Greenfield* (new project, thin codebase): favor strong reasoning (Anthropic, Grok) over DeepSeek/Qwen.
+  - *Debug / fix on existing code:* DeepSeek V4 is effective and cheap.
+  - *Needs images (screenshots, diagrams):* avoid DeepSeek (no image input).
+  - *Speed + low cost:* Grok 4.5 / Composer Fast.
+  - *Clarifying constraints and skill design:* Anthropic strongest at asking back.
 
-## Nguyên tắc rút ra
+## References
 
-- **Greenfield** (dự án mới, ít codebase): ưu tiên model mạnh reasoning (Anthropic, Grok) hơn DeepSeek/Qwen.
-- **Debug / fix trên codebase có sẵn**: DeepSeek V4 rất hiệu quả, rẻ.
-- **Cần ảnh (screenshot, diagram)**: tránh DeepSeek (không nhận ảnh).
-- **Cần tốc độ + chi phí thấp**: Grok 4.5 / Composer Fast.
-- **Cần làm rõ ràng buộc, thiết kế skill**: Anthropic mạnh nhất ở hỏi ngược.
-
-## Tham khảo
-
-- [OpenRouter — models & giá](https://openrouter.ai/models)
-- [LMArena leaderboard](https://lmarena.ai/) — xếp hạng theo bình chọn
+- [OpenRouter — models & prices](https://openrouter.ai/models)
+- [LMArena leaderboard](https://lmarena.ai/) — ranked by human votes
 
 ## Related
 

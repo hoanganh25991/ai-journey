@@ -1,52 +1,52 @@
-# AI timeline — hành trình của tôi (2023 → nay)
+# AI timeline — my journey (2023 → present)
 
-> Mốc bắt đầu là **2023** — lần đầu tôi biết đến LLM, rồi mới đi tìm hiểu các khái niệm nền (tokenize, embedding, attention, softmax, RAG). Timeline này neo các note của lab vào dòng thời gian AI thực tế, và cho thấy vì sao giờ trọng tâm chuyển sang **agent / automation**.
+> Starting point: **2023** — first time learning about LLMs, then background concepts (tokenize, embedding, attention, softmax, RAG). This timeline anchors lab notes to real AI milestones and shows why focus now shifts to **agents / automation**.
 
-> Nền học thuật có từ trước (Transformer 2017, BERT 2018, GPT-3 2020) — là gốc của các khái niệm, xem [attention.md](./attention.md), [embedding.md](./embedding.md). Nhưng *hành trình của tôi* bắt đầu từ 2023.
+> Academic roots (Transformer 2017, BERT 2018, GPT-3 2020) underpin the concepts — see [attention.md](./attention.md), [embedding.md](./embedding.md). *My journey* starts in 2023.
 
-## 4 giai đoạn
+## Why it matters
 
-### 1. 2023 — Lần đầu biết LLM & học nền tảng
-Cú hích: cuối 2022 **ChatGPT (GPT-3.5)** làm AI thành sản phẩm đại chúng → 2023 tôi bắt đầu tìm hiểu nghiêm túc. Đây là phần **concepts** của lab.
-- **03/2023** — GPT-4 · Claude 1 · Llama 1 (open weights). RAG bùng nổ.
-- Đi học khái niệm nền theo thứ tự: [tokenize.md](./tokenize.md) → [embedding.md](./embedding.md) → [attention.md](./attention.md) → [softmax.md](./softmax.md).
-- Rồi tới retrieval: [rag.md](./rag.md); train → infer: [06-train-infer.md](./06-train-infer.md), [train-gpu.md](./train-gpu.md).
-- **07/2023** — Claude 2 · Llama 2 (open, dùng thương mại). **12/2023** — Gemini 1.0 · Mixtral (MoE open).
+Concepts and tools arrive in a order that made sense for me. Mapping that order against industry milestones explains why the lab went from fundamentals → RAG → agents — and which older notes still matter.
 
-### 2. 2024 — Model mạnh hơn + chớm agent code
-- **Gemini 1.5** (1M context) · **Claude 3 → 3.5 Sonnet** (bước nhảy về code — thời Cursor cất cánh) · **GPT-4o** (đa phương thức) · **Llama 3.1 405B** · **o1** (reasoning) · **DeepSeek V3**.
-- Tôi chuyển từ *đọc khái niệm* sang *dùng AI để code thật*.
+## Key ideas
 
-### 3. Cuối 2024 – 2025 — Kỷ nguyên agent (MCP · skills · harness)
-Lúc lab chuyển sang **MCP · skills · harness**.
-- **25/11/2024** — **MCP** (Anthropic): chuẩn kết nối agent ↔ tool. Bản lề. Xem [mcp.md](./mcp.md).
-- **01/2025** — DeepSeek R1 (reasoning open, rẻ) — [08-model-notes.md](./08-model-notes.md).
-- **02/2025** — Claude 3.7 Sonnet · GPT-4.5. **03/2025** — MCP thêm Streamable HTTP + OAuth · Gemini 2.5 Pro.
-- **05/2025** — Claude 4 (Sonnet/Opus) → **Claude Code** thành harness mạnh: [07-agents.md](./07-agents.md).
-- **08/2025** — GPT-5. **11/2025** — Claude Opus 4.5 · **AGENTS.md** thành chuẩn · skills/rules: [skills-rules.md](./skills-rules.md).
+- **Stage 1 — 2023: first LLM exposure and foundations**
+  - Late 2022 **ChatGPT (GPT-3.5)** made AI mainstream → 2023 I started learning seriously.
+  - **March 2023** — GPT-4 · Claude 1 · Llama 1; RAG exploded.
+  - Learned in order: [tokenize.md](./tokenize.md) → [embedding.md](./embedding.md) → [attention.md](./attention.md) → [softmax.md](./softmax.md).
+  - Then retrieval: [rag.md](./rag.md); train → infer: [06-train-infer.md](./06-train-infer.md), [train-gpu.md](./train-gpu.md).
+  - **July 2023** — Claude 2 · Llama 2. **December 2023** — Gemini 1.0 · Mixtral (MoE open).
 
-### 4. 2026 — Model wave + automation (bây giờ)
-Trọng tâm hiện tại: [08-model-notes.md](./08-model-notes.md), [09-agent-automation.md](./09-agent-automation.md).
-- **04/2026** — GPT-5.5. **28/05/2026** — Claude Opus 4.8. **06/2026** — Claude Fable 5 · Sonnet 5.
-- **08/07/2026** — **Grok 4.5** (train cùng Cursor): nhanh, token-efficient, rẻ. **09/07/2026** — GPT-5.6.
-- Song song: **OpenClaw** (harness `pi`) mở màn cảm giác agent control mọi thứ → **Hermess** làm tốt.
+- **Stage 2 — 2024: stronger models + early coding agents**
+  - Gemini 1.5 (1M context) · Claude 3 → 3.5 Sonnet (coding jump — Cursor took off) · GPT-4o · Llama 3.1 405B · o1 · DeepSeek V3.
+  - Shift from *reading concepts* to *using AI to code for real*.
 
-## Bảng mốc chính
+- **Stage 3 — late 2024–2025: agent era (MCP · skills · harness)**
+  - Lab pivots to **MCP · skills · harness**.
+  - **November 25, 2024** — **MCP** (Anthropic): standard agent ↔ tool connection. Hinge. See [mcp.md](./mcp.md).
+  - **January 2025** — DeepSeek R1 — [08-model-notes.md](./08-model-notes.md).
+  - **February 2025** — Claude 3.7 Sonnet · GPT-4.5. **March 2025** — MCP Streamable HTTP + OAuth · Gemini 2.5 Pro.
+  - **May 2025** — Claude 4 → **Claude Code** as strong harness: [07-agents.md](./07-agents.md).
+  - **August 2025** — GPT-5. **November 2025** — Claude Opus 4.5 · **AGENTS.md** standard · skills/rules: [skills-rules.md](./skills-rules.md).
 
-| Thời điểm | Sự kiện | Trong lab |
-|-----------|---------|-----------|
-| **2023** | **Lần đầu biết LLM** (ChatGPT/GPT-4) | bắt đầu học |
-| 03/2023 | GPT-4, Claude 1, Llama 1 | tokenize · embedding · attention · softmax · RAG |
-| 2024 | Gemini 1.5, Claude 3.5, GPT-4o, o1 | code agents |
-| **11/2024** | **MCP ra đời** | mcp |
-| 2025 | Claude 4 / GPT-5 / R1 · AGENTS.md | harness, skills |
-| 2026 | Grok 4.5, Opus 4.8, GPT-5.6 | model notes, automation |
+- **Stage 4 — 2026: model wave + automation (now)**
+  - Focus: [08-model-notes.md](./08-model-notes.md), [09-agent-automation.md](./09-agent-automation.md).
+  - **April 2026** — GPT-5.5. **May 28, 2026** — Claude Opus 4.8. **June 2026** — Claude Fable 5 · Sonnet 5.
+  - **July 8, 2026** — **Grok 4.5** (trained with Cursor): fast, token-efficient, cheap. **July 9, 2026** — GPT-5.6.
+  - Parallel: **OpenClaw** (`pi` harness) opens "agent controls everything" → **Hermess** polishes it.
 
-## Ý rút ra
+- **Milestone table:**
 
-- Hành trình đi từ **hiểu mô hình** (2023–2024) → **điều khiển agent** (cuối 2024 →). MCP (11/2024) là bản lề.
-- Concepts học năm 2023 *không lỗi thời*: tokenize / attention / RAG vẫn là nền cho mọi agent hôm nay.
-- Cái mới cần theo: harness (Cursor / Claude Code / pi), model wave (Grok 4.5…), automation (OpenClaw / Hermess).
+  | When | Event | In the lab |
+  |------|-------|------------|
+  | **2023** | first LLM exposure (ChatGPT/GPT-4) | start studying |
+  | March 2023 | GPT-4, Claude 1, Llama 1 | tokenize · embedding · attention · softmax · RAG |
+  | 2024 | Gemini 1.5, Claude 3.5, GPT-4o, o1 | coding agents |
+  | **Nov 2024** | **MCP launches** | mcp |
+  | 2025 | Claude 4 / GPT-5 / R1 · AGENTS.md | harness, skills |
+  | 2026 | Grok 4.5, Opus 4.8, GPT-5.6 | model notes, automation |
+
+- **Takeaways:** journey goes from **understanding models** (2023–2024) → **steering agents** (late 2024 onward). MCP (November 2024) is the hinge. 2023 concepts are not outdated — tokenize / attention / RAG still underpin every agent. Watch harnesses (Cursor / Claude Code / pi), model waves (Grok 4.5…), automation (OpenClaw / Hermess).
 
 ## Related
 

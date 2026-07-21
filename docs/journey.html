@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AI Lab Journey · AI Lab</title>
+<script>
+(function () {
+  try {
+    var KEY = "ai-lab-theme";
+    var pref = localStorage.getItem(KEY) || "system";
+    if (pref !== "light" && pref !== "dark" && pref !== "system") pref = "system";
+    var dark = pref === "dark" || (pref === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches);
+    document.documentElement.setAttribute("data-theme", dark ? "dark" : "light");
+    document.documentElement.setAttribute("data-theme-pref", pref);
+  } catch (e) {
+    document.documentElement.setAttribute("data-theme", "light");
+    document.documentElement.setAttribute("data-theme-pref", "system");
+  }
+})();
+</script>
+<script>
+(function () {
+  try {
+    var KEY = "ai-lab-lang";
+    var pref = localStorage.getItem(KEY) || "en";
+    if (pref !== "en" && pref !== "vi" && pref !== "system") pref = "en";
+    var nav = String(navigator.language || "en").toLowerCase();
+    var resolved = pref === "system" ? (nav.indexOf("vi") === 0 ? "vi" : "en") : pref;
+    document.documentElement.setAttribute("data-lang-pref", pref);
+    document.documentElement.setAttribute("data-lang", resolved);
+    document.documentElement.lang = resolved;
+  } catch (e) {
+    document.documentElement.setAttribute("data-lang-pref", "en");
+    document.documentElement.setAttribute("data-lang", "en");
+    document.documentElement.lang = "en";
+  }
+})();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+
+:root, [data-theme="light"] {
+  --bg: #eef3f9; --surface: #ffffff; --ink: #16202e; --muted: #5a6b80;
+  --teal: #0f8a9b; --teal-soft: rgba(15,138,155,.12); --amber: #c2703a;
+  --line: rgba(20,32,46,.12); --line-soft: rgba(20,32,46,.07);
+  --shadow: 0 1px 2px rgba(20,32,46,.05), 0 8px 24px rgba(20,32,46,.06);
+  --glow-teal: rgba(15,138,155,.10); --glow-amber: rgba(194,112,58,.08);
+  --font: Sora, system-ui, sans-serif; --serif: "Instrument Serif", Georgia, serif;
+  --mono: "IBM Plex Mono", ui-monospace, monospace;
+}
+[data-theme="dark"] {
+  --bg: #0d1520; --surface: #152033; --ink: #e8eef6; --muted: #8b9bb0;
+  --teal: #3db8c9; --teal-soft: rgba(61,184,201,.16); --amber: #d4894a;
+  --line: rgba(232,238,246,.12); --line-soft: rgba(232,238,246,.07);
+  --shadow: 0 1px 2px rgba(0,0,0,.25), 0 8px 24px rgba(0,0,0,.35);
+  --glow-teal: rgba(61,184,201,.12); --glow-amber: rgba(212,137,74,.10);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  min-height: 100vh; color: var(--ink); font-family: var(--font);
+  background:
+    radial-gradient(ellipse 60% 45% at 88% -5%, var(--glow-teal), transparent 60%),
+    radial-gradient(ellipse 55% 45% at 0% 105%, var(--glow-amber), transparent 55%),
+    var(--bg);
+  -webkit-font-smoothing: antialiased;
+}
+a { color: var(--teal); }
+::selection { background: var(--teal-soft); }
+.logo-dark { display: none; }
+[data-theme="dark"] .logo-light { display: none; }
+[data-theme="dark"] .logo-dark { display: block; }
+.theme-bar {
+  display: inline-flex; gap: 2px; padding: 3px;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 999px;
+  box-shadow: var(--shadow);
+}
+.theme-bar button {
+  appearance: none; border: 0; background: transparent; color: var(--muted);
+  font: 500 11px var(--mono); letter-spacing: .04em; text-transform: uppercase;
+  padding: 7px 11px; border-radius: 999px; cursor: pointer; transition: all .15s;
+}
+.theme-bar button:hover { color: var(--teal); }
+.theme-bar button.on { background: var(--teal); color: #fff; }
+.prefs { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.lang-bar {
+  display: inline-flex; gap: 2px; padding: 3px;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 999px;
+  box-shadow: var(--shadow);
+}
+.lang-bar button {
+  appearance: none; border: 0; background: transparent; color: var(--muted);
+  font: 500 11px var(--mono); letter-spacing: .04em; text-transform: uppercase;
+  padding: 7px 11px; border-radius: 999px; cursor: pointer; transition: all .15s;
+}
+.lang-bar button:hover { color: var(--teal); }
+.lang-bar button.on { background: var(--teal); color: #fff; }
+html.i18n-busy { cursor: progress; }
+html.i18n-busy .lang-bar { opacity: .7; pointer-events: none; }
+
+.wrap { max-width: 820px; margin: 0 auto; padding: 32px 22px 96px; }
+.nav-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.back { display: inline-flex; align-items: center; gap: 7px; text-decoration: none; color: var(--muted); font: 500 13px var(--mono); }
+.back:hover { color: var(--teal); }
+.hero { margin: 28px 0 10px; }
+.hero .kicker { font: 600 11px var(--mono); letter-spacing: .16em; text-transform: uppercase; color: var(--teal); }
+.hero h1 { font-family: var(--serif); font-weight: 400; font-size: clamp(36px, 6vw, 52px); letter-spacing: -.02em; margin: 10px 0 12px; line-height: 1.1; }
+.hero h1 em { font-style: italic; color: var(--teal); }
+.hero .lead { color: var(--muted); font-size: 16px; line-height: 1.55; max-width: 560px; }
+.hero .chain {
+  margin-top: 18px; font: 500 12px var(--mono); color: var(--amber);
+  letter-spacing: .02em; line-height: 1.6;
+}
+.moods { display: flex; flex-wrap: wrap; gap: 8px; margin: 28px 0 8px; }
+.moods a {
+  text-decoration: none; color: var(--teal); background: var(--teal-soft);
+  border: 1px solid transparent; border-radius: 999px; padding: 8px 13px;
+  font: 500 12px var(--mono); transition: border-color .15s;
+}
+.moods a:hover { border-color: var(--teal); }
+.path { margin-top: 18px; position: relative; }
+.path::before {
+  content: ""; position: absolute; left: 23px; top: 18px; bottom: 18px; width: 2px;
+  background: linear-gradient(var(--teal), var(--amber)); opacity: .35;
+}
+.stage {
+  position: relative; margin: 0 0 18px; padding: 22px 22px 20px 64px;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 18px;
+  box-shadow: var(--shadow);
+}
+.stage .dot {
+  position: absolute; left: 12px; top: 24px; width: 24px; height: 24px;
+  border-radius: 50%; background: var(--teal); color: #fff;
+  font: 600 12px var(--mono); display: grid; place-items: center;
+  box-shadow: 0 0 0 6px var(--teal-soft);
+}
+.stage .roman { font: 600 12px var(--mono); color: var(--teal); letter-spacing: .08em; }
+.stage h2 { font-size: 22px; margin: 4px 0 8px; letter-spacing: -.01em; }
+.stage .goal { color: var(--muted); font-size: 14px; line-height: 1.5; margin-bottom: 14px; }
+.stops { display: flex; flex-direction: column; gap: 8px; }
+.stop {
+  display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; align-items: baseline;
+  text-decoration: none; color: inherit; padding: 10px 12px; border-radius: 12px;
+  border: 1px solid var(--line-soft); transition: border-color .15s, background .15s;
+}
+.stop:hover { border-color: var(--teal); background: var(--teal-soft); }
+.stop .num { font: 600 11px var(--mono); color: var(--teal); }
+.stop .when { font: 500 11px var(--mono); color: var(--amber); }
+.stop .title { font-weight: 600; font-size: 14.5px; grid-column: 2; }
+.stop .blip { grid-column: 2; color: var(--muted); font-size: 13px; line-height: 1.4; }
+.boss {
+  margin-top: 14px; padding: 10px 14px; border-left: 3px solid var(--amber);
+  background: rgba(194,112,58,.08); border-radius: 0 10px 10px 0;
+  font-size: 13.5px; line-height: 1.5; color: var(--ink);
+}
+.boss strong { font: 600 11px var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--amber); display: block; margin-bottom: 4px; }
+.fin {
+  text-align: center; margin: 28px 0 8px; padding: 28px 20px;
+  border: 1px dashed var(--line); border-radius: 18px; color: var(--muted);
+  font: 500 14px var(--mono);
+}
+.fin strong { color: var(--teal); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="nav-row">
+    <a class="back" href="./index.html">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m15 18-6-6 6-6"/></svg>
+      AI Lab · notes
+    </a>
+    <div class="prefs" translate="no">
+  <div class="theme-bar" role="group" aria-label="Theme">
+    <button type="button" data-theme-set="light">Light</button>
+    <button type="button" data-theme-set="system">System</button>
+    <button type="button" data-theme-set="dark">Dark</button>
+  </div>
+  <div class="lang-bar" role="group" aria-label="Language">
+    <button type="button" data-lang-set="en">EN</button>
+    <button type="button" data-lang-set="system">System</button>
+    <button type="button" data-lang-set="vi">VI</button>
+  </div>
+</div>
+<script>
+(function () {
+  var KEY = "ai-lab-theme";
+  function resolve(pref) {
+    if (pref === "light" || pref === "dark") return pref;
+    return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  }
+  function apply(pref) {
+    if (pref !== "light" && pref !== "dark" && pref !== "system") pref = "system";
+    var resolved = resolve(pref);
+    document.documentElement.setAttribute("data-theme", resolved);
+    document.documentElement.setAttribute("data-theme-pref", pref);
+    try { localStorage.setItem(KEY, pref); } catch (e) {}
+    document.querySelectorAll("[data-theme-set]").forEach(function (btn) {
+      btn.classList.toggle("on", btn.getAttribute("data-theme-set") === pref);
+    });
+  }
+  var pref = document.documentElement.getAttribute("data-theme-pref") || "system";
+  apply(pref);
+  document.querySelectorAll("[data-theme-set]").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      apply(btn.getAttribute("data-theme-set"));
+    });
+  });
+  try {
+    window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", function () {
+      var p = document.documentElement.getAttribute("data-theme-pref") || "system";
+      if (p === "system") apply("system");
+    });
+  } catch (e) {}
+})();
+</script>
+
+<script>
+(function () {
+  var KEY = "ai-lab-lang";
+  var CACHE_KEY = "ai-lab-i18n-en-vi";
+  var SKIP = /^(SCRIPT|STYLE|NOSCRIPT|CODE|PRE|KBD|SAMP|TEXTAREA|SVG|MATH)$/;
+  var cache = {};
+  try { cache = JSON.parse(localStorage.getItem(CACHE_KEY) || "{}") || {}; } catch (e) { cache = {}; }
+
+  function resolve(pref) {
+    if (pref === "en" || pref === "vi") return pref;
+    var nav = String(navigator.language || "en").toLowerCase();
+    return nav.indexOf("vi") === 0 ? "vi" : "en";
+  }
+
+  function saveCache() {
+    try { localStorage.setItem(CACHE_KEY, JSON.stringify(cache)); } catch (e) {}
+  }
+
+  async function translateOne(text) {
+    if (!text || !text.trim()) return text;
+    if (cache[text]) return cache[text];
+    // Google gtx web endpoint (no API key). Fallback: MyMemory.
+    var q = encodeURIComponent(text);
+    try {
+      var url = "https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=vi&dt=t&q=" + q;
+      var res = await fetch(url);
+      if (res.ok) {
+        var data = await res.json();
+        var out = (data[0] || []).map(function (row) { return row[0] || ""; }).join("");
+        if (out) { cache[text] = out; return out; }
+      }
+    } catch (e) {}
+    try {
+      var url2 = "https://api.mymemory.translated.net/get?langpair=en|vi&q=" + q;
+      var res2 = await fetch(url2);
+      if (res2.ok) {
+        var data2 = await res2.json();
+        var out2 = data2 && data2.responseData && data2.responseData.translatedText;
+        if (out2 && out2.indexOf("MYMEMORY WARNING") === -1) {
+          cache[text] = out2;
+          return out2;
+        }
+      }
+    } catch (e2) {}
+    return text;
+  }
+
+  function collectNodes(root) {
+    var out = [];
+    var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+      acceptNode: function (node) {
+        if (!node.nodeValue || !node.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+        var el = node.parentElement;
+        if (!el) return NodeFilter.FILTER_REJECT;
+        if (el.closest("[translate=no], .notranslate, .theme-bar, .lang-bar, .prefs, code, pre, kbd, samp")) {
+          return NodeFilter.FILTER_REJECT;
+        }
+        if (SKIP.test(el.tagName)) return NodeFilter.FILTER_REJECT;
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    });
+    while (walker.nextNode()) out.push(walker.currentNode);
+    return out;
+  }
+
+  async function mapPool(items, limit, fn) {
+    var i = 0;
+    var workers = [];
+    async function worker() {
+      while (i < items.length) {
+        var idx = i++;
+        items[idx].result = await fn(items[idx].src);
+      }
+    }
+    for (var w = 0; w < Math.min(limit, items.length); w++) workers.push(worker());
+    await Promise.all(workers);
+  }
+
+  async function applyLang(pref) {
+    if (pref !== "en" && pref !== "vi" && pref !== "system") pref = "en";
+    var resolved = resolve(pref);
+    document.documentElement.setAttribute("data-lang-pref", pref);
+    document.documentElement.setAttribute("data-lang", resolved);
+    document.documentElement.lang = resolved;
+    try { localStorage.setItem(KEY, pref); } catch (e) {}
+    document.querySelectorAll("[data-lang-set]").forEach(function (btn) {
+      btn.classList.toggle("on", btn.getAttribute("data-lang-set") === pref);
+    });
+
+    var nodes = collectNodes(document.body);
+    nodes.forEach(function (node) {
+      if (node._i18nEn == null) node._i18nEn = node.nodeValue;
+    });
+
+    if (resolved === "en") {
+      nodes.forEach(function (node) {
+        if (node._i18nEn != null) node.nodeValue = node._i18nEn;
+      });
+      return;
+    }
+
+    document.documentElement.classList.add("i18n-busy");
+    try {
+      var jobs = nodes.map(function (node) {
+        return { node: node, src: node._i18nEn };
+      });
+      await mapPool(jobs, 4, translateOne);
+      jobs.forEach(function (job) {
+        job.node.nodeValue = job.result;
+      });
+      saveCache();
+    } finally {
+      document.documentElement.classList.remove("i18n-busy");
+    }
+  }
+
+  var pref = document.documentElement.getAttribute("data-lang-pref") || "en";
+  document.querySelectorAll("[data-lang-set]").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      applyLang(btn.getAttribute("data-lang-set"));
+    });
+  });
+  // Defer first translate so DOM is ready
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", function () { applyLang(pref); });
+  } else {
+    applyLang(pref);
+  }
+})();
+</script>
+
+  </div>
+  <header class="hero">
+    <div class="kicker">Trình bày · hành trình</div>
+    <h1>AI Lab Journey</h1>
+    <p class="lead">A different presentation from notes — a fun five-screen map. Pick a screen that fits your mood, click into notes, then move to the next screen.</p>
+    <p class="chain">read text → label it → find documents → try demos → let agents work</p>
+  </header>
+  <nav class="moods"><a href="#abc" title="① ABC then take a break">Just starting</a>
+<a href="#build" title="① → ②, skip agents for now">Want to build models</a>
+<a href="#rag" title="① → ③, also sentence-transformers">Building search / chatbot</a>
+<a href="#demo" title="④ first, back to ① if stuck">Prefer fun demos</a>
+<a href="#agent" title="⑤ MCP · skills · harness">Coding agents</a></nav>
+  <div class="path"><section class="stage" id="abc"><div class="dot">1</div><div class="roman">①</div><h2>ABC · machines read text</h2><p class="goal">Understand how text becomes numbers, then how models &quot;see&quot; and &quot;choose&quot;.</p><div class="stops"><a class="stop" href="notes/tokenize.html"><span class="num">01</span><span class="when">01/2023</span><span class="title">Tokenize</span><span class="blip">Split text → IDs. Machines do not read words.</span></a><a class="stop" href="notes/embedding.html"><span class="num">02</span><span class="when">03/2023</span><span class="title">Embedding</span><span class="blip">Similar meaning → nearby in number space.</span></a><a class="stop" href="notes/attention.html"><span class="num">03</span><span class="when">05/2023</span><span class="title">Attention</span><span class="blip">Each word decides where to look.</span></a><a class="stop" href="notes/softmax.html"><span class="num">04</span><span class="when">06/2023</span><span class="title">Softmax</span><span class="blip">Raw scores → percentages that sum to 1.</span></a></div><div class="boss"><strong>Boss màn này</strong>Explain why &quot;dog / cat&quot; are closer than &quot;dog / invoice&quot; using embedding + cosine.</div></section>
+<section class="stage" id="build"><div class="dot">2</div><div class="roman">②</div><h2>Build · train · run</h2><p class="goal">Label data yourself, train for a few epochs, know where to get data and models.</p><div class="stops"><a class="stop" href="notes/classification.html"><span class="num">05</span><span class="when">08/2023</span><span class="title">Classification</span><span class="blip">Head + softmax = labeling.</span></a><a class="stop" href="notes/pytorch-training.html"><span class="num">06</span><span class="when">10/2023</span><span class="title">Train with PyTorch</span><span class="blip">forward → loss → backward → step.</span></a><a class="stop" href="notes/tensorflow-training.html"><span class="num">07</span><span class="when">11/2023</span><span class="title">Train with TensorFlow / Keras</span><span class="blip">compile then fit — Keras runs the loop.</span></a><a class="stop" href="notes/huggingface.html"><span class="num">08</span><span class="when">01/2024</span><span class="title">Hugging Face — dataset + Space</span><span class="blip">Dataset + pretrained model + Spaces.</span></a><a class="stop" href="notes/kaggle.html"><span class="num">09</span><span class="when">03/2024</span><span class="title">Kaggle — dataset + GPU notebook</span><span class="blip">Dataset + free GPU notebook.</span></a><a class="stop" href="notes/transformer.html"><span class="num">10</span><span class="when">05/2024</span><span class="title">Transformer — core LLM architecture</span><span class="blip">Stacked attention = LLM skeleton.</span></a><a class="stop" href="notes/sentence-transformers.html"><span class="num">11</span><span class="when">07/2024</span><span class="title">sentence-transformers — sentence embeddings</span><span class="blip">Sentence → vector in a few lines; classify fast.</span></a></div><div class="boss"><strong>Boss màn này</strong>Train a small classifier, then encode sentences with sentence-transformers.</div></section>
+<section class="stage" id="rag"><div class="dot">3</div><div class="roman">③</div><h2>Find · ground in documents</h2><p class="goal">Do not make the model memorize everything — let it look things up, then answer.</p><div class="stops"><a class="stop" href="notes/rag.html"><span class="num">12</span><span class="when">08/2024</span><span class="title">RAG</span><span class="blip">Retrieve first, compose after + cite sources.</span></a><a class="stop" href="notes/vector-database.html"><span class="num">13</span><span class="when">10/2024</span><span class="title">Vector database</span><span class="blip">Vector store + top-k neighbor search.</span></a><a class="stop" href="notes/semantic-search.html"><span class="num">14</span><span class="when">12/2024</span><span class="title">Semantic search — hybrid · tiered · fallback</span><span class="blip">Hybrid / tiered / fallback — real-world RAG lesson.</span></a></div><div class="boss"><strong>Boss màn này</strong>Contrast keyword search (Elastic) vs meaning (embeddings), and why hybrid often wins.</div></section>
+<section class="stage" id="demo"><div class="dot">4</div><div class="roman">④</div><h2>Demo · see it live</h2><p class="goal">Watch models work in the browser — not just read theory.</p><div class="stops"><a class="stop" href="notes/train-gpu.html"><span class="num">17</span><span class="when">05/2025</span><span class="title">Train · PyTorch / TensorFlow · GPU</span><span class="blip">Real stack: PyTorch/TF + HF/Kaggle + GPU.</span></a><a class="stop" href="notes/car-nn.html"><span class="num">18</span><span class="when">07/2025</span><span class="title">Car NN — sensor to action</span><span class="blip">3 sensors → 4 actions.</span></a><a class="stop" href="notes/sentiment-routing.html"><span class="num">19</span><span class="when">09/2025</span><span class="title">Sentiment &amp; complexity routing</span><span class="blip">Sentiment labels + easy/hard routing.</span></a><a class="stop" href="notes/train-infer.html"><span class="num">20</span><span class="when">10/2025</span><span class="title">Train → Inference</span><span class="blip">Learn heavy once, use light many times.</span></a></div><div class="boss"><strong>Boss màn này</strong>Open the car-nn or sentiment demo and point to where softmax / the classification head sits.</div></section>
+<section class="stage" id="agent"><div class="dot">5</div><div class="roman">⑤</div><h2>Agent · steer the machine</h2><p class="goal">From &quot;model answers&quot; to &quot;agent controls the machine&quot;.</p><div class="stops"><a class="stop" href="notes/mcp.html"><span class="num">15</span><span class="when">01/2025</span><span class="title">MCP</span><span class="blip">USB-C port for AI tool calls.</span></a><a class="stop" href="notes/skills-rules.html"><span class="num">16</span><span class="when">03/2025</span><span class="title">Skills · Rules · Commands</span><span class="blip">Three layers of teaching an agent.</span></a><a class="stop" href="notes/agents.html"><span class="num">21</span><span class="when">12/2025</span><span class="title">AI Agents · harness comparison</span><span class="blip">Harness ≠ model — Cursor / Claude / Pi…</span></a><a class="stop" href="notes/model-notes.html"><span class="num">22</span><span class="when">02/2026</span><span class="title">Model field notes</span><span class="blip">Field notes on Grok / Opus / DeepSeek…</span></a><a class="stop" href="notes/agent-automation.html"><span class="num">23</span><span class="when">03/2026</span><span class="title">Agent automation — OpenClaw · Hermess</span><span class="blip">OpenClaw opened the door → Hermess polished it.</span></a><a class="stop" href="notes/ai-timeline.html"><span class="num">24</span><span class="when">05/2026</span><span class="title">AI timeline — my journey</span><span class="blip">Anchor the lab to real AI history.</span></a><a class="stop" href="notes/personal-knowledge-base.html"><span class="num">25</span><span class="when">07/2026</span><span class="title">Personal Knowledge-base — videos · docs · GitHub</span><span class="blip">Search video / docs / GitHub + Graph RAG.</span></a></div><div class="boss"><strong>Boss màn này</strong>Explain MCP ≠ Skills, and why the same model feels different in Cursor vs Claude Code.</div></section></div>
+  <div class="fin">End of the path? Back to the <a href="./index.html"><strong>hub</strong></a> · search by <strong>#topic</strong>.</div>
+</div>
+</body>
+</html>

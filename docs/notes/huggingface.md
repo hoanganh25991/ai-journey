@@ -1,36 +1,32 @@
-# Hugging Face — dataset + Space → ra model
+# Hugging Face — dataset + Space → usable model
 
-> "GitHub của AI": nơi lấy sẵn **dataset**, **model** pretrained, và chạy/host demo bằng **Spaces**. Rút ngắn quãng đường từ ý tưởng tới một model dùng được.
+> "GitHub for AI": get **datasets**, **pretrained models**, and host demos with **Spaces**. Shortens the path from idea to a model you can actually use.
 
-## Vì sao quan trọng
+## Why it matters
 
-Tự train từ đầu rất tốn. Hugging Face cho phép *đứng trên vai người khác*: tải dataset có sẵn, lấy model pretrained rồi chỉ fine-tune nhẹ, và deploy demo trong vài phút. Đây là cách nhanh nhất để đi từ [training](./pytorch-training.md) tới một model có thể chia sẻ.
+Training from scratch is expensive. Hugging Face lets you stand on others' work: download a labeled dataset, grab a pretrained model, fine-tune lightly, and deploy a demo in minutes. It is the fastest route from [training](./pytorch-training.md) to a shareable model.
 
-## Ba mảnh chính
+## Key ideas
 
-| Mảnh | Là gì | Dùng để |
-|------|-------|---------|
-| **Datasets** | kho dữ liệu có nhãn, tải 1 dòng `load_dataset(...)` | có ngay dữ liệu train/eval |
-| **Models (Hub)** | model pretrained (BERT, GPT, ViT…) | fine-tune thay vì train từ 0 |
-| **Spaces** | host app demo (Gradio/Streamlit), có GPU | chạy & chia sẻ model ra web |
+- **Three main pieces:**
+  - *Datasets* — labeled data, one line: `load_dataset(...)`.
+  - *Models (Hub)* — pretrained BERT, GPT, ViT, etc.; fine-tune instead of training from zero.
+  - *Spaces* — host demo apps (Gradio/Streamlit), with optional GPU.
+- **`transformers` + `datasets`:** a few lines to load model, tokenizer, and data; fine-tune with `Trainer` or a familiar PyTorch/TF loop.
+- **Fine-tune beats scratch:** leverage knowledge from large models → needs far less data and time.
+- **Spaces = demo + endpoint:** push a model to a Space → instant UI and API for others to try.
+- **Model card and license:** read license and usage restrictions before commercial use.
+- **Output is a model:** checkpoint or endpoint ready for [inference](./06-train-infer.md).
 
-## Ý chính
-
-- **`transformers` + `datasets`:** vài dòng là nạp được model + tokenizer + dữ liệu; fine-tune bằng `Trainer` hoặc vòng lặp PyTorch/TF quen thuộc.
-- **Fine-tune > train from scratch:** tận dụng kiến thức đã học của model lớn → cần ít dữ liệu và thời gian hơn nhiều.
-- **Spaces = demo + endpoint:** đẩy model lên Space (kèm GPU nếu cần) → có ngay UI và API để người khác thử.
-- **Model card & license:** đọc kỹ giấy phép và giới hạn trước khi dùng thương mại.
-- **Output là một model:** kết quả cuối là checkpoint/endpoint sẵn sàng [inference](./06-train-infer.md).
-
-## Trong pipeline
+## Pipeline
 
 ```
-HF Datasets → model pretrained (Hub) → fine-tune (PyTorch/TF) → push lên Hub / Spaces → dùng
+HF Datasets → pretrained model (Hub) → fine-tune (PyTorch/TF) → push to Hub / Spaces → use
 ```
 
-Hugging Face là "nguồn dữ liệu + nơi chạy" cho [pytorch-training.md](./pytorch-training.md) / [tensorflow-training.md](./tensorflow-training.md); dữ liệu thi đấu thì xem [kaggle.md](./kaggle.md).
+Hugging Face is the data source and runtime for [pytorch-training.md](./pytorch-training.md) / [tensorflow-training.md](./tensorflow-training.md); for competition-style data, see [kaggle.md](./kaggle.md).
 
-## Tham khảo
+## References
 
 - [Hugging Face Hub](https://huggingface.co/docs/hub/) · [Datasets](https://huggingface.co/docs/datasets/) · [Spaces](https://huggingface.co/docs/hub/spaces)
 - [transformers](https://huggingface.co/docs/transformers/)

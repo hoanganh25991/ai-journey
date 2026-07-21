@@ -1,39 +1,39 @@
 # Attention
 
-> Khi đọc một từ, nên "nhìn" sang những từ nào khác để hiểu đúng? Attention là cơ chế cho mô hình tự quyết định điều đó.
+> When reading a word, which other words should you look at to understand it correctly? Attention is how the model decides that for itself.
 
-## Vì sao quan trọng
+## Why it matters
 
-Trong câu "con **chó** đuổi con mèo vì **nó** đói", chữ "nó" chỉ ai? Người đọc tự nối "nó" với "chó". Attention cho phép mỗi từ nhìn khắp câu và tự gán trọng số: từ nào liên quan thì chú ý nhiều, từ nào không thì bỏ qua. Đây là ý tưởng lõi làm nên Transformer — kiến trúc đứng sau gần như mọi mô hình ngôn ngữ hiện đại.
+In "the dog chased the cat because it was hungry," what does "it" refer to? A reader links "it" to "dog." Attention lets each word scan the whole sentence and assign its own weights: relevant words get high attention; irrelevant ones fade out. That is the core idea behind the Transformer — the architecture behind nearly every modern language model.
 
-## Ý chính
+## Key ideas
 
-- **Q, K, V — ba vai của mỗi từ:**
-  - *Query (Q)*: "tôi đang cần thông tin gì?"
-  - *Key (K)*: "tôi có thể cung cấp thông tin gì?"
-  - *Value (V)*: "nội dung thực sự tôi mang theo."
-  - So Q của từ này với K của mọi từ → ra điểm liên quan → trộn V theo điểm đó.
-- **Điểm liên quan → softmax → trung bình có trọng số:** điểm thô đi qua [softmax.md](./softmax.md) thành các trọng số cộng lại bằng 1, rồi lấy tổng V theo trọng số.
-- **Self-attention vs cross-attention:** self = các từ trong *cùng một câu* nhìn nhau; cross = câu này nhìn sang câu/nguồn khác (vd dịch máy: câu đích nhìn câu nguồn).
-- **Multi-head = nhiều góc nhìn song song:** một "đầu" bắt quan hệ ngữ pháp, đầu khác bắt quan hệ chủ đề… rồi gộp lại.
+- **Q, K, V — three roles per word:**
+  - *Query (Q):* "What information do I need?"
+  - *Key (K):* "What information can I provide?"
+  - *Value (V):* "The content I actually carry."
+  - Compare this word's Q to every word's K → relevance scores → mix V values by those scores.
+- **Score → softmax → weighted average:** raw scores pass through [softmax.md](./softmax.md) into weights that sum to 1, then combine V vectors.
+- **Self-attention vs cross-attention:** self = words in the *same* sentence look at each other; cross = one sentence attends to another (e.g. translation: target attends to source).
+- **Multi-head = parallel views:** one head may capture grammar, another topic — then results merge.
 
-## Hình minh họa
+## Illustrations
 
-![Self-attention: mỗi từ trong câu nhìn các từ còn lại](assets/protonx/self-attention.jpg)
+![Self-attention: each word in a sentence attends to the others](assets/protonx/self-attention.jpg)
 
-![Bảng attention: trọng số giữa từng cặp từ](assets/protonx/attention-table.jpg)
+![Attention table: weights between every pair of words](assets/protonx/attention-table.jpg)
 
-![Cross-attention: câu đích chú ý sang câu nguồn](assets/protonx/cross-attention.jpg)
+![Cross-attention: target sentence attends to source sentence](assets/protonx/cross-attention.jpg)
 
-![Trọng số attention sau khi qua softmax (cộng lại bằng 1)](assets/protonx/attention-after-softmax.jpg)
+![Attention weights after softmax (sum to 1)](assets/protonx/attention-after-softmax.jpg)
 
-## Trong pipeline
+## Pipeline
 
 ```
-vectors (embedding) → [attention: Q·K → softmax → ×V] → biểu diễn giàu ngữ cảnh
+vectors (embedding) → [attention: Q·K → softmax → ×V] → context-rich representation
 ```
 
-Attention đứng ngay sau [embedding.md](./embedding.md) và dùng [softmax.md](./softmax.md) để chuẩn hóa trọng số.
+Attention follows [embedding.md](./embedding.md) and uses [softmax.md](./softmax.md) to normalize weights.
 
 ## Slides & demo
 
@@ -42,7 +42,7 @@ Attention đứng ngay sau [embedding.md](./embedding.md) và dùng [softmax.md]
 | Slides | [slides/attention](../slides/attention/index.html) |
 | Working app | [demos/attention/app](../demos/attention/app/index.html) |
 
-## Tham khảo
+## References
 
 - Vaswani et al. 2017 — [Attention Is All You Need](https://arxiv.org/abs/1706.03762)
 - Jay Alammar — [The Illustrated Transformer](https://jalammar.github.io/illustrated-transformer/)

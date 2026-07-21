@@ -1,44 +1,44 @@
-# sentence-transformers — embedding câu trong vài dòng
+# sentence-transformers — sentence embedding in a few lines
 
-> Thư viện của Hugging Face biến cả một câu thành một vector chất lượng cao chỉ với vài dòng code. Nhờ đó các bài classification / similarity làm được *siêu nhanh, siêu đơn giản*.
+> A Hugging Face library that turns a whole sentence into a high-quality vector in just a few lines. Classification and similarity tasks become fast and simple.
 
-## Vì sao quan trọng
+## Why it matters
 
-Tự train một model embedding câu tốn rất nhiều công. `sentence-transformers` gói sẵn model pretrained (vd `all-MiniLM`, `paraphrase-mpnet`) để `encode` câu → vector dùng ngay. Với nhiều bài toán, chỉ cần embedding tốt + một bước nhẹ là xong — không cần train mạng lớn.
+Training an embedding model yourself takes serious effort. `sentence-transformers` packages pretrained models (e.g. `all-MiniLM`, `paraphrase-mpnet`) so `encode()` returns vectors ready to use. For many problems, good embeddings plus a light classifier are enough — no need to train a large network.
 
-## Dùng nhanh
+## Key ideas
+
+- **Sentence → one vector:** `encode()` returns embeddings optimized for *sentence-level* meaning comparison (not per-token vectors).
+- **Fast classification:** encode sentences, then attach a light classifier (logistic / k-NN) on top — no full Transformer fine-tune required.
+- **Similarity and search:** `cos_sim` finds semantically close sentences; core of [semantic-search.md](./semantic-search.md) and retrieval in [rag.md](./rag.md).
+- **Load into a vector DB:** vectors from `encode()` go straight into [vector-database.md](./vector-database.md) for top-k search.
+- **Pick a model for the job:** MiniLM is light and fast; mpnet is more accurate but heavier.
+
+Quick use:
 
 ```python
 from sentence_transformers import SentenceTransformer, util
 model = SentenceTransformer("all-MiniLM-L6-v2")
 
-emb = model.encode(["Xin chào", "Hello there"])
-sim = util.cos_sim(emb[0], emb[1])   # độ giống nhau về nghĩa
+emb = model.encode(["Hello", "Hi there"])
+sim = util.cos_sim(emb[0], emb[1])   # semantic similarity
 ```
 
-## Ý chính
+## Illustrations
 
-- **Câu → vector 1 bước:** `encode()` trả embedding đã tối ưu cho *so sánh nghĩa ở mức câu* (khác embedding từng token).
-- **Classification siêu nhanh:** encode câu rồi gắn một classifier nhẹ (logistic / k-NN) lên trên — không cần fine-tune cả Transformer.
-- **Similarity & search:** `cos_sim` để tìm câu gần nghĩa; là lõi của [semantic-search.md](./semantic-search.md) và retrieve trong [rag.md](./rag.md).
-- **Nạp vào vector DB:** vector từ `encode()` đẩy thẳng vào [vector-database.md](./vector-database.md) để tìm top-k.
-- **Chọn model theo nhu cầu:** MiniLM nhẹ & nhanh; mpnet chính xác hơn nhưng nặng hơn.
+![Cosine similarity between two sentence vectors](assets/protonx/cosine-similarity.jpg)
 
-## Hình minh họa
+![Embedding: a function that maps text to vectors](assets/protonx/embeddings-function.jpg)
 
-![Cosine similarity giữa hai vector câu](assets/protonx/cosine-similarity.jpg)
-
-![Embedding: hàm biến văn bản thành vector](assets/protonx/embeddings-function.jpg)
-
-## Trong pipeline
+## Pipeline
 
 ```
-câu → SentenceTransformer.encode → vector → { cos_sim: similarity | classifier nhẹ: nhãn | vector DB: search }
+sentence → SentenceTransformer.encode → vector → { cos_sim: similarity | light classifier: label | vector DB: search }
 ```
 
-Đây là con đường ngắn nhất từ [embedding.md](./embedding.md) tới [classification.md](./classification.md) và [semantic-search.md](./semantic-search.md) mà không phải train nặng.
+The shortest path from [embedding.md](./embedding.md) to [classification.md](./classification.md) and [semantic-search.md](./semantic-search.md) without heavy training.
 
-## Tham khảo
+## References
 
 - [SBERT / sentence-transformers](https://www.sbert.net/)
 - Reimers & Gurevych 2019 — [Sentence-BERT](https://arxiv.org/abs/1908.10084)

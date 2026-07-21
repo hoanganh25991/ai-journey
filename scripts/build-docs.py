@@ -29,6 +29,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 CATALOG = ROOT / "notes" / "catalog.json"
+JOURNEY = ROOT / "notes" / "journey.json"
 DOCS = ROOT / "docs"
 NOTES_OUT = DOCS / "notes"
 
@@ -214,7 +215,7 @@ def build_payload() -> tuple[dict, list[dict]]:
     catalog = json.loads(CATALOG.read_text(encoding="utf-8"))
     entries = catalog["notes"]
     file2id = {posixpath.basename(e["file"]): e["id"] for e in entries}
-    # Auto numbers/dates only for notes that don't override `num` (roadmap = "00").
+    # Auto numbers/dates; optional catalog overrides via `num` / `date`.
     content_total = sum(1 for e in entries if e.get("num") is None)
 
     search_notes: list[dict] = []
@@ -333,10 +334,10 @@ SYNONYMS = [
 
 
 # --------------------------------------------------------------------------- #
-# Shared light theme                                                           #
+# Shared theme (light / dark via data-theme; system resolved in JS)             #
 # --------------------------------------------------------------------------- #
 THEME_CSS = r"""
-:root {
+:root, [data-theme="light"] {
   --bg: #eef3f9; --surface: #ffffff; --ink: #16202e; --muted: #5a6b80;
   --teal: #0f8a9b; --teal-soft: rgba(15,138,155,.12); --amber: #c2703a;
   --line: rgba(20,32,46,.12); --line-soft: rgba(20,32,46,.07);
@@ -345,14 +346,12 @@ THEME_CSS = r"""
   --font: Sora, system-ui, sans-serif; --serif: "Instrument Serif", Georgia, serif;
   --mono: "IBM Plex Mono", ui-monospace, monospace;
 }
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #0d1520; --surface: #152033; --ink: #e8eef6; --muted: #8b9bb0;
-    --teal: #3db8c9; --teal-soft: rgba(61,184,201,.16); --amber: #d4894a;
-    --line: rgba(232,238,246,.12); --line-soft: rgba(232,238,246,.07);
-    --shadow: 0 1px 2px rgba(0,0,0,.25), 0 8px 24px rgba(0,0,0,.35);
-    --glow-teal: rgba(61,184,201,.12); --glow-amber: rgba(212,137,74,.10);
-  }
+[data-theme="dark"] {
+  --bg: #0d1520; --surface: #152033; --ink: #e8eef6; --muted: #8b9bb0;
+  --teal: #3db8c9; --teal-soft: rgba(61,184,201,.16); --amber: #d4894a;
+  --line: rgba(232,238,246,.12); --line-soft: rgba(232,238,246,.07);
+  --shadow: 0 1px 2px rgba(0,0,0,.25), 0 8px 24px rgba(0,0,0,.35);
+  --glow-teal: rgba(61,184,201,.12); --glow-amber: rgba(212,137,74,.10);
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
@@ -365,24 +364,290 @@ body {
 }
 a { color: var(--teal); }
 ::selection { background: var(--teal-soft); }
+.logo-dark { display: none; }
+[data-theme="dark"] .logo-light { display: none; }
+[data-theme="dark"] .logo-dark { display: block; }
+.theme-bar {
+  display: inline-flex; gap: 2px; padding: 3px;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 999px;
+  box-shadow: var(--shadow);
+}
+.theme-bar button {
+  appearance: none; border: 0; background: transparent; color: var(--muted);
+  font: 500 11px var(--mono); letter-spacing: .04em; text-transform: uppercase;
+  padding: 7px 11px; border-radius: 999px; cursor: pointer; transition: all .15s;
+}
+.theme-bar button:hover { color: var(--teal); }
+.theme-bar button.on { background: var(--teal); color: #fff; }
+.prefs { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.lang-bar {
+  display: inline-flex; gap: 2px; padding: 3px;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 999px;
+  box-shadow: var(--shadow);
+}
+.lang-bar button {
+  appearance: none; border: 0; background: transparent; color: var(--muted);
+  font: 500 11px var(--mono); letter-spacing: .04em; text-transform: uppercase;
+  padding: 7px 11px; border-radius: 999px; cursor: pointer; transition: all .15s;
+}
+.lang-bar button:hover { color: var(--teal); }
+.lang-bar button.on { background: var(--teal); color: #fff; }
+html.i18n-busy { cursor: progress; }
+html.i18n-busy .lang-bar { opacity: .7; pointer-events: none; }
 """
+
+# Runs in <head> before paint — prevents flash of wrong theme.
+THEME_BOOT = r"""<script>
+(function () {
+  try {
+    var KEY = "ai-lab-theme";
+    var pref = localStorage.getItem(KEY) || "system";
+    if (pref !== "light" && pref !== "dark" && pref !== "system") pref = "system";
+    var dark = pref === "dark" || (pref === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches);
+    document.documentElement.setAttribute("data-theme", dark ? "dark" : "light");
+    document.documentElement.setAttribute("data-theme-pref", pref);
+  } catch (e) {
+    document.documentElement.setAttribute("data-theme", "light");
+    document.documentElement.setAttribute("data-theme-pref", "system");
+  }
+})();
+</script>"""
+
+LANG_BOOT = r"""<script>
+(function () {
+  try {
+    var KEY = "ai-lab-lang";
+    var pref = localStorage.getItem(KEY) || "en";
+    if (pref !== "en" && pref !== "vi" && pref !== "system") pref = "en";
+    var nav = String(navigator.language || "en").toLowerCase();
+    var resolved = pref === "system" ? (nav.indexOf("vi") === 0 ? "vi" : "en") : pref;
+    document.documentElement.setAttribute("data-lang-pref", pref);
+    document.documentElement.setAttribute("data-lang", resolved);
+    document.documentElement.lang = resolved;
+  } catch (e) {
+    document.documentElement.setAttribute("data-lang-pref", "en");
+    document.documentElement.setAttribute("data-lang", "en");
+    document.documentElement.lang = "en";
+  }
+})();
+</script>"""
+
+THEME_CTRL = r"""
+<div class="theme-bar" role="group" aria-label="Theme" translate="no">
+  <button type="button" data-theme-set="light">Light</button>
+  <button type="button" data-theme-set="system">System</button>
+  <button type="button" data-theme-set="dark">Dark</button>
+</div>
+<script>
+(function () {
+  var KEY = "ai-lab-theme";
+  function resolve(pref) {
+    if (pref === "light" || pref === "dark") return pref;
+    return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  }
+  function apply(pref) {
+    if (pref !== "light" && pref !== "dark" && pref !== "system") pref = "system";
+    var resolved = resolve(pref);
+    document.documentElement.setAttribute("data-theme", resolved);
+    document.documentElement.setAttribute("data-theme-pref", pref);
+    try { localStorage.setItem(KEY, pref); } catch (e) {}
+    document.querySelectorAll("[data-theme-set]").forEach(function (btn) {
+      btn.classList.toggle("on", btn.getAttribute("data-theme-set") === pref);
+    });
+  }
+  var pref = document.documentElement.getAttribute("data-theme-pref") || "system";
+  apply(pref);
+  document.querySelectorAll("[data-theme-set]").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      apply(btn.getAttribute("data-theme-set"));
+    });
+  });
+  try {
+    window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", function () {
+      var p = document.documentElement.getAttribute("data-theme-pref") || "system";
+      if (p === "system") apply("system");
+    });
+  } catch (e) {}
+})();
+</script>
+"""
+
+# Dynamic EN→VI via public web translate API. Source pages stay English-only.
+LANG_CTRL = r"""
+<div class="lang-bar" role="group" aria-label="Language" translate="no">
+  <button type="button" data-lang-set="en">EN</button>
+  <button type="button" data-lang-set="system">System</button>
+  <button type="button" data-lang-set="vi">VI</button>
+</div>
+<script>
+(function () {
+  var KEY = "ai-lab-lang";
+  var CACHE_KEY = "ai-lab-i18n-en-vi";
+  var SKIP = /^(SCRIPT|STYLE|NOSCRIPT|CODE|PRE|KBD|SAMP|TEXTAREA|SVG|MATH)$/;
+  var cache = {};
+  try { cache = JSON.parse(localStorage.getItem(CACHE_KEY) || "{}") || {}; } catch (e) { cache = {}; }
+
+  function resolve(pref) {
+    if (pref === "en" || pref === "vi") return pref;
+    var nav = String(navigator.language || "en").toLowerCase();
+    return nav.indexOf("vi") === 0 ? "vi" : "en";
+  }
+
+  function saveCache() {
+    try { localStorage.setItem(CACHE_KEY, JSON.stringify(cache)); } catch (e) {}
+  }
+
+  async function translateOne(text) {
+    if (!text || !text.trim()) return text;
+    if (cache[text]) return cache[text];
+    // Google gtx web endpoint (no API key). Fallback: MyMemory.
+    var q = encodeURIComponent(text);
+    try {
+      var url = "https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=vi&dt=t&q=" + q;
+      var res = await fetch(url);
+      if (res.ok) {
+        var data = await res.json();
+        var out = (data[0] || []).map(function (row) { return row[0] || ""; }).join("");
+        if (out) { cache[text] = out; return out; }
+      }
+    } catch (e) {}
+    try {
+      var url2 = "https://api.mymemory.translated.net/get?langpair=en|vi&q=" + q;
+      var res2 = await fetch(url2);
+      if (res2.ok) {
+        var data2 = await res2.json();
+        var out2 = data2 && data2.responseData && data2.responseData.translatedText;
+        if (out2 && out2.indexOf("MYMEMORY WARNING") === -1) {
+          cache[text] = out2;
+          return out2;
+        }
+      }
+    } catch (e2) {}
+    return text;
+  }
+
+  function collectNodes(root) {
+    var out = [];
+    var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+      acceptNode: function (node) {
+        if (!node.nodeValue || !node.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+        var el = node.parentElement;
+        if (!el) return NodeFilter.FILTER_REJECT;
+        if (el.closest("[translate=no], .notranslate, .theme-bar, .lang-bar, .prefs, code, pre, kbd, samp")) {
+          return NodeFilter.FILTER_REJECT;
+        }
+        if (SKIP.test(el.tagName)) return NodeFilter.FILTER_REJECT;
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    });
+    while (walker.nextNode()) out.push(walker.currentNode);
+    return out;
+  }
+
+  async function mapPool(items, limit, fn) {
+    var i = 0;
+    var workers = [];
+    async function worker() {
+      while (i < items.length) {
+        var idx = i++;
+        items[idx].result = await fn(items[idx].src);
+      }
+    }
+    for (var w = 0; w < Math.min(limit, items.length); w++) workers.push(worker());
+    await Promise.all(workers);
+  }
+
+  async function applyLang(pref) {
+    if (pref !== "en" && pref !== "vi" && pref !== "system") pref = "en";
+    var resolved = resolve(pref);
+    document.documentElement.setAttribute("data-lang-pref", pref);
+    document.documentElement.setAttribute("data-lang", resolved);
+    document.documentElement.lang = resolved;
+    try { localStorage.setItem(KEY, pref); } catch (e) {}
+    document.querySelectorAll("[data-lang-set]").forEach(function (btn) {
+      btn.classList.toggle("on", btn.getAttribute("data-lang-set") === pref);
+    });
+
+    var nodes = collectNodes(document.body);
+    nodes.forEach(function (node) {
+      if (node._i18nEn == null) node._i18nEn = node.nodeValue;
+    });
+
+    if (resolved === "en") {
+      nodes.forEach(function (node) {
+        if (node._i18nEn != null) node.nodeValue = node._i18nEn;
+      });
+      return;
+    }
+
+    document.documentElement.classList.add("i18n-busy");
+    try {
+      var jobs = nodes.map(function (node) {
+        return { node: node, src: node._i18nEn };
+      });
+      await mapPool(jobs, 4, translateOne);
+      jobs.forEach(function (job) {
+        job.node.nodeValue = job.result;
+      });
+      saveCache();
+    } finally {
+      document.documentElement.classList.remove("i18n-busy");
+    }
+  }
+
+  var pref = document.documentElement.getAttribute("data-lang-pref") || "en";
+  document.querySelectorAll("[data-lang-set]").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      applyLang(btn.getAttribute("data-lang-set"));
+    });
+  });
+  // Defer first translate so DOM is ready
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", function () { applyLang(pref); });
+  } else {
+    applyLang(pref);
+  }
+})();
+</script>
+"""
+
+PREFS_CTRL = (
+    '<div class="prefs" translate="no">\n'
+    '  <div class="theme-bar" role="group" aria-label="Theme">\n'
+    '    <button type="button" data-theme-set="light">Light</button>\n'
+    '    <button type="button" data-theme-set="system">System</button>\n'
+    '    <button type="button" data-theme-set="dark">Dark</button>\n'
+    "  </div>\n"
+    '  <div class="lang-bar" role="group" aria-label="Language">\n'
+    '    <button type="button" data-lang-set="en">EN</button>\n'
+    '    <button type="button" data-lang-set="system">System</button>\n'
+    '    <button type="button" data-lang-set="vi">VI</button>\n'
+    "  </div>\n"
+    "</div>\n"
+    + THEME_CTRL[THEME_CTRL.index("<script>") :]
+    + "\n"
+    + LANG_CTRL[LANG_CTRL.index("<script>") :]
+)
 
 
 # --------------------------------------------------------------------------- #
 # Hub template                                                                 #
 # --------------------------------------------------------------------------- #
 HUB_HTML = r"""<!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>AI Lab</title>
+@@THEME_BOOT@@
+@@LANG_BOOT@@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet" />
 <style>
 @@THEME@@
 .shell { max-width: 880px; margin: 0 auto; padding: 56px 22px 96px; }
+.top-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
 .brand {
   display: block; text-decoration: none; color: inherit;
   line-height: 0;
@@ -392,6 +657,23 @@ HUB_HTML = r"""<!DOCTYPE html>
   object-fit: contain; object-position: left center;
 }
 .tagline { margin-top: 14px; color: var(--muted); font-size: 15px; max-width: 560px; line-height: 1.5; }
+.journey-cta {
+  display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+  margin: 22px 0 0; padding: 16px 18px; text-decoration: none; color: inherit;
+  background: linear-gradient(120deg, rgba(15,138,155,.10), var(--surface) 55%);
+  border: 1px solid var(--teal); border-radius: 16px; box-shadow: var(--shadow);
+  transition: transform .15s, box-shadow .15s;
+}
+.journey-cta:hover { transform: translateY(-1px); box-shadow: 0 8px 28px rgba(15,138,155,.14); }
+.journey-cta .j-kicker {
+  font: 600 11px var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--teal);
+}
+.journey-cta .j-title { font-size: 17px; font-weight: 600; margin-top: 2px; }
+.journey-cta .j-sub { color: var(--muted); font-size: 13px; margin-top: 4px; line-height: 1.45; }
+.journey-cta .j-go {
+  margin-left: auto; font: 600 12px var(--mono); color: #fff; background: var(--teal);
+  padding: 10px 14px; border-radius: 999px; white-space: nowrap;
+}
 .search-wrap { position: relative; margin: 30px 0 10px; }
 #q {
   width: 100%; background: var(--surface); border: 1px solid var(--line);
@@ -420,8 +702,6 @@ HUB_HTML = r"""<!DOCTYPE html>
   transition: border-color .15s, transform .15s, box-shadow .15s;
 }
 .row:hover { border-color: var(--teal); transform: translateY(-1px); box-shadow: var(--shadow); }
-.row-map { border-color: var(--teal); background: linear-gradient(180deg, rgba(15,138,155,.07), var(--surface) 48%); }
-.row-map .row-date { color: var(--teal); letter-spacing: .14em; }
 .row-date { font: 500 11px var(--mono); letter-spacing: .08em; color: var(--amber); margin-bottom: 6px; }
 .row-num {
   font: 600 11px var(--mono); letter-spacing: .05em; color: var(--teal);
@@ -460,17 +740,26 @@ footer { margin-top: 40px; font: 12px var(--mono); color: var(--muted); }
 </head>
 <body>
 <div class="shell">
-  <a class="brand" href="./index.html" aria-label="AI Lab">
-    <picture>
-      <source srcset="notes/assets/ai-lab-logo-dark.png" media="(prefers-color-scheme: dark)" />
-      <img src="notes/assets/ai-lab-logo-light.png" alt="AI Lab" width="420" height="120" />
-    </picture>
+  <div class="top-row">
+    <a class="brand" href="./index.html" aria-label="AI Lab">
+      <img class="logo-light" src="notes/assets/ai-lab-logo-light.png" alt="AI Lab" width="420" height="120" />
+      <img class="logo-dark" src="notes/assets/ai-lab-logo-dark.png" alt="AI Lab" width="420" height="120" />
+    </a>
+    @@THEME_CTRL@@
+  </div>
+  <p class="tagline">Notes are the source of truth. Search first — open a note as a document; slides &amp; demos appear when available.</p>
+  <a class="journey-cta" href="journey.html">
+    <div>
+      <div class="j-kicker">Journey · not a note</div>
+      <div class="j-title">5 stages · a fun AI Lab map</div>
+      <div class="j-sub">ABC of text → build/train → RAG → demo → agent. Pick a path by mood.</div>
+    </div>
+    <span class="j-go">Open journey →</span>
   </a>
-  <p class="tagline">Notes are the source of truth. Search first — mở note dạng document, slides &amp; demo hiện khi có.</p>
 
   <form class="search-wrap" id="searchForm" autocomplete="off">
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
-    <input id="q" type="search" placeholder="Tìm: tokenize, rag, mcp, skills, grok…" />
+    <input id="q" type="search" placeholder="Search: tokenize, rag, mcp, skills, grok…" />
   </form>
   <p class="meta-line" id="metaLine">Loading…</p>
 
@@ -583,9 +872,8 @@ footer { margin-top: 40px; font: 12px var(--mono); color: var(--muted); }
 
   function rowHtml(n, toks) {
     const snip = toks && toks.length ? snippet(n, toks) : "";
-    const mapCls = n.group === "map" ? " row-map" : "";
     return `
-      <a class="row${mapCls}" href="${escapeHtml(n.page)}">
+      <a class="row" href="${escapeHtml(n.page)}">
         ${n.date ? `<div class="row-date">${escapeHtml(n.date)}</div>` : ""}
         <div class="row-top">
           ${n.num ? `<span class="row-num">${escapeHtml(n.num)}</span>` : ""}
@@ -613,8 +901,8 @@ footer { margin-top: 40px; font: 12px var(--mono); color: var(--muted); }
     const chips = suggestions.map((t) => `<button type="button" data-chip="${escapeHtml(t)}">${escapeHtml(t)}</button>`).join("");
     return `
       <div class="followup">
-        <h4>Ít kết quả cho “${escapeHtml(query)}”.</h4>
-        <p>Search chỉ quét <strong>notes</strong> (không phải video/GitHub — xem note Personal Knowledge-base). Thử thu hẹp hoặc chọn một hướng liên quan:</p>
+        <h4>Few hits for “${escapeHtml(query)}”.</h4>
+        <p>Search only covers <strong>notes</strong> (not videos/GitHub — see the Personal Knowledge-base note). Try a narrower query or pick a related topic:</p>
         <div class="chips">${chips}</div>
       </div>`;
   }
@@ -630,13 +918,13 @@ footer { margin-top: 40px; font: 12px var(--mono); color: var(--muted); }
       // flat ranked list with snippets
       html = rows.length
         ? `<div class="list">${rows.map((x) => rowHtml(x.n, toks)).join("")}</div>`
-        : `<p class="empty">Không có note khớp.</p>`;
+        : `<p class="empty">No matching notes.</p>`;
       if (rows.length < 2) html += followup(toks);
     } else {
       // flat browse list in catalog order
       html = notes.length
         ? `<div class="list">${notes.map((n) => rowHtml(n, null)).join("")}</div>`
-        : `<p class="empty">Chưa có note.</p>`;
+        : `<p class="empty">No notes yet.</p>`;
     }
     document.getElementById("results").innerHTML = html;
   }
@@ -662,7 +950,7 @@ footer { margin-top: 40px; font: 12px var(--mono); color: var(--muted); }
     }
   });
 
-  document.getElementById("foot").textContent = "Build: python3 scripts/build-docs.py — source: notes/*.md + catalog.json";
+  document.getElementById("foot").textContent = "Build: ./scripts/build.sh — source: notes/*.md + catalog.json";
 
   // deep link ?q= and ?note=
   const params = new URLSearchParams(location.search);
@@ -685,17 +973,20 @@ footer { margin-top: 40px; font: 12px var(--mono); color: var(--muted); }
 # Note page template                                                          #
 # --------------------------------------------------------------------------- #
 NOTE_HTML = r"""<!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>@@TITLE@@ · AI Lab</title>
+@@THEME_BOOT@@
+@@LANG_BOOT@@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet" />
 <style>
 @@THEME@@
 .wrap { max-width: 960px; margin: 0 auto; padding: 32px 22px 96px; }
+.nav-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
 .back { display: inline-flex; align-items: center; gap: 7px; text-decoration: none; color: var(--muted); font: 500 13px var(--mono); }
 .back:hover { color: var(--teal); }
 .doc {
@@ -727,7 +1018,7 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 .body h1 { font-size: 24px; margin: 1.2em 0 .5em; }
 .body h2 { font-size: 19px; margin: 1.4em 0 .5em; letter-spacing: -.01em; }
 .body h3 { font-size: 16px; margin: 1.2em 0 .4em; }
-.body p, .body li { color: #2b3a4d; line-height: 1.65; font-size: 15px; }
+.body p, .body li { color: var(--ink); line-height: 1.65; font-size: 15px; opacity: .92; }
 .body ul { padding-left: 1.25em; margin: .5em 0 1em; }
 .body li { margin: .25em 0; }
 .body a { color: var(--teal); text-decoration: none; border-bottom: 1px solid var(--teal-soft); }
@@ -737,7 +1028,7 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 .body pre code { color: #dbe6f2; background: none; padding: 0; font-size: 12.5px; line-height: 1.6; }
 .body blockquote { border-left: 3px solid var(--teal); background: var(--teal-soft); padding: 10px 16px; margin: 14px 0; border-radius: 0 8px 8px 0; color: var(--ink); }
 .body table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 13.5px; }
-.body th, .body td { border: 1px solid var(--line); padding: 9px 11px; text-align: left; color: #2b3a4d; }
+.body th, .body td { border: 1px solid var(--line); padding: 9px 11px; text-align: left; color: var(--ink); }
 .body th { color: var(--teal); font: 500 11px var(--mono); letter-spacing: .05em; text-transform: uppercase; background: var(--teal-soft); }
 .body figure { margin: 20px 0; }
 .body figure img { width: 100%; height: auto; display: block; border-radius: 12px; border: 1px solid var(--line); background: #e6edf5; }
@@ -747,10 +1038,13 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 </head>
 <body>
 <div class="wrap">
-  <a class="back" href="../index.html">
-    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m15 18-6-6 6-6"/></svg>
-    AI Lab
-  </a>
+  <div class="nav-row">
+    <a class="back" href="../index.html">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m15 18-6-6 6-6"/></svg>
+      AI Lab
+    </a>
+    @@THEME_CTRL@@
+  </div>
   <article class="doc">
     <h1>@@TITLE@@</h1>
     <p class="summary">@@SUMMARY@@</p>
@@ -793,6 +1087,16 @@ def esc(s: str) -> str:
     )
 
 
+def _inject_theme(html: str) -> str:
+    return (
+        html.replace("@@THEME@@", THEME_CSS)
+        .replace("@@THEME_BOOT@@", THEME_BOOT)
+        .replace("@@LANG_BOOT@@", LANG_BOOT)
+        .replace("@@THEME_CTRL@@", PREFS_CTRL)
+        .replace("@@PREFS_CTRL@@", PREFS_CTRL)
+    )
+
+
 def render_note_page(n: dict) -> str:
     actions = []
     if n.get("slides"):
@@ -807,9 +1111,8 @@ def render_note_page(n: dict) -> str:
         actions.append(f'<a href="{esc(l["href"])}">{esc(l["label"])} ↗</a>')
     topics = "".join(f"<span>#{esc(t)}</span>" for t in n.get("topics") or [])
     title_js = json.dumps(n["title"], ensure_ascii=False)
-    return (
-        NOTE_HTML.replace("@@THEME@@", THEME_CSS)
-        .replace("@@TITLE@@", esc(n["title"]))
+    return _inject_theme(
+        NOTE_HTML.replace("@@TITLE@@", esc(n["title"]))
         .replace("@@SUMMARY@@", esc(n["summary"]))
         .replace("@@ACTIONS@@", "\n".join(actions))
         .replace("@@TOPICS@@", topics)
@@ -820,7 +1123,163 @@ def render_note_page(n: dict) -> str:
 
 def render_hub(payload: dict) -> str:
     data = json.dumps(payload, ensure_ascii=False).replace("<", "\\u003c")
-    return HUB_HTML.replace("@@THEME@@", THEME_CSS).replace("@@NOTES_JSON@@", data)
+    return _inject_theme(HUB_HTML.replace("@@NOTES_JSON@@", data))
+
+
+JOURNEY_HTML = r"""<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>@@TITLE@@ · AI Lab</title>
+@@THEME_BOOT@@
+@@LANG_BOOT@@
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+@@THEME@@
+.wrap { max-width: 820px; margin: 0 auto; padding: 32px 22px 96px; }
+.nav-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.back { display: inline-flex; align-items: center; gap: 7px; text-decoration: none; color: var(--muted); font: 500 13px var(--mono); }
+.back:hover { color: var(--teal); }
+.hero { margin: 28px 0 10px; }
+.hero .kicker { font: 600 11px var(--mono); letter-spacing: .16em; text-transform: uppercase; color: var(--teal); }
+.hero h1 { font-family: var(--serif); font-weight: 400; font-size: clamp(36px, 6vw, 52px); letter-spacing: -.02em; margin: 10px 0 12px; line-height: 1.1; }
+.hero h1 em { font-style: italic; color: var(--teal); }
+.hero .lead { color: var(--muted); font-size: 16px; line-height: 1.55; max-width: 560px; }
+.hero .chain {
+  margin-top: 18px; font: 500 12px var(--mono); color: var(--amber);
+  letter-spacing: .02em; line-height: 1.6;
+}
+.moods { display: flex; flex-wrap: wrap; gap: 8px; margin: 28px 0 8px; }
+.moods a {
+  text-decoration: none; color: var(--teal); background: var(--teal-soft);
+  border: 1px solid transparent; border-radius: 999px; padding: 8px 13px;
+  font: 500 12px var(--mono); transition: border-color .15s;
+}
+.moods a:hover { border-color: var(--teal); }
+.path { margin-top: 18px; position: relative; }
+.path::before {
+  content: ""; position: absolute; left: 23px; top: 18px; bottom: 18px; width: 2px;
+  background: linear-gradient(var(--teal), var(--amber)); opacity: .35;
+}
+.stage {
+  position: relative; margin: 0 0 18px; padding: 22px 22px 20px 64px;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 18px;
+  box-shadow: var(--shadow);
+}
+.stage .dot {
+  position: absolute; left: 12px; top: 24px; width: 24px; height: 24px;
+  border-radius: 50%; background: var(--teal); color: #fff;
+  font: 600 12px var(--mono); display: grid; place-items: center;
+  box-shadow: 0 0 0 6px var(--teal-soft);
+}
+.stage .roman { font: 600 12px var(--mono); color: var(--teal); letter-spacing: .08em; }
+.stage h2 { font-size: 22px; margin: 4px 0 8px; letter-spacing: -.01em; }
+.stage .goal { color: var(--muted); font-size: 14px; line-height: 1.5; margin-bottom: 14px; }
+.stops { display: flex; flex-direction: column; gap: 8px; }
+.stop {
+  display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; align-items: baseline;
+  text-decoration: none; color: inherit; padding: 10px 12px; border-radius: 12px;
+  border: 1px solid var(--line-soft); transition: border-color .15s, background .15s;
+}
+.stop:hover { border-color: var(--teal); background: var(--teal-soft); }
+.stop .num { font: 600 11px var(--mono); color: var(--teal); }
+.stop .when { font: 500 11px var(--mono); color: var(--amber); }
+.stop .title { font-weight: 600; font-size: 14.5px; grid-column: 2; }
+.stop .blip { grid-column: 2; color: var(--muted); font-size: 13px; line-height: 1.4; }
+.boss {
+  margin-top: 14px; padding: 10px 14px; border-left: 3px solid var(--amber);
+  background: rgba(194,112,58,.08); border-radius: 0 10px 10px 0;
+  font-size: 13.5px; line-height: 1.5; color: var(--ink);
+}
+.boss strong { font: 600 11px var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--amber); display: block; margin-bottom: 4px; }
+.fin {
+  text-align: center; margin: 28px 0 8px; padding: 28px 20px;
+  border: 1px dashed var(--line); border-radius: 18px; color: var(--muted);
+  font: 500 14px var(--mono);
+}
+.fin strong { color: var(--teal); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="nav-row">
+    <a class="back" href="./index.html">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m15 18-6-6 6-6"/></svg>
+      AI Lab · notes
+    </a>
+    @@THEME_CTRL@@
+  </div>
+  <header class="hero">
+    <div class="kicker">Trình bày · hành trình</div>
+    <h1>@@TITLE@@</h1>
+    <p class="lead">@@LEAD@@</p>
+    <p class="chain">@@TAGLINE@@</p>
+  </header>
+  <nav class="moods">@@MOODS@@</nav>
+  <div class="path">@@STAGES@@</div>
+  <div class="fin">End of the path? Back to the <a href="./index.html"><strong>hub</strong></a> · search by <strong>#topic</strong>.</div>
+</div>
+</body>
+</html>
+"""
+
+
+def render_journey(payload: dict) -> str:
+    """Build the journey presentation page (not a note)."""
+    if not JOURNEY.is_file():
+        return ""
+    spec = json.loads(JOURNEY.read_text(encoding="utf-8"))
+    by_id = {n["id"]: n for n in payload.get("notes") or []}
+
+    moods_html = []
+    for m in spec.get("moods") or []:
+        moods_html.append(
+            f'<a href="#{esc(m["stage"])}" title="{esc(m.get("hint") or "")}">{esc(m["label"])}</a>'
+        )
+
+    stages_html = []
+    for i, st in enumerate(spec.get("stages") or [], start=1):
+        stops = []
+        for nid in st.get("notes") or []:
+            n = by_id.get(nid)
+            if not n:
+                continue
+            blip = (st.get("blips") or {}).get(nid) or n.get("summary") or ""
+            href = n.get("page") or f"notes/{nid}.html"
+            stops.append(
+                f'<a class="stop" href="{esc(href)}">'
+                f'<span class="num">{esc(n.get("num") or "")}</span>'
+                f'<span class="when">{esc(n.get("date") or "")}</span>'
+                f'<span class="title">{esc(n["title"])}</span>'
+                f'<span class="blip">{esc(blip)}</span>'
+                f"</a>"
+            )
+        boss = st.get("boss") or ""
+        boss_html = (
+            f'<div class="boss"><strong>Boss màn này</strong>{esc(boss)}</div>' if boss else ""
+        )
+        stages_html.append(
+            f'<section class="stage" id="{esc(st["id"])}">'
+            f'<div class="dot">{i}</div>'
+            f'<div class="roman">{esc(st.get("roman") or "")}</div>'
+            f'<h2>{esc(st["title"])}</h2>'
+            f'<p class="goal">{esc(st.get("goal") or "")}</p>'
+            f'<div class="stops">{"".join(stops)}</div>'
+            f"{boss_html}"
+            f"</section>"
+        )
+
+    title = spec.get("title") or "Hành trình AI Lab"
+    return _inject_theme(
+        JOURNEY_HTML.replace("@@TITLE@@", esc(title))
+        .replace("@@LEAD@@", esc(spec.get("lead") or ""))
+        .replace("@@TAGLINE@@", esc(spec.get("tagline") or ""))
+        .replace("@@MOODS@@", "\n".join(moods_html))
+        .replace("@@STAGES@@", "\n".join(stages_html))
+    )
 
 
 # --------------------------------------------------------------------------- #
@@ -993,6 +1452,10 @@ def main() -> None:
     )
     (DOCS / "index.html").write_text(render_hub(payload), encoding="utf-8")
 
+    journey_html = render_journey(payload)
+    if journey_html:
+        (DOCS / "journey.html").write_text(journey_html, encoding="utf-8")
+
     for n in page_notes:
         (NOTES_OUT / f"{n['id']}.html").write_text(render_note_page(n), encoding="utf-8")
         # copy source .md next to the page for Download
@@ -1005,6 +1468,7 @@ def main() -> None:
 
     print(f"OK {len(page_notes)} notes")
     print(f"    hub        → {DOCS / 'index.html'}")
+    print(f"    journey    → {DOCS / 'journey.html'}")
     print(f"    note pages → {NOTES_OUT}/<id>.html")
     print(f"    copied     → docs/demos, docs/slides (+ zip / download.html)")
     print(f"    built_at   {payload['built_at']}")

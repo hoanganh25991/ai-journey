@@ -1,28 +1,12 @@
 {
   "version": 1,
-  "description": "Source of truth for AI Lab listing. Notes are primary; slides/demo optional.",
+  "description": "Source of truth for AI Lab listing. Notes are primary; slides and demos optional.",
   "notes": [
-    {
-      "id": "roadmap",
-      "file": "notes/roadmap.md",
-      "title": "Roadmap · hành trình AI Lab",
-      "summary": "Bản đồ vui 5 màn: ABC chữ → build/train → RAG → demo → agent. Bắt đầu từ đây.",
-      "topics": [
-        "roadmap",
-        "learning-path",
-        "map"
-      ],
-      "group": "map",
-      "num": "00",
-      "date": "START",
-      "slides": null,
-      "demo": null
-    },
     {
       "id": "tokenize",
       "file": "notes/tokenize.md",
       "title": "Tokenize",
-      "summary": "Cắt câu chữ thành token rồi đổi thành ID — máy chỉ đọc số. BPE vs WordPiece.",
+      "summary": "Split text into tokens and map them to IDs — machines read numbers, not words. BPE vs WordPiece.",
       "topics": [
         "tokenize",
         "BPE",
@@ -36,7 +20,7 @@
       "id": "embedding",
       "file": "notes/embedding.md",
       "title": "Embedding",
-      "summary": "Đổi ID thành vector: gần nghĩa thì gần nhau, đo bằng cosine.",
+      "summary": "Turn IDs into vectors: similar meaning → nearby points, measured with cosine similarity.",
       "topics": [
         "embedding",
         "cosine",
@@ -50,7 +34,7 @@
       "id": "attention",
       "file": "notes/attention.md",
       "title": "Attention",
-      "summary": "Mỗi từ nên nhìn từ nào khác để hiểu đúng — cơ chế Q·K·V của Transformer.",
+      "summary": "Each word decides which other words to attend to — the Q·K·V mechanism behind Transformers.",
       "topics": [
         "attention",
         "QKV",
@@ -64,7 +48,7 @@
       "id": "softmax",
       "file": "notes/softmax.md",
       "title": "Softmax",
-      "summary": "Biến điểm số thô thành phần trăm, cộng lại bằng 1.",
+      "summary": "Turn raw scores into probabilities that sum to 1.",
       "topics": [
         "softmax",
         "logits",
@@ -78,7 +62,7 @@
       "id": "classification",
       "file": "notes/classification.md",
       "title": "Classification",
-      "summary": "Dán nhãn cho đầu vào — bài build model phổ biến nhất, ngay sau softmax.",
+      "summary": "Assign a label to input — the most common model-building task, right after softmax.",
       "topics": [
         "classification",
         "cross-entropy",
@@ -92,8 +76,8 @@
     {
       "id": "pytorch-training",
       "file": "notes/pytorch-training.md",
-      "title": "Train với PyTorch",
-      "summary": "Vòng lặp epoch: forward → loss → backward → step. Tự tay train một classifier.",
+      "title": "Train with PyTorch",
+      "summary": "Epoch loop: forward → loss → backward → step. Train a classifier by hand.",
       "topics": [
         "pytorch",
         "training",
@@ -108,8 +92,8 @@
     {
       "id": "tensorflow-training",
       "file": "notes/tensorflow-training.md",
-      "title": "Train với TensorFlow / Keras",
-      "summary": "compile + fit: khai báo model rồi để Keras lo vòng lặp epoch.",
+      "title": "Train with TensorFlow / Keras",
+      "summary": "compile + fit: declare the model, let Keras run the epoch loop.",
       "topics": [
         "tensorflow",
         "keras",
@@ -124,7 +108,7 @@
       "id": "huggingface",
       "file": "notes/huggingface.md",
       "title": "Hugging Face — dataset + Space",
-      "summary": "GitHub của AI: Datasets + Models pretrained + Spaces → ra model dùng được.",
+      "summary": "GitHub for AI: Datasets + pretrained Models + Spaces → a usable model fast.",
       "topics": [
         "huggingface",
         "datasets",
@@ -140,7 +124,7 @@
       "id": "kaggle",
       "file": "notes/kaggle.md",
       "title": "Kaggle — dataset + GPU notebook",
-      "summary": "Kho dataset + notebook có GPU/TPU miễn phí + competition để cọ xát.",
+      "summary": "Dataset library + free GPU/TPU notebooks + competitions to practice.",
       "topics": [
         "kaggle",
         "dataset",
@@ -155,8 +139,8 @@
     {
       "id": "transformer",
       "file": "notes/transformer.md",
-      "title": "Transformer — kiến trúc lõi của LLM",
-      "summary": "Xếp chồng khối attention + positional encoding; encoder (BERT) / decoder (GPT).",
+      "title": "Transformer — core LLM architecture",
+      "summary": "Stack attention blocks + positional encoding; encoder (BERT) / decoder (GPT).",
       "topics": [
         "transformer",
         "attention",
@@ -171,8 +155,8 @@
     {
       "id": "sentence-transformers",
       "file": "notes/sentence-transformers.md",
-      "title": "sentence-transformers — embedding câu",
-      "summary": "Câu → vector trong vài dòng; classification & similarity siêu nhanh, siêu đơn giản.",
+      "title": "sentence-transformers — sentence embeddings",
+      "summary": "Sentence → vector in a few lines; classification and similarity made fast and simple.",
       "topics": [
         "sentence-transformers",
         "sbert",
@@ -188,7 +172,7 @@
       "id": "rag",
       "file": "notes/rag.md",
       "title": "RAG",
-      "summary": "Tra cứu tài liệu liên quan trước, rồi mới để model soạn câu trả lời có trích dẫn.",
+      "summary": "Retrieve relevant documents first, then let the model compose a grounded answer with citations.",
       "topics": [
         "RAG",
         "vector-db",
@@ -202,7 +186,7 @@
       "id": "vector-database",
       "file": "notes/vector-database.md",
       "title": "Vector database",
-      "summary": "Kho lưu vector + tìm top-k hàng xóm gần nhất (ANN). Hạ tầng cho RAG & semantic search.",
+      "summary": "Store vectors and find top-k nearest neighbors (ANN). Infrastructure for RAG and semantic search.",
       "topics": [
         "vector-db",
         "ANN",
@@ -218,7 +202,7 @@
       "id": "semantic-search",
       "file": "notes/semantic-search.md",
       "title": "Semantic search — hybrid · tiered · fallback",
-      "summary": "Tìm theo nghĩa: ghép inverted-index (Elastic) + semantic index (embedding). Dự án học RAG của tôi.",
+      "summary": "Search by meaning: combine inverted index (Elastic) + semantic index (embeddings). My hands-on RAG learning project.",
       "topics": [
         "semantic-search",
         "hybrid",
@@ -240,7 +224,7 @@
       "id": "mcp",
       "file": "notes/mcp.md",
       "title": "MCP",
-      "summary": "Chuẩn chung để agent gọi tool ngoài — như cổng USB-C cho AI. Host ↔ server ↔ tools có schema.",
+      "summary": "Common standard for agents to call external tools — USB-C for AI. Host ↔ server ↔ tools with schema.",
       "topics": [
         "MCP",
         "tools",
@@ -255,7 +239,7 @@
       "id": "skills-rules",
       "file": "notes/skills-rules.md",
       "title": "Skills · Rules · Commands",
-      "summary": "Know-how của AI agent: SKILL.md, rules, commands; global ~/.agents.",
+      "summary": "Agent know-how: SKILL.md, rules, commands; global ~/.agents.",
       "topics": [
         "skills",
         "rules",
@@ -271,7 +255,7 @@
       "id": "train-gpu",
       "file": "notes/train-gpu.md",
       "title": "Train · PyTorch / TensorFlow · GPU",
-      "summary": "HF/Kaggle datasets, PyTorch & TensorFlow, GPU notebooks, train → inference.",
+      "summary": "HF/Kaggle datasets, PyTorch and TensorFlow, GPU notebooks, train → inference.",
       "topics": [
         "pytorch",
         "tensorflow",
@@ -287,7 +271,7 @@
       "id": "car-nn",
       "file": "notes/04-demo-car.md",
       "title": "Car NN — sensor to action",
-      "summary": "3 cảm biến → mạng fully connected → forward / back / left / right. Ví dụ nhìn thấy được của phân loại.",
+      "summary": "3 sensors → fully connected network → forward / back / left / right. A visible classification example.",
       "topics": [
         "fully-connected",
         "classification",
@@ -301,7 +285,7 @@
       "id": "sentiment-routing",
       "file": "notes/05-demo-text.md",
       "title": "Sentiment & complexity routing",
-      "summary": "Đọc câu rồi dán nhãn: cảm xúc (neg/neu/pos) và định tuyến dễ/khó.",
+      "summary": "Read a sentence and label it: sentiment (neg/neu/pos) and easy/hard routing.",
       "topics": [
         "sentiment",
         "routing",
@@ -325,7 +309,7 @@
       "id": "train-infer",
       "file": "notes/06-train-infer.md",
       "title": "Train → Inference",
-      "summary": "Hai đời của mô hình: học weights nặng một lần (train) rồi dùng nhẹ nhiều lần (infer).",
+      "summary": "Two lives of a model: learn weights once (train), then use lightly many times (infer).",
       "topics": [
         "train",
         "inference",
@@ -338,7 +322,7 @@
     {
       "id": "agents",
       "file": "notes/07-agents.md",
-      "title": "AI Agents · So sánh harness",
+      "title": "AI Agents · harness comparison",
       "summary": "Harness ≠ model: Cursor, Claude Code, Pi, Cline/Kilo, OpenCode, Zed.",
       "topics": [
         "agents",
@@ -373,7 +357,7 @@
       "id": "agent-automation",
       "file": "notes/09-agent-automation.md",
       "title": "Agent automation — OpenClaw · Hermess",
-      "summary": "Câu chuyện: OpenClaw (pi harness) mở màn cảm giác agent control mọi thứ → Hermess làm tốt.",
+      "summary": "Story arc: OpenClaw (pi harness) opened the feel of agent control → Hermess polished it.",
       "topics": [
         "openclaw",
         "hermess",
@@ -388,8 +372,8 @@
     {
       "id": "ai-timeline",
       "file": "notes/10-ai-timeline.md",
-      "title": "AI timeline — hành trình của tôi",
-      "summary": "Hành trình từ 2023 (lần đầu biết LLM) → embedding… → agent → automation, neo vào mốc AI thực tế.",
+      "title": "AI timeline — my journey",
+      "summary": "Journey from 2023 (first LLM exposure) → embedding… → agents → automation, anchored to real AI milestones.",
       "topics": [
         "timeline",
         "history",
@@ -405,7 +389,7 @@
       "id": "personal-knowledge-base",
       "file": "notes/personal-knowledge-base.md",
       "title": "Personal Knowledge-base — videos · docs · GitHub",
-      "summary": "Repo riêng ~/work-station/personal-kb: FTS search + Graph RAG keywords. Sẽ gắn submodule.",
+      "summary": "Separate repo ~/work-station/personal-kb: FTS search + Graph RAG keywords. Submodule planned.",
       "topics": [
         "knowledge-base",
         "youtube",

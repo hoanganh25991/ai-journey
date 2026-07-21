@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -50,7 +50,7 @@ textarea {
   <div class="route">
     <div class="card" id="simple">
       <h3>Fast path · simple</h3>
-      <p>Trả lời thẳng / small model / rule. Không cần crew.</p>
+      <p>Straight answer / small model / rule. No crew needed.</p>
     </div>
     <div class="card" id="complex">
       <h3>Heavy path · complex</h3>
@@ -72,7 +72,7 @@ function score(text) {
   const hits = [];
   if (words.length > 28) { s += 0.25; hits.push("long"); }
   if (words.length > 50) { s += 0.15; hits.push("very-long"); }
-  if (/(then|after that|sau đó|và rồi|\d+\.)/i.test(text)) { s += 0.2; hits.push("multi-step"); }
+  if (/(then|after that|then|and then|\d+\.)/i.test(text)) { s += 0.2; hits.push("multi-step"); }
   for (const k of HEAVY) {
     if (t.includes(k)) { s += 0.18; hits.push(k); }
   }

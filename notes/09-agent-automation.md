@@ -1,39 +1,39 @@
 # Agent automation — OpenClaw · Hermess
 
-> Câu chuyện cá nhân về làn sóng "AI agent tự chạy việc": từ chatbot trả lời → agent **cầm tay làm** (chạy lệnh, đụng file, điều khiển máy). Hai con mình dùng qua: **OpenClaw** và **Hermess**.
+> Personal notes on the wave of "AI agents that do things on their own": from chatbot answers → agents **hands-on** with the machine (run commands, edit files, control tools). Two I use: **OpenClaw** and **Hermess**.
 
-## Bối cảnh
+## Why it matters
 
-Trước đây AI chỉ *trả lời*: hỏi — đáp, còn làm là việc của mình. Bước ngoặt là khi agent bắt đầu **tích hợp vào máy và control mọi thứ**: tự mở terminal, sửa file, gọi tool, chạy cả một chuỗi task mà không cần mình bấm từng bước.
+Early AI only *answered* — you still did the work. The shift is agents that **integrate with the machine**: open terminals, edit files, call tools, chain tasks without clicking each step. OpenClaw was the first to make that feel real; Hermess refined it.
 
-## OpenClaw — con đầu tiên cho *cảm giác đó*
+## Key ideas
 
-- Dùng **`pi`** làm harness: đơn giản, nhanh, gọn, nhẹ — cắm vào là chạy task ngay.
-- Điểm khiến nó đáng nhớ: **nó là thằng đầu tiên cho người ta cảm giác "AI agent integrate sâu, control giúp mọi thứ".**
-  - Không chỉ gợi ý — nó *thực sự làm*: đọc/ghi file, chạy shell, tự nối các bước.
-  - Lần đầu thấy một agent "cầm lái" thay vì chỉ ngồi cạnh nhắc bài.
-- Triết lý: harness mỏng, ít ma sát → thử nghiệm automation cực nhanh.
+- **OpenClaw — first to deliver *that feeling***
+  - Uses **`pi`** as harness: simple, fast, compact — plug in and run.
+  - Memorable because it was the first that felt like "the agent controls the whole machine."
+  - Does not just suggest — it *does*: read/write files, run shells, connect steps.
+  - Philosophy: thin harness, low friction → fastest way to feel agent automation.
 
-> Đây là phần cần **nổi bật**: OpenClaw = khoảnh khắc "à, agent có thể tự điều khiển cả cái máy này".
+- **Hermess — came later, done well**
+  - Smoother, more dependable for real automation after OpenClaw proved the concept.
+  - Slides: [slides/hermess](../slides/hermess/index.html).
 
-## Hermess — đến sau, làm tốt
+- **Side by side:**
 
-- Sau OpenClaw, **Hermess** hoàn thiện trải nghiệm: mượt, chắc tay hơn khi chạy automation thật.
-- Xem slide riêng: [slides/hermess](../slides/hermess/index.html).
+  | | OpenClaw | Hermess |
+  |--|----------|---------|
+  | Harness | `pi` — thin, fast | more complete |
+  | Role | **opens** the "agent controls everything" feeling | **polishes** it for real use |
+  | When | quick sense-making, automation prototypes | run automation properly |
 
-## Rút ra
+  Light harness (`pi` / OpenClaw) = shortest path to *feel* agent power. Polished product (Hermess) = when you need stable daily automation.
 
-| | OpenClaw | Hermess |
-|--|----------|---------|
-| Harness | `pi` — mỏng, nhanh gọn nhẹ | hoàn thiện hơn |
-| Vai trò | **mở màn** cảm giác agent control mọi thứ | **làm tốt**, dùng thật ổn |
-| Khi nào | cảm nhận nhanh, prototype automation | chạy automation chỉn chu |
+## References
 
-- Harness nhẹ (`pi` / OpenClaw) = đường ngắn nhất để *cảm* được sức mạnh agent automation.
-- Con làm tốt (Hermess) = khi cần chạy thật, ổn định.
+- Hermess slides: [slides/hermess](../slides/hermess/index.html)
 
 ## Related
 
-- [07-agents.md](./07-agents.md) — so sánh harness (Cursor, Claude Code, Pi…)
-- [mcp.md](./mcp.md) — cách agent thực thi tool
+- [07-agents.md](./07-agents.md) — harness comparison (Cursor, Claude Code, Pi…)
+- [mcp.md](./mcp.md) — how agents execute tools
 - [skills-rules.md](./skills-rules.md), [08-model-notes.md](./08-model-notes.md)

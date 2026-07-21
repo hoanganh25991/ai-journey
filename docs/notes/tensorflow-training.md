@@ -1,12 +1,20 @@
-# Train với TensorFlow / Keras
+# Train with TensorFlow / Keras
 
-> Cùng bài classifier, nhưng làm bằng TensorFlow (API Keras): định nghĩa model, `compile`, rồi `fit` qua nhiều epoch. Ngắn gọn hơn PyTorch nhờ vòng lặp training được gói sẵn.
+> Same classifier lesson, but with TensorFlow (Keras API): define the model, `compile`, then `fit` over many epochs. More concise than PyTorch thanks to the built-in training loop.
 
-## Vì sao quan trọng
+## Why it matters
 
-TensorFlow (qua Keras) là lối train "khai báo": bạn mô tả model và cấu hình, framework lo phần lặp epoch. Đối chiếu với [PyTorch](./pytorch-training.md) (tự viết vòng lặp) giúp thấy rõ *cùng một ý tưởng học* nhưng hai phong cách API — và bạn chọn cái nào tùy dự án.
+TensorFlow (via Keras) is declarative training: you describe the model and settings, the framework runs the epoch loop. Contrasting with [PyTorch](./pytorch-training.md) (where you write the loop yourself) shows the same learning idea in two API styles — pick the one that fits the project.
 
-## Khung xương
+## Key ideas
+
+- **`compile` = declare how to learn:** pick optimizer, loss (softmax + cross-entropy for classification), and metrics to track.
+- **`fit` = run training:** the framework handles epoch/batch iteration and backprop — no manual `backward()`/`step()` like PyTorch.
+- **Monitor with metrics:** `accuracy` and `val_loss` print each epoch; rising `val_loss` while train loss falls → overfitting.
+- **Callbacks:** `EarlyStopping`, `ModelCheckpoint` stop at the right time and save the best model.
+- **TensorBoard and Projector:** plot loss curves and project embeddings into 3D to inspect ([embedding.md](./embedding.md)).
+
+Skeleton:
 
 ```python
 model = keras.Sequential([
@@ -19,29 +27,21 @@ model.compile(optimizer="adam",
 model.fit(x_train, y_train, epochs=EPOCHS, validation_data=(x_val, y_val))
 ```
 
-## Ý chính
+## Illustrations
 
-- **`compile` = khai báo cách học:** chọn optimizer, loss (softmax + cross-entropy cho phân loại), metric theo dõi.
-- **`fit` = chạy training:** framework tự lặp epoch/batch, tự backprop — không cần viết `backward()`/`step()` như PyTorch.
-- **Theo dõi bằng metrics:** `accuracy`, `val_loss` in ra mỗi epoch; `val_loss` bắt đầu tăng lại = dấu hiệu overfitting.
-- **Callbacks:** `EarlyStopping`, `ModelCheckpoint` giúp dừng đúng lúc và lưu model tốt nhất.
-- **TensorBoard & Projector:** xem đường loss, và chiếu embedding xuống 3D để kiểm tra ([embedding.md](./embedding.md)).
+![Softmax regression — multi-class classification in TensorFlow](assets/protonx/softmax-regression.jpg)
 
-## Hình minh họa
+![TensorFlow Embedding Projector: vectors projected into 3D](assets/protonx/tf-projector.jpg)
 
-![Softmax regression — bài phân loại nhiều lớp làm bằng TensorFlow](assets/protonx/softmax-regression.jpg)
-
-![TensorFlow Embedding Projector: chiếu vector xuống 3D](assets/protonx/tf-projector.jpg)
-
-## Trong pipeline
+## Pipeline
 
 ```
 dataset → model (Keras) → compile → fit (epochs) → checkpoint
 ```
 
-Cùng đích với [pytorch-training.md](./pytorch-training.md), phục vụ [classification.md](./classification.md).
+Same target as [pytorch-training.md](./pytorch-training.md), serving [classification.md](./classification.md).
 
-## Tham khảo
+## References
 
 - [TensorFlow — Basic classification](https://www.tensorflow.org/tutorials/keras/classification)
 - [Keras API](https://keras.io/api/)

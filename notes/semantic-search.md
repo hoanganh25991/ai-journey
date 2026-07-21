@@ -1,53 +1,45 @@
 # Semantic search — hybrid · tiered · fallback
 
-> Tìm theo *nghĩa* chứ không chỉ khớp từ khóa, bằng cách ghép hai loại chỉ mục: inverted index (Elastic, theo từ khóa) và semantic index (embedding, theo nghĩa). Đây là dự án mình làm để học sâu về RAG.
+> Search by *meaning*, not just keywords, by combining two index types: inverted index (Elastic, by keyword) and semantic index (embedding, by meaning). This is the project I built to learn RAG deeply.
 
-> Repo: [github.com/hoanganh25991/semantic-search](https://github.com/hoanganh25991/semantic-search) — Hybrid / Tiered / Fallback trên dataset MS MARCO.
+> Repo: [github.com/hoanganh25991/semantic-search](https://github.com/hoanganh25991/semantic-search) — Hybrid / Tiered / Fallback on the MS MARCO dataset.
 
-## Vì sao quan trọng
+## Why it matters
 
-Tìm bằng từ khóa (BM25 / TF-IDF trong Elastic) thì nhanh và rẻ, nhưng "xe hơi" với "ô tô" là hai từ khác nhau nên dễ trượt. Tìm bằng [embedding](./embedding.md) thì hiểu nghĩa, nhưng nặng và tốn khi chạy trên mọi câu. Semantic search thực dụng là **kết hợp** cả hai: lấy cái nhanh để lọc, cái hiểu nghĩa để xếp hạng. Đây cũng chính là bước "retrieve" chất lượng cao cho [RAG](./rag.md).
+Keyword search (BM25 / TF-IDF in Elastic) is fast and cheap, but "car" and "automobile" are different strings — easy to miss matches. Embedding search captures meaning but is heavier to run on every query. Pragmatic semantic search **combines** both: use keywords to filter quickly, embeddings to rank by meaning. That is also a high-quality retrieve step for [RAG](./rag.md).
 
-## Hai loại chỉ mục
+## Key ideas
 
-| Chỉ mục | Cơ chế | Mạnh | Yếu |
-|---------|--------|------|-----|
-| **Inverted index** (Elastic) | map từ khóa → tài liệu | nhanh, rẻ, chính xác với truy vấn rõ | không hiểu từ đồng nghĩa |
-| **Semantic index** (embedding) | vector trong [vector database](./vector-database.md) | hiểu nghĩa, bắt được diễn đạt khác | nặng hơn, cần model |
+- **Two index types:**
 
-## Ba chiến lược tìm kiếm
+  | Index | Mechanism | Strong | Weak |
+  |-------|-----------|--------|------|
+  | **Inverted index** (Elastic) | keyword → documents | fast, cheap, precise on exact terms | no synonym understanding |
+  | **Semantic index** (embedding) | vectors in [vector database](./vector-database.md) | captures meaning, varied phrasing | heavier, needs a model |
 
-- **Hybrid:** dùng inverted index *lọc nhanh* ứng viên theo từ khóa, rồi semantic index *rerank* theo nghĩa. Tối ưu chi phí; điểm yếu là nếu keyword trượt thì thiếu ứng viên để rerank.
-- **Tiered:** *phân loại câu hỏi* dễ/khó trước → câu dễ đi keyword, câu khó mới đi semantic. Cân bằng tốc độ và độ chính xác (cùng ý tưởng với [complexity router](./05-demo-text.md)).
-- **Fallback:** semantic trước để tối đa độ chính xác, nếu kết quả kém thì *rớt về* keyword. Chính xác cao nhưng đắt hơn.
+- **Three search strategies:**
+  - *Hybrid:* inverted index *filters* candidates by keyword, semantic index *reranks* by meaning. Cost-efficient; fails when keywords miss entirely.
+  - *Tiered:* classify questions as easy/hard first → easy goes keyword, hard goes semantic. Balances speed and precision (same idea as [complexity router](./05-demo-text.md)).
+  - *Fallback:* semantic first for max accuracy; if results are poor, *fall back* to keyword. Most accurate, most expensive.
+- **Dataset and evaluation:** MS MARCO — real user questions plus relevant passages. Metrics: *Precision@k*, *MRR@10*. Query classifier labels simple vs complex questions for the Tiered strategy.
+- **Storage:** MongoDB for raw documents; Elasticsearch for indexed data (inverted + kNN) for fast search.
 
-## Dataset & đánh giá
+## Illustrations
 
-- **MS MARCO** — câu hỏi thật của người dùng + đoạn văn liên quan, dùng làm testbed.
-- **Metrics:** *Precision@k* (tỉ lệ kết quả đúng trong top-k), *MRR@10* (vị trí kết quả đúng đầu tiên) — quan trọng khi câu trả lời đầu tiên là thứ đáng giá nhất.
-- **Query classification:** phân loại câu hỏi *simple* (`description`) vs *complex* (`entity`, `location`, `numeric`…) bằng một classifier fine-tune trên embedding — đầu vào cho chiến lược Tiered.
+![Embed the question, then query — the retrieve step of semantic search](assets/protonx/embed-then-query.jpg)
 
-## Kiến trúc lưu trữ
+![Advanced retrieval: combine filtering and reranking for higher accuracy](assets/protonx/rag-advanced.jpg)
 
-- **MongoDB** — lưu tài liệu thô.
-- **Elasticsearch** — lưu dữ liệu đã index (cả inverted lẫn kNN) để tìm nhanh.
-
-## Hình minh họa
-
-![Embed câu hỏi rồi đi truy vấn — bước retrieve của semantic search](assets/protonx/embed-then-query.jpg)
-
-![Retrieval nâng cao: kết hợp lọc + rerank để tăng độ chính xác](assets/protonx/rag-advanced.jpg)
-
-## Trong pipeline
+## Pipeline
 
 ```
-câu hỏi → (phân loại dễ/khó) → { keyword: inverted index | nghĩa: semantic index }
-        → hợp nhất / rerank → top-k → RAG
+question → (classify easy/hard) → { keyword: inverted index | meaning: semantic index }
+         → merge / rerank → top-k → RAG
 ```
 
-Semantic search đứng trên [embedding.md](./embedding.md) + [vector-database.md](./vector-database.md), và là bước retrieve cho [rag.md](./rag.md).
+Semantic search stands on [embedding.md](./embedding.md) + [vector-database.md](./vector-database.md), and is the retrieval step for [rag.md](./rag.md).
 
-## Tham khảo
+## References
 
 - Repo: [hoanganh25991/semantic-search](https://github.com/hoanganh25991/semantic-search)
 - [MS MARCO](https://microsoft.github.io/msmarco/) · [Elasticsearch kNN](https://www.elastic.co/guide/en/elasticsearch/reference/current/knn-search.html)
@@ -55,4 +47,4 @@ Semantic search đứng trên [embedding.md](./embedding.md) + [vector-database.
 ## Related
 
 - [vector-database.md](./vector-database.md), [rag.md](./rag.md), [embedding.md](./embedding.md)
-- [05-demo-text.md](./05-demo-text.md) — complexity router (cùng ý "tiered")
+- [05-demo-text.md](./05-demo-text.md) — complexity router (same tiered idea)

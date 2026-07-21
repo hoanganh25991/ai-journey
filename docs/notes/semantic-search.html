@@ -1,15 +1,48 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Semantic search — hybrid · tiered · fallback · AI Lab</title>
+<script>
+(function () {
+  try {
+    var KEY = "ai-lab-theme";
+    var pref = localStorage.getItem(KEY) || "system";
+    if (pref !== "light" && pref !== "dark" && pref !== "system") pref = "system";
+    var dark = pref === "dark" || (pref === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches);
+    document.documentElement.setAttribute("data-theme", dark ? "dark" : "light");
+    document.documentElement.setAttribute("data-theme-pref", pref);
+  } catch (e) {
+    document.documentElement.setAttribute("data-theme", "light");
+    document.documentElement.setAttribute("data-theme-pref", "system");
+  }
+})();
+</script>
+<script>
+(function () {
+  try {
+    var KEY = "ai-lab-lang";
+    var pref = localStorage.getItem(KEY) || "en";
+    if (pref !== "en" && pref !== "vi" && pref !== "system") pref = "en";
+    var nav = String(navigator.language || "en").toLowerCase();
+    var resolved = pref === "system" ? (nav.indexOf("vi") === 0 ? "vi" : "en") : pref;
+    document.documentElement.setAttribute("data-lang-pref", pref);
+    document.documentElement.setAttribute("data-lang", resolved);
+    document.documentElement.lang = resolved;
+  } catch (e) {
+    document.documentElement.setAttribute("data-lang-pref", "en");
+    document.documentElement.setAttribute("data-lang", "en");
+    document.documentElement.lang = "en";
+  }
+})();
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet" />
 <style>
 
-:root {
+:root, [data-theme="light"] {
   --bg: #eef3f9; --surface: #ffffff; --ink: #16202e; --muted: #5a6b80;
   --teal: #0f8a9b; --teal-soft: rgba(15,138,155,.12); --amber: #c2703a;
   --line: rgba(20,32,46,.12); --line-soft: rgba(20,32,46,.07);
@@ -18,14 +51,12 @@
   --font: Sora, system-ui, sans-serif; --serif: "Instrument Serif", Georgia, serif;
   --mono: "IBM Plex Mono", ui-monospace, monospace;
 }
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #0d1520; --surface: #152033; --ink: #e8eef6; --muted: #8b9bb0;
-    --teal: #3db8c9; --teal-soft: rgba(61,184,201,.16); --amber: #d4894a;
-    --line: rgba(232,238,246,.12); --line-soft: rgba(232,238,246,.07);
-    --shadow: 0 1px 2px rgba(0,0,0,.25), 0 8px 24px rgba(0,0,0,.35);
-    --glow-teal: rgba(61,184,201,.12); --glow-amber: rgba(212,137,74,.10);
-  }
+[data-theme="dark"] {
+  --bg: #0d1520; --surface: #152033; --ink: #e8eef6; --muted: #8b9bb0;
+  --teal: #3db8c9; --teal-soft: rgba(61,184,201,.16); --amber: #d4894a;
+  --line: rgba(232,238,246,.12); --line-soft: rgba(232,238,246,.07);
+  --shadow: 0 1px 2px rgba(0,0,0,.25), 0 8px 24px rgba(0,0,0,.35);
+  --glow-teal: rgba(61,184,201,.12); --glow-amber: rgba(212,137,74,.10);
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
@@ -38,8 +69,39 @@ body {
 }
 a { color: var(--teal); }
 ::selection { background: var(--teal-soft); }
+.logo-dark { display: none; }
+[data-theme="dark"] .logo-light { display: none; }
+[data-theme="dark"] .logo-dark { display: block; }
+.theme-bar {
+  display: inline-flex; gap: 2px; padding: 3px;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 999px;
+  box-shadow: var(--shadow);
+}
+.theme-bar button {
+  appearance: none; border: 0; background: transparent; color: var(--muted);
+  font: 500 11px var(--mono); letter-spacing: .04em; text-transform: uppercase;
+  padding: 7px 11px; border-radius: 999px; cursor: pointer; transition: all .15s;
+}
+.theme-bar button:hover { color: var(--teal); }
+.theme-bar button.on { background: var(--teal); color: #fff; }
+.prefs { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.lang-bar {
+  display: inline-flex; gap: 2px; padding: 3px;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 999px;
+  box-shadow: var(--shadow);
+}
+.lang-bar button {
+  appearance: none; border: 0; background: transparent; color: var(--muted);
+  font: 500 11px var(--mono); letter-spacing: .04em; text-transform: uppercase;
+  padding: 7px 11px; border-radius: 999px; cursor: pointer; transition: all .15s;
+}
+.lang-bar button:hover { color: var(--teal); }
+.lang-bar button.on { background: var(--teal); color: #fff; }
+html.i18n-busy { cursor: progress; }
+html.i18n-busy .lang-bar { opacity: .7; pointer-events: none; }
 
 .wrap { max-width: 960px; margin: 0 auto; padding: 32px 22px 96px; }
+.nav-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
 .back { display: inline-flex; align-items: center; gap: 7px; text-decoration: none; color: var(--muted); font: 500 13px var(--mono); }
 .back:hover { color: var(--teal); }
 .doc {
@@ -71,7 +133,7 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 .body h1 { font-size: 24px; margin: 1.2em 0 .5em; }
 .body h2 { font-size: 19px; margin: 1.4em 0 .5em; letter-spacing: -.01em; }
 .body h3 { font-size: 16px; margin: 1.2em 0 .4em; }
-.body p, .body li { color: #2b3a4d; line-height: 1.65; font-size: 15px; }
+.body p, .body li { color: var(--ink); line-height: 1.65; font-size: 15px; opacity: .92; }
 .body ul { padding-left: 1.25em; margin: .5em 0 1em; }
 .body li { margin: .25em 0; }
 .body a { color: var(--teal); text-decoration: none; border-bottom: 1px solid var(--teal-soft); }
@@ -81,7 +143,7 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 .body pre code { color: #dbe6f2; background: none; padding: 0; font-size: 12.5px; line-height: 1.6; }
 .body blockquote { border-left: 3px solid var(--teal); background: var(--teal-soft); padding: 10px 16px; margin: 14px 0; border-radius: 0 8px 8px 0; color: var(--ink); }
 .body table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 13.5px; }
-.body th, .body td { border: 1px solid var(--line); padding: 9px 11px; text-align: left; color: #2b3a4d; }
+.body th, .body td { border: 1px solid var(--line); padding: 9px 11px; text-align: left; color: var(--ink); }
 .body th { color: var(--teal); font: 500 11px var(--mono); letter-spacing: .05em; text-transform: uppercase; background: var(--teal-soft); }
 .body figure { margin: 20px 0; }
 .body figure img { width: 100%; height: auto; display: block; border-radius: 12px; border: 1px solid var(--line); background: #e6edf5; }
@@ -91,58 +153,231 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 </head>
 <body>
 <div class="wrap">
-  <a class="back" href="../index.html">
-    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m15 18-6-6 6-6"/></svg>
-    AI Lab
-  </a>
+  <div class="nav-row">
+    <a class="back" href="../index.html">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m15 18-6-6 6-6"/></svg>
+      AI Lab
+    </a>
+    <div class="prefs" translate="no">
+  <div class="theme-bar" role="group" aria-label="Theme">
+    <button type="button" data-theme-set="light">Light</button>
+    <button type="button" data-theme-set="system">System</button>
+    <button type="button" data-theme-set="dark">Dark</button>
+  </div>
+  <div class="lang-bar" role="group" aria-label="Language">
+    <button type="button" data-lang-set="en">EN</button>
+    <button type="button" data-lang-set="system">System</button>
+    <button type="button" data-lang-set="vi">VI</button>
+  </div>
+</div>
+<script>
+(function () {
+  var KEY = "ai-lab-theme";
+  function resolve(pref) {
+    if (pref === "light" || pref === "dark") return pref;
+    return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  }
+  function apply(pref) {
+    if (pref !== "light" && pref !== "dark" && pref !== "system") pref = "system";
+    var resolved = resolve(pref);
+    document.documentElement.setAttribute("data-theme", resolved);
+    document.documentElement.setAttribute("data-theme-pref", pref);
+    try { localStorage.setItem(KEY, pref); } catch (e) {}
+    document.querySelectorAll("[data-theme-set]").forEach(function (btn) {
+      btn.classList.toggle("on", btn.getAttribute("data-theme-set") === pref);
+    });
+  }
+  var pref = document.documentElement.getAttribute("data-theme-pref") || "system";
+  apply(pref);
+  document.querySelectorAll("[data-theme-set]").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      apply(btn.getAttribute("data-theme-set"));
+    });
+  });
+  try {
+    window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", function () {
+      var p = document.documentElement.getAttribute("data-theme-pref") || "system";
+      if (p === "system") apply("system");
+    });
+  } catch (e) {}
+})();
+</script>
+
+<script>
+(function () {
+  var KEY = "ai-lab-lang";
+  var CACHE_KEY = "ai-lab-i18n-en-vi";
+  var SKIP = /^(SCRIPT|STYLE|NOSCRIPT|CODE|PRE|KBD|SAMP|TEXTAREA|SVG|MATH)$/;
+  var cache = {};
+  try { cache = JSON.parse(localStorage.getItem(CACHE_KEY) || "{}") || {}; } catch (e) { cache = {}; }
+
+  function resolve(pref) {
+    if (pref === "en" || pref === "vi") return pref;
+    var nav = String(navigator.language || "en").toLowerCase();
+    return nav.indexOf("vi") === 0 ? "vi" : "en";
+  }
+
+  function saveCache() {
+    try { localStorage.setItem(CACHE_KEY, JSON.stringify(cache)); } catch (e) {}
+  }
+
+  async function translateOne(text) {
+    if (!text || !text.trim()) return text;
+    if (cache[text]) return cache[text];
+    // Google gtx web endpoint (no API key). Fallback: MyMemory.
+    var q = encodeURIComponent(text);
+    try {
+      var url = "https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=vi&dt=t&q=" + q;
+      var res = await fetch(url);
+      if (res.ok) {
+        var data = await res.json();
+        var out = (data[0] || []).map(function (row) { return row[0] || ""; }).join("");
+        if (out) { cache[text] = out; return out; }
+      }
+    } catch (e) {}
+    try {
+      var url2 = "https://api.mymemory.translated.net/get?langpair=en|vi&q=" + q;
+      var res2 = await fetch(url2);
+      if (res2.ok) {
+        var data2 = await res2.json();
+        var out2 = data2 && data2.responseData && data2.responseData.translatedText;
+        if (out2 && out2.indexOf("MYMEMORY WARNING") === -1) {
+          cache[text] = out2;
+          return out2;
+        }
+      }
+    } catch (e2) {}
+    return text;
+  }
+
+  function collectNodes(root) {
+    var out = [];
+    var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+      acceptNode: function (node) {
+        if (!node.nodeValue || !node.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+        var el = node.parentElement;
+        if (!el) return NodeFilter.FILTER_REJECT;
+        if (el.closest("[translate=no], .notranslate, .theme-bar, .lang-bar, .prefs, code, pre, kbd, samp")) {
+          return NodeFilter.FILTER_REJECT;
+        }
+        if (SKIP.test(el.tagName)) return NodeFilter.FILTER_REJECT;
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    });
+    while (walker.nextNode()) out.push(walker.currentNode);
+    return out;
+  }
+
+  async function mapPool(items, limit, fn) {
+    var i = 0;
+    var workers = [];
+    async function worker() {
+      while (i < items.length) {
+        var idx = i++;
+        items[idx].result = await fn(items[idx].src);
+      }
+    }
+    for (var w = 0; w < Math.min(limit, items.length); w++) workers.push(worker());
+    await Promise.all(workers);
+  }
+
+  async function applyLang(pref) {
+    if (pref !== "en" && pref !== "vi" && pref !== "system") pref = "en";
+    var resolved = resolve(pref);
+    document.documentElement.setAttribute("data-lang-pref", pref);
+    document.documentElement.setAttribute("data-lang", resolved);
+    document.documentElement.lang = resolved;
+    try { localStorage.setItem(KEY, pref); } catch (e) {}
+    document.querySelectorAll("[data-lang-set]").forEach(function (btn) {
+      btn.classList.toggle("on", btn.getAttribute("data-lang-set") === pref);
+    });
+
+    var nodes = collectNodes(document.body);
+    nodes.forEach(function (node) {
+      if (node._i18nEn == null) node._i18nEn = node.nodeValue;
+    });
+
+    if (resolved === "en") {
+      nodes.forEach(function (node) {
+        if (node._i18nEn != null) node.nodeValue = node._i18nEn;
+      });
+      return;
+    }
+
+    document.documentElement.classList.add("i18n-busy");
+    try {
+      var jobs = nodes.map(function (node) {
+        return { node: node, src: node._i18nEn };
+      });
+      await mapPool(jobs, 4, translateOne);
+      jobs.forEach(function (job) {
+        job.node.nodeValue = job.result;
+      });
+      saveCache();
+    } finally {
+      document.documentElement.classList.remove("i18n-busy");
+    }
+  }
+
+  var pref = document.documentElement.getAttribute("data-lang-pref") || "en";
+  document.querySelectorAll("[data-lang-set]").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      applyLang(btn.getAttribute("data-lang-set"));
+    });
+  });
+  // Defer first translate so DOM is ready
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", function () { applyLang(pref); });
+  } else {
+    applyLang(pref);
+  }
+})();
+</script>
+
+  </div>
   <article class="doc">
     <h1>Semantic search — hybrid · tiered · fallback</h1>
-    <p class="summary">Tìm theo nghĩa: ghép inverted-index (Elastic) + semantic index (embedding). Dự án học RAG của tôi.</p>
+    <p class="summary">Search by meaning: combine inverted index (Elastic) + semantic index (embeddings). My hands-on RAG learning project.</p>
     <div class="actions"><a href="semantic-search.md" id="labDownload" download="semantic-search.md">Download</a>
 <button type="button" id="labShare">Share</button>
 <a href="https://github.com/hoanganh25991/semantic-search">GitHub — semantic-search ↗</a></div>
     <div class="topics"><span>#semantic-search</span><span>#hybrid</span><span>#inverted-index</span><span>#elasticsearch</span><span>#ms-marco</span></div>
     <hr class="sep" />
     <div class="body"><h1>Semantic search — hybrid · tiered · fallback</h1>
-<blockquote>Tìm theo <em>nghĩa</em> chứ không chỉ khớp từ khóa, bằng cách ghép hai loại chỉ mục: inverted index (Elastic, theo từ khóa) và semantic index (embedding, theo nghĩa). Đây là dự án mình làm để học sâu về RAG.</blockquote>
-<blockquote>Repo: <a href="https://github.com/hoanganh25991/semantic-search">github.com/hoanganh25991/semantic-search</a> — Hybrid / Tiered / Fallback trên dataset MS MARCO.</blockquote>
-<h2>Vì sao quan trọng</h2>
-<p>Tìm bằng từ khóa (BM25 / TF-IDF trong Elastic) thì nhanh và rẻ, nhưng "xe hơi" với "ô tô" là hai từ khác nhau nên dễ trượt. Tìm bằng <a href="embedding.html">embedding</a> thì hiểu nghĩa, nhưng nặng và tốn khi chạy trên mọi câu. Semantic search thực dụng là <strong>kết hợp</strong> cả hai: lấy cái nhanh để lọc, cái hiểu nghĩa để xếp hạng. Đây cũng chính là bước "retrieve" chất lượng cao cho <a href="rag.html">RAG</a>.</p>
-<h2>Hai loại chỉ mục</h2>
-<table><tbody>
-<tr><th>Chỉ mục</th><th>Cơ chế</th><th>Mạnh</th><th>Yếu</th></tr>
-<tr><td><strong>Inverted index</strong> (Elastic)</td><td>map từ khóa → tài liệu</td><td>nhanh, rẻ, chính xác với truy vấn rõ</td><td>không hiểu từ đồng nghĩa</td></tr>
-<tr><td><strong>Semantic index</strong> (embedding)</td><td>vector trong <a href="vector-database.html">vector database</a></td><td>hiểu nghĩa, bắt được diễn đạt khác</td><td>nặng hơn, cần model</td></tr>
-</tbody></table>
-<h2>Ba chiến lược tìm kiếm</h2>
+<blockquote>Search by <em>meaning</em>, not just keywords, by combining two index types: inverted index (Elastic, by keyword) and semantic index (embedding, by meaning). This is the project I built to learn RAG deeply.</blockquote>
+<blockquote>Repo: <a href="https://github.com/hoanganh25991/semantic-search">github.com/hoanganh25991/semantic-search</a> — Hybrid / Tiered / Fallback on the MS MARCO dataset.</blockquote>
+<h2>Why it matters</h2>
+<p>Keyword search (BM25 / TF-IDF in Elastic) is fast and cheap, but "car" and "automobile" are different strings — easy to miss matches. Embedding search captures meaning but is heavier to run on every query. Pragmatic semantic search <strong>combines</strong> both: use keywords to filter quickly, embeddings to rank by meaning. That is also a high-quality retrieve step for <a href="rag.html">RAG</a>.</p>
+<h2>Key ideas</h2>
 <ul>
-<li><strong>Hybrid:</strong> dùng inverted index <em>lọc nhanh</em> ứng viên theo từ khóa, rồi semantic index <em>rerank</em> theo nghĩa. Tối ưu chi phí; điểm yếu là nếu keyword trượt thì thiếu ứng viên để rerank.</li>
-<li><strong>Tiered:</strong> <em>phân loại câu hỏi</em> dễ/khó trước → câu dễ đi keyword, câu khó mới đi semantic. Cân bằng tốc độ và độ chính xác (cùng ý tưởng với <a href="sentiment-routing.html">complexity router</a>).</li>
-<li><strong>Fallback:</strong> semantic trước để tối đa độ chính xác, nếu kết quả kém thì <em>rớt về</em> keyword. Chính xác cao nhưng đắt hơn.</li>
+<li><strong>Two index types:</strong></li>
 </ul>
-<h2>Dataset &amp; đánh giá</h2>
+<p>  | Index | Mechanism | Strong | Weak |</p>
+<p>  |-------|-----------|--------|------|</p>
+<p>  | <strong>Inverted index</strong> (Elastic) | keyword → documents | fast, cheap, precise on exact terms | no synonym understanding |</p>
+<p>  | <strong>Semantic index</strong> (embedding) | vectors in <a href="vector-database.html">vector database</a> | captures meaning, varied phrasing | heavier, needs a model |</p>
 <ul>
-<li><strong>MS MARCO</strong> — câu hỏi thật của người dùng + đoạn văn liên quan, dùng làm testbed.</li>
-<li><strong>Metrics:</strong> <em>Precision@k</em> (tỉ lệ kết quả đúng trong top-k), <em>MRR@10</em> (vị trí kết quả đúng đầu tiên) — quan trọng khi câu trả lời đầu tiên là thứ đáng giá nhất.</li>
-<li><strong>Query classification:</strong> phân loại câu hỏi <em>simple</em> (<code>description</code>) vs <em>complex</em> (<code>entity</code>, <code>location</code>, <code>numeric</code>…) bằng một classifier fine-tune trên embedding — đầu vào cho chiến lược Tiered.</li>
+<li><strong>Three search strategies:</strong></li>
 </ul>
-<h2>Kiến trúc lưu trữ</h2>
+<p>  - <em>Hybrid:</em> inverted index <em>filters</em> candidates by keyword, semantic index <em>reranks</em> by meaning. Cost-efficient; fails when keywords miss entirely.</p>
+<p>  - <em>Tiered:</em> classify questions as easy/hard first → easy goes keyword, hard goes semantic. Balances speed and precision (same idea as <a href="sentiment-routing.html">complexity router</a>).</p>
+<p>  - <em>Fallback:</em> semantic first for max accuracy; if results are poor, <em>fall back</em> to keyword. Most accurate, most expensive.</p>
 <ul>
-<li><strong>MongoDB</strong> — lưu tài liệu thô.</li>
-<li><strong>Elasticsearch</strong> — lưu dữ liệu đã index (cả inverted lẫn kNN) để tìm nhanh.</li>
+<li><strong>Dataset and evaluation:</strong> MS MARCO — real user questions plus relevant passages. Metrics: <em>Precision@k</em>, <em>MRR@10</em>. Query classifier labels simple vs complex questions for the Tiered strategy.</li>
+<li><strong>Storage:</strong> MongoDB for raw documents; Elasticsearch for indexed data (inverted + kNN) for fast search.</li>
 </ul>
-<h2>Hình minh họa</h2>
-<figure><img src="assets/protonx/embed-then-query.jpg" alt="Embed câu hỏi rồi đi truy vấn — bước retrieve của semantic search" loading="lazy" /><figcaption>Embed câu hỏi rồi đi truy vấn — bước retrieve của semantic search</figcaption></figure>
-<figure><img src="assets/protonx/rag-advanced.jpg" alt="Retrieval nâng cao: kết hợp lọc + rerank để tăng độ chính xác" loading="lazy" /><figcaption>Retrieval nâng cao: kết hợp lọc + rerank để tăng độ chính xác</figcaption></figure>
-<h2>Trong pipeline</h2>
+<h2>Illustrations</h2>
+<figure><img src="assets/protonx/embed-then-query.jpg" alt="Embed the question, then query — the retrieve step of semantic search" loading="lazy" /><figcaption>Embed the question, then query — the retrieve step of semantic search</figcaption></figure>
+<figure><img src="assets/protonx/rag-advanced.jpg" alt="Advanced retrieval: combine filtering and reranking for higher accuracy" loading="lazy" /><figcaption>Advanced retrieval: combine filtering and reranking for higher accuracy</figcaption></figure>
+<h2>Pipeline</h2>
 <pre><code>
-câu hỏi → (phân loại dễ/khó) → { keyword: inverted index | nghĩa: semantic index }
+question → (classify easy/hard) → { keyword: inverted index | meaning: semantic index }
 
-        → hợp nhất / rerank → top-k → RAG
+         → merge / rerank → top-k → RAG
 
 </code></pre>
-<p>Semantic search đứng trên <a href="embedding.html">embedding.md</a> + <a href="vector-database.html">vector-database.md</a>, và là bước retrieve cho <a href="rag.html">rag.md</a>.</p>
-<h2>Tham khảo</h2>
+<p>Semantic search stands on <a href="embedding.html">embedding.md</a> + <a href="vector-database.html">vector-database.md</a>, and is the retrieval step for <a href="rag.html">rag.md</a>.</p>
+<h2>References</h2>
 <ul>
 <li>Repo: <a href="https://github.com/hoanganh25991/semantic-search">hoanganh25991/semantic-search</a></li>
 <li><a href="https://microsoft.github.io/msmarco/">MS MARCO</a> · <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/knn-search.html">Elasticsearch kNN</a></li>
@@ -150,7 +385,7 @@ câu hỏi → (phân loại dễ/khó) → { keyword: inverted index | nghĩa: 
 <h2>Related</h2>
 <ul>
 <li><a href="vector-database.html">vector-database.md</a>, <a href="rag.html">rag.md</a>, <a href="embedding.html">embedding.md</a></li>
-<li><a href="sentiment-routing.html">05-demo-text.md</a> — complexity router (cùng ý "tiered")</li>
+<li><a href="sentiment-routing.html">05-demo-text.md</a> — complexity router (same tiered idea)</li>
 </ul></div>
   </article>
 </div>

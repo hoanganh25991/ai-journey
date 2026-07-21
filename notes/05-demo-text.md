@@ -1,26 +1,26 @@
 # Demo: Sentiment & Complexity routing
 
-> Hai demo văn bản dùng chung một ý: đọc một câu rồi *dán nhãn* cho nó. Sentiment dán nhãn cảm xúc; Complexity router dán nhãn "câu này dễ hay khó" để chọn cách xử lý.
+> Two text demos share one idea: read a sentence and *label* it. Sentiment labels emotion; the complexity router labels easy vs hard to pick how to handle the request.
 
-## Vì sao đáng xem
+## Why it matters
 
-Đây là nơi chuỗi khái niệm tokenize → embedding → softmax chạy end-to-end trên câu chữ thật, và cho thấy phân loại không chỉ để "đoán cảm xúc" mà còn để *điều phối* hệ thống: câu dễ thì trả lời nhanh, câu khó mới huy động agent phức tạp.
+This is where tokenize → embedding → softmax runs end-to-end on real sentences. Classification is not only "guess the mood" — it also *routes* the system: easy queries get a fast path, hard ones mobilize heavier agents.
 
-## Hai pipeline
+## Key ideas
+
+- **Sentiment (emotion classification):** three classes — negative / neutral / positive. Same chain: [tokenize.md](./tokenize.md) → [embedding.md](./embedding.md) → [softmax.md](./softmax.md).
+- **Complexity router (difficulty routing):** classify requests as simple or complex, then route — simple to a fast/cheap model, complex to a multi-agent crew or first-mate.
+- **Same shape, different purpose:** both are classification; the label drives different downstream behavior — display sentiment vs choose the next path.
+- **Routing saves cost:** not every sentence needs the strongest model; the router balances quality and spend (same spirit as [08-model-notes.md](./08-model-notes.md)).
+
+Two pipelines:
 
 ```
-Sentiment:   text → tokenize → embed → classifier → softmax → {neg, neu, pos}
-Router:      text → đo độ phức tạp → { đơn giản: model nhanh | phức tạp: crew / first-mate }
+Sentiment:  text → tokenize → embed → classifier → softmax → {neg, neu, pos}
+Router:     text → measure complexity → { simple: fast model | complex: crew / first-mate }
 ```
 
-## Ý chính
-
-- **Sentiment (phân loại cảm xúc):** ba lớp tiêu cực / trung tính / tích cực. Dùng lại đúng chuỗi [tokenize.md](./tokenize.md) → [embedding.md](./embedding.md) → [softmax.md](./softmax.md).
-- **Complexity router (định tuyến theo độ khó):** phân loại yêu cầu thành "đơn giản" hay "phức tạp" rồi định tuyến — câu đơn giản đi model nhanh/rẻ, câu phức tạp mới gọi tới crew nhiều agent hoặc first-mate.
-- **Cùng một khuôn, khác mục đích:** cả hai đều là bài phân loại; điểm khác là *dùng nhãn để làm gì* — hiển thị cảm xúc, hay quyết định đường đi tiếp theo.
-- **Định tuyến = tiết kiệm:** không phải câu nào cũng cần mô hình mạnh nhất; router giúp cân bằng chất lượng và chi phí, cùng tinh thần với [08-model-notes.md](./08-model-notes.md).
-
-## Slides & apps
+## Slides & demo
 
 | Demo | Slides | App |
 |------|--------|-----|
@@ -30,5 +30,5 @@ Router:      text → đo độ phức tạp → { đơn giản: model nhanh | p
 ## Related
 
 - [tokenize.md](./tokenize.md), [embedding.md](./embedding.md), [softmax.md](./softmax.md)
-- [07-agents.md](./07-agents.md) — crew / first-mate cho nhánh phức tạp
-- Huấn luyện: [06-train-infer.md](./06-train-infer.md), [train-gpu.md](./train-gpu.md)
+- [07-agents.md](./07-agents.md) — crew / first-mate for the complex branch
+- Train: [06-train-infer.md](./06-train-infer.md), [train-gpu.md](./train-gpu.md)

@@ -1,15 +1,48 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>AI Agents · So sánh harness · AI Lab</title>
+<title>AI Agents · harness comparison · AI Lab</title>
+<script>
+(function () {
+  try {
+    var KEY = "ai-lab-theme";
+    var pref = localStorage.getItem(KEY) || "system";
+    if (pref !== "light" && pref !== "dark" && pref !== "system") pref = "system";
+    var dark = pref === "dark" || (pref === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches);
+    document.documentElement.setAttribute("data-theme", dark ? "dark" : "light");
+    document.documentElement.setAttribute("data-theme-pref", pref);
+  } catch (e) {
+    document.documentElement.setAttribute("data-theme", "light");
+    document.documentElement.setAttribute("data-theme-pref", "system");
+  }
+})();
+</script>
+<script>
+(function () {
+  try {
+    var KEY = "ai-lab-lang";
+    var pref = localStorage.getItem(KEY) || "en";
+    if (pref !== "en" && pref !== "vi" && pref !== "system") pref = "en";
+    var nav = String(navigator.language || "en").toLowerCase();
+    var resolved = pref === "system" ? (nav.indexOf("vi") === 0 ? "vi" : "en") : pref;
+    document.documentElement.setAttribute("data-lang-pref", pref);
+    document.documentElement.setAttribute("data-lang", resolved);
+    document.documentElement.lang = resolved;
+  } catch (e) {
+    document.documentElement.setAttribute("data-lang-pref", "en");
+    document.documentElement.setAttribute("data-lang", "en");
+    document.documentElement.lang = "en";
+  }
+})();
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet" />
 <style>
 
-:root {
+:root, [data-theme="light"] {
   --bg: #eef3f9; --surface: #ffffff; --ink: #16202e; --muted: #5a6b80;
   --teal: #0f8a9b; --teal-soft: rgba(15,138,155,.12); --amber: #c2703a;
   --line: rgba(20,32,46,.12); --line-soft: rgba(20,32,46,.07);
@@ -18,14 +51,12 @@
   --font: Sora, system-ui, sans-serif; --serif: "Instrument Serif", Georgia, serif;
   --mono: "IBM Plex Mono", ui-monospace, monospace;
 }
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #0d1520; --surface: #152033; --ink: #e8eef6; --muted: #8b9bb0;
-    --teal: #3db8c9; --teal-soft: rgba(61,184,201,.16); --amber: #d4894a;
-    --line: rgba(232,238,246,.12); --line-soft: rgba(232,238,246,.07);
-    --shadow: 0 1px 2px rgba(0,0,0,.25), 0 8px 24px rgba(0,0,0,.35);
-    --glow-teal: rgba(61,184,201,.12); --glow-amber: rgba(212,137,74,.10);
-  }
+[data-theme="dark"] {
+  --bg: #0d1520; --surface: #152033; --ink: #e8eef6; --muted: #8b9bb0;
+  --teal: #3db8c9; --teal-soft: rgba(61,184,201,.16); --amber: #d4894a;
+  --line: rgba(232,238,246,.12); --line-soft: rgba(232,238,246,.07);
+  --shadow: 0 1px 2px rgba(0,0,0,.25), 0 8px 24px rgba(0,0,0,.35);
+  --glow-teal: rgba(61,184,201,.12); --glow-amber: rgba(212,137,74,.10);
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
@@ -38,8 +69,39 @@ body {
 }
 a { color: var(--teal); }
 ::selection { background: var(--teal-soft); }
+.logo-dark { display: none; }
+[data-theme="dark"] .logo-light { display: none; }
+[data-theme="dark"] .logo-dark { display: block; }
+.theme-bar {
+  display: inline-flex; gap: 2px; padding: 3px;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 999px;
+  box-shadow: var(--shadow);
+}
+.theme-bar button {
+  appearance: none; border: 0; background: transparent; color: var(--muted);
+  font: 500 11px var(--mono); letter-spacing: .04em; text-transform: uppercase;
+  padding: 7px 11px; border-radius: 999px; cursor: pointer; transition: all .15s;
+}
+.theme-bar button:hover { color: var(--teal); }
+.theme-bar button.on { background: var(--teal); color: #fff; }
+.prefs { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.lang-bar {
+  display: inline-flex; gap: 2px; padding: 3px;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 999px;
+  box-shadow: var(--shadow);
+}
+.lang-bar button {
+  appearance: none; border: 0; background: transparent; color: var(--muted);
+  font: 500 11px var(--mono); letter-spacing: .04em; text-transform: uppercase;
+  padding: 7px 11px; border-radius: 999px; cursor: pointer; transition: all .15s;
+}
+.lang-bar button:hover { color: var(--teal); }
+.lang-bar button.on { background: var(--teal); color: #fff; }
+html.i18n-busy { cursor: progress; }
+html.i18n-busy .lang-bar { opacity: .7; pointer-events: none; }
 
 .wrap { max-width: 960px; margin: 0 auto; padding: 32px 22px 96px; }
+.nav-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
 .back { display: inline-flex; align-items: center; gap: 7px; text-decoration: none; color: var(--muted); font: 500 13px var(--mono); }
 .back:hover { color: var(--teal); }
 .doc {
@@ -71,7 +133,7 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 .body h1 { font-size: 24px; margin: 1.2em 0 .5em; }
 .body h2 { font-size: 19px; margin: 1.4em 0 .5em; letter-spacing: -.01em; }
 .body h3 { font-size: 16px; margin: 1.2em 0 .4em; }
-.body p, .body li { color: #2b3a4d; line-height: 1.65; font-size: 15px; }
+.body p, .body li { color: var(--ink); line-height: 1.65; font-size: 15px; opacity: .92; }
 .body ul { padding-left: 1.25em; margin: .5em 0 1em; }
 .body li { margin: .25em 0; }
 .body a { color: var(--teal); text-decoration: none; border-bottom: 1px solid var(--teal-soft); }
@@ -81,7 +143,7 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 .body pre code { color: #dbe6f2; background: none; padding: 0; font-size: 12.5px; line-height: 1.6; }
 .body blockquote { border-left: 3px solid var(--teal); background: var(--teal-soft); padding: 10px 16px; margin: 14px 0; border-radius: 0 8px 8px 0; color: var(--ink); }
 .body table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 13.5px; }
-.body th, .body td { border: 1px solid var(--line); padding: 9px 11px; text-align: left; color: #2b3a4d; }
+.body th, .body td { border: 1px solid var(--line); padding: 9px 11px; text-align: left; color: var(--ink); }
 .body th { color: var(--teal); font: 500 11px var(--mono); letter-spacing: .05em; text-transform: uppercase; background: var(--teal-soft); }
 .body figure { margin: 20px 0; }
 .body figure img { width: 100%; height: auto; display: block; border-radius: 12px; border: 1px solid var(--line); background: #e6edf5; }
@@ -91,66 +153,248 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 </head>
 <body>
 <div class="wrap">
-  <a class="back" href="../index.html">
-    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m15 18-6-6 6-6"/></svg>
-    AI Lab
-  </a>
+  <div class="nav-row">
+    <a class="back" href="../index.html">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m15 18-6-6 6-6"/></svg>
+      AI Lab
+    </a>
+    <div class="prefs" translate="no">
+  <div class="theme-bar" role="group" aria-label="Theme">
+    <button type="button" data-theme-set="light">Light</button>
+    <button type="button" data-theme-set="system">System</button>
+    <button type="button" data-theme-set="dark">Dark</button>
+  </div>
+  <div class="lang-bar" role="group" aria-label="Language">
+    <button type="button" data-lang-set="en">EN</button>
+    <button type="button" data-lang-set="system">System</button>
+    <button type="button" data-lang-set="vi">VI</button>
+  </div>
+</div>
+<script>
+(function () {
+  var KEY = "ai-lab-theme";
+  function resolve(pref) {
+    if (pref === "light" || pref === "dark") return pref;
+    return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  }
+  function apply(pref) {
+    if (pref !== "light" && pref !== "dark" && pref !== "system") pref = "system";
+    var resolved = resolve(pref);
+    document.documentElement.setAttribute("data-theme", resolved);
+    document.documentElement.setAttribute("data-theme-pref", pref);
+    try { localStorage.setItem(KEY, pref); } catch (e) {}
+    document.querySelectorAll("[data-theme-set]").forEach(function (btn) {
+      btn.classList.toggle("on", btn.getAttribute("data-theme-set") === pref);
+    });
+  }
+  var pref = document.documentElement.getAttribute("data-theme-pref") || "system";
+  apply(pref);
+  document.querySelectorAll("[data-theme-set]").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      apply(btn.getAttribute("data-theme-set"));
+    });
+  });
+  try {
+    window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", function () {
+      var p = document.documentElement.getAttribute("data-theme-pref") || "system";
+      if (p === "system") apply("system");
+    });
+  } catch (e) {}
+})();
+</script>
+
+<script>
+(function () {
+  var KEY = "ai-lab-lang";
+  var CACHE_KEY = "ai-lab-i18n-en-vi";
+  var SKIP = /^(SCRIPT|STYLE|NOSCRIPT|CODE|PRE|KBD|SAMP|TEXTAREA|SVG|MATH)$/;
+  var cache = {};
+  try { cache = JSON.parse(localStorage.getItem(CACHE_KEY) || "{}") || {}; } catch (e) { cache = {}; }
+
+  function resolve(pref) {
+    if (pref === "en" || pref === "vi") return pref;
+    var nav = String(navigator.language || "en").toLowerCase();
+    return nav.indexOf("vi") === 0 ? "vi" : "en";
+  }
+
+  function saveCache() {
+    try { localStorage.setItem(CACHE_KEY, JSON.stringify(cache)); } catch (e) {}
+  }
+
+  async function translateOne(text) {
+    if (!text || !text.trim()) return text;
+    if (cache[text]) return cache[text];
+    // Google gtx web endpoint (no API key). Fallback: MyMemory.
+    var q = encodeURIComponent(text);
+    try {
+      var url = "https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=vi&dt=t&q=" + q;
+      var res = await fetch(url);
+      if (res.ok) {
+        var data = await res.json();
+        var out = (data[0] || []).map(function (row) { return row[0] || ""; }).join("");
+        if (out) { cache[text] = out; return out; }
+      }
+    } catch (e) {}
+    try {
+      var url2 = "https://api.mymemory.translated.net/get?langpair=en|vi&q=" + q;
+      var res2 = await fetch(url2);
+      if (res2.ok) {
+        var data2 = await res2.json();
+        var out2 = data2 && data2.responseData && data2.responseData.translatedText;
+        if (out2 && out2.indexOf("MYMEMORY WARNING") === -1) {
+          cache[text] = out2;
+          return out2;
+        }
+      }
+    } catch (e2) {}
+    return text;
+  }
+
+  function collectNodes(root) {
+    var out = [];
+    var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+      acceptNode: function (node) {
+        if (!node.nodeValue || !node.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+        var el = node.parentElement;
+        if (!el) return NodeFilter.FILTER_REJECT;
+        if (el.closest("[translate=no], .notranslate, .theme-bar, .lang-bar, .prefs, code, pre, kbd, samp")) {
+          return NodeFilter.FILTER_REJECT;
+        }
+        if (SKIP.test(el.tagName)) return NodeFilter.FILTER_REJECT;
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    });
+    while (walker.nextNode()) out.push(walker.currentNode);
+    return out;
+  }
+
+  async function mapPool(items, limit, fn) {
+    var i = 0;
+    var workers = [];
+    async function worker() {
+      while (i < items.length) {
+        var idx = i++;
+        items[idx].result = await fn(items[idx].src);
+      }
+    }
+    for (var w = 0; w < Math.min(limit, items.length); w++) workers.push(worker());
+    await Promise.all(workers);
+  }
+
+  async function applyLang(pref) {
+    if (pref !== "en" && pref !== "vi" && pref !== "system") pref = "en";
+    var resolved = resolve(pref);
+    document.documentElement.setAttribute("data-lang-pref", pref);
+    document.documentElement.setAttribute("data-lang", resolved);
+    document.documentElement.lang = resolved;
+    try { localStorage.setItem(KEY, pref); } catch (e) {}
+    document.querySelectorAll("[data-lang-set]").forEach(function (btn) {
+      btn.classList.toggle("on", btn.getAttribute("data-lang-set") === pref);
+    });
+
+    var nodes = collectNodes(document.body);
+    nodes.forEach(function (node) {
+      if (node._i18nEn == null) node._i18nEn = node.nodeValue;
+    });
+
+    if (resolved === "en") {
+      nodes.forEach(function (node) {
+        if (node._i18nEn != null) node.nodeValue = node._i18nEn;
+      });
+      return;
+    }
+
+    document.documentElement.classList.add("i18n-busy");
+    try {
+      var jobs = nodes.map(function (node) {
+        return { node: node, src: node._i18nEn };
+      });
+      await mapPool(jobs, 4, translateOne);
+      jobs.forEach(function (job) {
+        job.node.nodeValue = job.result;
+      });
+      saveCache();
+    } finally {
+      document.documentElement.classList.remove("i18n-busy");
+    }
+  }
+
+  var pref = document.documentElement.getAttribute("data-lang-pref") || "en";
+  document.querySelectorAll("[data-lang-set]").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      applyLang(btn.getAttribute("data-lang-set"));
+    });
+  });
+  // Defer first translate so DOM is ready
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", function () { applyLang(pref); });
+  } else {
+    applyLang(pref);
+  }
+})();
+</script>
+
+  </div>
   <article class="doc">
-    <h1>AI Agents · So sánh harness</h1>
+    <h1>AI Agents · harness comparison</h1>
     <p class="summary">Harness ≠ model: Cursor, Claude Code, Pi, Cline/Kilo, OpenCode, Zed.</p>
     <div class="actions"><a href="../demos/mcp/app/index.html">Demo ↗</a>
 <a href="07-agents.md" id="labDownload" download="07-agents.md">Download</a>
 <button type="button" id="labShare">Share</button></div>
     <div class="topics"><span>#agents</span><span>#harness</span><span>#cursor</span><span>#claude</span><span>#pi</span><span>#first-mate</span></div>
     <hr class="sep" />
-    <div class="body"><h1>AI Agents · So sánh harness</h1>
-<blockquote><strong>Harness ≠ model.</strong> Harness = phần mềm điều phối (UI, tool-calling, context, agent loop). Model = bộ não cắm vào. Cùng một model chạy trên harness khác nhau cho trải nghiệm rất khác. So sánh model ở <a href="model-notes.html">08-model-notes.md</a>.</blockquote>
-<h2>Related demos</h2>
+    <div class="body"><h1>AI Agents · harness comparison</h1>
+<blockquote><strong>Harness ≠ model.</strong> Harness = orchestration software (UI, tool calling, context, agent loop). Model = the brain plugged in. The same model on different harnesses feels very different. Compare models at <a href="model-notes.html">08-model-notes.md</a>.</blockquote>
+<h2>Why it matters</h2>
+<p>Picking a model is only half the story. The harness decides what context the model sees, which tools it can call, and how it loops until the job is done. Two people with the same model in Cursor vs Claude Code can have opposite experiences — because the harness differs.</p>
+<h2>Key ideas</h2>
 <ul>
-<li><a href="../demos/mcp">MCP</a> — tools protocol</li>
-<li><a href="../demos/complexity-router">Complexity router</a> — simple vs crew</li>
-<li>Notes: <a href="mcp.html">mcp.md</a>, <a href="skills-rules.html">skills-rules.md</a>, <a href="model-notes.html">08-model-notes.md</a></li>
+<li><strong>Comparison table (personal experience):</strong></li>
 </ul>
-<h2>Bảng so sánh (kinh nghiệm cá nhân)</h2>
+<p>  | Harness | Strengths | Limitations | Feel |</p>
+<p>  |---------|-----------|-------------|------|</p>
+<p>  | <strong>Cursor</strong> | fast feedback — see results and adjust immediately; Auto vs fixed model; MCP + strong skills | Auto quality can be unpredictable | fastest loop; default <code>grok-4.5</code> is cheap with very good quality |</p>
+<p>  | <strong>Claude Code</strong> | excellent at clarifying context; handles complex skills/rules well | slower; session limits → wait | solid for hard tasks / many constraints |</p>
+<p>  | <strong>Pi</strong> | loads global <code>~/.agents</code>; lightweight | smaller ecosystem | same skills as Cursor/Claude, minimal overhead |</p>
+<p>  | <strong>Cline / Kilo</strong> | open, customizable; Kilo clones Cline | quality depends on plugged-in model | good for rapid self-directed testing |</p>
+<p>  | <strong>OpenCode</strong> | open source, many models | fewer "smart" features than Cursor | test models via OpenRouter |</p>
+<p>  | <strong>Zed</strong> | fast editor, compact agent | agent less deep than Cursor/Claude | lightweight coding |</p>
+<ul>
+<li><strong>Auto vs fixed model:</strong> Cursor Auto is fast but quality varies with routing. Fixed model (e.g. <code>grok-4.5</code>) is controllable — in practice often <em>better than Auto</em> without burning much budget (token efficiency? routing? worth investigating).</li>
+</ul>
+<ul>
+<li><strong>What harnesses differ on:</strong></li>
+</ul>
+<p>  - <em>Context management</em> — how files get compressed and selected for the prompt.</p>
+<p>  - <em>Tool calling</em> — MCP, shell, browser — smoothness and reliability.</p>
+<p>  - <em>Agent loop</em> — self-correction, tests, asking back.</p>
+<p>  - <em>Skills / rules</em> — loading global know-how from <code>~/.agents</code>.</p>
+<ul>
+<li><strong>First mate:</strong> orchestrates crew + <code>agents.md</code> — an agent that knows what to do and coordinates crewmates. Lab UI: Kun Chen video + repo <code>kunchenguid/firstmate</code>.</li>
+</ul>
+<ul>
+<li><strong>Homes:</strong> <code>~/.agents/skills</code> (global skills), <code>~/work-station/agents-setup</code> (skill trials), <code>graphify</code> (codebase link viz).</li>
+</ul>
+<h2>Slides &amp; demo</h2>
 <table><tbody>
-<tr><th>Harness</th><th>Điểm mạnh</th><th>Hạn chế</th><th>Cảm nhận</th></tr>
-<tr><td><strong>Cursor</strong></td><td>Vòng feedback nhanh — thấy kết quả là chỉnh ngay; Auto vs model cố định linh hoạt; MCP + skills tốt</td><td>Auto đôi khi khó đoán chất lượng</td><td>Tương tác nhanh nhất; default <code>grok-4.5</code> đốt ít tiền mà chất lượng rất tốt</td></tr>
-<tr><td><strong>Claude Code</strong></td><td>Clarify context cực mạnh — hỏi ngược để làm rõ; xử lý skill/rule phức tạp tốt</td><td>Chậm; có session limit → phải chờ</td><td>Chắc tay, hợp task khó / nhiều ràng buộc</td></tr>
-<tr><td><strong>Pi</strong></td><td>Tự load <code>~/.agents</code> global; nhẹ</td><td>Hệ sinh thái nhỏ hơn</td><td>Tiện dùng chung skill với Cursor/Claude</td></tr>
-<tr><td><strong>Cline / Kilo</strong></td><td>Open, tuỳ biến; Kilo là clone của Cline</td><td>Chất lượng phụ thuộc model cắm vào</td><td>Thử nghiệm nhanh, tự kiểm soát</td></tr>
-<tr><td><strong>OpenCode</strong></td><td>Open-source, chạy nhiều model</td><td>Ít tính năng "smart" hơn Cursor</td><td>Tốt để test model qua OpenRouter</td></tr>
-<tr><td><strong>Zed</strong></td><td>Editor nhanh, agent tích hợp gọn</td><td>Agent chưa sâu bằng Cursor/Claude</td><td>Nhẹ, hợp code nhanh</td></tr>
+<tr><th></th><th>Link</th></tr>
+<tr><td>MCP demo</td><td><a href="../demos/mcp/app/index.html">demos/mcp</a></td></tr>
+<tr><td>Complexity router</td><td><a href="../demos/complexity-router/app/index.html">demos/complexity-router</a></td></tr>
 </tbody></table>
-<h2>Auto vs model cố định</h2>
+<h2>References</h2>
 <ul>
-<li><strong>Cursor Auto</strong>: nhanh, feedback loop tốt, nhưng chất lượng dao động theo model được route.</li>
-<li><strong>Model cố định</strong> (vd đặt <code>grok-4.5</code>): kiểm soát được, và trải nghiệm cá nhân thấy <code>grok-4.5</code> chạy <em>tốt hơn</em> Auto mà <strong>không đốt nhiều tiền</strong> — cần investigate vì sao (token efficiency? routing?).</li>
-</ul>
-<h2>Điều gì tạo khác biệt giữa harness</h2>
-<ul>
-<li><strong>Context management</strong>: cách nén / chọn file đưa vào prompt.</li>
-<li><strong>Tool calling</strong>: MCP, shell, browser — độ mượt và độ tin cậy.</li>
-<li><strong>Agent loop</strong>: có tự sửa lỗi, chạy test, hỏi ngược không.</li>
-<li><strong>Skills / rules</strong>: có nạp know-how global (<code>~/.agents</code>) không.</li>
-</ul>
-<h2>First mate</h2>
-<p>Orchestrate crew + <code>agents.md</code> — một agent "biết phải làm gì", điều phối các crewmate. Search Lab UI: video Kun Chen + repo <code>kunchenguid/firstmate</code>.</p>
-<h2>Homes</h2>
-<ul>
-<li><code>~/.agents/skills</code> — global skills</li>
-<li><code>~/work-station/agents-setup</code> — skill trials</li>
-<li><code>graphify</code> — method link viz</li>
-</ul>
-<h2>Tham khảo</h2>
-<ul>
-<li><a href="https://agents.md/">AGENTS.md</a> — chuẩn khai báo hướng dẫn cho agent</li>
+<li><a href="https://agents.md/">AGENTS.md</a> — standard for declaring agent instructions</li>
 <li><a href="https://docs.cursor.com/">Cursor docs</a> · <a href="https://docs.anthropic.com/en/docs/claude-code">Claude Code</a></li>
+</ul>
+<h2>Related</h2>
+<ul>
+<li><a href="mcp.html">mcp.md</a>, <a href="skills-rules.html">skills-rules.md</a>, <a href="model-notes.html">08-model-notes.md</a></li>
 </ul></div>
   </article>
 </div>
 <script>
 (function () {
-  const title = "AI Agents · So sánh harness";
+  const title = "AI Agents · harness comparison";
   function toast(msg) {
     let el = document.querySelector(".lab-toast");
     if (!el) { el = document.createElement("div"); el.className = "lab-toast"; document.body.appendChild(el); }

@@ -1,25 +1,31 @@
-# Demo: Car NN — từ cảm biến ra hành động
+# Demo: Car NN — from sensors to action
 
-> Một chiếc xe đồ chơi có 3 cảm biến khoảng cách. Một mạng nơ-ron nhỏ (fully connected) nhìn 3 con số đó và quyết định: đi tới, lùi, rẽ trái hay rẽ phải. Đây là ví dụ *nhìn thấy được* của phân loại.
+> A toy car with three distance sensors. A small fully connected network reads those three numbers and picks an action: forward, backward, turn left, or turn right. A visible example of classification.
 
-## Vì sao đáng xem
+## Why it matters
 
-Các note khái niệm (embedding, softmax) khá trừu tượng. Demo này rút gọn tất cả về mức "thấy tận mắt": đầu vào là 3 số, đầu ra là 1 trong 4 hành động, và bạn quan sát mạng đổi quyết định ngay khi vật cản dịch chuyển. Nó cho cảm giác cụ thể về *một lớp fully connected + softmax* làm việc gì.
+Concept notes (embedding, softmax) stay abstract. This demo boils them down: input is three numbers, output is one of four actions, and you watch the decision change as obstacles move. You get a concrete feel for *fully connected layer + softmax*.
 
-## Ý chính
+## Key ideas
 
-- **Đầu vào:** ba cảm biến trái / giữa / phải, mỗi cái là số trong `[0,1]`. Không vật cản → gần 1; có vật cản → nhỏ dần.
-- **Mạng:** một (hoặc vài) lớp fully connected biến 3 số đầu vào thành 4 điểm — mỗi điểm cho một hành động.
-- **Ra quyết định:** [softmax.md](./softmax.md) đổi 4 điểm thành xác suất, chọn hành động cao nhất → `{forward, back, left, right}`.
-- **Trực giác "học":** trọng số của lớp fully connected chính là thứ được điều chỉnh khi train, để bộ 3 cảm biến ánh xạ sang hành động hợp lý.
+- **Input:** left / center / right sensors, each a number in `[0,1]`. Clear path → near 1; obstacle nearby → drops toward 0.
+- **Network:** one or more fully connected layers map three inputs to four scores — one per action.
+- **Decision:** [softmax.md](./softmax.md) turns four scores into probabilities; pick the highest → `{forward, back, left, right}`.
+- **Learning intuition:** training adjusts the fully connected weights so sensor patterns map to the right action.
 
-## Kiến trúc
+Architecture:
 
 ```
 sensors [L, M, R] ∈ [0,1]  →  hidden (fully connected)  →  softmax  →  {forward, back, left, right}
 ```
 
-## Slides & app
+## Pipeline
+
+```
+sensor readings → neural net → softmax → driving action
+```
+
+## Slides & demo
 
 | | Link |
 |--|------|
@@ -28,5 +34,5 @@ sensors [L, M, R] ∈ [0,1]  →  hidden (fully connected)  →  softmax  →  {
 
 ## Related
 
-- [softmax.md](./softmax.md) — bước chọn hành động
-- [06-train-infer.md](./06-train-infer.md), [train-gpu.md](./train-gpu.md) — huấn luyện trọng số
+- [softmax.md](./softmax.md) — action selection step
+- [06-train-infer.md](./06-train-infer.md), [train-gpu.md](./train-gpu.md) — training the weights

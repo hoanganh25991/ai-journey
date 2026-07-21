@@ -1,47 +1,48 @@
-# AI Agents · So sánh harness
+# AI Agents · harness comparison
 
-> **Harness ≠ model.** Harness = phần mềm điều phối (UI, tool-calling, context, agent loop). Model = bộ não cắm vào. Cùng một model chạy trên harness khác nhau cho trải nghiệm rất khác. So sánh model ở [08-model-notes.md](./08-model-notes.md).
+> **Harness ≠ model.** Harness = orchestration software (UI, tool calling, context, agent loop). Model = the brain plugged in. The same model on different harnesses feels very different. Compare models at [08-model-notes.md](./08-model-notes.md).
 
-## Related demos
+## Why it matters
 
-- [MCP](../demos/mcp/) — tools protocol
-- [Complexity router](../demos/complexity-router/) — simple vs crew
-- Notes: [mcp.md](./mcp.md), [skills-rules.md](./skills-rules.md), [08-model-notes.md](./08-model-notes.md)
+Picking a model is only half the story. The harness decides what context the model sees, which tools it can call, and how it loops until the job is done. Two people with the same model in Cursor vs Claude Code can have opposite experiences — because the harness differs.
 
-## Bảng so sánh (kinh nghiệm cá nhân)
+## Key ideas
 
-| Harness | Điểm mạnh | Hạn chế | Cảm nhận |
-|---------|-----------|---------|----------|
-| **Cursor** | Vòng feedback nhanh — thấy kết quả là chỉnh ngay; Auto vs model cố định linh hoạt; MCP + skills tốt | Auto đôi khi khó đoán chất lượng | Tương tác nhanh nhất; default `grok-4.5` đốt ít tiền mà chất lượng rất tốt |
-| **Claude Code** | Clarify context cực mạnh — hỏi ngược để làm rõ; xử lý skill/rule phức tạp tốt | Chậm; có session limit → phải chờ | Chắc tay, hợp task khó / nhiều ràng buộc |
-| **Pi** | Tự load `~/.agents` global; nhẹ | Hệ sinh thái nhỏ hơn | Tiện dùng chung skill với Cursor/Claude |
-| **Cline / Kilo** | Open, tuỳ biến; Kilo là clone của Cline | Chất lượng phụ thuộc model cắm vào | Thử nghiệm nhanh, tự kiểm soát |
-| **OpenCode** | Open-source, chạy nhiều model | Ít tính năng "smart" hơn Cursor | Tốt để test model qua OpenRouter |
-| **Zed** | Editor nhanh, agent tích hợp gọn | Agent chưa sâu bằng Cursor/Claude | Nhẹ, hợp code nhanh |
+- **Comparison table (personal experience):**
 
-## Auto vs model cố định
+  | Harness | Strengths | Limitations | Feel |
+  |---------|-----------|-------------|------|
+  | **Cursor** | fast feedback — see results and adjust immediately; Auto vs fixed model; MCP + strong skills | Auto quality can be unpredictable | fastest loop; default `grok-4.5` is cheap with very good quality |
+  | **Claude Code** | excellent at clarifying context; handles complex skills/rules well | slower; session limits → wait | solid for hard tasks / many constraints |
+  | **Pi** | loads global `~/.agents`; lightweight | smaller ecosystem | same skills as Cursor/Claude, minimal overhead |
+  | **Cline / Kilo** | open, customizable; Kilo clones Cline | quality depends on plugged-in model | good for rapid self-directed testing |
+  | **OpenCode** | open source, many models | fewer "smart" features than Cursor | test models via OpenRouter |
+  | **Zed** | fast editor, compact agent | agent less deep than Cursor/Claude | lightweight coding |
 
-- **Cursor Auto**: nhanh, feedback loop tốt, nhưng chất lượng dao động theo model được route.
-- **Model cố định** (vd đặt `grok-4.5`): kiểm soát được, và trải nghiệm cá nhân thấy `grok-4.5` chạy *tốt hơn* Auto mà **không đốt nhiều tiền** — cần investigate vì sao (token efficiency? routing?).
+- **Auto vs fixed model:** Cursor Auto is fast but quality varies with routing. Fixed model (e.g. `grok-4.5`) is controllable — in practice often *better than Auto* without burning much budget (token efficiency? routing? worth investigating).
 
-## Điều gì tạo khác biệt giữa harness
+- **What harnesses differ on:**
+  - *Context management* — how files get compressed and selected for the prompt.
+  - *Tool calling* — MCP, shell, browser — smoothness and reliability.
+  - *Agent loop* — self-correction, tests, asking back.
+  - *Skills / rules* — loading global know-how from `~/.agents`.
 
-- **Context management**: cách nén / chọn file đưa vào prompt.
-- **Tool calling**: MCP, shell, browser — độ mượt và độ tin cậy.
-- **Agent loop**: có tự sửa lỗi, chạy test, hỏi ngược không.
-- **Skills / rules**: có nạp know-how global (`~/.agents`) không.
+- **First mate:** orchestrates crew + `agents.md` — an agent that knows what to do and coordinates crewmates. Lab UI: Kun Chen video + repo `kunchenguid/firstmate`.
 
-## First mate
+- **Homes:** `~/.agents/skills` (global skills), `~/work-station/agents-setup` (skill trials), `graphify` (codebase link viz).
 
-Orchestrate crew + `agents.md` — một agent "biết phải làm gì", điều phối các crewmate. Search Lab UI: video Kun Chen + repo `kunchenguid/firstmate`.
+## Slides & demo
 
-## Homes
+| | Link |
+|--|------|
+| MCP demo | [demos/mcp](../demos/mcp/app/index.html) |
+| Complexity router | [demos/complexity-router](../demos/complexity-router/app/index.html) |
 
-- `~/.agents/skills` — global skills
-- `~/work-station/agents-setup` — skill trials
-- `graphify` — method link viz
+## References
 
-## Tham khảo
-
-- [AGENTS.md](https://agents.md/) — chuẩn khai báo hướng dẫn cho agent
+- [AGENTS.md](https://agents.md/) — standard for declaring agent instructions
 - [Cursor docs](https://docs.cursor.com/) · [Claude Code](https://docs.anthropic.com/en/docs/claude-code)
+
+## Related
+
+- [mcp.md](./mcp.md), [skills-rules.md](./skills-rules.md), [08-model-notes.md](./08-model-notes.md)

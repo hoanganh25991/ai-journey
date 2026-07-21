@@ -1,0 +1,105 @@
+{
+  "title": "AI Lab Journey",
+  "lead": "A different presentation from notes — a fun five-screen map. Pick a screen that fits your mood, click into notes, then move to the next screen.",
+  "tagline": "read text → label it → find documents → try demos → let agents work",
+  "stages": [
+    {
+      "id": "abc",
+      "roman": "①",
+      "title": "ABC · machines read text",
+      "goal": "Understand how text becomes numbers, then how models \"see\" and \"choose\".",
+      "boss": "Explain why \"dog / cat\" are closer than \"dog / invoice\" using embedding + cosine.",
+      "notes": ["tokenize", "embedding", "attention", "softmax"],
+      "blips": {
+        "tokenize": "Split text → IDs. Machines do not read words.",
+        "embedding": "Similar meaning → nearby in number space.",
+        "attention": "Each word decides where to look.",
+        "softmax": "Raw scores → percentages that sum to 1."
+      }
+    },
+    {
+      "id": "build",
+      "roman": "②",
+      "title": "Build · train · run",
+      "goal": "Label data yourself, train for a few epochs, know where to get data and models.",
+      "boss": "Train a small classifier, then encode sentences with sentence-transformers.",
+      "notes": [
+        "classification",
+        "pytorch-training",
+        "tensorflow-training",
+        "huggingface",
+        "kaggle",
+        "transformer",
+        "sentence-transformers"
+      ],
+      "blips": {
+        "classification": "Head + softmax = labeling.",
+        "pytorch-training": "forward → loss → backward → step.",
+        "tensorflow-training": "compile then fit — Keras runs the loop.",
+        "huggingface": "Dataset + pretrained model + Spaces.",
+        "kaggle": "Dataset + free GPU notebook.",
+        "transformer": "Stacked attention = LLM skeleton.",
+        "sentence-transformers": "Sentence → vector in a few lines; classify fast."
+      }
+    },
+    {
+      "id": "rag",
+      "roman": "③",
+      "title": "Find · ground in documents",
+      "goal": "Do not make the model memorize everything — let it look things up, then answer.",
+      "boss": "Contrast keyword search (Elastic) vs meaning (embeddings), and why hybrid often wins.",
+      "notes": ["rag", "vector-database", "semantic-search"],
+      "blips": {
+        "rag": "Retrieve first, compose after + cite sources.",
+        "vector-database": "Vector store + top-k neighbor search.",
+        "semantic-search": "Hybrid / tiered / fallback — real-world RAG lesson."
+      }
+    },
+    {
+      "id": "demo",
+      "roman": "④",
+      "title": "Demo · see it live",
+      "goal": "Watch models work in the browser — not just read theory.",
+      "boss": "Open the car-nn or sentiment demo and point to where softmax / the classification head sits.",
+      "notes": ["train-gpu", "car-nn", "sentiment-routing", "train-infer"],
+      "blips": {
+        "train-gpu": "Real stack: PyTorch/TF + HF/Kaggle + GPU.",
+        "car-nn": "3 sensors → 4 actions.",
+        "sentiment-routing": "Sentiment labels + easy/hard routing.",
+        "train-infer": "Learn heavy once, use light many times."
+      }
+    },
+    {
+      "id": "agent",
+      "roman": "⑤",
+      "title": "Agent · steer the machine",
+      "goal": "From \"model answers\" to \"agent controls the machine\".",
+      "boss": "Explain MCP ≠ Skills, and why the same model feels different in Cursor vs Claude Code.",
+      "notes": [
+        "mcp",
+        "skills-rules",
+        "agents",
+        "model-notes",
+        "agent-automation",
+        "ai-timeline",
+        "personal-knowledge-base"
+      ],
+      "blips": {
+        "mcp": "USB-C port for AI tool calls.",
+        "skills-rules": "Three layers of teaching an agent.",
+        "agents": "Harness ≠ model — Cursor / Claude / Pi…",
+        "model-notes": "Field notes on Grok / Opus / DeepSeek…",
+        "agent-automation": "OpenClaw opened the door → Hermess polished it.",
+        "ai-timeline": "Anchor the lab to real AI history.",
+        "personal-knowledge-base": "Search video / docs / GitHub + Graph RAG."
+      }
+    }
+  ],
+  "moods": [
+    { "label": "Just starting", "hint": "① ABC then take a break", "stage": "abc" },
+    { "label": "Want to build models", "hint": "① → ②, skip agents for now", "stage": "build" },
+    { "label": "Building search / chatbot", "hint": "① → ③, also sentence-transformers", "stage": "rag" },
+    { "label": "Prefer fun demos", "hint": "④ first, back to ① if stuck", "stage": "demo" },
+    { "label": "Coding agents", "hint": "⑤ MCP · skills · harness", "stage": "agent" }
+  ]
+}

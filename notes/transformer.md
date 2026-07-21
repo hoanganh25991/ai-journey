@@ -1,40 +1,40 @@
-# Transformer — kiến trúc lõi của LLM
+# Transformer — core architecture of LLMs
 
-> Kiến trúc ghép nhiều khối [attention](./attention.md) lại, xử lý cả câu song song thay vì tuần tự. Là bộ khung đứng sau BERT, GPT và gần như mọi model ngôn ngữ hiện đại.
+> Stack many [attention](./attention.md) blocks and process a whole sentence in parallel instead of step by step. The framework behind BERT, GPT, and nearly every modern language model.
 
-## Vì sao quan trọng
+## Why it matters
 
-Trước Transformer, model đọc câu tuần tự (RNN/LSTM) — chậm và hay quên phần đầu câu. Transformer (2017, "Attention Is All You Need") bỏ tuần tự, cho mọi từ nhìn nhau cùng lúc bằng attention → train nhanh trên GPU và bắt được quan hệ xa. Đây là bước ngoặt mở ra kỷ nguyên LLM.
+Before Transformers, models read sentences sequentially (RNN/LSTM) — slow and prone to forgetting early context. The Transformer (2017, "Attention Is All You Need") drops sequential processing: every word attends to every other word at once → faster GPU training and better long-range links. That pivot opened the LLM era.
 
-## Ý chính
+## Key ideas
 
-- **Xếp chồng khối attention:** mỗi lớp gồm multi-head [attention](./attention.md) + mạng feed-forward, chồng nhiều lớp để học biểu diễn ngày càng trừu tượng.
-- **Positional encoding:** vì xử lý song song (không theo thứ tự), phải *chèn thông tin vị trí* để model biết từ nào đứng trước/sau.
+- **Stacked attention blocks:** each layer has multi-head [attention](./attention.md) plus a feed-forward network; stack many layers for increasingly abstract representations.
+- **Positional encoding:** parallel processing has no built-in order — inject position info so the model knows word sequence.
 - **Encoder / decoder:**
-  - *Encoder* (BERT): đọc-hiểu cả câu → hợp cho [classification](./classification.md), embedding.
-  - *Decoder* (GPT): sinh từ trái sang phải → hợp cho tạo văn bản.
-  - *Encoder-decoder*: dịch máy, tóm tắt (dùng cross-attention).
-- **Residual + layer norm:** mẹo giúp mạng sâu vẫn train ổn định.
-- **Song song = nhanh:** không phụ thuộc bước trước → tận dụng GPU tối đa ([train-gpu.md](./train-gpu.md)).
+  - *Encoder* (BERT): read and understand the whole sentence → good for [classification](./classification.md) and embeddings.
+  - *Decoder* (GPT): generate left to right → good for text generation.
+  - *Encoder-decoder:* translation, summarization (uses cross-attention).
+- **Residual + layer norm:** tricks that keep deep networks stable during training.
+- **Parallel = fast:** no step-by-step dependency → full GPU utilization ([train-gpu.md](./train-gpu.md)).
 
-## Hình minh họa
+## Illustrations
 
-![Self-attention trong một khối encoder](assets/protonx/self-attention.jpg)
+![Self-attention inside one encoder block](assets/protonx/self-attention.jpg)
 
-![Cross-attention: decoder nhìn sang encoder (dịch máy)](assets/protonx/cross-attention.jpg)
+![Cross-attention: decoder attends to encoder (machine translation)](assets/protonx/cross-attention.jpg)
 
-![Trọng số attention sau softmax bên trong một lớp](assets/protonx/attention-after-softmax.jpg)
+![Attention weights after softmax inside one layer](assets/protonx/attention-after-softmax.jpg)
 
-## Trong pipeline
+## Pipeline
 
 ```
-tokens → embedding + positional → [N × (multi-head attention + feed-forward)] → biểu diễn
+tokens → embedding + positional → [N × (multi-head attention + feed-forward)] → representation
        → head: classification / generation
 ```
 
-Transformer là "khung nhà" gói [attention.md](./attention.md), [embedding.md](./embedding.md) và [softmax.md](./softmax.md) lại thành một model hoàn chỉnh.
+The Transformer is the "house frame" wrapping [attention.md](./attention.md), [embedding.md](./embedding.md), and [softmax.md](./softmax.md) into one complete model.
 
-## Tham khảo
+## References
 
 - Vaswani et al. 2017 — [Attention Is All You Need](https://arxiv.org/abs/1706.03762)
 - Jay Alammar — [The Illustrated Transformer](https://jalammar.github.io/illustrated-transformer/)
@@ -42,4 +42,4 @@ Transformer là "khung nhà" gói [attention.md](./attention.md), [embedding.md]
 ## Related
 
 - [attention.md](./attention.md), [embedding.md](./embedding.md), [softmax.md](./softmax.md)
-- [huggingface.md](./huggingface.md) — model Transformer pretrained
+- [huggingface.md](./huggingface.md) — pretrained Transformer models

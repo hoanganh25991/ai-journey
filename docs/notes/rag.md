@@ -1,38 +1,38 @@
 # RAG — Retrieval-Augmented Generation
 
-> Thay vì bắt mô hình trả lời bằng mỗi trí nhớ, trước tiên đi *tra cứu* tài liệu liên quan rồi mới để mô hình *soạn* câu trả lời dựa trên đó. Giống mở sách ra tra trước khi phát biểu.
+> Instead of forcing the model to answer from memory alone, first *look up* relevant documents, then let the model *compose* an answer grounded in them. Like checking a book before you speak.
 
-## Vì sao quan trọng
+## Why it matters
 
-Mô hình ngôn ngữ biết nhiều nhưng hay "chém" (bịa) khi gặp thứ ngoài trí nhớ, và không cập nhật tài liệu riêng của bạn. RAG vá cả hai: neo câu trả lời vào một kho tài liệu thật (tài liệu công ty, video, repo…), kèm trích dẫn nguồn. Nhờ vậy trả lời đúng hơn, cập nhật hơn, và kiểm chứng được — không cần train lại mô hình.
+Language models know a lot but often hallucinate on unfamiliar facts and cannot read your private documents. RAG fixes both: anchor answers in a real corpus (company docs, videos, repos…) with citations. Answers become more accurate, more current, and verifiable — without retraining the model.
 
-## Ý chính
+## Key ideas
 
-- **Hai pha:**
-  - *Retrieve*: đổi câu hỏi thành vector ([embedding.md](./embedding.md)), tìm trong vector DB ra top-k đoạn (chunk) gần nghĩa nhất.
-  - *Generate*: nhét các đoạn đó vào prompt làm ngữ cảnh, mô hình soạn câu trả lời bám theo.
-- **Chunk + vector DB:** tài liệu được cắt thành đoạn nhỏ, mỗi đoạn một vector; DB (FAISS, Chroma, pgvector…) lo tìm nhanh đoạn gần nhất, có thể lọc thêm bằng metadata.
-- **Khác chat thuần:** chat thuần dựa vào trí nhớ mô hình; RAG luôn *neo vào corpus* nên trả lời được câu về tài liệu mô hình chưa từng thấy.
-- **Chất lượng phụ thuộc retrieve:** lấy sai đoạn thì mô hình soạn hay đến mấy cũng sai. Cắt chunk hợp lý và embedding tốt là mấu chốt.
-- **Biến thể nâng cao:** *Graph RAG* nối các thực thể thành đồ thị để trả lời câu bắc cầu; rerank, hybrid search (từ khóa + vector) để tăng độ chính xác.
+- **Two phases:**
+  - *Retrieve:* embed the question ([embedding.md](./embedding.md)), search the vector DB for the top-k chunks closest in meaning.
+  - *Generate:* insert those chunks into the prompt as context; the model composes the answer from them.
+- **Chunk + vector DB:** split documents into segments, embed each segment; a DB (FAISS, Chroma, pgvector…) finds nearest segments fast, optionally filtered by metadata.
+- **Unlike pure chat:** pure chat relies on model memory; RAG is always *anchored to your corpus* — it can answer about documents the model never saw.
+- **Quality depends on retrieval:** wrong chunks → wrong answers no matter how good the model is. Good chunking and embeddings are critical.
+- **Advanced variants:** *Graph RAG* links entities in a graph for multi-hop questions; reranking and hybrid search (keyword + vector) boost accuracy.
 
-## Hình minh họa
+## Illustrations
 
-![Embed câu hỏi rồi đi truy vấn kho tài liệu](assets/protonx/embed-then-query.jpg)
+![Embed the question, then query the document store](assets/protonx/embed-then-query.jpg)
 
-![Đường đi của một pipeline RAG](assets/protonx/drop-rag.jpg)
+![Flow of a RAG pipeline](assets/protonx/drop-rag.jpg)
 
-![Graph RAG: nối thực thể thành đồ thị để trả lời câu bắc cầu](assets/protonx/graph-rag.jpg)
+![Graph RAG: connect entities in a graph for multi-hop answers](assets/protonx/graph-rag.jpg)
 
-![RAG nâng cao: thêm rerank / lọc để tăng độ chính xác](assets/protonx/rag-advanced.jpg)
+![Advanced RAG: rerank and filter for higher accuracy](assets/protonx/rag-advanced.jpg)
 
-## Trong pipeline
+## Pipeline
 
 ```
-câu hỏi → embed → tìm top-k trong vector DB → (đoạn + câu hỏi) → LLM → trả lời + trích dẫn
+question → embed → top-k from vector DB → (chunks + question) → LLM → answer + citations
 ```
 
-RAG đứng trên [embedding.md](./embedding.md); Personal Knowledge-base của lab đi đúng hướng này ([personal-knowledge-base.md](./personal-knowledge-base.md)).
+RAG stands on [embedding.md](./embedding.md); the lab's Personal Knowledge-base follows this direction ([personal-knowledge-base.md](./personal-knowledge-base.md)).
 
 ## Slides & demo
 
@@ -41,12 +41,12 @@ RAG đứng trên [embedding.md](./embedding.md); Personal Knowledge-base của 
 | Slides | [slides/rag](../slides/rag/index.html) |
 | Working app | [demos/rag/app](../demos/rag/app/index.html) |
 
-## Tham khảo
+## References
 
 - Lewis et al. 2020 — [Retrieval-Augmented Generation](https://arxiv.org/abs/2005.11401)
 - [Microsoft GraphRAG](https://microsoft.github.io/graphrag/)
 
 ## Related
 
-- [vector-database.md](./vector-database.md), [semantic-search.md](./semantic-search.md) — hạ tầng & retrieve cho RAG
+- [vector-database.md](./vector-database.md), [semantic-search.md](./semantic-search.md) — infrastructure and retrieval for RAG
 - [embedding.md](./embedding.md), [personal-knowledge-base.md](./personal-knowledge-base.md)

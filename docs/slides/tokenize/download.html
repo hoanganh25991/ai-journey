@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -203,11 +203,11 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
     <div class="topbar reveal"><span>Tokenize</span><span class="pill">idea</span></div>
-    <h2 class="reveal">Ý chính</h2>
+    <h2 class="reveal">Key ideas</h2>
     <div class="cols-2">
       <div class="card reveal"><div class="tag">remember</div><h3>Tokenize</h3><p>Text → tokens / subwords → IDs. BPE vs WordPiece.</p></div>
       <div class="card cyan reveal"><div class="tag">topics</div><h3>Keywords</h3><p>tokenize, BPE, vocabulary</p>
-        <p style="margin-top:12px">Đọc kèm: <span style="color:var(--amber);font-family:var(--font-mono);font-size:16px">notes/tokenize.md</span></p>
+        <p style="margin-top:12px">Read with: <span style="color:var(--amber);font-family:var(--font-mono);font-size:16px">notes/tokenize.md</span></p>
       </div>
     </div>
   </div>
@@ -217,41 +217,41 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
 <section class="slide">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
-    <div class="topbar reveal"><span>Minh họa</span><span class="pill">tokenizer-viz.jpg</span></div>
-    <h2 class="reveal" style="font-size:36px;margin-bottom:16px;">Hình minh họa</h2>
+    <div class="topbar reveal"><span>Illustration</span><span class="pill">tokenizer-viz.jpg</span></div>
+    <h2 class="reveal" style="font-size:36px;margin-bottom:16px;">Illustration</h2>
     <img class="shot shot-lg reveal" src="../../notes/assets/protonx/tokenizer-viz.jpg" alt="tokenizer-viz.jpg" />
   </div>
-  <div class="foot"><span>03</span><span>AI Lab · minh họa</span></div>
+  <div class="foot"><span>03</span><span>AI Lab · illustration</span></div>
 </section>
 
 <section class="slide">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
-    <div class="topbar reveal"><span>Minh họa</span><span class="pill">bpe-vs-wordpiece.png</span></div>
-    <h2 class="reveal" style="font-size:36px;margin-bottom:16px;">Hình minh họa</h2>
+    <div class="topbar reveal"><span>Illustration</span><span class="pill">bpe-vs-wordpiece.png</span></div>
+    <h2 class="reveal" style="font-size:36px;margin-bottom:16px;">Illustration</h2>
     <img class="shot shot-lg reveal" src="../../notes/assets/protonx/bpe-vs-wordpiece.png" alt="bpe-vs-wordpiece.png" />
   </div>
-  <div class="foot"><span>04</span><span>AI Lab · minh họa</span></div>
+  <div class="foot"><span>04</span><span>AI Lab · illustration</span></div>
 </section>
 
 <section class="slide">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
-    <div class="topbar reveal"><span>Minh họa</span><span class="pill">build-vocab.jpg</span></div>
-    <h2 class="reveal" style="font-size:36px;margin-bottom:16px;">Hình minh họa</h2>
+    <div class="topbar reveal"><span>Illustration</span><span class="pill">build-vocab.jpg</span></div>
+    <h2 class="reveal" style="font-size:36px;margin-bottom:16px;">Illustration</h2>
     <img class="shot shot-lg reveal" src="../../notes/assets/protonx/build-vocab.jpg" alt="build-vocab.jpg" />
   </div>
-  <div class="foot"><span>05</span><span>AI Lab · minh họa</span></div>
+  <div class="foot"><span>05</span><span>AI Lab · illustration</span></div>
 </section>
 
 <section class="slide">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
-    <div class="topbar reveal"><span>Tokenize</span><span class="pill">ví dụ</span></div>
-    <h2 class="reveal">Từ chữ tới ID</h2>
+    <div class="topbar reveal"><span>Tokenize</span><span class="pill">example</span></div>
+    <h2 class="reveal">From text to ID</h2>
     <div class="cols-2">
-      <div class="card reveal"><div class="tag">bước 1 · cắt</div><h3>"chào bạn"</h3><p>→ ["chào", "bạn"] — mỗi mẩu là một token subword.</p></div>
-      <div class="card cyan reveal"><div class="tag">bước 2 · tra từ điển</div><h3>token → ID</h3><p>["chào", "bạn"] → [5021, 883]. Model chỉ thấy dãy số này.</p></div>
+      <div class="card reveal"><div class="tag">step 1 · split</div><h3>"hello friend"</h3><p>→ ["hello", "friend"] — each piece is a subword token.</p></div>
+      <div class="card cyan reveal"><div class="tag">step 2 · lookup</div><h3>token → ID</h3><p>["hello", "friend"] → [5021, 883]. The model only sees this number sequence.</p></div>
     </div>
   </div>
   <div class="foot"><span>06</span><span>notes/tokenize.md</span></div>
@@ -260,11 +260,11 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
 <section class="slide">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
-    <div class="topbar reveal"><span>Tokenize</span><span class="pill">lưu ý</span></div>
-    <h2 class="reveal">Dễ sai chỗ nào</h2>
+    <div class="topbar reveal"><span>Tokenize</span><span class="pill">pitfalls</span></div>
+    <h2 class="reveal">It's easy to go wrong</h2>
     <div class="cols-2">
-      <div class="card reveal"><div class="tag">bẫy</div><h3>Lệch tokenizer</h3><p>Train một kiểu, chạy một kiểu → ID lệch → model hiểu nhầm hết.</p></div>
-      <div class="card cyan reveal"><div class="tag">nhớ</div><h3>Tính theo token</h3><p>≈ 4 ký tự tiếng Anh / token. Chi phí gọi model đo bằng token, không phải chữ.</p></div>
+      <div class="card reveal"><div class="tag">pitfall</div><h3>Tokenizer mismatch</h3><p>Train with one tokenizer, run with another → IDs drift → the model misreads everything.</p></div>
+      <div class="card cyan reveal"><div class="tag">remember</div><h3>Count by token</h3><p>≈ 4 English characters per token. Model cost is measured in tokens, not words.</p></div>
     </div>
   </div>
   <div class="foot"><span>07</span><span>notes/tokenize.md</span></div>
@@ -274,9 +274,9 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
     <div class="topbar reveal"><span>Next</span><span class="pill">app</span></div>
-    <h1 class="reveal" style="margin-top:120px;font-size:64px;">Mở working app<br /><em>thử tay.</em></h1>
-    <p class="lead reveal" style="margin-top:28px;">demos/tokenize/app — interactive, không cần GPU.</p>
-    <a class="app-cta reveal" href="../../demos/tokenize/app/index.html">Mở working app →</a>
+    <h1 class="reveal" style="margin-top:120px;font-size:64px;">Open working app<br /><em>try it.</em></h1>
+    <p class="lead reveal" style="margin-top:28px;">demos/tokenize/app — interactive, no GPU required.</p>
+    <a class="app-cta reveal" href="../../demos/tokenize/app/index.html">Open working app →</a>
   </div>
   <div class="foot"><span>end</span><span>demos/tokenize/app</span></div>
 </section>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -203,11 +203,11 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
     <div class="topbar reveal"><span>Attention</span><span class="pill">idea</span></div>
-    <h2 class="reveal">Ý chính</h2>
+    <h2 class="reveal">Key ideas</h2>
     <div class="cols-2">
       <div class="card reveal"><div class="tag">remember</div><h3>Attention</h3><p>Query · Key · Value — contextual mixing across tokens.</p></div>
       <div class="card cyan reveal"><div class="tag">topics</div><h3>Keywords</h3><p>attention, QKV, transformer</p>
-        <p style="margin-top:12px">Đọc kèm: <span style="color:var(--amber);font-family:var(--font-mono);font-size:16px">notes/attention.md</span></p>
+        <p style="margin-top:12px">Read with: <span style="color:var(--amber);font-family:var(--font-mono);font-size:16px">notes/attention.md</span></p>
       </div>
     </div>
   </div>
@@ -217,41 +217,41 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
 <section class="slide">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
-    <div class="topbar reveal"><span>Minh họa</span><span class="pill">self-attention.jpg</span></div>
-    <h2 class="reveal" style="font-size:36px;margin-bottom:16px;">Hình minh họa</h2>
+    <div class="topbar reveal"><span>Illustration</span><span class="pill">self-attention.jpg</span></div>
+    <h2 class="reveal" style="font-size:36px;margin-bottom:16px;">Illustration</h2>
     <img class="shot shot-lg reveal" src="../../notes/assets/protonx/self-attention.jpg" alt="self-attention.jpg" />
   </div>
-  <div class="foot"><span>03</span><span>AI Lab · minh họa</span></div>
+  <div class="foot"><span>03</span><span>AI Lab · illustration</span></div>
 </section>
 
 <section class="slide">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
-    <div class="topbar reveal"><span>Minh họa</span><span class="pill">attention-table.jpg</span></div>
-    <h2 class="reveal" style="font-size:36px;margin-bottom:16px;">Hình minh họa</h2>
+    <div class="topbar reveal"><span>Illustration</span><span class="pill">attention-table.jpg</span></div>
+    <h2 class="reveal" style="font-size:36px;margin-bottom:16px;">Illustration</h2>
     <img class="shot shot-lg reveal" src="../../notes/assets/protonx/attention-table.jpg" alt="attention-table.jpg" />
   </div>
-  <div class="foot"><span>04</span><span>AI Lab · minh họa</span></div>
+  <div class="foot"><span>04</span><span>AI Lab · illustration</span></div>
 </section>
 
 <section class="slide">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
-    <div class="topbar reveal"><span>Minh họa</span><span class="pill">cross-attention.jpg</span></div>
-    <h2 class="reveal" style="font-size:36px;margin-bottom:16px;">Hình minh họa</h2>
+    <div class="topbar reveal"><span>Illustration</span><span class="pill">cross-attention.jpg</span></div>
+    <h2 class="reveal" style="font-size:36px;margin-bottom:16px;">Illustration</h2>
     <img class="shot shot-lg reveal" src="../../notes/assets/protonx/cross-attention.jpg" alt="cross-attention.jpg" />
   </div>
-  <div class="foot"><span>05</span><span>AI Lab · minh họa</span></div>
+  <div class="foot"><span>05</span><span>AI Lab · illustration</span></div>
 </section>
 
 <section class="slide">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
-    <div class="topbar reveal"><span>Attention</span><span class="pill">ví dụ</span></div>
-    <h2 class="reveal">"Nó" chỉ ai?</h2>
+    <div class="topbar reveal"><span>Attention</span><span class="pill">example</span></div>
+    <h2 class="reveal">Who does "it" refer to?</h2>
     <div class="cols-2">
-      <div class="card reveal"><div class="tag">câu</div><h3>con chó đuổi con mèo vì <em>nó</em> đói</h3><p>Attention để chữ "nó" tự nối về "chó" — nhìn đúng chỗ trong câu.</p></div>
-      <div class="card cyan reveal"><div class="tag">Q · K · V</div><h3>Ba vai</h3><p>Q hỏi "cần gì", K "có gì", V "nội dung". Q khớp K cao → lấy nhiều V của từ đó.</p></div>
+      <div class="card reveal"><div class="tag">sentence</div><h3>the dog chased the cat because <em>it</em> was hungry</h3><p>Attention lets "it" link back to "dog" — looking at the right place in the sentence.</p></div>
+      <div class="card cyan reveal"><div class="tag">Q · K · V</div><h3>Three roles</h3><p>Q asks "what do I need?", K "what is available?", V "the content". High Q·K match → pull more V from that token.</p></div>
     </div>
   </div>
   <div class="foot"><span>06</span><span>notes/attention.md</span></div>
@@ -260,11 +260,11 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
 <section class="slide">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
-    <div class="topbar reveal"><span>Attention</span><span class="pill">lưu ý</span></div>
+    <div class="topbar reveal"><span>Attention</span><span class="pill">pitfalls</span></div>
     <h2 class="reveal">Self / cross · multi-head</h2>
     <div class="cols-2">
-      <div class="card reveal"><div class="tag">phạm vi</div><h3>Self vs cross</h3><p>Self = các từ trong cùng câu nhìn nhau; cross = câu đích nhìn câu nguồn (vd dịch máy).</p></div>
-      <div class="card cyan reveal"><div class="tag">multi-head</div><h3>Nhiều góc nhìn</h3><p>Mỗi đầu bắt một loại quan hệ (ngữ pháp, chủ đề…) chạy song song rồi gộp lại.</p></div>
+      <div class="card reveal"><div class="tag">scope</div><h3>Self vs cross</h3><p>Self = words in the same sentence look at each other; cross = target sentence looking at the source sentence (eg machine translation).</p></div>
+      <div class="card cyan reveal"><div class="tag">multi-head</div><h3>Many perspectives</h3><p>Each end captures a type of relationship (grammar, topic...) that runs in parallel and then combined.</p></div>
     </div>
   </div>
   <div class="foot"><span>07</span><span>notes/attention.md</span></div>
@@ -274,9 +274,9 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
     <div class="topbar reveal"><span>Next</span><span class="pill">app</span></div>
-    <h1 class="reveal" style="margin-top:120px;font-size:64px;">Mở working app<br /><em>thử tay.</em></h1>
-    <p class="lead reveal" style="margin-top:28px;">demos/attention/app — interactive, không cần GPU.</p>
-    <a class="app-cta reveal" href="../../demos/attention/app/index.html">Mở working app →</a>
+    <h1 class="reveal" style="margin-top:120px;font-size:64px;">Open working app<br /><em>try it.</em></h1>
+    <p class="lead reveal" style="margin-top:28px;">demos/attention/app — interactive, no GPU required.</p>
+    <a class="app-cta reveal" href="../../demos/attention/app/index.html">Open working app →</a>
   </div>
   <div class="foot"><span>end</span><span>demos/attention/app</span></div>
 </section>

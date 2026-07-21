@@ -1,30 +1,32 @@
 # Train → Inference
 
-> Mọi mô hình đều sống hai đời: đời **học** (train) tốn công một lần để chỉnh trọng số, và đời **dùng** (inference) chạy đi chạy lại để dự đoán. Hiểu tách bạch hai pha này giúp biết chỗ nào tốn GPU, chỗ nào chạy nhẹ.
+> Every model lives two lives: **learning** (train) — spend heavy compute once to adjust weights — and **using** (inference) — run lightly again and again to predict. Knowing the split clarifies what needs a GPU and what runs in the browser.
 
-## Vì sao quan trọng
+## Why it matters
 
-Người mới hay gộp "AI" thành một khối. Thực ra phần *nặng* (train nhiều epoch trên GPU) chỉ làm một lần để ra checkpoint; phần *nhẹ* (inference) mới là thứ chạy trong app mỗi lần người dùng bấm. Các demo trong lab đều là inference — train thật diễn ra ở notebook / cloud GPU rồi mới cắm trọng số vào.
+Beginners often treat "AI" as one block. Training (many GPU epochs) happens once to produce a checkpoint; inference (predict on new input) is what runs every time a user clicks. Lab demos are all inference — real training happens in notebooks / cloud GPU, then weights plug into the UI.
 
-## Hai pha
+## Key ideas
 
-| Pha | Việc | Chi phí | Output |
-|-----|------|---------|--------|
-| **Train** | Lặp qua dữ liệu nhiều epoch, so dự đoán với đáp án, chỉnh trọng số | Nặng, cần GPU | checkpoint (bộ trọng số) |
-| **Inference** | Nạp trọng số, đưa đầu vào, lấy dự đoán | Nhẹ, chạy realtime | nhãn / hành động |
+- **Two phases:**
+
+  | Phase | Work | Cost | Output |
+  |-------|------|------|--------|
+  | **Train** | loop data for many epochs, compare prediction to label, update weights | heavy, needs GPU | checkpoint (weight file) |
+  | **Inference** | load weights, feed input, get prediction | light, realtime | label / action |
+
+- **Learning = reducing error:** each round the model predicts, measures loss (e.g. cross-entropy with [softmax.md](./softmax.md)), then nudges weights toward lower loss.
+- **Checkpoint is the product:** after training, save weights; inference no longer needs training data.
+- **In AI Lab:** browser demos show *inference* only. Heavy training in protonx / Kaggle / Colab notebooks → export → embed in UI.
+
+## Pipeline
 
 ```
-data → train (nhiều epoch trên GPU) → checkpoint → load → infer (dự đoán)
+data → train (many GPU epochs) → checkpoint → load → infer (predict)
 ```
-
-## Ý chính
-
-- **Học = giảm sai số:** mỗi vòng, mô hình dự đoán, đo lệch (loss, vd cross-entropy đi cùng [softmax.md](./softmax.md)), rồi dịch trọng số theo hướng bớt lệch.
-- **Checkpoint là "thành phẩm":** train xong ta cất bộ trọng số; từ đó inference không cần dữ liệu train nữa.
-- **Trong AI Lab:** browser demos = minh họa *inference*, không train trong trình duyệt. Train nặng ở notebook protonx / Kaggle / Colab → export → cắm vào UI.
 
 ## Related
 
-- Đầy đủ stack (PyTorch, TensorFlow, HF, Kaggle, GPU): [train-gpu.md](./train-gpu.md)
+- Full stack (PyTorch, TensorFlow, HF, Kaggle, GPU): [train-gpu.md](./train-gpu.md)
 - Demo inference: [04-demo-car.md](./04-demo-car.md), [05-demo-text.md](./05-demo-text.md)
-- [softmax.md](./softmax.md) — loss khi train phân loại
+- [softmax.md](./softmax.md) — loss when training classifiers

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -23,7 +23,7 @@
   <div class="pad">
     <div class="topbar reveal"><span>Demo · car-nn</span><span class="pill">slides + app</span></div>
     <h1 class="reveal" style="margin-top:100px;">Sensor → <em>action</em></h1>
-    <p class="lead reveal" style="margin-top:28px;">Fully connected NN: 3 hướng cảm biến điều khiển xe tiến / lùi / trái / phải.</p>
+    <p class="lead reveal" style="margin-top:28px;">Fully connected NN: 3 sensor directions to control the car forward / backward / left / right.</p>
     <div class="flow-row reveal">
       <span class="step">L · M · R</span><span class="arr">→</span>
       <span class="step">hidden FC</span><span class="arr">→</span>
@@ -39,8 +39,8 @@
     <div class="topbar reveal"><span>Architecture</span><span class="pill">3 layers</span></div>
     <h2 class="reveal">Input · Hidden · <em>Output</em></h2>
     <div class="cols-3">
-      <div class="card reveal"><div class="tag">input</div><h3>Sensors</h3><p>Trái · Giữa · Phải ∈ [0, 1]. Vật cản → giá trị &lt; 1.</p></div>
-      <div class="card cyan reveal"><div class="tag">hidden</div><h3>Fully connected</h3><p>Lớp đệm học tổ hợp tín hiệu môi trường.</p></div>
+      <div class="card reveal"><div class="tag">input</div><h3>Sensors</h3><p>Left · Center · Right ∈ [0, 1]. Obstacles → value < 1.</p></div>
+      <div class="card cyan reveal"><div class="tag">hidden</div><h3>Fully connected</h3><p>The buffer layer learns the combination of environmental signals.</p></div>
       <div class="card accent reveal"><div class="tag">output</div><h3>Actions</h3><p>forward · back · left · right (argmax).</p></div>
     </div>
   </div>
@@ -51,7 +51,7 @@
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
     <div class="topbar reveal"><span>Picture</span><span class="pill">sense → think → act</span></div>
-    <h2 class="reveal" style="font-size:36px;margin-bottom:16px;">Hình minh họa</h2>
+    <h2 class="reveal" style="font-size:36px;margin-bottom:16px;">Illustration</h2>
     <img class="shot shot-lg reveal" src="../assets/car-nn-sensors.png" alt="Car NN: sensors to neural net to actions" />
   </div>
   <div class="foot"><span>03</span><span>slides/assets/car-nn-sensors.png</span></div>
@@ -61,12 +61,12 @@
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
     <div class="topbar reveal"><span>Lifecycle</span><span class="pill">train → infer</span></div>
-    <h2 class="reveal">Hai lớp tư duy</h2>
+    <h2 class="reveal">Two layers of thinking</h2>
     <div class="cols-2">
-      <div class="card reveal"><div class="tag">train</div><h3>Học</h3><p>Thu cặp (sensor, action) → nhiều epoch → lưu weights.</p></div>
-      <div class="card accent reveal"><div class="tag">infer</div><h3>Dùng</h3><p>Realtime: đọc sensor → model → lệnh điều khiển.</p></div>
+      <div class="card reveal"><div class="tag">train</div><h3>Learn</h3><p>Collect pairs (sensor, action) → multiple epochs → save weights.</p></div>
+      <div class="card accent reveal"><div class="tag">infer</div><h3>Use</h3><p>Realtime: read sensor → model → control command.</p></div>
     </div>
-    <p class="lead reveal" style="margin-top:36px;">App demo dùng weights đã tinh chỉnh (rule-trained) để bạn xoay sensor và xem action.</p>
+    <p class="lead reveal" style="margin-top:36px;">The demo app uses rule-trained weights so you can rotate the sensor and see the action.</p>
   </div>
   <div class="foot"><span>04</span><span>notes/06-train-infer.md</span></div>
 </section>
@@ -75,9 +75,9 @@
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
     <div class="topbar reveal"><span>Next</span><span class="pill">working app</span></div>
-    <h1 class="reveal" style="margin-top:120px;font-size:72px;">Mở app · kéo sensor<br /><em>xem action.</em></h1>
-    <p class="lead reveal" style="margin-top:32px;">Kéo sensor L/M/R rồi xem mạng chọn action — chạy thẳng trong trình duyệt.</p>
-    <a class="app-cta reveal" href="../../demos/car-nn/app/index.html">Mở working app →</a>
+    <h1 class="reveal" style="margin-top:120px;font-size:72px;">Open app · drag sensors<br /><em>see the action.</em></h1>
+    <p class="lead reveal" style="margin-top:32px;">Drag the L/M/R sensor then view the network and select action — run straight in the browser.</p>
+    <a class="app-cta reveal" href="../../demos/car-nn/app/index.html">Open working app →</a>
   </div>
   <div class="foot"><span>05</span><span>demos/car-nn/app</span></div>
 </section>

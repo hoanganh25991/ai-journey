@@ -1,80 +1,86 @@
 # AI Lab — Notes Index
 
-> **Gốc = notes.** Mỗi chủ đề là một file `.md` viết như bài giải thích ngắn. Build ra hub tĩnh trong `docs/` rồi mở/serve từ đó.
+> **Source of truth = English notes.** Each topic is a `.md` file with a short explanation. Build the static hub in `docs/` and open or serve from there. Vietnamese is **not** stored in separate files — the built site translates EN → VI at runtime in the browser.
 
-Build: `./scripts/build.sh` → mở [`../docs/index.html`](../docs/index.html). Review giống GitHub Pages: `./scripts/review.sh`.
+Build: `./scripts/build.sh` → open [`../docs/index.html`](../docs/index.html). Review like GitHub Pages: `./scripts/review.sh`.
 
-Catalog: [`catalog.json`](./catalog.json) — source of truth cho listing (id, title, summary, slides, demo).
+Catalog: [`catalog.json`](./catalog.json) — listing source of truth (id, title, summary, slides, demo).
 
-**Bắt đầu từ đây:** [roadmap.md](./roadmap.md) — bản đồ vui 5 màn đi hết các note.
+**Start here:** open the hub → **Journey** (`docs/journey.html`) — a fun five-stage map. Journey is a **separate presentation**, not a note.
 
-## Ba lớp nội dung
+## Three layers of content (+ journey)
 
-| Lớp | Vai trò | Khi nào đọc |
-|-----|---------|-------------|
-| **Note** (`.md`) | Nơi **đơn giản nhất** để nắm ý chính | luôn bắt đầu ở đây |
-| **Slide** (`slides/<topic>/`) | Trình bày, làm rõ bằng hình + từng bước | khi muốn giảng lại / thuyết trình |
-| **Demo** (`demos/<topic>/app/`) | Thử tay ngay trong browser | khi muốn *cảm* cách nó chạy |
+| Class | Role | When to read |
+|-------|------|--------------|
+| **Note** (`.md`) | Simplest place to get the main idea | always start here |
+| **Journey** (`journey.html`) | Fun map connecting notes by level | want the big picture / pick a route |
+| **Slide** (`slides/<topic>/`) | Present with pictures + step by step | re-lecture / present |
+| **Demo** (`demos/<topic>/app/`) | Try it in the browser | want to *feel* how it runs |
 
-Một note là trung tâm; nó *có thể* trỏ tới một slide và một demo (khai trong `catalog.json`, để `null` nếu chưa có).
+A note is the center; it may link to a slide and a demo (declared in `catalog.json`; use `null` if missing).
 
-## Quy ước viết note
+## Language
 
-Mỗi note theo cùng một khung để dễ đọc và dễ mở rộng:
+- **Author and edit in English** under `notes/`.
+- **VI in the browser:** after `./scripts/build.sh`, use the EN/VI toggle on built pages — translation calls a public web API client-side (same approach as `build-docs.py`, no parallel `-vi.md` files).
 
-1. Tiêu đề + một câu lead (ví dụ đời thường).
-2. **Vì sao quan trọng** — một đoạn ngắn.
-3. **Ý chính** — 3–5 mục, kèm ví dụ nhỏ.
-4. **Hình minh họa** — 1–3 ảnh, mỗi ảnh một caption.
-5. **Trong pipeline** — nối sang note khác.
-6. **Slides & demo** — bảng link.
-7. **Tham khảo** — 1–3 link công khai (tuỳ chọn).
+## Note writing conventions
 
-## Đưa hình / PDF vào note
+Each note follows the same framework:
 
-Ảnh là cách nhanh nhất để làm rõ một ý. Cách đưa lên:
+1. Title + lead sentence (everyday example).
+2. **Why it matters** — short paragraph.
+3. **Key ideas** — 3–5 bullets with small examples.
+4. **Illustrations** — 1–3 images, each with a caption (when applicable).
+5. **Pipeline** — connect to the next note.
+6. **Slides & demo** — link table (when applicable).
+7. **References** — 1–3 public links (optional).
+8. **Related** — links to sibling notes.
+
+## Insert image/PDF into a note
+
+Photos are the fastest way to make an idea clear:
 
 ```
-ảnh chụp / 1 trang PDF  →  notes/assets/<chủ-đề>/ten-file.jpg
-                        →  trong note: ![caption ngắn](assets/<chủ-đề>/ten-file.jpg)
-                        →  ./scripts/build.sh  →  docs/notes/*.html
+screenshot / PDF page  →  notes/assets/<topic>/filename.jpg
+                       →  in note: ![short caption](assets/<topic>/filename.jpg)
+                       →  ./scripts/build.sh  →  docs/notes/*.html
 ```
 
-- Copy ảnh vào `notes/assets/…` rồi tham chiếu bằng đường dẫn **tương đối** `assets/…` — build copy nguyên sang `docs/notes/assets/` nên link chạy đúng ở cả local lẫn GitHub Pages.
-- Ảnh đứng riêng một dòng → tự thành `<figure>` có caption (lấy từ chữ trong `![…]`).
-- **PDF phức tạp:** đừng nhúng cả file. Chụp 1–2 trang then chốt thành ảnh, hoặc để link ngoài; phần cốt lõi thì viết lại bằng lời trong note.
+- Copy the image to `notes/assets/…` and reference it with the **relative** path `assets/…` — build copies assets to `docs/notes/assets/` for local and GitHub Pages.
+- Image on its own line → becomes `<figure>` with caption from `![…]`.
+- **Complex PDF:** do not embed the whole file. Capture 1–2 key pages as images, or link externally; write the core idea in prose in the note.
 
 ## Notes
 
-| Note | Group | Slides | Demo |
-|------|-------|--------|------|
-| [roadmap.md](./roadmap.md) | map | — | — |
-| [tokenize.md](./tokenize.md) | concept | có | có |
-| [embedding.md](./embedding.md) | concept | có | có |
-| [attention.md](./attention.md) | concept | có | có |
-| [softmax.md](./softmax.md) | concept | có | có |
-| [classification.md](./classification.md) | concept | — | — |
-| [pytorch-training.md](./pytorch-training.md) | concept | — | — |
-| [tensorflow-training.md](./tensorflow-training.md) | concept | — | — |
-| [huggingface.md](./huggingface.md) | concept | — | — |
-| [kaggle.md](./kaggle.md) | concept | — | — |
-| [transformer.md](./transformer.md) | concept | — | — |
-| [sentence-transformers.md](./sentence-transformers.md) | concept | — | — |
-| [rag.md](./rag.md) | concept | có | có |
-| [vector-database.md](./vector-database.md) | concept | — | — |
-| [semantic-search.md](./semantic-search.md) | project | — | GitHub |
-| [mcp.md](./mcp.md) | concept | có | có |
-| [skills-rules.md](./skills-rules.md) | concept | — | mcp app |
-| [train-gpu.md](./train-gpu.md) | concept | — | — |
-| [04-demo-car.md](./04-demo-car.md) | project | có | có |
-| [05-demo-text.md](./05-demo-text.md) | project | có | có (+ complexity-router) |
-| [06-train-infer.md](./06-train-infer.md) | concept | — | — |
-| [07-agents.md](./07-agents.md) | concept | — | mcp app |
+| Notes | Group | Slides | Demo |
+|-------|-------|--------|------|
+| [tokenize.md](./tokenize.md) | concepts | yes | yes |
+| [embedding.md](./embedding.md) | concepts | yes | yes |
+| [attention.md](./attention.md) | concepts | yes | yes |
+| [softmax.md](./softmax.md) | concepts | yes | yes |
+| [classification.md](./classification.md) | concepts | — | — |
+| [pytorch-training.md](./pytorch-training.md) | concepts | — | — |
+| [tensorflow-training.md](./tensorflow-training.md) | concepts | — | — |
+| [huggingface.md](./huggingface.md) | concepts | — | — |
+| [kaggle.md](./kaggle.md) | concepts | — | — |
+| [transformer.md](./transformer.md) | concepts | — | — |
+| [sentence-transformers.md](./sentence-transformers.md) | concepts | — | — |
+| [rag.md](./rag.md) | concepts | yes | yes |
+| [vector-database.md](./vector-database.md) | concepts | — | — |
+| [semantic-search.md](./semantic-search.md) | projects | — | GitHub |
+| [mcp.md](./mcp.md) | concepts | yes | yes |
+| [skills-rules.md](./skills-rules.md) | concepts | — | mcp app |
+| [train-gpu.md](./train-gpu.md) | concepts | — | — |
+| [04-demo-car.md](./04-demo-car.md) | projects | yes | yes |
+| [05-demo-text.md](./05-demo-text.md) | projects | yes | yes (+ complexity-router) |
+| [06-train-infer.md](./06-train-infer.md) | concepts | — | — |
+| [07-agents.md](./07-agents.md) | concepts | — | mcp app |
 | [08-model-notes.md](./08-model-notes.md) | field-notes | — | — |
 | [09-agent-automation.md](./09-agent-automation.md) | field-notes | Hermess | — |
 | [10-ai-timeline.md](./10-ai-timeline.md) | field-notes | — | — |
-| [personal-knowledge-base.md](./personal-knowledge-base.md) | project | overview | CLI / plan |
+| [personal-knowledge-base.md](./personal-knowledge-base.md) | projects | overview | CLI / plan |
 
 ## Assets
 
-[`assets/`](./assets/) — hình minh họa dùng trong note & slide. Thêm ảnh mới vào đây theo chủ đề rồi build lại.
+[`assets/`](./assets/) — illustrations for notes and slides. Add new images by topic, then rebuild.

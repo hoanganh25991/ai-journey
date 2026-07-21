@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="vi"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Softmax · App</title>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Sora:wght@400;600;700&display=swap" rel="stylesheet"/>
 <style>
@@ -16,7 +16,7 @@ input[type=range]{width:min(420px,100%);accent-color:var(--cyan)}
 <header><h1>Softmax · app</h1><div><a href="../../../slides/softmax/">Slides</a> · <a href="../../../index.html">Lab UI</a></div></header>
 <div id="sliders"></div>
 <p class="meta" id="sum"></p>
-<p class="meta">σ(zᵢ)=e^{zᵢ}/Σ e^{zⱼ} — tổng luôn ≈ 1. Dùng ở classifier head & attention weights.</p>
+<p class="meta">σ(zᵢ)=e^{zᵢ}/Σ e^{zⱼ} — sum always ≈ 1. Used in classifier head & attention weights.</p>
 <script>
 const names=["neg","neu","pos"];
 const vals=[1,0,0];

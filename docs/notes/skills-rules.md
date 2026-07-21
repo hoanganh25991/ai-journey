@@ -1,58 +1,50 @@
 # Skills · Rules · Commands
 
-> Ba cách "dạy nghề" cho một AI coding agent. **Skill** = năng lực đóng gói agent tự lấy ra khi cần; **Rule** = ràng buộc luôn áp; **Command** = shortcut để kích hoạt một quy trình.
+> Three ways to teach a coding agent. **Skill** = packaged capability loaded when needed; **Rule** = constraint that always applies; **Command** = shortcut to kick off a workflow.
 
-## Vì sao quan trọng
+## Why it matters
 
-Cùng một model, nếu được nạp đúng know-how thì làm việc chuẩn hơn hẳn: biết quy trình của bạn, tuân quy ước dự án, không phải nhắc lại mỗi lần. Ba lớp này là cách "cấu hình bộ não" đó. Hiểu rõ khác biệt giúp đặt đúng thứ vào đúng chỗ — thứ bắt buộc thì thành rule, quy trình phức tạp thì thành skill.
+The same model, loaded with the right know-how, works far better: it knows your process, follows project conventions, and you do not repeat instructions every turn. These three layers are how that "brain gets configured." Put mandatory things in rules, complex processes in skills.
 
-## Ba khái niệm
+## Key ideas
 
-| Lớp | Là gì | Khi nào load | Ví dụ |
-|-----|-------|--------------|-------|
-| **Skill** | 1 folder `SKILL.md` (+ script/asset) mô tả một năng lực | model tự đọc khi task khớp description | `graphify`, `frontend-slides`, `tavily-*` |
-| **Rule** | chỉ dẫn luôn áp hoặc theo pattern file | mỗi turn (always) hoặc khi match glob | commit style, "docs = notes-first" |
-| **Command** | prompt / workflow gọi bằng shortcut | khi user gõ (vd `/deep-plan`) | `/graphify .`, `/loop` |
+- **Three concepts:**
 
-## SKILL.md — cấu trúc
+  | Kind | What | When loaded | Example |
+  |------|------|-------------|---------|
+  | **Skill** | folder with `SKILL.md` (+ scripts/assets) | model reads when task matches description | `graphify`, `frontend-slides`, `tavily-*` |
+  | **Rule** | instructions always on or matched by glob | every turn (always) or on file pattern | commit style, "docs = notes-first" |
+  | **Command** | prompt / workflow via shortcut | user types it (e.g. `/deep-plan`) | `/graphify .`, `/loop` |
 
-```
-~/.agents/skills/<name>/SKILL.md
----
-name: <name>
-description: khi nào dùng skill này  ← model dựa vào đây để tự kích hoạt
----
-# hướng dẫn từng bước + script path
-```
+- **SKILL.md structure:**
 
-- **description** là phần quan trọng nhất: viết rõ trigger ("use when…") để agent tự chọn.
-- Skill có thể kèm script → agent chạy qua shell/MCP.
+  ```
+  ~/.agents/skills/<name>/SKILL.md
+  ---
+  name: <name>
+  description: when to use this skill  ← model uses this to auto-trigger
+  ---
+  # step-by-step guide + script paths
+  ```
 
-## Global home: `~/.agents`
+  The **description** is the most important field: write a clear trigger ("use when…") so the agent picks correctly. Skills can include scripts the agent runs via shell/MCP.
 
-- Canonical: `~/.agents/skills/<name>/SKILL.md`.
-- Cursor / Claude / Pi đều load từ đây → viết một lần, dùng nhiều client.
-- Không copy skill vào `~/.cursor/skills` hay `~/.claude/skills` (để trống); Pi chỉ dùng **symlink** trỏ về `~/.agents`.
-- Cài / khoá version các **skill pack từ GitHub**: `~/.agents/scripts/sync-skill-repos.sh` (alias `skill-lock.sh`) — copy tĩnh bằng rsync, lockfile ở `config/skill-repos.lock.json`. Không dùng `npx skills` cho `~/.agents`.
+- **Global home: `~/.agents`**
+  - Canonical path: `~/.agents/skills/<name>/SKILL.md`.
+  - Cursor / Claude / Pi load from here → write once, use across clients.
+  - Do not copy skills into `~/.cursor/skills` or `~/.claude/skills` (keep empty); Pi uses **symlinks** to `~/.agents` only.
+  - Install GitHub skill packs: `~/.agents/scripts/sync-skill-repos.sh` (alias `skill-lock.sh`) — rsync copy with lockfile at `config/skill-repos.lock.json`. Do not use `npx skills` for `~/.agents`.
 
-## Project-local exception
+- **Project-local exception:** repo-specific skills may live in that repo's `.cursor/skills`. Global skills stay in `~/.agents/skills`.
 
-Skill riêng cho một repo có thể để trong `.cursor/skills` của repo đó. Skill cá nhân/global thì vẫn ở `~/.agents/skills`.
+- **Rules in practice:** "always" rules consume context every turn → keep them short. Glob rules (`*.tsx`, `notes/*.md`) load only on matching files → cheaper. Rules for conventions; skills for complex processes.
 
-## Rules — ghi nhớ thực chiến
+- **Skill interactions:** when adding a skill, consider overlap with existing ones (conflicting triggers or instructions). Anthropic Opus/Sonnet is strong at asking back to clarify interactions.
 
-- Rule "always" tốn context mỗi turn → giữ ngắn, chỉ đưa thứ thật sự bắt buộc.
-- Rule theo glob (`*.tsx`, `notes/*.md`) chỉ nạp khi đụng file khớp → rẻ hơn.
-- Dùng rule cho quy ước bền vững (commit, layout docs), skill cho quy trình phức tạp.
-
-## Liên quan hệ thống
-
-Khi thêm skill mới, cân nhắc nó **ảnh hưởng skill đang có** thế nào (chồng trigger, mâu thuẫn hướng dẫn). Anthropic Opus/Sonnet mạnh ở việc *hỏi ngược* để làm rõ tương tác này.
-
-## Tham khảo
+## References
 
 - [Anthropic — Agent Skills](https://www.anthropic.com/news/skills)
-- [AGENTS.md](https://agents.md/) — chuẩn khai báo hướng dẫn cho agent
+- [AGENTS.md](https://agents.md/) — standard for declaring agent instructions
 
 ## Related
 

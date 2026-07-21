@@ -7,7 +7,7 @@ demos/<id>/
   README.md
 ```
 
-Catalog: [`catalog.json`](./catalog.json) — Unified UI đọc file này.
+Catalog: [`catalog.json`](./catalog.json) — Unified UI reads this file.
 
 ## Concepts
 
@@ -28,7 +28,7 @@ Catalog: [`catalog.json`](./catalog.json) — Unified UI đọc file này.
 | [sentiment](./sentiment/) | `notes/05-demo-text.md` |
 | [complexity-router](./complexity-router/) | `notes/05-demo-text.md` |
 
-Slides dùng ảnh curated từ protonx: `notes/assets/protonx/`.
+Slides use curated images from protonx: `notes/assets/protonx/`.
 
 ```bash
 python3 ui/server.py

@@ -1,28 +1,28 @@
-# Kaggle — dataset + notebook + GPU miễn phí
+# Kaggle — free dataset + notebook + GPU
 
-> Nền tảng học và thi đấu ML: kho **dataset** khổng lồ, **notebook** chạy sẵn có **GPU/TPU miễn phí**, và các **competition** để cọ xát. Tương tự Hugging Face nhưng nghiêng về thực hành và thi đấu.
+> ML learning and competition platform: huge **dataset** library, **notebooks** with free **GPU/TPU**, and **competitions** to practice. Similar to Hugging Face but tilted toward hands-on work and leaderboards.
 
-## Vì sao quan trọng
+## Why it matters
 
-Khi mới học, hai thứ hay thiếu là *dữ liệu tốt* và *máy đủ mạnh*. Kaggle cho cả hai miễn phí: dataset đa dạng và notebook có GPU để train ngay trên trình duyệt. Các competition còn cho leaderboard và lời giải công khai — học từ cách người giỏi làm.
+When learning, two things are often missing: *good data* and *enough compute*. Kaggle offers both for free — diverse datasets and GPU notebooks in the browser. Competitions add leaderboards and public solutions so you can learn from what top performers do.
 
-## Ý chính
+## Key ideas
 
-- **Datasets:** hàng chục nghìn bộ dữ liệu công khai, tải thẳng vào notebook.
-- **Notebooks (Kernels):** môi trường chạy sẵn thư viện, bật GPU/TPU trong settings → train không cần cài gì máy cá nhân.
-- **Competitions:** đề bài thật + metric + leaderboard; nộp dự đoán để chấm điểm. Đọc *public notebooks* để học mẹo.
-- **Giới hạn quota:** GPU miễn phí có hạn giờ/tuần → canh dùng cho lúc train thật.
-- **Kết nối HF:** thường tải dataset ở Kaggle, model pretrained ở [Hugging Face](./huggingface.md), rồi train trên notebook Kaggle.
+- **Datasets:** tens of thousands of public datasets, downloadable straight into a notebook.
+- **Notebooks (Kernels):** built-in libraries; enable GPU/TPU in settings → train without installing anything locally.
+- **Competitions:** real problem + metric + leaderboard; submit predictions for a score. Read *public notebooks* for tips.
+- **Quota limits:** free GPU hours are capped per week — save them for real training runs.
+- **HF connection:** often download data on Kaggle, grab a pretrained model from [Hugging Face](./huggingface.md), then train in a Kaggle notebook.
 
-## Trong pipeline
+## Pipeline
 
 ```
-Kaggle dataset → notebook (bật GPU) → train (epochs) → export model → inference
+Kaggle dataset → notebook (enable GPU) → train (epochs) → export model → inference
 ```
 
-Cùng vai "dữ liệu + nơi chạy GPU" với [huggingface.md](./huggingface.md); tổng quan stack ở [train-gpu.md](./train-gpu.md).
+Same role as "data + GPU runtime" alongside [huggingface.md](./huggingface.md); stack overview at [train-gpu.md](./train-gpu.md).
 
-## Tham khảo
+## References
 
 - [Kaggle Datasets](https://www.kaggle.com/datasets) · [Notebooks](https://www.kaggle.com/code)
 - [Kaggle Learn](https://www.kaggle.com/learn)

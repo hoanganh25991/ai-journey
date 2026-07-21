@@ -1,15 +1,48 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Model field notes · AI Lab</title>
+<script>
+(function () {
+  try {
+    var KEY = "ai-lab-theme";
+    var pref = localStorage.getItem(KEY) || "system";
+    if (pref !== "light" && pref !== "dark" && pref !== "system") pref = "system";
+    var dark = pref === "dark" || (pref === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches);
+    document.documentElement.setAttribute("data-theme", dark ? "dark" : "light");
+    document.documentElement.setAttribute("data-theme-pref", pref);
+  } catch (e) {
+    document.documentElement.setAttribute("data-theme", "light");
+    document.documentElement.setAttribute("data-theme-pref", "system");
+  }
+})();
+</script>
+<script>
+(function () {
+  try {
+    var KEY = "ai-lab-lang";
+    var pref = localStorage.getItem(KEY) || "en";
+    if (pref !== "en" && pref !== "vi" && pref !== "system") pref = "en";
+    var nav = String(navigator.language || "en").toLowerCase();
+    var resolved = pref === "system" ? (nav.indexOf("vi") === 0 ? "vi" : "en") : pref;
+    document.documentElement.setAttribute("data-lang-pref", pref);
+    document.documentElement.setAttribute("data-lang", resolved);
+    document.documentElement.lang = resolved;
+  } catch (e) {
+    document.documentElement.setAttribute("data-lang-pref", "en");
+    document.documentElement.setAttribute("data-lang", "en");
+    document.documentElement.lang = "en";
+  }
+})();
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet" />
 <style>
 
-:root {
+:root, [data-theme="light"] {
   --bg: #eef3f9; --surface: #ffffff; --ink: #16202e; --muted: #5a6b80;
   --teal: #0f8a9b; --teal-soft: rgba(15,138,155,.12); --amber: #c2703a;
   --line: rgba(20,32,46,.12); --line-soft: rgba(20,32,46,.07);
@@ -18,14 +51,12 @@
   --font: Sora, system-ui, sans-serif; --serif: "Instrument Serif", Georgia, serif;
   --mono: "IBM Plex Mono", ui-monospace, monospace;
 }
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #0d1520; --surface: #152033; --ink: #e8eef6; --muted: #8b9bb0;
-    --teal: #3db8c9; --teal-soft: rgba(61,184,201,.16); --amber: #d4894a;
-    --line: rgba(232,238,246,.12); --line-soft: rgba(232,238,246,.07);
-    --shadow: 0 1px 2px rgba(0,0,0,.25), 0 8px 24px rgba(0,0,0,.35);
-    --glow-teal: rgba(61,184,201,.12); --glow-amber: rgba(212,137,74,.10);
-  }
+[data-theme="dark"] {
+  --bg: #0d1520; --surface: #152033; --ink: #e8eef6; --muted: #8b9bb0;
+  --teal: #3db8c9; --teal-soft: rgba(61,184,201,.16); --amber: #d4894a;
+  --line: rgba(232,238,246,.12); --line-soft: rgba(232,238,246,.07);
+  --shadow: 0 1px 2px rgba(0,0,0,.25), 0 8px 24px rgba(0,0,0,.35);
+  --glow-teal: rgba(61,184,201,.12); --glow-amber: rgba(212,137,74,.10);
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
@@ -38,8 +69,39 @@ body {
 }
 a { color: var(--teal); }
 ::selection { background: var(--teal-soft); }
+.logo-dark { display: none; }
+[data-theme="dark"] .logo-light { display: none; }
+[data-theme="dark"] .logo-dark { display: block; }
+.theme-bar {
+  display: inline-flex; gap: 2px; padding: 3px;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 999px;
+  box-shadow: var(--shadow);
+}
+.theme-bar button {
+  appearance: none; border: 0; background: transparent; color: var(--muted);
+  font: 500 11px var(--mono); letter-spacing: .04em; text-transform: uppercase;
+  padding: 7px 11px; border-radius: 999px; cursor: pointer; transition: all .15s;
+}
+.theme-bar button:hover { color: var(--teal); }
+.theme-bar button.on { background: var(--teal); color: #fff; }
+.prefs { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.lang-bar {
+  display: inline-flex; gap: 2px; padding: 3px;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 999px;
+  box-shadow: var(--shadow);
+}
+.lang-bar button {
+  appearance: none; border: 0; background: transparent; color: var(--muted);
+  font: 500 11px var(--mono); letter-spacing: .04em; text-transform: uppercase;
+  padding: 7px 11px; border-radius: 999px; cursor: pointer; transition: all .15s;
+}
+.lang-bar button:hover { color: var(--teal); }
+.lang-bar button.on { background: var(--teal); color: #fff; }
+html.i18n-busy { cursor: progress; }
+html.i18n-busy .lang-bar { opacity: .7; pointer-events: none; }
 
 .wrap { max-width: 960px; margin: 0 auto; padding: 32px 22px 96px; }
+.nav-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
 .back { display: inline-flex; align-items: center; gap: 7px; text-decoration: none; color: var(--muted); font: 500 13px var(--mono); }
 .back:hover { color: var(--teal); }
 .doc {
@@ -71,7 +133,7 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 .body h1 { font-size: 24px; margin: 1.2em 0 .5em; }
 .body h2 { font-size: 19px; margin: 1.4em 0 .5em; letter-spacing: -.01em; }
 .body h3 { font-size: 16px; margin: 1.2em 0 .4em; }
-.body p, .body li { color: #2b3a4d; line-height: 1.65; font-size: 15px; }
+.body p, .body li { color: var(--ink); line-height: 1.65; font-size: 15px; opacity: .92; }
 .body ul { padding-left: 1.25em; margin: .5em 0 1em; }
 .body li { margin: .25em 0; }
 .body a { color: var(--teal); text-decoration: none; border-bottom: 1px solid var(--teal-soft); }
@@ -81,7 +143,7 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 .body pre code { color: #dbe6f2; background: none; padding: 0; font-size: 12.5px; line-height: 1.6; }
 .body blockquote { border-left: 3px solid var(--teal); background: var(--teal-soft); padding: 10px 16px; margin: 14px 0; border-radius: 0 8px 8px 0; color: var(--ink); }
 .body table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 13.5px; }
-.body th, .body td { border: 1px solid var(--line); padding: 9px 11px; text-align: left; color: #2b3a4d; }
+.body th, .body td { border: 1px solid var(--line); padding: 9px 11px; text-align: left; color: var(--ink); }
 .body th { color: var(--teal); font: 500 11px var(--mono); letter-spacing: .05em; text-transform: uppercase; background: var(--teal-soft); }
 .body figure { margin: 20px 0; }
 .body figure img { width: 100%; height: auto; display: block; border-radius: 12px; border: 1px solid var(--line); background: #e6edf5; }
@@ -91,10 +153,188 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 </head>
 <body>
 <div class="wrap">
-  <a class="back" href="../index.html">
-    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m15 18-6-6 6-6"/></svg>
-    AI Lab
-  </a>
+  <div class="nav-row">
+    <a class="back" href="../index.html">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m15 18-6-6 6-6"/></svg>
+      AI Lab
+    </a>
+    <div class="prefs" translate="no">
+  <div class="theme-bar" role="group" aria-label="Theme">
+    <button type="button" data-theme-set="light">Light</button>
+    <button type="button" data-theme-set="system">System</button>
+    <button type="button" data-theme-set="dark">Dark</button>
+  </div>
+  <div class="lang-bar" role="group" aria-label="Language">
+    <button type="button" data-lang-set="en">EN</button>
+    <button type="button" data-lang-set="system">System</button>
+    <button type="button" data-lang-set="vi">VI</button>
+  </div>
+</div>
+<script>
+(function () {
+  var KEY = "ai-lab-theme";
+  function resolve(pref) {
+    if (pref === "light" || pref === "dark") return pref;
+    return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  }
+  function apply(pref) {
+    if (pref !== "light" && pref !== "dark" && pref !== "system") pref = "system";
+    var resolved = resolve(pref);
+    document.documentElement.setAttribute("data-theme", resolved);
+    document.documentElement.setAttribute("data-theme-pref", pref);
+    try { localStorage.setItem(KEY, pref); } catch (e) {}
+    document.querySelectorAll("[data-theme-set]").forEach(function (btn) {
+      btn.classList.toggle("on", btn.getAttribute("data-theme-set") === pref);
+    });
+  }
+  var pref = document.documentElement.getAttribute("data-theme-pref") || "system";
+  apply(pref);
+  document.querySelectorAll("[data-theme-set]").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      apply(btn.getAttribute("data-theme-set"));
+    });
+  });
+  try {
+    window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", function () {
+      var p = document.documentElement.getAttribute("data-theme-pref") || "system";
+      if (p === "system") apply("system");
+    });
+  } catch (e) {}
+})();
+</script>
+
+<script>
+(function () {
+  var KEY = "ai-lab-lang";
+  var CACHE_KEY = "ai-lab-i18n-en-vi";
+  var SKIP = /^(SCRIPT|STYLE|NOSCRIPT|CODE|PRE|KBD|SAMP|TEXTAREA|SVG|MATH)$/;
+  var cache = {};
+  try { cache = JSON.parse(localStorage.getItem(CACHE_KEY) || "{}") || {}; } catch (e) { cache = {}; }
+
+  function resolve(pref) {
+    if (pref === "en" || pref === "vi") return pref;
+    var nav = String(navigator.language || "en").toLowerCase();
+    return nav.indexOf("vi") === 0 ? "vi" : "en";
+  }
+
+  function saveCache() {
+    try { localStorage.setItem(CACHE_KEY, JSON.stringify(cache)); } catch (e) {}
+  }
+
+  async function translateOne(text) {
+    if (!text || !text.trim()) return text;
+    if (cache[text]) return cache[text];
+    // Google gtx web endpoint (no API key). Fallback: MyMemory.
+    var q = encodeURIComponent(text);
+    try {
+      var url = "https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=vi&dt=t&q=" + q;
+      var res = await fetch(url);
+      if (res.ok) {
+        var data = await res.json();
+        var out = (data[0] || []).map(function (row) { return row[0] || ""; }).join("");
+        if (out) { cache[text] = out; return out; }
+      }
+    } catch (e) {}
+    try {
+      var url2 = "https://api.mymemory.translated.net/get?langpair=en|vi&q=" + q;
+      var res2 = await fetch(url2);
+      if (res2.ok) {
+        var data2 = await res2.json();
+        var out2 = data2 && data2.responseData && data2.responseData.translatedText;
+        if (out2 && out2.indexOf("MYMEMORY WARNING") === -1) {
+          cache[text] = out2;
+          return out2;
+        }
+      }
+    } catch (e2) {}
+    return text;
+  }
+
+  function collectNodes(root) {
+    var out = [];
+    var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+      acceptNode: function (node) {
+        if (!node.nodeValue || !node.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+        var el = node.parentElement;
+        if (!el) return NodeFilter.FILTER_REJECT;
+        if (el.closest("[translate=no], .notranslate, .theme-bar, .lang-bar, .prefs, code, pre, kbd, samp")) {
+          return NodeFilter.FILTER_REJECT;
+        }
+        if (SKIP.test(el.tagName)) return NodeFilter.FILTER_REJECT;
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    });
+    while (walker.nextNode()) out.push(walker.currentNode);
+    return out;
+  }
+
+  async function mapPool(items, limit, fn) {
+    var i = 0;
+    var workers = [];
+    async function worker() {
+      while (i < items.length) {
+        var idx = i++;
+        items[idx].result = await fn(items[idx].src);
+      }
+    }
+    for (var w = 0; w < Math.min(limit, items.length); w++) workers.push(worker());
+    await Promise.all(workers);
+  }
+
+  async function applyLang(pref) {
+    if (pref !== "en" && pref !== "vi" && pref !== "system") pref = "en";
+    var resolved = resolve(pref);
+    document.documentElement.setAttribute("data-lang-pref", pref);
+    document.documentElement.setAttribute("data-lang", resolved);
+    document.documentElement.lang = resolved;
+    try { localStorage.setItem(KEY, pref); } catch (e) {}
+    document.querySelectorAll("[data-lang-set]").forEach(function (btn) {
+      btn.classList.toggle("on", btn.getAttribute("data-lang-set") === pref);
+    });
+
+    var nodes = collectNodes(document.body);
+    nodes.forEach(function (node) {
+      if (node._i18nEn == null) node._i18nEn = node.nodeValue;
+    });
+
+    if (resolved === "en") {
+      nodes.forEach(function (node) {
+        if (node._i18nEn != null) node.nodeValue = node._i18nEn;
+      });
+      return;
+    }
+
+    document.documentElement.classList.add("i18n-busy");
+    try {
+      var jobs = nodes.map(function (node) {
+        return { node: node, src: node._i18nEn };
+      });
+      await mapPool(jobs, 4, translateOne);
+      jobs.forEach(function (job) {
+        job.node.nodeValue = job.result;
+      });
+      saveCache();
+    } finally {
+      document.documentElement.classList.remove("i18n-busy");
+    }
+  }
+
+  var pref = document.documentElement.getAttribute("data-lang-pref") || "en";
+  document.querySelectorAll("[data-lang-set]").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      applyLang(btn.getAttribute("data-lang-set"));
+    });
+  });
+  // Defer first translate so DOM is ready
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", function () { applyLang(pref); });
+  } else {
+    applyLang(pref);
+  }
+})();
+</script>
+
+  </div>
   <article class="doc">
     <h1>Model field notes</h1>
     <p class="summary">Model ≠ harness: Grok 4.5, Composer, Anthropic, DeepSeek, Qwen, Kimi/GLM.</p>
@@ -103,40 +343,37 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
     <div class="topics"><span>#grok</span><span>#openrouter</span><span>#deepseek</span><span>#anthropic</span><span>#composer</span><span>#cursor</span></div>
     <hr class="sep" />
     <div class="body"><h1>Model field notes</h1>
-<blockquote><strong>Model ≠ harness.</strong> Đây là cảm nhận về <em>bản thân mô hình</em> (qua OpenRouter + Cursor). So sánh harness ở <a href="agents.html">07-agents.md</a>.</blockquote>
-<h2>Bảng nhanh (kinh nghiệm cá nhân)</h2>
-<table><tbody>
-<tr><th>Model / Mode</th><th>Mạnh</th><th>Yếu / chi phí</th></tr>
-<tr><td><strong>Grok 4.5</strong></td><td>Nhanh, mượt, cảm giác rất tốt; chất lượng cao; đốt ít tiền</td><td>Không dẫn đầu mọi benchmark; hallucination cao hơn ở task không verify được</td></tr>
-<tr><td><strong>Composer 2.5 Fast</strong></td><td>Rất nhanh, trả lời tốt</td><td>Tốn tiền hơn Auto</td></tr>
-<tr><td><strong>Cursor Auto</strong></td><td>Feedback loop nhanh</td><td>Chất lượng dao động theo routing</td></tr>
-<tr><td><strong>Anthropic Opus / Sonnet / Fable</strong></td><td>Hỏi ngược làm rõ context &amp; skill cực tốt; tương tác chắc</td><td>Chậm; có session limit</td></tr>
-<tr><td><strong>DeepSeek V4</strong></td><td>Debug / fix lỗi tốt</td><td>Không nhận ảnh; yếu khi code mới (greenfield)</td></tr>
-<tr><td><strong>Qwen 3</strong></td><td>Task đơn giản</td><td>Yếu ở complex follow / mô tả dự án lớn không có codebase</td></tr>
-<tr><td><strong>Kimi / GLM</strong></td><td>Code tốt</td><td>Đắt</td></tr>
-</tbody></table>
-<h2>Grok 4.5 — vì sao ấn tượng</h2>
-<p>Trải nghiệm: <strong>nhanh, mượt, thật sự rất tốt</strong> — đặc biệt khi để làm default trong Cursor thì tiền không bị đốt nhiều mà chất lượng còn <em>tốt hơn Auto</em>.</p>
-<p>Context công khai (xAI, 2026-07) khớp cảm nhận:</p>
+<blockquote><strong>Model ≠ harness.</strong> Notes on <em>the models themselves</em> (via OpenRouter + Cursor). Compare harnesses at <a href="agents.html">07-agents.md</a>.</blockquote>
+<h2>Why it matters</h2>
+<p>Harness choice shapes daily workflow; model choice shapes reasoning quality, speed, and cost. These are personal field notes — not benchmarks — on what each model feels like in real coding work.</p>
+<h2>Key ideas</h2>
 <ul>
-<li>Tối ưu cho coding + agentic, phục vụ ở tốc độ ~<strong>80 TPS</strong> (fast-model).</li>
-<li><strong>Token efficiency</strong>: dùng ~4.2× ít output token hơn Opus 4.8 trên SWE-Bench Pro → <em>rẻ hơn nhiều mỗi task</em> (giá $2 in / $6 out /1M).</li>
-<li>Benchmark ngang tầm Opus 4.8 / GPT-5.5 ở nhiều eval coding (mạnh Terminal-Bench 2.1), không dẫn đầu tuyệt đối; được train cùng Cursor.</li>
-<li>Điểm mạnh chính = <strong>intelligence trên mỗi đơn vị thời gian &amp; chi phí</strong>, hợp task verify được bằng máy.</li>
+<li><strong>Quick table (personal experience):</strong></li>
 </ul>
-<p>→ Đây chính là lý do "chạy tốt hơn Auto mà đốt ít tiền": tốc độ cao + ít token.</p>
-<h2>Nguyên tắc rút ra</h2>
+<p>  | Model / mode | Strong | Weak / cost |</p>
+<p>  |--------------|--------|-------------|</p>
+<p>  | <strong>Grok 4.5</strong> | fast, smooth, high quality; moderate spend | not top on every benchmark; more hallucination on unverifiable tasks |</p>
+<p>  | <strong>Composer 2.5 Fast</strong> | very fast, good replies | costs more than Auto |</p>
+<p>  | <strong>Cursor Auto</strong> | fast feedback loop | quality varies with routing |</p>
+<p>  | <strong>Anthropic Opus / Sonnet / Fable</strong> | best at clarifying context and skills; reliable interaction | slow; session limits |</p>
+<p>  | <strong>DeepSeek V4</strong> | strong debug / fix on existing code | no images; weaker on greenfield |</p>
+<p>  | <strong>Qwen 3</strong> | simple tasks | weak on complex following / describing large projects without codebase |</p>
+<p>  | <strong>Kimi / GLM</strong> | good code | expensive |</p>
 <ul>
-<li><strong>Greenfield</strong> (dự án mới, ít codebase): ưu tiên model mạnh reasoning (Anthropic, Grok) hơn DeepSeek/Qwen.</li>
-<li><strong>Debug / fix trên codebase có sẵn</strong>: DeepSeek V4 rất hiệu quả, rẻ.</li>
-<li><strong>Cần ảnh (screenshot, diagram)</strong>: tránh DeepSeek (không nhận ảnh).</li>
-<li><strong>Cần tốc độ + chi phí thấp</strong>: Grok 4.5 / Composer Fast.</li>
-<li><strong>Cần làm rõ ràng buộc, thiết kế skill</strong>: Anthropic mạnh nhất ở hỏi ngược.</li>
+<li><strong>Grok 4.5 — why it impresses:</strong> fast, smooth, genuinely good — especially as Cursor default; does not burn much budget yet often beats Auto. Public context (xAI, mid-2026): optimized for coding + agentic at ~<strong>80 TPS</strong>; ~<strong>4.2× fewer output tokens</strong> than Opus 4.8 on SWE-Bench Pro → much cheaper per task ($2 in / $6 out per 1M). Benchmarks competitive with Opus 4.8 / GPT-5.5 on many coding evals; trained with Cursor. Main edge = <strong>intelligence per unit time and cost</strong> on verifiable tasks.</li>
 </ul>
-<h2>Tham khảo</h2>
 <ul>
-<li><a href="https://openrouter.ai/models">OpenRouter — models &amp; giá</a></li>
-<li><a href="https://lmarena.ai/">LMArena leaderboard</a> — xếp hạng theo bình chọn</li>
+<li><strong>Principles:</strong></li>
+</ul>
+<p>  - <em>Greenfield</em> (new project, thin codebase): favor strong reasoning (Anthropic, Grok) over DeepSeek/Qwen.</p>
+<p>  - <em>Debug / fix on existing code:</em> DeepSeek V4 is effective and cheap.</p>
+<p>  - <em>Needs images (screenshots, diagrams):</em> avoid DeepSeek (no image input).</p>
+<p>  - <em>Speed + low cost:</em> Grok 4.5 / Composer Fast.</p>
+<p>  - <em>Clarifying constraints and skill design:</em> Anthropic strongest at asking back.</p>
+<h2>References</h2>
+<ul>
+<li><a href="https://openrouter.ai/models">OpenRouter — models &amp; prices</a></li>
+<li><a href="https://lmarena.ai/">LMArena leaderboard</a> — ranked by human votes</li>
 </ul>
 <h2>Related</h2>
 <ul>

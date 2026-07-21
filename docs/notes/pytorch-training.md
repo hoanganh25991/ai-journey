@@ -1,12 +1,21 @@
-# Train với PyTorch
+# Train with PyTorch
 
-> Một bài "chạy thật": dùng PyTorch để train một classifier — vòng lặp epoch, tính loss, backprop, cập nhật trọng số cho tới khi model đủ tốt.
+> A hands-on lesson: use PyTorch to train a classifier — epoch loop, compute loss, backprop, update weights until the model is good enough.
 
-## Vì sao quan trọng
+## Why it matters
 
-PyTorch là framework linh hoạt và phổ biến nhất để tự tay dựng và train model. Hiểu vòng lặp training trong PyTorch là hiểu *cơ chế học* thật sự diễn ra thế nào — thứ mà mọi thư viện cấp cao ([Hugging Face](./huggingface.md), sentence-transformers) đều gói lại bên dưới.
+PyTorch is the most popular flexible framework for building and training models yourself. Understanding its training loop means understanding how learning actually happens — the same mechanism every high-level library ([Hugging Face](./huggingface.md), sentence-transformers) wraps underneath.
 
-## Vòng lặp training (khung xương)
+## Key ideas
+
+- **Epoch vs batch:** an *epoch* is one pass over all data; a *batch* is a small chunk processed per step. Many epochs let the model learn gradually.
+- **Four steps per batch:** forward → loss → `backward()` (gradients) → `step()` (weight update). Call `zero_grad()` so gradients do not accumulate.
+- **Optimizer and learning rate:** Adam/SGD decides how far to move each step; learning rate too high → unstable jumps, too low → slow learning.
+- **Train/val split:** track validation loss to catch *overfitting* (memorizes training data, fails on new data).
+- **GPU:** `.to("cuda")` for model and batch → much faster training; see [train-gpu.md](./train-gpu.md).
+- **When done, save:** `torch.save(model.state_dict())` → checkpoint for [inference](./06-train-infer.md).
+
+Training loop (skeleton):
 
 ```python
 model = MyClassifier()
@@ -14,32 +23,23 @@ opt = torch.optim.Adam(model.parameters(), lr=1e-3)
 loss_fn = nn.CrossEntropyLoss()
 
 for epoch in range(EPOCHS):
-    for x, y in dataloader:          # từng batch
-        opt.zero_grad()              # xóa gradient cũ
+    for x, y in dataloader:          # each batch
+        opt.zero_grad()              # clear old gradients
         logits = model(x)            # forward
-        loss = loss_fn(logits, y)    # so với đáp án
-        loss.backward()              # backprop: tính gradient
-        opt.step()                   # cập nhật trọng số
+        loss = loss_fn(logits, y)    # compare to labels
+        loss.backward()              # backprop: compute gradients
+        opt.step()                   # update weights
 ```
 
-## Ý chính
-
-- **Epoch vs batch:** *epoch* = một lần đi hết dữ liệu; *batch* = một nhóm nhỏ xử lý mỗi bước. Nhiều epoch để model học dần.
-- **4 bước lặp lại:** forward → loss → `backward()` (gradient) → `step()` (cập nhật). Nhớ `zero_grad()` để gradient không cộng dồn.
-- **Optimizer & learning rate:** Adam/SGD quyết định *đi bao xa* mỗi bước; lr quá lớn → nhảy loạn, quá nhỏ → học chậm.
-- **Train/val split:** theo dõi loss trên tập validation để phát hiện *overfitting* (thuộc lòng train, kém trên dữ liệu mới).
-- **GPU:** `.to("cuda")` cho model và batch → train nhanh hơn nhiều; xem [train-gpu.md](./train-gpu.md).
-- **Xong thì lưu:** `torch.save(model.state_dict())` → checkpoint để [inference](./06-train-infer.md).
-
-## Trong pipeline
+## Pipeline
 
 ```
-dataset → DataLoader → [vòng lặp epoch: forward → loss → backward → step] → checkpoint
+dataset → DataLoader → [epoch loop: forward → loss → backward → step] → checkpoint
 ```
 
-Đây là cách hiện thực việc train cho [classification.md](./classification.md); phiên bản TensorFlow ở [tensorflow-training.md](./tensorflow-training.md).
+This is how to implement training for [classification.md](./classification.md); the TensorFlow version is at [tensorflow-training.md](./tensorflow-training.md).
 
-## Tham khảo
+## References
 
 - [PyTorch — Training a classifier](https://pytorch.org/tutorials/beginner/blitz/cifar10_tutorial.html)
 - [torch.optim](https://pytorch.org/docs/stable/optim.html)

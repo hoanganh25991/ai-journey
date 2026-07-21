@@ -1,15 +1,48 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>RAG · AI Lab</title>
+<script>
+(function () {
+  try {
+    var KEY = "ai-lab-theme";
+    var pref = localStorage.getItem(KEY) || "system";
+    if (pref !== "light" && pref !== "dark" && pref !== "system") pref = "system";
+    var dark = pref === "dark" || (pref === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches);
+    document.documentElement.setAttribute("data-theme", dark ? "dark" : "light");
+    document.documentElement.setAttribute("data-theme-pref", pref);
+  } catch (e) {
+    document.documentElement.setAttribute("data-theme", "light");
+    document.documentElement.setAttribute("data-theme-pref", "system");
+  }
+})();
+</script>
+<script>
+(function () {
+  try {
+    var KEY = "ai-lab-lang";
+    var pref = localStorage.getItem(KEY) || "en";
+    if (pref !== "en" && pref !== "vi" && pref !== "system") pref = "en";
+    var nav = String(navigator.language || "en").toLowerCase();
+    var resolved = pref === "system" ? (nav.indexOf("vi") === 0 ? "vi" : "en") : pref;
+    document.documentElement.setAttribute("data-lang-pref", pref);
+    document.documentElement.setAttribute("data-lang", resolved);
+    document.documentElement.lang = resolved;
+  } catch (e) {
+    document.documentElement.setAttribute("data-lang-pref", "en");
+    document.documentElement.setAttribute("data-lang", "en");
+    document.documentElement.lang = "en";
+  }
+})();
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet" />
 <style>
 
-:root {
+:root, [data-theme="light"] {
   --bg: #eef3f9; --surface: #ffffff; --ink: #16202e; --muted: #5a6b80;
   --teal: #0f8a9b; --teal-soft: rgba(15,138,155,.12); --amber: #c2703a;
   --line: rgba(20,32,46,.12); --line-soft: rgba(20,32,46,.07);
@@ -18,14 +51,12 @@
   --font: Sora, system-ui, sans-serif; --serif: "Instrument Serif", Georgia, serif;
   --mono: "IBM Plex Mono", ui-monospace, monospace;
 }
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #0d1520; --surface: #152033; --ink: #e8eef6; --muted: #8b9bb0;
-    --teal: #3db8c9; --teal-soft: rgba(61,184,201,.16); --amber: #d4894a;
-    --line: rgba(232,238,246,.12); --line-soft: rgba(232,238,246,.07);
-    --shadow: 0 1px 2px rgba(0,0,0,.25), 0 8px 24px rgba(0,0,0,.35);
-    --glow-teal: rgba(61,184,201,.12); --glow-amber: rgba(212,137,74,.10);
-  }
+[data-theme="dark"] {
+  --bg: #0d1520; --surface: #152033; --ink: #e8eef6; --muted: #8b9bb0;
+  --teal: #3db8c9; --teal-soft: rgba(61,184,201,.16); --amber: #d4894a;
+  --line: rgba(232,238,246,.12); --line-soft: rgba(232,238,246,.07);
+  --shadow: 0 1px 2px rgba(0,0,0,.25), 0 8px 24px rgba(0,0,0,.35);
+  --glow-teal: rgba(61,184,201,.12); --glow-amber: rgba(212,137,74,.10);
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
@@ -38,8 +69,39 @@ body {
 }
 a { color: var(--teal); }
 ::selection { background: var(--teal-soft); }
+.logo-dark { display: none; }
+[data-theme="dark"] .logo-light { display: none; }
+[data-theme="dark"] .logo-dark { display: block; }
+.theme-bar {
+  display: inline-flex; gap: 2px; padding: 3px;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 999px;
+  box-shadow: var(--shadow);
+}
+.theme-bar button {
+  appearance: none; border: 0; background: transparent; color: var(--muted);
+  font: 500 11px var(--mono); letter-spacing: .04em; text-transform: uppercase;
+  padding: 7px 11px; border-radius: 999px; cursor: pointer; transition: all .15s;
+}
+.theme-bar button:hover { color: var(--teal); }
+.theme-bar button.on { background: var(--teal); color: #fff; }
+.prefs { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.lang-bar {
+  display: inline-flex; gap: 2px; padding: 3px;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 999px;
+  box-shadow: var(--shadow);
+}
+.lang-bar button {
+  appearance: none; border: 0; background: transparent; color: var(--muted);
+  font: 500 11px var(--mono); letter-spacing: .04em; text-transform: uppercase;
+  padding: 7px 11px; border-radius: 999px; cursor: pointer; transition: all .15s;
+}
+.lang-bar button:hover { color: var(--teal); }
+.lang-bar button.on { background: var(--teal); color: #fff; }
+html.i18n-busy { cursor: progress; }
+html.i18n-busy .lang-bar { opacity: .7; pointer-events: none; }
 
 .wrap { max-width: 960px; margin: 0 auto; padding: 32px 22px 96px; }
+.nav-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
 .back { display: inline-flex; align-items: center; gap: 7px; text-decoration: none; color: var(--muted); font: 500 13px var(--mono); }
 .back:hover { color: var(--teal); }
 .doc {
@@ -71,7 +133,7 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 .body h1 { font-size: 24px; margin: 1.2em 0 .5em; }
 .body h2 { font-size: 19px; margin: 1.4em 0 .5em; letter-spacing: -.01em; }
 .body h3 { font-size: 16px; margin: 1.2em 0 .4em; }
-.body p, .body li { color: #2b3a4d; line-height: 1.65; font-size: 15px; }
+.body p, .body li { color: var(--ink); line-height: 1.65; font-size: 15px; opacity: .92; }
 .body ul { padding-left: 1.25em; margin: .5em 0 1em; }
 .body li { margin: .25em 0; }
 .body a { color: var(--teal); text-decoration: none; border-bottom: 1px solid var(--teal-soft); }
@@ -81,7 +143,7 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 .body pre code { color: #dbe6f2; background: none; padding: 0; font-size: 12.5px; line-height: 1.6; }
 .body blockquote { border-left: 3px solid var(--teal); background: var(--teal-soft); padding: 10px 16px; margin: 14px 0; border-radius: 0 8px 8px 0; color: var(--ink); }
 .body table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 13.5px; }
-.body th, .body td { border: 1px solid var(--line); padding: 9px 11px; text-align: left; color: #2b3a4d; }
+.body th, .body td { border: 1px solid var(--line); padding: 9px 11px; text-align: left; color: var(--ink); }
 .body th { color: var(--teal); font: 500 11px var(--mono); letter-spacing: .05em; text-transform: uppercase; background: var(--teal-soft); }
 .body figure { margin: 20px 0; }
 .body figure img { width: 100%; height: auto; display: block; border-radius: 12px; border: 1px solid var(--line); background: #e6edf5; }
@@ -91,13 +153,191 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 </head>
 <body>
 <div class="wrap">
-  <a class="back" href="../index.html">
-    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m15 18-6-6 6-6"/></svg>
-    AI Lab
-  </a>
+  <div class="nav-row">
+    <a class="back" href="../index.html">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m15 18-6-6 6-6"/></svg>
+      AI Lab
+    </a>
+    <div class="prefs" translate="no">
+  <div class="theme-bar" role="group" aria-label="Theme">
+    <button type="button" data-theme-set="light">Light</button>
+    <button type="button" data-theme-set="system">System</button>
+    <button type="button" data-theme-set="dark">Dark</button>
+  </div>
+  <div class="lang-bar" role="group" aria-label="Language">
+    <button type="button" data-lang-set="en">EN</button>
+    <button type="button" data-lang-set="system">System</button>
+    <button type="button" data-lang-set="vi">VI</button>
+  </div>
+</div>
+<script>
+(function () {
+  var KEY = "ai-lab-theme";
+  function resolve(pref) {
+    if (pref === "light" || pref === "dark") return pref;
+    return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  }
+  function apply(pref) {
+    if (pref !== "light" && pref !== "dark" && pref !== "system") pref = "system";
+    var resolved = resolve(pref);
+    document.documentElement.setAttribute("data-theme", resolved);
+    document.documentElement.setAttribute("data-theme-pref", pref);
+    try { localStorage.setItem(KEY, pref); } catch (e) {}
+    document.querySelectorAll("[data-theme-set]").forEach(function (btn) {
+      btn.classList.toggle("on", btn.getAttribute("data-theme-set") === pref);
+    });
+  }
+  var pref = document.documentElement.getAttribute("data-theme-pref") || "system";
+  apply(pref);
+  document.querySelectorAll("[data-theme-set]").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      apply(btn.getAttribute("data-theme-set"));
+    });
+  });
+  try {
+    window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", function () {
+      var p = document.documentElement.getAttribute("data-theme-pref") || "system";
+      if (p === "system") apply("system");
+    });
+  } catch (e) {}
+})();
+</script>
+
+<script>
+(function () {
+  var KEY = "ai-lab-lang";
+  var CACHE_KEY = "ai-lab-i18n-en-vi";
+  var SKIP = /^(SCRIPT|STYLE|NOSCRIPT|CODE|PRE|KBD|SAMP|TEXTAREA|SVG|MATH)$/;
+  var cache = {};
+  try { cache = JSON.parse(localStorage.getItem(CACHE_KEY) || "{}") || {}; } catch (e) { cache = {}; }
+
+  function resolve(pref) {
+    if (pref === "en" || pref === "vi") return pref;
+    var nav = String(navigator.language || "en").toLowerCase();
+    return nav.indexOf("vi") === 0 ? "vi" : "en";
+  }
+
+  function saveCache() {
+    try { localStorage.setItem(CACHE_KEY, JSON.stringify(cache)); } catch (e) {}
+  }
+
+  async function translateOne(text) {
+    if (!text || !text.trim()) return text;
+    if (cache[text]) return cache[text];
+    // Google gtx web endpoint (no API key). Fallback: MyMemory.
+    var q = encodeURIComponent(text);
+    try {
+      var url = "https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=vi&dt=t&q=" + q;
+      var res = await fetch(url);
+      if (res.ok) {
+        var data = await res.json();
+        var out = (data[0] || []).map(function (row) { return row[0] || ""; }).join("");
+        if (out) { cache[text] = out; return out; }
+      }
+    } catch (e) {}
+    try {
+      var url2 = "https://api.mymemory.translated.net/get?langpair=en|vi&q=" + q;
+      var res2 = await fetch(url2);
+      if (res2.ok) {
+        var data2 = await res2.json();
+        var out2 = data2 && data2.responseData && data2.responseData.translatedText;
+        if (out2 && out2.indexOf("MYMEMORY WARNING") === -1) {
+          cache[text] = out2;
+          return out2;
+        }
+      }
+    } catch (e2) {}
+    return text;
+  }
+
+  function collectNodes(root) {
+    var out = [];
+    var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+      acceptNode: function (node) {
+        if (!node.nodeValue || !node.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+        var el = node.parentElement;
+        if (!el) return NodeFilter.FILTER_REJECT;
+        if (el.closest("[translate=no], .notranslate, .theme-bar, .lang-bar, .prefs, code, pre, kbd, samp")) {
+          return NodeFilter.FILTER_REJECT;
+        }
+        if (SKIP.test(el.tagName)) return NodeFilter.FILTER_REJECT;
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    });
+    while (walker.nextNode()) out.push(walker.currentNode);
+    return out;
+  }
+
+  async function mapPool(items, limit, fn) {
+    var i = 0;
+    var workers = [];
+    async function worker() {
+      while (i < items.length) {
+        var idx = i++;
+        items[idx].result = await fn(items[idx].src);
+      }
+    }
+    for (var w = 0; w < Math.min(limit, items.length); w++) workers.push(worker());
+    await Promise.all(workers);
+  }
+
+  async function applyLang(pref) {
+    if (pref !== "en" && pref !== "vi" && pref !== "system") pref = "en";
+    var resolved = resolve(pref);
+    document.documentElement.setAttribute("data-lang-pref", pref);
+    document.documentElement.setAttribute("data-lang", resolved);
+    document.documentElement.lang = resolved;
+    try { localStorage.setItem(KEY, pref); } catch (e) {}
+    document.querySelectorAll("[data-lang-set]").forEach(function (btn) {
+      btn.classList.toggle("on", btn.getAttribute("data-lang-set") === pref);
+    });
+
+    var nodes = collectNodes(document.body);
+    nodes.forEach(function (node) {
+      if (node._i18nEn == null) node._i18nEn = node.nodeValue;
+    });
+
+    if (resolved === "en") {
+      nodes.forEach(function (node) {
+        if (node._i18nEn != null) node.nodeValue = node._i18nEn;
+      });
+      return;
+    }
+
+    document.documentElement.classList.add("i18n-busy");
+    try {
+      var jobs = nodes.map(function (node) {
+        return { node: node, src: node._i18nEn };
+      });
+      await mapPool(jobs, 4, translateOne);
+      jobs.forEach(function (job) {
+        job.node.nodeValue = job.result;
+      });
+      saveCache();
+    } finally {
+      document.documentElement.classList.remove("i18n-busy");
+    }
+  }
+
+  var pref = document.documentElement.getAttribute("data-lang-pref") || "en";
+  document.querySelectorAll("[data-lang-set]").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      applyLang(btn.getAttribute("data-lang-set"));
+    });
+  });
+  // Defer first translate so DOM is ready
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", function () { applyLang(pref); });
+  } else {
+    applyLang(pref);
+  }
+})();
+</script>
+
+  </div>
   <article class="doc">
     <h1>RAG</h1>
-    <p class="summary">Tra cứu tài liệu liên quan trước, rồi mới để model soạn câu trả lời có trích dẫn.</p>
+    <p class="summary">Retrieve relevant documents first, then let the model compose a grounded answer with citations.</p>
     <div class="actions"><a class="primary" href="../slides/rag/index.html">Slides ↗</a>
 <a href="../demos/rag/app/index.html">Demo ↗</a>
 <a href="rag.md" id="labDownload" download="rag.md">Download</a>
@@ -105,46 +345,46 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
     <div class="topics"><span>#RAG</span><span>#vector-db</span><span>#retrieve</span></div>
     <hr class="sep" />
     <div class="body"><h1>RAG — Retrieval-Augmented Generation</h1>
-<blockquote>Thay vì bắt mô hình trả lời bằng mỗi trí nhớ, trước tiên đi <em>tra cứu</em> tài liệu liên quan rồi mới để mô hình <em>soạn</em> câu trả lời dựa trên đó. Giống mở sách ra tra trước khi phát biểu.</blockquote>
-<h2>Vì sao quan trọng</h2>
-<p>Mô hình ngôn ngữ biết nhiều nhưng hay "chém" (bịa) khi gặp thứ ngoài trí nhớ, và không cập nhật tài liệu riêng của bạn. RAG vá cả hai: neo câu trả lời vào một kho tài liệu thật (tài liệu công ty, video, repo…), kèm trích dẫn nguồn. Nhờ vậy trả lời đúng hơn, cập nhật hơn, và kiểm chứng được — không cần train lại mô hình.</p>
-<h2>Ý chính</h2>
+<blockquote>Instead of forcing the model to answer from memory alone, first <em>look up</em> relevant documents, then let the model <em>compose</em> an answer grounded in them. Like checking a book before you speak.</blockquote>
+<h2>Why it matters</h2>
+<p>Language models know a lot but often hallucinate on unfamiliar facts and cannot read your private documents. RAG fixes both: anchor answers in a real corpus (company docs, videos, repos…) with citations. Answers become more accurate, more current, and verifiable — without retraining the model.</p>
+<h2>Key ideas</h2>
 <ul>
-<li><strong>Hai pha:</strong></li>
+<li><strong>Two phases:</strong></li>
 </ul>
-<p>  - <em>Retrieve</em>: đổi câu hỏi thành vector (<a href="embedding.html">embedding.md</a>), tìm trong vector DB ra top-k đoạn (chunk) gần nghĩa nhất.</p>
-<p>  - <em>Generate</em>: nhét các đoạn đó vào prompt làm ngữ cảnh, mô hình soạn câu trả lời bám theo.</p>
+<p>  - <em>Retrieve:</em> embed the question (<a href="embedding.html">embedding.md</a>), search the vector DB for the top-k chunks closest in meaning.</p>
+<p>  - <em>Generate:</em> insert those chunks into the prompt as context; the model composes the answer from them.</p>
 <ul>
-<li><strong>Chunk + vector DB:</strong> tài liệu được cắt thành đoạn nhỏ, mỗi đoạn một vector; DB (FAISS, Chroma, pgvector…) lo tìm nhanh đoạn gần nhất, có thể lọc thêm bằng metadata.</li>
-<li><strong>Khác chat thuần:</strong> chat thuần dựa vào trí nhớ mô hình; RAG luôn <em>neo vào corpus</em> nên trả lời được câu về tài liệu mô hình chưa từng thấy.</li>
-<li><strong>Chất lượng phụ thuộc retrieve:</strong> lấy sai đoạn thì mô hình soạn hay đến mấy cũng sai. Cắt chunk hợp lý và embedding tốt là mấu chốt.</li>
-<li><strong>Biến thể nâng cao:</strong> <em>Graph RAG</em> nối các thực thể thành đồ thị để trả lời câu bắc cầu; rerank, hybrid search (từ khóa + vector) để tăng độ chính xác.</li>
+<li><strong>Chunk + vector DB:</strong> split documents into segments, embed each segment; a DB (FAISS, Chroma, pgvector…) finds nearest segments fast, optionally filtered by metadata.</li>
+<li><strong>Unlike pure chat:</strong> pure chat relies on model memory; RAG is always <em>anchored to your corpus</em> — it can answer about documents the model never saw.</li>
+<li><strong>Quality depends on retrieval:</strong> wrong chunks → wrong answers no matter how good the model is. Good chunking and embeddings are critical.</li>
+<li><strong>Advanced variants:</strong> <em>Graph RAG</em> links entities in a graph for multi-hop questions; reranking and hybrid search (keyword + vector) boost accuracy.</li>
 </ul>
-<h2>Hình minh họa</h2>
-<figure><img src="assets/protonx/embed-then-query.jpg" alt="Embed câu hỏi rồi đi truy vấn kho tài liệu" loading="lazy" /><figcaption>Embed câu hỏi rồi đi truy vấn kho tài liệu</figcaption></figure>
-<figure><img src="assets/protonx/drop-rag.jpg" alt="Đường đi của một pipeline RAG" loading="lazy" /><figcaption>Đường đi của một pipeline RAG</figcaption></figure>
-<figure><img src="assets/protonx/graph-rag.jpg" alt="Graph RAG: nối thực thể thành đồ thị để trả lời câu bắc cầu" loading="lazy" /><figcaption>Graph RAG: nối thực thể thành đồ thị để trả lời câu bắc cầu</figcaption></figure>
-<figure><img src="assets/protonx/rag-advanced.jpg" alt="RAG nâng cao: thêm rerank / lọc để tăng độ chính xác" loading="lazy" /><figcaption>RAG nâng cao: thêm rerank / lọc để tăng độ chính xác</figcaption></figure>
-<h2>Trong pipeline</h2>
+<h2>Illustrations</h2>
+<figure><img src="assets/protonx/embed-then-query.jpg" alt="Embed the question, then query the document store" loading="lazy" /><figcaption>Embed the question, then query the document store</figcaption></figure>
+<figure><img src="assets/protonx/drop-rag.jpg" alt="Flow of a RAG pipeline" loading="lazy" /><figcaption>Flow of a RAG pipeline</figcaption></figure>
+<figure><img src="assets/protonx/graph-rag.jpg" alt="Graph RAG: connect entities in a graph for multi-hop answers" loading="lazy" /><figcaption>Graph RAG: connect entities in a graph for multi-hop answers</figcaption></figure>
+<figure><img src="assets/protonx/rag-advanced.jpg" alt="Advanced RAG: rerank and filter for higher accuracy" loading="lazy" /><figcaption>Advanced RAG: rerank and filter for higher accuracy</figcaption></figure>
+<h2>Pipeline</h2>
 <pre><code>
-câu hỏi → embed → tìm top-k trong vector DB → (đoạn + câu hỏi) → LLM → trả lời + trích dẫn
+question → embed → top-k from vector DB → (chunks + question) → LLM → answer + citations
 
 </code></pre>
-<p>RAG đứng trên <a href="embedding.html">embedding.md</a>; Personal Knowledge-base của lab đi đúng hướng này (<a href="personal-knowledge-base.html">personal-knowledge-base.md</a>).</p>
+<p>RAG stands on <a href="embedding.html">embedding.md</a>; the lab's Personal Knowledge-base follows this direction (<a href="personal-knowledge-base.html">personal-knowledge-base.md</a>).</p>
 <h2>Slides &amp; demo</h2>
 <table><tbody>
 <tr><th></th><th>Link</th></tr>
 <tr><td>Slides</td><td><a href="../slides/rag/index.html">slides/rag</a></td></tr>
 <tr><td>Working app</td><td><a href="../demos/rag/app/index.html">demos/rag/app</a></td></tr>
 </tbody></table>
-<h2>Tham khảo</h2>
+<h2>References</h2>
 <ul>
 <li>Lewis et al. 2020 — <a href="https://arxiv.org/abs/2005.11401">Retrieval-Augmented Generation</a></li>
 <li><a href="https://microsoft.github.io/graphrag/">Microsoft GraphRAG</a></li>
 </ul>
 <h2>Related</h2>
 <ul>
-<li><a href="vector-database.html">vector-database.md</a>, <a href="semantic-search.html">semantic-search.md</a> — hạ tầng &amp; retrieve cho RAG</li>
+<li><a href="vector-database.html">vector-database.md</a>, <a href="semantic-search.html">semantic-search.md</a> — infrastructure and retrieval for RAG</li>
 <li><a href="embedding.html">embedding.md</a>, <a href="personal-knowledge-base.html">personal-knowledge-base.md</a></li>
 </ul></div>
   </article>
