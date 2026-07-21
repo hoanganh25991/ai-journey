@@ -196,15 +196,32 @@ def rewrite_html_links(html: str, base_vdir: str, out_vdir: str, file2id: dict[s
 # --------------------------------------------------------------------------- #
 # Payload                                                                      #
 # --------------------------------------------------------------------------- #
+def _auto_date(i: int, total: int) -> str:
+    """Auto-assign a month/year spread evenly across Jan 2023 → Jul 2026.
+
+    Not meant to be accurate — just a stable, increasing timeline label so the
+    listing reads like a learning journey from 2023 to now.
+    """
+    start_m = 2023 * 12 + 0  # Jan 2023
+    end_m = 2026 * 12 + 6  # Jul 2026
+    span = max(1, total - 1)
+    m = round(start_m + (end_m - start_m) * i / span)
+    year, month = divmod(m, 12)
+    return f"{month + 1:02d}/{year}"
+
+
 def build_payload() -> tuple[dict, list[dict]]:
     catalog = json.loads(CATALOG.read_text(encoding="utf-8"))
     entries = catalog["notes"]
     file2id = {posixpath.basename(e["file"]): e["id"] for e in entries}
+    total = len(entries)
 
     search_notes: list[dict] = []
     page_notes: list[dict] = []
 
-    for entry in entries:
+    for i, entry in enumerate(entries):
+        num = f"{i + 1:02d}"
+        date = _auto_date(i, total)
         path = ROOT / entry["file"]
         raw = path.read_bytes().decode("utf-8", errors="replace") if path.is_file() else ""
 
@@ -239,6 +256,8 @@ def build_payload() -> tuple[dict, list[dict]]:
         search_notes.append(
             {
                 "id": entry["id"],
+                "num": num,
+                "date": date,
                 "title": entry["title"],
                 "summary": entry.get("summary") or "",
                 "topics": entry.get("topics") or [],
@@ -255,6 +274,8 @@ def build_payload() -> tuple[dict, list[dict]]:
         page_notes.append(
             {
                 "id": entry["id"],
+                "num": num,
+                "date": date,
                 "title": entry["title"],
                 "summary": entry.get("summary") or "",
                 "topics": entry.get("topics") or [],
@@ -382,6 +403,11 @@ HUB_HTML = r"""<!DOCTYPE html>
   transition: border-color .15s, transform .15s, box-shadow .15s;
 }
 .row:hover { border-color: var(--teal); transform: translateY(-1px); box-shadow: var(--shadow); }
+.row-date { font: 500 11px var(--mono); letter-spacing: .08em; color: var(--amber); margin-bottom: 6px; }
+.row-num {
+  font: 600 11px var(--mono); letter-spacing: .05em; color: var(--teal);
+  background: var(--teal-soft); border-radius: 7px; padding: 3px 8px; align-self: center;
+}
 .row-top { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
 .row h3 { font-size: 17px; font-weight: 600; letter-spacing: -.01em; }
 .row .grp { font: 500 10px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
@@ -537,7 +563,9 @@ footer { margin-top: 40px; font: 12px var(--mono); color: var(--muted); }
     const snip = toks && toks.length ? snippet(n, toks) : "";
     return `
       <a class="row" href="${escapeHtml(n.page)}">
+        ${n.date ? `<div class="row-date">${escapeHtml(n.date)}</div>` : ""}
         <div class="row-top">
+          ${n.num ? `<span class="row-num">${escapeHtml(n.num)}</span>` : ""}
           <h3>${escapeHtml(n.title)}</h3>
           <span class="spacer"></span>
           <span class="badges">

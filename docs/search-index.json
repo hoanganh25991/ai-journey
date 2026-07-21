@@ -1,5 +1,5 @@
 {
-  "built_at": "2026-07-21T10:30:35Z",
+  "built_at": "2026-07-21T10:36:19Z",
   "synonyms": [
     [
       "tokenize",
@@ -124,6 +124,8 @@
   "notes": [
     {
       "id": "tokenize",
+      "num": "01",
+      "date": "01/2023",
       "title": "Tokenize",
       "summary": "Cắt câu chữ thành token rồi đổi thành ID — máy chỉ đọc số. BPE vs WordPiece.",
       "topics": [
@@ -141,6 +143,8 @@
     },
     {
       "id": "embedding",
+      "num": "02",
+      "date": "04/2023",
       "title": "Embedding",
       "summary": "Đổi ID thành vector: gần nghĩa thì gần nhau, đo bằng cosine.",
       "topics": [
@@ -158,6 +162,8 @@
     },
     {
       "id": "attention",
+      "num": "03",
+      "date": "07/2023",
       "title": "Attention",
       "summary": "Mỗi từ nên nhìn từ nào khác để hiểu đúng — cơ chế Q·K·V của Transformer.",
       "topics": [
@@ -175,6 +181,8 @@
     },
     {
       "id": "softmax",
+      "num": "04",
+      "date": "09/2023",
       "title": "Softmax",
       "summary": "Biến điểm số thô thành phần trăm, cộng lại bằng 1.",
       "topics": [
@@ -192,6 +200,8 @@
     },
     {
       "id": "rag",
+      "num": "05",
+      "date": "12/2023",
       "title": "RAG",
       "summary": "Tra cứu tài liệu liên quan trước, rồi mới để model soạn câu trả lời có trích dẫn.",
       "topics": [
@@ -209,6 +219,8 @@
     },
     {
       "id": "mcp",
+      "num": "06",
+      "date": "03/2024",
       "title": "MCP",
       "summary": "Chuẩn chung để agent gọi tool ngoài — như cổng USB-C cho AI. Host ↔ server ↔ tools có schema.",
       "topics": [
@@ -227,6 +239,8 @@
     },
     {
       "id": "skills-rules",
+      "num": "07",
+      "date": "06/2024",
       "title": "Skills · Rules · Commands",
       "summary": "Know-how của AI agent: SKILL.md, rules, commands; global ~/.agents.",
       "topics": [
@@ -246,6 +260,8 @@
     },
     {
       "id": "train-gpu",
+      "num": "08",
+      "date": "09/2024",
       "title": "Train · PyTorch / TensorFlow · GPU",
       "summary": "HF/Kaggle datasets, PyTorch & TensorFlow, GPU notebooks, train → inference.",
       "topics": [
@@ -265,6 +281,8 @@
     },
     {
       "id": "car-nn",
+      "num": "09",
+      "date": "11/2024",
       "title": "Car NN — sensor to action",
       "summary": "3 cảm biến → mạng fully connected → forward / back / left / right. Ví dụ nhìn thấy được của phân loại.",
       "topics": [
@@ -282,6 +300,8 @@
     },
     {
       "id": "sentiment-routing",
+      "num": "10",
+      "date": "02/2025",
       "title": "Sentiment & complexity routing",
       "summary": "Đọc câu rồi dán nhãn: cảm xúc (neg/neu/pos) và định tuyến dễ/khó.",
       "topics": [
@@ -308,6 +328,8 @@
     },
     {
       "id": "train-infer",
+      "num": "11",
+      "date": "05/2025",
       "title": "Train → Inference",
       "summary": "Hai đời của mô hình: học weights nặng một lần (train) rồi dùng nhẹ nhiều lần (infer).",
       "topics": [
@@ -325,6 +347,8 @@
     },
     {
       "id": "agents",
+      "num": "12",
+      "date": "08/2025",
       "title": "AI Agents · So sánh harness",
       "summary": "Harness ≠ model: Cursor, Claude Code, Pi, Cline/Kilo, OpenCode, Zed.",
       "topics": [
@@ -345,6 +369,8 @@
     },
     {
       "id": "model-notes",
+      "num": "13",
+      "date": "11/2025",
       "title": "Model field notes",
       "summary": "Model ≠ harness: Grok 4.5, Composer, Anthropic, DeepSeek, Qwen, Kimi/GLM.",
       "topics": [
@@ -365,6 +391,8 @@
     },
     {
       "id": "agent-automation",
+      "num": "14",
+      "date": "01/2026",
       "title": "Agent automation — OpenClaw · Hermess",
       "summary": "Câu chuyện: OpenClaw (pi harness) mở màn cảm giác agent control mọi thứ → Hermess làm tốt.",
       "topics": [
@@ -384,6 +412,8 @@
     },
     {
       "id": "ai-timeline",
+      "num": "15",
+      "date": "04/2026",
       "title": "AI timeline — hành trình của tôi",
       "summary": "Hành trình từ 2023 (lần đầu biết LLM) → embedding… → agent → automation, neo vào mốc AI thực tế.",
       "topics": [
@@ -403,6 +433,8 @@
     },
     {
       "id": "personal-knowledge-base",
+      "num": "16",
+      "date": "07/2026",
       "title": "Personal Knowledge-base — videos · docs · GitHub",
       "summary": "Repo riêng ~/work-station/personal-kb: FTS search + Graph RAG keywords. Sẽ gắn submodule.",
       "topics": [
