@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Train GPU · slides</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Sora:wght@400;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="../_shared/deck.css" />
+<style>
+.shot {
+  width: 100%; height: 420px; object-fit: contain; border-radius: 14px;
+  border: 1px solid var(--line); background: #e6edf5;
+}
+.shot-lg { height: 520px; }
+.shot-md { height: 380px; }
+.mini { font-size: 18px !important; }
+.table-card { overflow: hidden; }
+.table-card table { width: 100%; border-collapse: collapse; font-size: 18px; }
+.table-card th, .table-card td {
+  text-align: left; padding: 12px 14px; border-bottom: 1px solid var(--line);
+  color: var(--muted); vertical-align: top;
+}
+.table-card th { color: var(--ink); font-family: var(--font-mono); font-size: 14px;
+  letter-spacing: 0.06em; text-transform: uppercase; }
+.code-block {
+  font-family: var(--font-mono); font-size: 18px; line-height: 1.55;
+  background: rgba(22,32,46,0.92); color: #e8eef7; padding: 24px 28px;
+  border-radius: 14px; white-space: pre; overflow: hidden;
+}
+.code-block .c { color: #8b97a8; }
+.code-block .k { color: #5ec8d4; }
+.code-block .s { color: #f0a35e; }
+</style>
+</head>
+<body>
+<div class="deck-viewport">
+<main class="deck-stage" id="deckStage">
+
+<section class="slide active">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Concept · train-gpu</span><span class="pill">teaching</span></div>
+    <h1 class="reveal" style="margin-top:72px;">Train · <em>PyTorch / TF · GPU</em></h1>
+    <p class="lead reveal" style="margin-top:28px;">Where models actually learn: HF/Kaggle data, PyTorch or TensorFlow, many GPU epochs, then export weights.</p>
+    <div class="flow-row reveal"><span class="step">data</span><span class="arr">→</span><span class="step">notebook</span><span class="arr">→</span><span class="step">GPU epochs</span><span class="arr">→</span><span class="step">checkpoint</span><span class="arr">→</span><span class="step">demo</span></div>
+  </div>
+  <div class="foot"><span>01</span><span>AI Lab</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Why</span><span class="pill">checklist</span></div>
+    <h2 class="reveal">Demos are inference — training is elsewhere</h2>
+    <div class="cols-3"><div class="card accent reveal"><div class="tag">lab</div><h3>Browser demos</h3><p>Show the flow; they do not replace GPU training.</p></div><div class="card cyan reveal"><div class="tag">real</div><h3>Real learning</h3><p>Needs labeled data + GPU hours.</p></div><div class="card reveal"><div class="tag">plug</div><h3>Then plug in</h3><p>Export checkpoint → embed in UI demos.</p></div></div>
+  </div>
+  <div class="foot"><span>02</span><span>notes/train-gpu.md</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Stack</span><span class="pill">ideas</span></div>
+    <h2 class="reveal">Key ideas</h2>
+    <div class="cols-3"><div class="card reveal"><div class="tag">pt</div><h3>PyTorch</h3><p>Flexible loop — most lab training code.</p></div><div class="card cyan reveal"><div class="tag">tf</div><h3>TensorFlow</h3><p>Softmax regression + Embedding Projector.</p></div><div class="card reveal"><div class="tag">data</div><h3>HF + Kaggle</h3><p>Pre-labeled data ready to download.</p></div></div>
+    <p class="lead reveal" style="margin-top:24px;font-size:20px;">Keywords: pytorch · tensorflow · GPU · huggingface · kaggle · Read: <span style="color:var(--amber);font-family:var(--font-mono)">notes/train-gpu.md</span></p>
+  </div>
+  <div class="foot"><span>03</span><span>notes/train-gpu.md</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Illustration</span><span class="pill">train-gpu-stack.png</span></div>
+    <h2 class="reveal" style="font-size:36px;margin-bottom:16px;">Illustration</h2>
+    <img class="shot shot-lg reveal" src="../assets/train-gpu-stack.png" alt="GPU stack" />
+    
+  </div>
+  <div class="foot"><span>04</span><span>AI Lab · illustration</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Layers</span><span class="pill">two</span></div>
+    <h2 class="reveal">Training vs inference</h2>
+    <div class="card table-card reveal">
+      <table><thead><tr><th>Layer</th><th>Job</th><th>Output</th></tr></thead><tbody><tr><td>Training</td><td>HF/Kaggle → GPU epochs</td><td>checkpoint</td></tr><tr><td>Inference</td><td>load model → predict</td><td>label / action</td></tr></tbody></table>
+    </div>
+  </div>
+  <div class="foot"><span>05</span><span>see train-infer.md</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Workflow</span><span class="pill">pipeline</span></div>
+    <h2 class="reveal">Short practical path</h2>
+    <div class="flow-row reveal" style="margin-top:48px;"><span class="step">pick dataset</span><span class="arr">→</span><span class="step">write notebook</span><span class="arr">→</span><span class="step">GPU train</span><span class="arr">→</span><span class="step">watch metrics</span><span class="arr">→</span><span class="step">export</span><span class="arr">→</span><span class="step">demo</span></div>
+    
+  </div>
+  <div class="foot"><span>06</span><span>notes/train-gpu.md</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Runtime</span><span class="pill">where</span></div>
+    <h2 class="reveal">Where to run epochs</h2>
+    <div class="cols-3"><div class="card accent reveal"><div class="tag">colab</div><h3>Google Colab</h3><p>Quick GPU notebooks in the browser.</p></div><div class="card cyan reveal"><div class="tag">kaggle</div><h3>Kaggle</h3><p>Free GPU/TPU with datasets attached.</p></div><div class="card reveal"><div class="tag">cloud</div><h3>Cloud endpoint</h3><p>When you need sustained training.</p></div></div>
+  </div>
+  <div class="foot"><span>07</span><span>notes/train-gpu.md</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Watch</span><span class="pill">metrics</span></div>
+    <h2 class="reveal">Train until good enough</h2>
+    <div class="cols-3"><div class="card accent reveal"><div class="tag">loss</div><h3>Loss / accuracy</h3><p>Watch train and val together.</p></div><div class="card cyan reveal"><div class="tag">stop</div><h3>~95%+</h3><p>Good enough for many demos — then export.</p></div><div class="card reveal"><div class="tag">infer</div><h3>Back to UI</h3><p>car-nn · sentiment · softmax demos.</p></div></div>
+  </div>
+  <div class="foot"><span>08</span><span>demos</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Related</span><span class="pill">notes</span></div>
+    <h2 class="reveal">Deep links</h2>
+    <div class="cols-3"><div class="card accent reveal"><div class="tag">pt</div><h3>pytorch-training</h3><p>Manual loop details.</p></div><div class="card cyan reveal"><div class="tag">tf</div><h3>tensorflow-training</h3><p>compile + fit.</p></div><div class="card reveal"><div class="tag">ti</div><h3>train-infer</h3><p>Mental model of two phases.</p></div></div>
+  </div>
+  <div class="foot"><span>09</span><span>related</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Next</span><span class="pill">continue</span></div>
+    <h1 class="reveal" style="margin-top:100px;font-size:64px;">Train on GPU,<br /><em>infer in the lab.</em></h1>
+    <p class="lead reveal" style="margin-top:28px;">notes/train-gpu.md</p>
+    <a class="app-cta reveal" href="../../notes/train-gpu.html">Open note →</a>
+  </div>
+  <div class="foot"><span>end</span><span>AI Lab</span></div>
+</section>
+
+</main>
+</div>
+<nav class="deck-controls">
+  <button type="button" id="prevBtn">←</button>
+  <span id="pageLabel">1</span>
+  <button type="button" id="nextBtn">→</button>
+</nav>
+<script>window.LAB={"kind": "slides", "title": "Train Gpu · Slides", "download": "download.html", "downloadName": "train-gpu-slides.html"};</script>
+<script src="../_shared/deck.js"></script>
+</body>
+</html>

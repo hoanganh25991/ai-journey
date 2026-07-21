@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" fill="none">
+  <rect width="960" height="540" fill="#0c1118"/>
+  <rect x="80" y="80" width="240" height="380" rx="10" fill="#15202e" stroke="#f0a35e" stroke-width="2"/><text x="200.0" y="274.0" text-anchor="middle" fill="#e8eef7" font-family="IBM Plex Mono, monospace" font-size="14"></text>
+  <text x="200" y="140" text-anchor="middle" fill="#f0a35e" font-family="IBM Plex Mono, monospace" font-size="15">SKILL</text>
+  <text x="200" y="190" text-anchor="middle" fill="#e8eef7" font-family="Sora, sans-serif" font-size="18">packaged know-how</text>
+  <text x="200" y="240" text-anchor="middle" fill="#8b97a8" font-family="IBM Plex Mono, monospace" font-size="13">SKILL.md + scripts</text>
+  <text x="200" y="280" text-anchor="middle" fill="#8b97a8" font-family="IBM Plex Mono, monospace" font-size="13">loaded when needed</text>
+  <text x="200" y="340" text-anchor="middle" fill="#8b97a8" font-family="IBM Plex Mono, monospace" font-size="13">graphify · slides</text>
+  <rect x="360" y="80" width="240" height="380" rx="10" fill="#15202e" stroke="#5ec8d4" stroke-width="2"/><text x="480.0" y="274.0" text-anchor="middle" fill="#e8eef7" font-family="IBM Plex Mono, monospace" font-size="14"></text>
+  <text x="480" y="140" text-anchor="middle" fill="#5ec8d4" font-family="IBM Plex Mono, monospace" font-size="15">RULE</text>
+  <text x="480" y="190" text-anchor="middle" fill="#e8eef7" font-family="Sora, sans-serif" font-size="18">always-on constraint</text>
+  <text x="480" y="240" text-anchor="middle" fill="#8b97a8" font-family="IBM Plex Mono, monospace" font-size="13">always or glob</text>
+  <text x="480" y="280" text-anchor="middle" fill="#8b97a8" font-family="IBM Plex Mono, monospace" font-size="13">keep short</text>
+  <text x="480" y="340" text-anchor="middle" fill="#8b97a8" font-family="IBM Plex Mono, monospace" font-size="13">commit · notes-first</text>
+  <rect x="640" y="80" width="240" height="380" rx="10" fill="#15202e" stroke="#f0a35e" stroke-width="2"/><text x="760.0" y="274.0" text-anchor="middle" fill="#e8eef7" font-family="IBM Plex Mono, monospace" font-size="14"></text>
+  <text x="760" y="140" text-anchor="middle" fill="#f0a35e" font-family="IBM Plex Mono, monospace" font-size="15">COMMAND</text>
+  <text x="760" y="190" text-anchor="middle" fill="#e8eef7" font-family="Sora, sans-serif" font-size="18">user shortcut</text>
+  <text x="760" y="240" text-anchor="middle" fill="#8b97a8" font-family="IBM Plex Mono, monospace" font-size="13">typed by user</text>
+  <text x="760" y="280" text-anchor="middle" fill="#8b97a8" font-family="IBM Plex Mono, monospace" font-size="13">/deep-plan · /loop</text>
+  <text x="480" y="500" text-anchor="middle" fill="#8b97a8" font-family="IBM Plex Mono, monospace" font-size="13">home: ~/.agents/skills — write once, use across clients</text>
+</svg>

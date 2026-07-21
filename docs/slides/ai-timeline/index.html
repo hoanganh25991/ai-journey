@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AI timeline · slides</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Sora:wght@400;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="../_shared/deck.css" />
+<style>
+.shot {
+  width: 100%; height: 420px; object-fit: contain; border-radius: 14px;
+  border: 1px solid var(--line); background: #e6edf5;
+}
+.shot-lg { height: 520px; }
+.shot-md { height: 380px; }
+.mini { font-size: 18px !important; }
+.table-card { overflow: hidden; }
+.table-card table { width: 100%; border-collapse: collapse; font-size: 18px; }
+.table-card th, .table-card td {
+  text-align: left; padding: 12px 14px; border-bottom: 1px solid var(--line);
+  color: var(--muted); vertical-align: top;
+}
+.table-card th { color: var(--ink); font-family: var(--font-mono); font-size: 14px;
+  letter-spacing: 0.06em; text-transform: uppercase; }
+.code-block {
+  font-family: var(--font-mono); font-size: 18px; line-height: 1.55;
+  background: rgba(22,32,46,0.92); color: #e8eef7; padding: 24px 28px;
+  border-radius: 14px; white-space: pre; overflow: hidden;
+}
+.code-block .c { color: #8b97a8; }
+.code-block .k { color: #5ec8d4; }
+.code-block .s { color: #f0a35e; }
+</style>
+</head>
+<body>
+<div class="deck-viewport">
+<main class="deck-stage" id="deckStage">
+
+<section class="slide active">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Field notes · ai-timeline</span><span class="pill">teaching</span></div>
+    <h1 class="reveal" style="margin-top:72px;">AI timeline · <em>my journey</em></h1>
+    <p class="lead reveal" style="margin-top:28px;">2023 → present: from first LLM exposure through RAG to agents and automation — anchored to real milestones.</p>
+    <div class="flow-row reveal"><span class="step">2023 basics</span><span class="arr">→</span><span class="step">2024 agents</span><span class="arr">→</span><span class="step">MCP</span><span class="arr">→</span><span class="step">2026 automation</span></div>
+  </div>
+  <div class="foot"><span>01</span><span>AI Lab</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Why</span><span class="pill">map</span></div>
+    <h2 class="reveal">Order explains the lab</h2>
+    <div class="cols-3"><div class="card accent reveal"><div class="tag">path</div><h3>My path</h3><p>Fundamentals → RAG → agents.</p></div><div class="card cyan reveal"><div class="tag">hinge</div><h3>MCP hinge</h3><p>Nov 2024 — tools for agents.</p></div><div class="card reveal"><div class="tag">keep</div><h3>Old notes still matter</h3><p>Tokenize / attention / RAG underpin every agent.</p></div></div>
+  </div>
+  <div class="foot"><span>02</span><span>notes/10-ai-timeline.md</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Illustration</span><span class="pill">ai-timeline-hero.png</span></div>
+    <h2 class="reveal" style="font-size:36px;margin-bottom:16px;">Illustration</h2>
+    <img class="shot shot-lg reveal" src="../assets/ai-timeline-hero.png" alt="Timeline hero" />
+    
+  </div>
+  <div class="foot"><span>03</span><span>AI Lab · illustration</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Illustration</span><span class="pill">ai-timeline-strip.svg</span></div>
+    <h2 class="reveal" style="font-size:36px;margin-bottom:16px;">Illustration</h2>
+    <img class="shot shot-lg reveal" src="../assets/ai-timeline-strip.svg" alt="Strip" />
+    
+  </div>
+  <div class="foot"><span>04</span><span>AI Lab · illustration</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>2023</span><span class="pill">stage 1</span></div>
+    <h2 class="reveal">First LLM exposure + foundations</h2>
+    <div class="cols-3"><div class="card accent reveal"><div class="tag">start</div><h3>ChatGPT wave</h3><p>Late 2022 → serious learning in 2023.</p></div><div class="card cyan reveal"><div class="tag">mar</div><h3>Mar 2023</h3><p>GPT-4 · Claude 1 · Llama 1 · RAG boom.</p></div><div class="card reveal"><div class="tag">order</div><h3>Learn order</h3><p>tokenize → embedding → attention → softmax → RAG.</p></div></div>
+  </div>
+  <div class="foot"><span>05</span><span>notes/10-ai-timeline.md</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>2024</span><span class="pill">stage 2</span></div>
+    <h2 class="reveal">Stronger models + coding agents</h2>
+    <div class="cols-3"><div class="card accent reveal"><div class="tag">ctx</div><h3>Long context</h3><p>Gemini 1.5 · 1M context.</p></div><div class="card cyan reveal"><div class="tag">code</div><h3>Coding jump</h3><p>Claude 3.5 Sonnet · Cursor takes off.</p></div><div class="card reveal"><div class="tag">shift</div><h3>From reading to building</h3><p>Use AI to code for real.</p></div></div>
+  </div>
+  <div class="foot"><span>06</span><span>notes/10-ai-timeline.md</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>2024–25</span><span class="pill">stage 3</span></div>
+    <h2 class="reveal">Agent era — MCP · skills · harness</h2>
+    <div class="cols-3"><div class="card accent reveal"><div class="tag">mcp</div><h3>Nov 25, 2024</h3><p>MCP launches — hinge event.</p></div><div class="card cyan reveal"><div class="tag">harness</div><h3>2025</h3><p>Claude Code · AGENTS.md · skills/rules.</p></div><div class="card reveal"><div class="tag">lab</div><h3>Lab pivot</h3><p>mcp · skills-rules · agents notes.</p></div></div>
+  </div>
+  <div class="foot"><span>07</span><span>notes/mcp.md</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>2026</span><span class="pill">stage 4</span></div>
+    <h2 class="reveal">Model wave + automation (now)</h2>
+    <div class="cols-3"><div class="card accent reveal"><div class="tag">models</div><h3>Model wave</h3><p>Opus 4.8 · Fable 5 · Grok 4.5 · GPT-5.6.</p></div><div class="card cyan reveal"><div class="tag">auto</div><h3>Automation</h3><p>OpenClaw (pi) → Hermess polish.</p></div><div class="card reveal"><div class="tag">focus</div><h3>Focus now</h3><p>model-notes · agent-automation.</p></div></div>
+  </div>
+  <div class="foot"><span>08</span><span>notes/09-agent-automation.md</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Milestones</span><span class="pill">table</span></div>
+    <h2 class="reveal">Anchors in the lab</h2>
+    <div class="card table-card reveal">
+      <table><thead><tr><th>When</th><th>Event</th><th>In the lab</th></tr></thead><tbody><tr><td>2023</td><td>First LLM exposure</td><td>tokenize · embed · attn · softmax · RAG</td></tr><tr><td>2024</td><td>Coding agents</td><td>using AI to build</td></tr><tr><td>Nov 2024</td><td>MCP</td><td>mcp note + demo</td></tr><tr><td>2025</td><td>Harness · skills</td><td>agents · skills-rules</td></tr><tr><td>2026</td><td>Grok 4.5 · automation</td><td>model-notes · Hermess</td></tr></tbody></table>
+    </div>
+  </div>
+  <div class="foot"><span>09</span><span>notes/10-ai-timeline.md</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Takeaways</span><span class="pill">now</span></div>
+    <h2 class="reveal">Understanding → steering</h2>
+    <div class="cols-3"><div class="card accent reveal"><div class="tag">arc</div><h3>Arc</h3><p>Understand models (2023–24) → steer agents (late 2024+).</p></div><div class="card cyan reveal"><div class="tag">hinge</div><h3>Hinge</h3><p>MCP — agent ↔ tool standard.</p></div><div class="card reveal"><div class="tag">watch</div><h3>Watch</h3><p>Harnesses · model waves · automation.</p></div></div>
+  </div>
+  <div class="foot"><span>10</span><span>related</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Next</span><span class="pill">continue</span></div>
+    <h1 class="reveal" style="margin-top:100px;font-size:64px;">Concepts still hold;<br /><em>agents steer them.</em></h1>
+    <p class="lead reveal" style="margin-top:28px;">notes/10-ai-timeline.md</p>
+    <a class="app-cta reveal" href="../../notes/ai-timeline.html">Open note →</a>
+  </div>
+  <div class="foot"><span>end</span><span>AI Lab</span></div>
+</section>
+
+</main>
+</div>
+<nav class="deck-controls">
+  <button type="button" id="prevBtn">←</button>
+  <span id="pageLabel">1</span>
+  <button type="button" id="nextBtn">→</button>
+</nav>
+<script>window.LAB={"kind": "slides", "title": "Ai Timeline · Slides", "download": "download.html", "downloadName": "ai-timeline-slides.html"};</script>
+<script src="../_shared/deck.js"></script>
+</body>
+</html>

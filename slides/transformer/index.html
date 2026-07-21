@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Transformer · slides</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Sora:wght@400;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="../_shared/deck.css" />
+<style>
+.shot {
+  width: 100%; height: 420px; object-fit: contain; border-radius: 14px;
+  border: 1px solid var(--line); background: #e6edf5;
+}
+.shot-lg { height: 520px; }
+.shot-md { height: 380px; }
+.mini { font-size: 18px !important; }
+.table-card { overflow: hidden; }
+.table-card table { width: 100%; border-collapse: collapse; font-size: 18px; }
+.table-card th, .table-card td {
+  text-align: left; padding: 12px 14px; border-bottom: 1px solid var(--line);
+  color: var(--muted); vertical-align: top;
+}
+.table-card th { color: var(--ink); font-family: var(--font-mono); font-size: 14px;
+  letter-spacing: 0.06em; text-transform: uppercase; }
+.code-block {
+  font-family: var(--font-mono); font-size: 18px; line-height: 1.55;
+  background: rgba(22,32,46,0.92); color: #e8eef7; padding: 24px 28px;
+  border-radius: 14px; white-space: pre; overflow: hidden;
+}
+.code-block .c { color: #8b97a8; }
+.code-block .k { color: #5ec8d4; }
+.code-block .s { color: #f0a35e; }
+</style>
+</head>
+<body>
+<div class="deck-viewport">
+<main class="deck-stage" id="deckStage">
+
+<section class="slide active">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Concept · transformer</span><span class="pill">teaching</span></div>
+    <h1 class="reveal" style="margin-top:72px;">Transformer · <em>core LLM architecture</em></h1>
+    <p class="lead reveal" style="margin-top:28px;">Stack attention blocks; process the whole sentence in parallel. The frame behind BERT, GPT, and modern LLMs.</p>
+    <div class="flow-row reveal"><span class="step">tokens</span><span class="arr">→</span><span class="step">embed+pos</span><span class="arr">→</span><span class="step">N× attn+FFN</span><span class="arr">→</span><span class="step">head</span></div>
+  </div>
+  <div class="foot"><span>01</span><span>AI Lab</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Why</span><span class="pill">2017</span></div>
+    <h2 class="reveal">Why Transformers won</h2>
+    <div class="cols-3"><div class="card accent reveal"><div class="tag">rnn</div><h3>Before: RNN/LSTM</h3><p>Step-by-step — slow, forgets early context.</p></div><div class="card cyan reveal"><div class="tag">par</div><h3>Parallel attend</h3><p>Every token attends to every other → GPU-friendly.</p></div><div class="card reveal"><div class="tag">era</div><h3>Opened LLMs</h3><p>Attention Is All You Need → BERT/GPT era.</p></div></div>
+  </div>
+  <div class="foot"><span>02</span><span>notes/transformer.md</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Transformer</span><span class="pill">ideas</span></div>
+    <h2 class="reveal">Key ideas</h2>
+    <div class="cols-3"><div class="card reveal"><div class="tag">stack</div><h3>Stacked blocks</h3><p>Multi-head attention + feed-forward, many layers.</p></div><div class="card cyan reveal"><div class="tag">pos</div><h3>Positional encoding</h3><p>Parallel has no order — inject positions.</p></div><div class="card reveal"><div class="tag">ed</div><h3>Encoder / decoder</h3><p>BERT reads; GPT generates; both for MT.</p></div></div>
+    <p class="lead reveal" style="margin-top:24px;font-size:20px;">Keywords: transformer · attention · encoder · decoder · Read: <span style="color:var(--amber);font-family:var(--font-mono)">notes/transformer.md</span></p>
+  </div>
+  <div class="foot"><span>03</span><span>notes/transformer.md</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Illustration</span><span class="pill">transformer-stack.png</span></div>
+    <h2 class="reveal" style="font-size:36px;margin-bottom:16px;">Illustration</h2>
+    <img class="shot shot-lg reveal" src="../assets/transformer-stack.png" alt="Stacked blocks" />
+    
+  </div>
+  <div class="foot"><span>04</span><span>AI Lab · illustration</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Illustration</span><span class="pill">self-attention.jpg</span></div>
+    <h2 class="reveal" style="font-size:36px;margin-bottom:16px;">Illustration</h2>
+    <img class="shot shot-lg reveal" src="../../notes/assets/protonx/self-attention.jpg" alt="Self-attention" />
+    <p class="lead reveal" style="margin-top:12px;font-size:20px;">Inside one encoder block.</p>
+  </div>
+  <div class="foot"><span>05</span><span>AI Lab · illustration</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Illustration</span><span class="pill">cross-attention.jpg</span></div>
+    <h2 class="reveal" style="font-size:36px;margin-bottom:16px;">Illustration</h2>
+    <img class="shot shot-lg reveal" src="../../notes/assets/protonx/cross-attention.jpg" alt="Cross-attention" />
+    <p class="lead reveal" style="margin-top:12px;font-size:20px;">Decoder attends to encoder (translation).</p>
+  </div>
+  <div class="foot"><span>06</span><span>AI Lab · illustration</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Illustration</span><span class="pill">attention-after-softmax.jpg</span></div>
+    <h2 class="reveal" style="font-size:36px;margin-bottom:16px;">Illustration</h2>
+    <img class="shot shot-lg reveal" src="../../notes/assets/protonx/attention-after-softmax.jpg" alt="After softmax" />
+    <p class="lead reveal" style="margin-top:12px;font-size:20px;">Attention weights inside a layer.</p>
+  </div>
+  <div class="foot"><span>07</span><span>AI Lab · illustration</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Roles</span><span class="pill">variants</span></div>
+    <h2 class="reveal">Encoder · decoder · both</h2>
+    <div class="card table-card reveal">
+      <table><thead><tr><th>Kind</th><th>Job</th><th>Example</th></tr></thead><tbody><tr><td>Encoder</td><td>Understand whole input</td><td>BERT · classification · embeddings</td></tr><tr><td>Decoder</td><td>Generate left → right</td><td>GPT · chat · completion</td></tr><tr><td>Enc-Dec</td><td>Map sequence → sequence</td><td>Translation · summarization</td></tr></tbody></table>
+    </div>
+  </div>
+  <div class="foot"><span>08</span><span>notes/transformer.md</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Stability</span><span class="pill">tricks</span></div>
+    <h2 class="reveal">What keeps deep stacks trainable</h2>
+    <div class="cols-3"><div class="card accent reveal"><div class="tag">res</div><h3>Residual links</h3><p>Skip connections keep gradients flowing.</p></div><div class="card cyan reveal"><div class="tag">ln</div><h3>Layer norm</h3><p>Stabilizes activations across layers.</p></div><div class="card reveal"><div class="tag">gpu</div><h3>Parallel = fast</h3><p>No step dependency → full GPU use.</p></div></div>
+  </div>
+  <div class="foot"><span>09</span><span>notes/transformer.md</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Pipeline</span><span class="pill">pipeline</span></div>
+    <h2 class="reveal">Tokens to representation</h2>
+    <div class="flow-row reveal" style="margin-top:48px;"><span class="step">tokens</span><span class="arr">→</span><span class="step">embed+pos</span><span class="arr">→</span><span class="step">N× (attn+FFN)</span><span class="arr">→</span><span class="step">head</span></div>
+    
+  </div>
+  <div class="foot"><span>10</span><span>wraps attention · embedding · softmax</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Next</span><span class="pill">continue</span></div>
+    <h1 class="reveal" style="margin-top:100px;font-size:64px;">The house frame<br /><em>around attention.</em></h1>
+    <p class="lead reveal" style="margin-top:28px;">notes/transformer.md — pretrained models live on Hugging Face.</p>
+    <a class="app-cta reveal" href="../../notes/transformer.html">Open note →</a>
+  </div>
+  <div class="foot"><span>end</span><span>AI Lab</span></div>
+</section>
+
+</main>
+</div>
+<nav class="deck-controls">
+  <button type="button" id="prevBtn">←</button>
+  <span id="pageLabel">1</span>
+  <button type="button" id="nextBtn">→</button>
+</nav>
+<script src="../_shared/deck.js"></script>
+</body>
+</html>

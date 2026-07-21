@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Semantic search · slides</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Sora:wght@400;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="../_shared/deck.css" />
+<style>
+.shot {
+  width: 100%; height: 420px; object-fit: contain; border-radius: 14px;
+  border: 1px solid var(--line); background: #e6edf5;
+}
+.shot-lg { height: 520px; }
+.shot-md { height: 380px; }
+.mini { font-size: 18px !important; }
+.table-card { overflow: hidden; }
+.table-card table { width: 100%; border-collapse: collapse; font-size: 18px; }
+.table-card th, .table-card td {
+  text-align: left; padding: 12px 14px; border-bottom: 1px solid var(--line);
+  color: var(--muted); vertical-align: top;
+}
+.table-card th { color: var(--ink); font-family: var(--font-mono); font-size: 14px;
+  letter-spacing: 0.06em; text-transform: uppercase; }
+.code-block {
+  font-family: var(--font-mono); font-size: 18px; line-height: 1.55;
+  background: rgba(22,32,46,0.92); color: #e8eef7; padding: 24px 28px;
+  border-radius: 14px; white-space: pre; overflow: hidden;
+}
+.code-block .c { color: #8b97a8; }
+.code-block .k { color: #5ec8d4; }
+.code-block .s { color: #f0a35e; }
+</style>
+</head>
+<body>
+<div class="deck-viewport">
+<main class="deck-stage" id="deckStage">
+
+<section class="slide active">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Project · semantic-search</span><span class="pill">teaching</span></div>
+    <h1 class="reveal" style="margin-top:72px;">Semantic search · <em>hybrid · tiered · fallback</em></h1>
+    <p class="lead reveal" style="margin-top:28px;">Search by meaning: combine inverted index (Elastic) with semantic index (embeddings). Hands-on RAG learning project.</p>
+    <div class="flow-row reveal"><span class="step">question</span><span class="arr">→</span><span class="step">keyword ± meaning</span><span class="arr">→</span><span class="step">rerank</span><span class="arr">→</span><span class="step">top-k</span></div>
+  </div>
+  <div class="foot"><span>01</span><span>AI Lab</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Why</span><span class="pill">hybrid</span></div>
+    <h2 class="reveal">Keywords alone miss synonyms</h2>
+    <div class="cols-3"><div class="card accent reveal"><div class="tag">kw</div><h3>BM25 / Elastic</h3><p>Fast and cheap — but “car” ≠ “automobile”.</p></div><div class="card cyan reveal"><div class="tag">sem</div><h3>Embeddings</h3><p>Catch meaning — heavier per query.</p></div><div class="card reveal"><div class="tag">both</div><h3>Combine</h3><p>Filter by keyword, rank by meaning.</p></div></div>
+  </div>
+  <div class="foot"><span>02</span><span>notes/semantic-search.md</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Strategies</span><span class="pill">ideas</span></div>
+    <h2 class="reveal">Key ideas</h2>
+    <div class="cols-3"><div class="card reveal"><div class="tag">hyb</div><h3>Hybrid</h3><p>Keyword filters candidates; semantic reranks.</p></div><div class="card cyan reveal"><div class="tag">tier</div><h3>Tiered</h3><p>Easy → keyword; hard → semantic (complexity router).</p></div><div class="card reveal"><div class="tag">fall</div><h3>Fallback</h3><p>Semantic first; fall back to keyword if weak.</p></div></div>
+    <p class="lead reveal" style="margin-top:24px;font-size:20px;">Keywords: hybrid · tiered · fallback · MS MARCO · Read: <span style="color:var(--amber);font-family:var(--font-mono)">notes/semantic-search.md</span></p>
+  </div>
+  <div class="foot"><span>03</span><span>notes/semantic-search.md</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Illustration</span><span class="pill">semantic-hybrid.svg</span></div>
+    <h2 class="reveal" style="font-size:36px;margin-bottom:16px;">Illustration</h2>
+    <img class="shot shot-lg reveal" src="../assets/semantic-hybrid.svg" alt="Two indexes" />
+    
+  </div>
+  <div class="foot"><span>04</span><span>AI Lab · illustration</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Illustration</span><span class="pill">search-twoway.svg</span></div>
+    <h2 class="reveal" style="font-size:36px;margin-bottom:16px;">Illustration</h2>
+    <img class="shot shot-lg reveal" src="../assets/search-twoway.svg" alt="Two-way search" />
+    
+  </div>
+  <div class="foot"><span>05</span><span>AI Lab · illustration</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Illustration</span><span class="pill">embed-then-query.jpg</span></div>
+    <h2 class="reveal" style="font-size:36px;margin-bottom:16px;">Illustration</h2>
+    <img class="shot shot-lg reveal" src="../../notes/assets/protonx/embed-then-query.jpg" alt="Retrieve step" />
+    
+  </div>
+  <div class="foot"><span>06</span><span>AI Lab · illustration</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Illustration</span><span class="pill">rag-advanced.jpg</span></div>
+    <h2 class="reveal" style="font-size:36px;margin-bottom:16px;">Illustration</h2>
+    <img class="shot shot-lg reveal" src="../../notes/assets/protonx/rag-advanced.jpg" alt="Advanced retrieve" />
+    
+  </div>
+  <div class="foot"><span>07</span><span>AI Lab · illustration</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Indexes</span><span class="pill">compare</span></div>
+    <h2 class="reveal">Two index types</h2>
+    <div class="card table-card reveal">
+      <table><thead><tr><th>Index</th><th>Strong</th><th>Weak</th></tr></thead><tbody><tr><td>Inverted (Elastic)</td><td>Fast, exact terms</td><td>No synonym understanding</td></tr><tr><td>Semantic (vectors)</td><td>Meaning / paraphrase</td><td>Heavier; needs a model</td></tr></tbody></table>
+    </div>
+  </div>
+  <div class="foot"><span>08</span><span>notes/semantic-search.md</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Eval</span><span class="pill">MS MARCO</span></div>
+    <h2 class="reveal">How to know it works</h2>
+    <div class="cols-3"><div class="card accent reveal"><div class="tag">data</div><h3>MS MARCO</h3><p>Real questions + relevant passages.</p></div><div class="card cyan reveal"><div class="tag">mrr</div><h3>MRR@10 / P@k</h3><p>Rank quality metrics.</p></div><div class="card reveal"><div class="tag">clf</div><h3>Query classifier</h3><p>Labels easy vs hard for Tiered.</p></div></div>
+  </div>
+  <div class="foot"><span>09</span><span>github.com/hoanganh25991/semantic-search</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Pipeline</span><span class="pill">pipeline</span></div>
+    <h2 class="reveal">Question to top-k</h2>
+    <div class="flow-row reveal" style="margin-top:48px;"><span class="step">question</span><span class="arr">→</span><span class="step">classify?</span><span class="arr">→</span><span class="step">keyword|semantic</span><span class="arr">→</span><span class="step">merge</span><span class="arr">→</span><span class="step">top-k</span><span class="arr">→</span><span class="step">RAG</span></div>
+    
+  </div>
+  <div class="foot"><span>10</span><span>stands on embedding + vector-db</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Next</span><span class="pill">continue</span></div>
+    <h1 class="reveal" style="margin-top:100px;font-size:64px;">Open the repo<br /><em>and the note.</em></h1>
+    <p class="lead reveal" style="margin-top:28px;">notes/semantic-search.md · github.com/hoanganh25991/semantic-search</p>
+    <a class="app-cta reveal" href="../../notes/semantic-search.html">Open note →</a>
+  </div>
+  <div class="foot"><span>end</span><span>AI Lab</span></div>
+</section>
+
+</main>
+</div>
+<nav class="deck-controls">
+  <button type="button" id="prevBtn">←</button>
+  <span id="pageLabel">1</span>
+  <button type="button" id="nextBtn">→</button>
+</nav>
+<script>window.LAB={"kind": "slides", "title": "Semantic Search · Slides", "download": "download.html", "downloadName": "semantic-search-slides.html"};</script>
+<script src="../_shared/deck.js"></script>
+</body>
+</html>

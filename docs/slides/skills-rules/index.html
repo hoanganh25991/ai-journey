@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Skills · Rules · Commands · slides</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Sora:wght@400;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="../_shared/deck.css" />
+<style>
+.shot {
+  width: 100%; height: 420px; object-fit: contain; border-radius: 14px;
+  border: 1px solid var(--line); background: #e6edf5;
+}
+.shot-lg { height: 520px; }
+.shot-md { height: 380px; }
+.mini { font-size: 18px !important; }
+.table-card { overflow: hidden; }
+.table-card table { width: 100%; border-collapse: collapse; font-size: 18px; }
+.table-card th, .table-card td {
+  text-align: left; padding: 12px 14px; border-bottom: 1px solid var(--line);
+  color: var(--muted); vertical-align: top;
+}
+.table-card th { color: var(--ink); font-family: var(--font-mono); font-size: 14px;
+  letter-spacing: 0.06em; text-transform: uppercase; }
+.code-block {
+  font-family: var(--font-mono); font-size: 18px; line-height: 1.55;
+  background: rgba(22,32,46,0.92); color: #e8eef7; padding: 24px 28px;
+  border-radius: 14px; white-space: pre; overflow: hidden;
+}
+.code-block .c { color: #8b97a8; }
+.code-block .k { color: #5ec8d4; }
+.code-block .s { color: #f0a35e; }
+</style>
+</head>
+<body>
+<div class="deck-viewport">
+<main class="deck-stage" id="deckStage">
+
+<section class="slide active">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Concept · skills-rules</span><span class="pill">teaching</span></div>
+    <h1 class="reveal" style="margin-top:72px;">Skills · Rules · <em>Commands</em></h1>
+    <p class="lead reveal" style="margin-top:28px;">Three ways to teach a coding agent: packaged capability, always-on constraint, and typed shortcuts.</p>
+    <div class="flow-row reveal"><span class="step">Skill</span><span class="arr">→</span><span class="step">Rule</span><span class="arr">→</span><span class="step">Command</span><span class="arr">→</span><span class="step">~/.agents</span></div>
+  </div>
+  <div class="foot"><span>01</span><span>AI Lab</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Why</span><span class="pill">matters</span></div>
+    <h2 class="reveal">Same model, better brain config</h2>
+    <div class="cols-3"><div class="card accent reveal"><div class="tag">proc</div><h3>Process once</h3><p>Stop repeating instructions every turn.</p></div><div class="card cyan reveal"><div class="tag">conv</div><h3>Conventions stick</h3><p>Rules enforce project style automatically.</p></div><div class="card reveal"><div class="tag">trig</div><h3>Auto-trigger</h3><p>Skill descriptions tell the agent when to load.</p></div></div>
+  </div>
+  <div class="foot"><span>02</span><span>notes/skills-rules.md</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Three layers</span><span class="pill">ideas</span></div>
+    <h2 class="reveal">Key ideas</h2>
+    <div class="cols-3"><div class="card reveal"><div class="tag">skill</div><h3>Skill</h3><p>SKILL.md (+ scripts) loaded when the task matches.</p></div><div class="card cyan reveal"><div class="tag">rule</div><h3>Rule</h3><p>Always-on or glob-matched constraint.</p></div><div class="card reveal"><div class="tag">cmd</div><h3>Command</h3><p>User types /deep-plan, /loop, /graphify.</p></div></div>
+    <p class="lead reveal" style="margin-top:24px;font-size:20px;">Keywords: skills · rules · commands · ~/.agents · Read: <span style="color:var(--amber);font-family:var(--font-mono)">notes/skills-rules.md</span></p>
+  </div>
+  <div class="foot"><span>03</span><span>notes/skills-rules.md</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Illustration</span><span class="pill">skills-rules-commands.png</span></div>
+    <h2 class="reveal" style="font-size:36px;margin-bottom:16px;">Illustration</h2>
+    <img class="shot shot-lg reveal" src="../assets/skills-rules-commands.png" alt="Three concepts" />
+    
+  </div>
+  <div class="foot"><span>04</span><span>AI Lab · illustration</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Illustration</span><span class="pill">skills-layers.svg</span></div>
+    <h2 class="reveal" style="font-size:36px;margin-bottom:16px;">Illustration</h2>
+    <img class="shot shot-lg reveal" src="../assets/skills-layers.svg" alt="Layers" />
+    
+  </div>
+  <div class="foot"><span>05</span><span>AI Lab · illustration</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Compare</span><span class="pill">when</span></div>
+    <h2 class="reveal">When each layer loads</h2>
+    <div class="card table-card reveal">
+      <table><thead><tr><th>Kind</th><th>When</th><th>Example</th></tr></thead><tbody><tr><td>Skill</td><td>Task matches description</td><td>frontend-slides · tavily-*</td></tr><tr><td>Rule</td><td>Always or file glob</td><td>commit style · notes-first</td></tr><tr><td>Command</td><td>User types shortcut</td><td>/deep-plan · /graphify .</td></tr></tbody></table>
+    </div>
+  </div>
+  <div class="foot"><span>06</span><span>notes/skills-rules.md</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>SKILL.md</span><span class="pill">structure</span></div>
+    <h2 class="reveal">Description is the trigger</h2>
+    <div class="cols-3"><div class="card accent reveal"><div class="tag">home</div><h3>~/.agents/skills</h3><p>Canonical path — write once, use everywhere.</p></div><div class="card cyan reveal"><div class="tag">desc</div><h3>description field</h3><p>“Use when…” — the model auto-picks from this.</p></div><div class="card reveal"><div class="tag">scripts</div><h3>Scripts OK</h3><p>Agent runs helpers via shell / MCP.</p></div></div>
+  </div>
+  <div class="foot"><span>07</span><span>notes/skills-rules.md</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Rules</span><span class="pill">budget</span></div>
+    <h2 class="reveal">Keep always-rules short</h2>
+    <div class="cols-3"><div class="card accent reveal"><div class="tag">ctx</div><h3>Context cost</h3><p>Always rules burn tokens every turn.</p></div><div class="card cyan reveal"><div class="tag">glob</div><h3>Prefer globs</h3><p>*.tsx / notes/*.md load only when relevant.</p></div><div class="card reveal"><div class="tag">split</div><h3>Rules vs skills</h3><p>Conventions in rules; processes in skills.</p></div></div>
+  </div>
+  <div class="foot"><span>08</span><span>notes/skills-rules.md</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Clients</span><span class="pill">layout</span></div>
+    <h2 class="reveal">Global home layout</h2>
+    <div class="cols-3"><div class="card accent reveal"><div class="tag">src</div><h3>~/.agents/skills</h3><p>Source of truth</p></div><div class="card cyan reveal"><div class="tag">empty</div><h3>Cursor/Claude skills dirs</h3><p>Keep empty — don't duplicate trees</p></div><div class="card reveal"><div class="tag">pi</div><h3>Pi</h3><p>Symlinks → ~/.agents only</p></div></div>
+  </div>
+  <div class="foot"><span>09</span><span>related: mcp · agents</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Next</span><span class="pill">continue</span></div>
+    <h1 class="reveal" style="margin-top:100px;font-size:64px;">Configure the brain,<br /><em>then call tools.</em></h1>
+    <p class="lead reveal" style="margin-top:28px;">notes/skills-rules.md · try demos/mcp app</p>
+    <a class="app-cta reveal" href="../../demos/mcp/app/index.html">Open MCP demo →</a>
+  </div>
+  <div class="foot"><span>end</span><span>AI Lab</span></div>
+</section>
+
+</main>
+</div>
+<nav class="deck-controls">
+  <button type="button" id="prevBtn">←</button>
+  <span id="pageLabel">1</span>
+  <button type="button" id="nextBtn">→</button>
+</nav>
+<script>window.LAB={"kind": "slides", "title": "Skills Rules · Slides", "download": "download.html", "downloadName": "skills-rules-slides.html"};</script>
+<script src="../_shared/deck.js"></script>
+</body>
+</html>

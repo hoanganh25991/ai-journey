@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Classification · slides</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Sora:wght@400;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="../_shared/deck.css" />
+<style>
+.shot {
+  width: 100%; height: 420px; object-fit: contain; border-radius: 14px;
+  border: 1px solid var(--line); background: #e6edf5;
+}
+.shot-lg { height: 520px; }
+.shot-md { height: 380px; }
+.mini { font-size: 18px !important; }
+.table-card { overflow: hidden; }
+.table-card table { width: 100%; border-collapse: collapse; font-size: 18px; }
+.table-card th, .table-card td {
+  text-align: left; padding: 12px 14px; border-bottom: 1px solid var(--line);
+  color: var(--muted); vertical-align: top;
+}
+.table-card th { color: var(--ink); font-family: var(--font-mono); font-size: 14px;
+  letter-spacing: 0.06em; text-transform: uppercase; }
+.code-block {
+  font-family: var(--font-mono); font-size: 18px; line-height: 1.55;
+  background: rgba(22,32,46,0.92); color: #e8eef7; padding: 24px 28px;
+  border-radius: 14px; white-space: pre; overflow: hidden;
+}
+.code-block .c { color: #8b97a8; }
+.code-block .k { color: #5ec8d4; }
+.code-block .s { color: #f0a35e; }
+</style>
+</head>
+<body>
+<div class="deck-viewport">
+<main class="deck-stage" id="deckStage">
+
+<section class="slide active">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Concept · classification</span><span class="pill">teaching</span></div>
+    <h1 class="reveal" style="margin-top:72px;">Classification · <em>label the input</em></h1>
+    <p class="lead reveal" style="margin-top:28px;">Given text, image, or numbers — pick one label from a fixed set. The most common model-building task after softmax.</p>
+    <div class="flow-row reveal"><span class="step">input</span><span class="arr">→</span><span class="step">embedding</span><span class="arr">→</span><span class="step">head</span><span class="arr">→</span><span class="step">softmax</span><span class="arr">→</span><span class="step">label</span></div>
+  </div>
+  <div class="foot"><span>01</span><span>AI Lab</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Why</span><span class="pill">matters</span></div>
+    <h2 class="reveal">Why classification shows up everywhere</h2>
+    <div class="cols-3"><div class="card accent reveal"><div class="tag">review</div><h3>Sentiment</h3><p>Is this review positive or negative?</p></div><div class="card cyan reveal"><div class="tag">inbox</div><h3>Spam filter</h3><p>Email spam / not spam — binary decisions.</p></div><div class="card reveal"><div class="tag">route</div><h3>Easy vs hard</h3><p>Route questions by difficulty before calling a big model.</p></div></div>
+  </div>
+  <div class="foot"><span>02</span><span>notes/classification.md</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Classification</span><span class="pill">ideas</span></div>
+    <h2 class="reveal">Key ideas</h2>
+    <div class="cols-3"><div class="card reveal"><div class="tag">head</div><h3>Classification head</h3><p>Last layer → logits per label → softmax → pick the highest.</p></div><div class="card cyan reveal"><div class="tag">kinds</div><h3>Binary / multi / multi-label</h3><p>Two classes · exactly one of many · several labels at once.</p></div><div class="card reveal"><div class="tag">loss</div><h3>Cross-entropy</h3><p>Measures how wrong the predicted probability is; training pushes it down.</p></div></div>
+    <p class="lead reveal" style="margin-top:24px;font-size:20px;">Keywords: classification · cross-entropy · multi-class · F1 · Read: <span style="color:var(--amber);font-family:var(--font-mono)">notes/classification.md</span></p>
+  </div>
+  <div class="foot"><span>03</span><span>notes/classification.md</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Illustration</span><span class="pill">classification-hero.png</span></div>
+    <h2 class="reveal" style="font-size:36px;margin-bottom:16px;">Illustration</h2>
+    <img class="shot shot-lg reveal" src="../assets/classification-hero.png" alt="Classification hero" />
+    <p class="lead reveal" style="margin-top:12px;font-size:20px;">Scores become a discrete decision.</p>
+  </div>
+  <div class="foot"><span>04</span><span>AI Lab · illustration</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Illustration</span><span class="pill">classification-pipeline.svg</span></div>
+    <h2 class="reveal" style="font-size:36px;margin-bottom:16px;">Illustration</h2>
+    <img class="shot shot-lg reveal" src="../assets/classification-pipeline.svg" alt="Pipeline" />
+    
+  </div>
+  <div class="foot"><span>05</span><span>AI Lab · illustration</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Illustration</span><span class="pill">softmax-regression.jpg</span></div>
+    <h2 class="reveal" style="font-size:36px;margin-bottom:16px;">Illustration</h2>
+    <img class="shot shot-lg reveal" src="../../notes/assets/protonx/softmax-regression.jpg" alt="Softmax regression" />
+    <p class="lead reveal" style="margin-top:12px;font-size:20px;">Multi-class classification model.</p>
+  </div>
+  <div class="foot"><span>06</span><span>AI Lab · illustration</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Illustration</span><span class="pill">softmax.jpg</span></div>
+    <h2 class="reveal" style="font-size:36px;margin-bottom:16px;">Illustration</h2>
+    <img class="shot shot-lg reveal" src="../../notes/assets/protonx/softmax.jpg" alt="Softmax" />
+    <p class="lead reveal" style="margin-top:12px;font-size:20px;">Raw scores → probabilities that sum to 1.</p>
+  </div>
+  <div class="foot"><span>07</span><span>AI Lab · illustration</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Evaluate</span><span class="pill">metrics</span></div>
+    <h2 class="reveal">Accuracy is easy — and often misleading</h2>
+    <div class="card table-card reveal">
+      <table><thead><tr><th>Metric</th><th>Asks</th><th>Watch out</th></tr></thead><tbody><tr><td>Accuracy</td><td>How often correct?</td><td>Fails on imbalanced classes</td></tr><tr><td>Precision</td><td>Of predicted positives, how many true?</td><td>False alarms</td></tr><tr><td>Recall</td><td>Of true positives, how many found?</td><td>Missed rare labels</td></tr><tr><td>F1</td><td>Harmonic mean of P & R</td><td>Better default on skewed data</td></tr></tbody></table>
+    </div>
+  </div>
+  <div class="foot"><span>08</span><span>notes/classification.md</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Pitfalls</span><span class="pill">watch</span></div>
+    <h2 class="reveal">Easy to go wrong</h2>
+    <div class="cols-3"><div class="card accent reveal"><div class="tag">balance</div><h3>Class imbalance</h3><p>Rare labels get ignored — inspect the label distribution first.</p></div><div class="card cyan reveal"><div class="tag">leak</div><h3>Train/val leak</h3><p>Same examples in train and val → fake high scores.</p></div><div class="card reveal"><div class="tag">metric</div><h3>Wrong metric</h3><p>Optimizing accuracy on 95% majority class hides failure.</p></div></div>
+  </div>
+  <div class="foot"><span>09</span><span>notes/classification.md</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Pipeline</span><span class="pill">pipeline</span></div>
+    <h2 class="reveal">From input to label</h2>
+    <div class="flow-row reveal" style="margin-top:48px;"><span class="step">input</span><span class="arr">→</span><span class="step">embed</span><span class="arr">→</span><span class="step">head</span><span class="arr">→</span><span class="step">softmax</span><span class="arr">→</span><span class="step">label</span></div>
+    <p class="lead reveal" style="margin-top:36px;">Train with pytorch-training.md or tensorflow-training.md.</p>
+  </div>
+  <div class="foot"><span>10</span><span>train: cross-entropy</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Related</span><span class="pill">next</span></div>
+    <h2 class="reveal">Where to go next</h2>
+    <div class="cols-3"><div class="card accent reveal"><div class="tag">before</div><h3>Softmax</h3><p>How scores become probabilities.</p></div><div class="card cyan reveal"><div class="tag">train</div><h3>PyTorch / TensorFlow</h3><p>Actually run the training loop.</p></div><div class="card reveal"><div class="tag">demo</div><h3>Sentiment / car-nn</h3><p>See classification in a browser demo.</p></div></div>
+  </div>
+  <div class="foot"><span>11</span><span>related notes</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Next</span><span class="pill">continue</span></div>
+    <h1 class="reveal" style="margin-top:100px;font-size:64px;">Read the note<br /><em>then train it.</em></h1>
+    <p class="lead reveal" style="margin-top:28px;">notes/classification.md — then pytorch-training or tensorflow-training.</p>
+    <a class="app-cta reveal" href="../../notes/classification.html">Open note →</a>
+  </div>
+  <div class="foot"><span>end</span><span>AI Lab</span></div>
+</section>
+
+</main>
+</div>
+<nav class="deck-controls">
+  <button type="button" id="prevBtn">←</button>
+  <span id="pageLabel">1</span>
+  <button type="button" id="nextBtn">→</button>
+</nav>
+<script>window.LAB={"kind": "slides", "title": "Classification · Slides", "download": "download.html", "downloadName": "classification-slides.html"};</script>
+<script src="../_shared/deck.js"></script>
+</body>
+</html>

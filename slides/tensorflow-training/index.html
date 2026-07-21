@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>TensorFlow training · slides</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Sora:wght@400;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="../_shared/deck.css" />
+<style>
+.shot {
+  width: 100%; height: 420px; object-fit: contain; border-radius: 14px;
+  border: 1px solid var(--line); background: #e6edf5;
+}
+.shot-lg { height: 520px; }
+.shot-md { height: 380px; }
+.mini { font-size: 18px !important; }
+.table-card { overflow: hidden; }
+.table-card table { width: 100%; border-collapse: collapse; font-size: 18px; }
+.table-card th, .table-card td {
+  text-align: left; padding: 12px 14px; border-bottom: 1px solid var(--line);
+  color: var(--muted); vertical-align: top;
+}
+.table-card th { color: var(--ink); font-family: var(--font-mono); font-size: 14px;
+  letter-spacing: 0.06em; text-transform: uppercase; }
+.code-block {
+  font-family: var(--font-mono); font-size: 18px; line-height: 1.55;
+  background: rgba(22,32,46,0.92); color: #e8eef7; padding: 24px 28px;
+  border-radius: 14px; white-space: pre; overflow: hidden;
+}
+.code-block .c { color: #8b97a8; }
+.code-block .k { color: #5ec8d4; }
+.code-block .s { color: #f0a35e; }
+</style>
+</head>
+<body>
+<div class="deck-viewport">
+<main class="deck-stage" id="deckStage">
+
+<section class="slide active">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Concept · tensorflow-training</span><span class="pill">teaching</span></div>
+    <h1 class="reveal" style="margin-top:72px;">Train with <em>TensorFlow / Keras</em></h1>
+    <p class="lead reveal" style="margin-top:28px;">Same classifier lesson, declarative style: define the model, compile, then fit over epochs.</p>
+    <div class="flow-row reveal"><span class="step">dataset</span><span class="arr">→</span><span class="step">model</span><span class="arr">→</span><span class="step">compile</span><span class="arr">→</span><span class="step">fit</span><span class="arr">→</span><span class="step">checkpoint</span></div>
+  </div>
+  <div class="foot"><span>01</span><span>AI Lab</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Why</span><span class="pill">matters</span></div>
+    <h2 class="reveal">Why Keras still matters</h2>
+    <div class="cols-3"><div class="card accent reveal"><div class="tag">short</div><h3>Concise</h3><p>No manual backward/step — the framework owns the loop.</p></div><div class="card cyan reveal"><div class="tag">viz</div><h3>Projector</h3><p>Embedding Projector makes vector space visible in 3D.</p></div><div class="card reveal"><div class="tag">pair</div><h3>Pair with PyTorch</h3><p>Two APIs, one learning idea — pick what fits.</p></div></div>
+  </div>
+  <div class="foot"><span>02</span><span>notes/tensorflow-training.md</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Keras</span><span class="pill">ideas</span></div>
+    <h2 class="reveal">Key ideas</h2>
+    <div class="cols-3"><div class="card reveal"><div class="tag">compile</div><h3>compile = how to learn</h3><p>Optimizer, loss (cross-entropy), metrics.</p></div><div class="card cyan reveal"><div class="tag">fit</div><h3>fit = run training</h3><p>Epochs, batches, backprop — handled for you.</p></div><div class="card reveal"><div class="tag">cb</div><h3>Callbacks</h3><p>EarlyStopping + ModelCheckpoint save the best model.</p></div></div>
+    <p class="lead reveal" style="margin-top:24px;font-size:20px;">Keywords: tensorflow · keras · epoch · Read: <span style="color:var(--amber);font-family:var(--font-mono)">notes/tensorflow-training.md</span></p>
+  </div>
+  <div class="foot"><span>03</span><span>notes/tensorflow-training.md</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Illustration</span><span class="pill">tensorflow-keras.png</span></div>
+    <h2 class="reveal" style="font-size:36px;margin-bottom:16px;">Illustration</h2>
+    <img class="shot shot-lg reveal" src="../assets/tensorflow-keras.png" alt="Keras flow" />
+    
+  </div>
+  <div class="foot"><span>04</span><span>AI Lab · illustration</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Code</span><span class="pill">skeleton</span></div>
+    <h2 class="reveal">compile then fit</h2>
+    <div class="code-block reveal">model = keras.Sequential([
+  Dense(64, activation=<span class="s">"relu"</span>),
+  Dense(NUM_CLASSES, activation=<span class="s">"softmax"</span>),
+])
+model.compile(optimizer=<span class="s">"adam"</span>,
+  loss=<span class="s">"sparse_categorical_crossentropy"</span>,
+  metrics=[<span class="s">"accuracy"</span>])
+model.fit(x, y, epochs=EPOCHS, validation_data=val)</div>
+  </div>
+  <div class="foot"><span>05</span><span>notes/tensorflow-training.md</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Illustration</span><span class="pill">softmax-regression.jpg</span></div>
+    <h2 class="reveal" style="font-size:36px;margin-bottom:16px;">Illustration</h2>
+    <img class="shot shot-lg reveal" src="../../notes/assets/protonx/softmax-regression.jpg" alt="Softmax regression" />
+    
+  </div>
+  <div class="foot"><span>06</span><span>AI Lab · illustration</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Illustration</span><span class="pill">tf-projector.jpg</span></div>
+    <h2 class="reveal" style="font-size:36px;margin-bottom:16px;">Illustration</h2>
+    <img class="shot shot-lg reveal" src="../../notes/assets/protonx/tf-projector.jpg" alt="Embedding Projector" />
+    <p class="lead reveal" style="margin-top:12px;font-size:20px;">Inspect embeddings in 3D while training.</p>
+  </div>
+  <div class="foot"><span>07</span><span>AI Lab · illustration</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Monitor</span><span class="pill">curves</span></div>
+    <h2 class="reveal">What to watch each epoch</h2>
+    <div class="cols-3"><div class="card accent reveal"><div class="tag">acc</div><h3>accuracy</h3><p>Rising on train — good, but not enough alone.</p></div><div class="card cyan reveal"><div class="tag">val</div><h3>val_loss</h3><p>Rising while train falls → overfitting.</p></div><div class="card reveal"><div class="tag">stop</div><h3>EarlyStopping</h3><p>Stop when val stops improving; keep best weights.</p></div></div>
+  </div>
+  <div class="foot"><span>08</span><span>notes/tensorflow-training.md</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Pipeline</span><span class="pill">pipeline</span></div>
+    <h2 class="reveal">Same destination as PyTorch</h2>
+    <div class="flow-row reveal" style="margin-top:48px;"><span class="step">dataset</span><span class="arr">→</span><span class="step">Keras model</span><span class="arr">→</span><span class="step">compile</span><span class="arr">→</span><span class="step">fit</span><span class="arr">→</span><span class="step">checkpoint</span></div>
+    
+  </div>
+  <div class="foot"><span>09</span><span>serves classification.md</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Related</span><span class="pill">stack</span></div>
+    <h2 class="reveal">Connect the stack</h2>
+    <div class="cols-3"><div class="card accent reveal"><div class="tag">cls</div><h3>Classification</h3><p>The task this trains.</p></div><div class="card cyan reveal"><div class="tag">pt</div><h3>PyTorch twin</h3><p>Manual loop version of the same idea.</p></div><div class="card reveal"><div class="tag">emb</div><h3>Embedding</h3><p>Projector visualizes the vectors.</p></div></div>
+  </div>
+  <div class="foot"><span>10</span><span>related</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Next</span><span class="pill">continue</span></div>
+    <h1 class="reveal" style="margin-top:100px;font-size:64px;">Declare it,<br /><em>then fit.</em></h1>
+    <p class="lead reveal" style="margin-top:28px;">notes/tensorflow-training.md</p>
+    <a class="app-cta reveal" href="../../notes/tensorflow-training.html">Open note →</a>
+  </div>
+  <div class="foot"><span>end</span><span>AI Lab</span></div>
+</section>
+
+</main>
+</div>
+<nav class="deck-controls">
+  <button type="button" id="prevBtn">←</button>
+  <span id="pageLabel">1</span>
+  <button type="button" id="nextBtn">→</button>
+</nav>
+<script src="../_shared/deck.js"></script>
+</body>
+</html>

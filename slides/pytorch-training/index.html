@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>PyTorch training · slides</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Sora:wght@400;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="../_shared/deck.css" />
+<style>
+.shot {
+  width: 100%; height: 420px; object-fit: contain; border-radius: 14px;
+  border: 1px solid var(--line); background: #e6edf5;
+}
+.shot-lg { height: 520px; }
+.shot-md { height: 380px; }
+.mini { font-size: 18px !important; }
+.table-card { overflow: hidden; }
+.table-card table { width: 100%; border-collapse: collapse; font-size: 18px; }
+.table-card th, .table-card td {
+  text-align: left; padding: 12px 14px; border-bottom: 1px solid var(--line);
+  color: var(--muted); vertical-align: top;
+}
+.table-card th { color: var(--ink); font-family: var(--font-mono); font-size: 14px;
+  letter-spacing: 0.06em; text-transform: uppercase; }
+.code-block {
+  font-family: var(--font-mono); font-size: 18px; line-height: 1.55;
+  background: rgba(22,32,46,0.92); color: #e8eef7; padding: 24px 28px;
+  border-radius: 14px; white-space: pre; overflow: hidden;
+}
+.code-block .c { color: #8b97a8; }
+.code-block .k { color: #5ec8d4; }
+.code-block .s { color: #f0a35e; }
+</style>
+</head>
+<body>
+<div class="deck-viewport">
+<main class="deck-stage" id="deckStage">
+
+<section class="slide active">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Concept · pytorch-training</span><span class="pill">teaching</span></div>
+    <h1 class="reveal" style="margin-top:72px;">Train with <em>PyTorch</em></h1>
+    <p class="lead reveal" style="margin-top:28px;">Epoch loop you write yourself: forward → loss → backward → step until the model is good enough.</p>
+    <div class="flow-row reveal"><span class="step">dataset</span><span class="arr">→</span><span class="step">DataLoader</span><span class="arr">→</span><span class="step">epoch loop</span><span class="arr">→</span><span class="step">checkpoint</span></div>
+  </div>
+  <div class="foot"><span>01</span><span>AI Lab</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Why</span><span class="pill">matters</span></div>
+    <h2 class="reveal">Why learn the loop by hand</h2>
+    <div class="cols-3"><div class="card accent reveal"><div class="tag">flex</div><h3>Most flexible</h3><p>You see exactly how learning happens — what high-level APIs wrap.</p></div><div class="card cyan reveal"><div class="tag">same</div><h3>Same mechanism</h3><p>Hugging Face Trainer and sentence-transformers sit on this loop.</p></div><div class="card reveal"><div class="tag">debug</div><h3>Debuggable</h3><p>When loss explodes, you know which step to inspect.</p></div></div>
+  </div>
+  <div class="foot"><span>02</span><span>notes/pytorch-training.md</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>PyTorch</span><span class="pill">ideas</span></div>
+    <h2 class="reveal">Key ideas</h2>
+    <div class="cols-3"><div class="card reveal"><div class="tag">batch</div><h3>Epoch vs batch</h3><p>Epoch = one pass over all data; batch = chunk processed per step.</p></div><div class="card cyan reveal"><div class="tag">four</div><h3>Four steps</h3><p>forward → loss → backward() → step(). Always zero_grad().</p></div><div class="card reveal"><div class="tag">lr</div><h3>Optimizer + LR</h3><p>Adam/SGD; LR too high → jumps; too low → crawls.</p></div></div>
+    <p class="lead reveal" style="margin-top:24px;font-size:20px;">Keywords: pytorch · epoch · optimizer · backprop · Read: <span style="color:var(--amber);font-family:var(--font-mono)">notes/pytorch-training.md</span></p>
+  </div>
+  <div class="foot"><span>03</span><span>notes/pytorch-training.md</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Illustration</span><span class="pill">pytorch-loop.png</span></div>
+    <h2 class="reveal" style="font-size:36px;margin-bottom:16px;">Illustration</h2>
+    <img class="shot shot-lg reveal" src="../assets/pytorch-loop.png" alt="Training loop" />
+    
+  </div>
+  <div class="foot"><span>04</span><span>AI Lab · illustration</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Illustration</span><span class="pill">pytorch-steps.svg</span></div>
+    <h2 class="reveal" style="font-size:36px;margin-bottom:16px;">Illustration</h2>
+    <img class="shot shot-lg reveal" src="../assets/pytorch-steps.svg" alt="Four steps" />
+    
+  </div>
+  <div class="foot"><span>05</span><span>AI Lab · illustration</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Code</span><span class="pill">skeleton</span></div>
+    <h2 class="reveal">The batch loop</h2>
+    <div class="cols-2">
+      <div class="code-block reveal"><span class="k">for</span> epoch <span class="k">in</span> range(EPOCHS):
+    <span class="k">for</span> x, y <span class="k">in</span> dataloader:
+        opt.zero_grad()
+        logits = model(x)       <span class="c"># forward</span>
+        loss = loss_fn(logits, y)
+        loss.backward()         <span class="c"># gradients</span>
+        opt.step()              <span class="c"># update W</span></div>
+      <div class="card cyan reveal"><div class="tag">remember</div><h3>zero_grad()</h3><p>Without clearing gradients, updates accumulate across batches and training goes wild.</p></div>
+    </div>
+  </div>
+  <div class="foot"><span>06</span><span>notes/pytorch-training.md</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Validate</span><span class="pill">overfit</span></div>
+    <h2 class="reveal">Train vs validation</h2>
+    <div class="cols-3"><div class="card accent reveal"><div class="tag">split</div><h3>Hold out val</h3><p>Track val loss every epoch — not just train loss.</p></div><div class="card cyan reveal"><div class="tag">overfit</div><h3>Overfitting</h3><p>Train loss ↓ while val loss ↑ → memorizing, not generalizing.</p></div><div class="card reveal"><div class="tag">save</div><h3>Checkpoint</h3><p>torch.save(model.state_dict()) for inference later.</p></div></div>
+  </div>
+  <div class="foot"><span>07</span><span>notes/pytorch-training.md</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>GPU</span><span class="pill">speed</span></div>
+    <h2 class="reveal">Move model and batch to device</h2>
+    <div class="cols-3"><div class="card accent reveal"><div class="tag">cuda</div><h3>.to("cuda")</h3><p>Model and each batch must live on the same device.</p></div><div class="card cyan reveal"><div class="tag">note</div><h3>train-gpu.md</h3><p>Full stack: HF/Kaggle data + Colab/cloud notebooks.</p></div><div class="card reveal"><div class="tag">export</div><h3>Then infer</h3><p>Training is heavy once; inference is light forever.</p></div></div>
+  </div>
+  <div class="foot"><span>08</span><span>notes/train-gpu.md</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Pipeline</span><span class="pill">pipeline</span></div>
+    <h2 class="reveal">Dataset → checkpoint</h2>
+    <div class="flow-row reveal" style="margin-top:48px;"><span class="step">dataset</span><span class="arr">→</span><span class="step">DataLoader</span><span class="arr">→</span><span class="step">forward</span><span class="arr">→</span><span class="step">loss</span><span class="arr">→</span><span class="step">backward</span><span class="arr">→</span><span class="step">step</span><span class="arr">→</span><span class="step">ckpt</span></div>
+    
+  </div>
+  <div class="foot"><span>09</span><span>notes/pytorch-training.md</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Compare</span><span class="pill">vs TF</span></div>
+    <h2 class="reveal">PyTorch vs TensorFlow style</h2>
+    <div class="cols-3"><div class="card accent reveal"><div class="tag">pt</div><h3>PyTorch</h3><p>You write the loop — maximum control.</p></div><div class="card cyan reveal"><div class="tag">tf</div><h3>Keras</h3><p>compile + fit — framework runs the loop.</p></div><div class="card reveal"><div class="tag">pick</div><h3>Choose by project</h3><p>Same learning idea; different API ergonomics.</p></div></div>
+  </div>
+  <div class="foot"><span>10</span><span>related</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Next</span><span class="pill">continue</span></div>
+    <h1 class="reveal" style="margin-top:100px;font-size:64px;">Write the loop<br /><em>once.</em></h1>
+    <p class="lead reveal" style="margin-top:28px;">notes/pytorch-training.md — then try tensorflow-training for the declarative twin.</p>
+    <a class="app-cta reveal" href="../../notes/pytorch-training.html">Open note →</a>
+  </div>
+  <div class="foot"><span>end</span><span>AI Lab</span></div>
+</section>
+
+</main>
+</div>
+<nav class="deck-controls">
+  <button type="button" id="prevBtn">←</button>
+  <span id="pageLabel">1</span>
+  <button type="button" id="nextBtn">→</button>
+</nav>
+<script src="../_shared/deck.js"></script>
+</body>
+</html>

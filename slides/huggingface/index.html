@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Hugging Face · slides</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Sora:wght@400;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="../_shared/deck.css" />
+<style>
+.shot {
+  width: 100%; height: 420px; object-fit: contain; border-radius: 14px;
+  border: 1px solid var(--line); background: #e6edf5;
+}
+.shot-lg { height: 520px; }
+.shot-md { height: 380px; }
+.mini { font-size: 18px !important; }
+.table-card { overflow: hidden; }
+.table-card table { width: 100%; border-collapse: collapse; font-size: 18px; }
+.table-card th, .table-card td {
+  text-align: left; padding: 12px 14px; border-bottom: 1px solid var(--line);
+  color: var(--muted); vertical-align: top;
+}
+.table-card th { color: var(--ink); font-family: var(--font-mono); font-size: 14px;
+  letter-spacing: 0.06em; text-transform: uppercase; }
+.code-block {
+  font-family: var(--font-mono); font-size: 18px; line-height: 1.55;
+  background: rgba(22,32,46,0.92); color: #e8eef7; padding: 24px 28px;
+  border-radius: 14px; white-space: pre; overflow: hidden;
+}
+.code-block .c { color: #8b97a8; }
+.code-block .k { color: #5ec8d4; }
+.code-block .s { color: #f0a35e; }
+</style>
+</head>
+<body>
+<div class="deck-viewport">
+<main class="deck-stage" id="deckStage">
+
+<section class="slide active">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Concept · huggingface</span><span class="pill">teaching</span></div>
+    <h1 class="reveal" style="margin-top:72px;">Hugging Face · <em>dataset + Space</em></h1>
+    <p class="lead reveal" style="margin-top:28px;">GitHub for AI: Datasets, pretrained Models, and Spaces — shorten the path from idea to a usable model.</p>
+    <div class="flow-row reveal"><span class="step">Datasets</span><span class="arr">→</span><span class="step">Hub model</span><span class="arr">→</span><span class="step">fine-tune</span><span class="arr">→</span><span class="step">Spaces</span></div>
+  </div>
+  <div class="foot"><span>01</span><span>AI Lab</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Why</span><span class="pill">matters</span></div>
+    <h2 class="reveal">Standing on others' work</h2>
+    <div class="cols-3"><div class="card accent reveal"><div class="tag">cost</div><h3>Scratch is expensive</h3><p>Pretrained + light fine-tune beats training from zero.</p></div><div class="card cyan reveal"><div class="tag">data</div><h3>Labeled data ready</h3><p>load_dataset(...) — one line to a training set.</p></div><div class="card reveal"><div class="tag">share</div><h3>Demo in minutes</h3><p>Spaces host Gradio/Streamlit with optional GPU.</p></div></div>
+  </div>
+  <div class="foot"><span>02</span><span>notes/huggingface.md</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Hub</span><span class="pill">ideas</span></div>
+    <h2 class="reveal">Key ideas</h2>
+    <div class="cols-3"><div class="card reveal"><div class="tag">data</div><h3>Datasets</h3><p>Labeled corpora ready for Trainer or your own loop.</p></div><div class="card cyan reveal"><div class="tag">models</div><h3>Models</h3><p>BERT, GPT, ViT… fine-tune instead of scratch.</p></div><div class="card reveal"><div class="tag">spaces</div><h3>Spaces</h3><p>Push a demo → UI + API endpoint.</p></div></div>
+    <p class="lead reveal" style="margin-top:24px;font-size:20px;">Keywords: huggingface · datasets · spaces · fine-tune · Read: <span style="color:var(--amber);font-family:var(--font-mono)">notes/huggingface.md</span></p>
+  </div>
+  <div class="foot"><span>03</span><span>notes/huggingface.md</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Illustration</span><span class="pill">huggingface-hub.png</span></div>
+    <h2 class="reveal" style="font-size:36px;margin-bottom:16px;">Illustration</h2>
+    <img class="shot shot-lg reveal" src="../assets/huggingface-hub.png" alt="Three pillars" />
+    
+  </div>
+  <div class="foot"><span>04</span><span>AI Lab · illustration</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Workflow</span><span class="pill">path</span></div>
+    <h2 class="reveal">Typical fine-tune path</h2>
+    <div class="cols-2"><div class="card reveal"><div class="tag">1</div><h3>Load data</h3><p>datasets.load_dataset(...)</p></div><div class="card cyan reveal"><div class="tag">2</div><h3>Load model</h3><p>transformers AutoModel + tokenizer</p></div><div class="card reveal"><div class="tag">3</div><h3>Train</h3><p>Trainer API or PyTorch/TF loop</p></div><div class="card cyan reveal"><div class="tag">4</div><h3>Publish</h3><p>push to Hub / deploy Space</p></div></div>
+  </div>
+  <div class="foot"><span>05</span><span>notes/huggingface.md</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Fine-tune</span><span class="pill">vs scratch</span></div>
+    <h2 class="reveal">Fine-tune beats scratch</h2>
+    <div class="cols-3"><div class="card accent reveal"><div class="tag">less</div><h3>Less data</h3><p>Reuse knowledge from large pretraining.</p></div><div class="card cyan reveal"><div class="tag">time</div><h3>Less time</h3><p>Hours instead of weeks on a GPU.</p></div><div class="card reveal"><div class="tag">card</div><h3>Read the card</h3><p>License + intended use before commercial work.</p></div></div>
+  </div>
+  <div class="foot"><span>06</span><span>notes/huggingface.md</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Pipeline</span><span class="pill">pipeline</span></div>
+    <h2 class="reveal">From Hub to use</h2>
+    <div class="flow-row reveal" style="margin-top:48px;"><span class="step">HF Datasets</span><span class="arr">→</span><span class="step">pretrained</span><span class="arr">→</span><span class="step">fine-tune</span><span class="arr">→</span><span class="step">Hub / Spaces</span><span class="arr">→</span><span class="step">infer</span></div>
+    
+  </div>
+  <div class="foot"><span>07</span><span>notes/huggingface.md</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Pair</span><span class="pill">kaggle</span></div>
+    <h2 class="reveal">HF + Kaggle</h2>
+    <div class="cols-3"><div class="card accent reveal"><div class="tag">hf</div><h3>Hugging Face</h3><p>Models + datasets + Spaces.</p></div><div class="card cyan reveal"><div class="tag">kg</div><h3>Kaggle</h3><p>Free GPU notebooks + competitions.</p></div><div class="card reveal"><div class="tag">combo</div><h3>Often combined</h3><p>HF model + Kaggle GPU notebook.</p></div></div>
+  </div>
+  <div class="foot"><span>08</span><span>related</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Pitfalls</span><span class="pill">watch</span></div>
+    <h2 class="reveal">Before you ship</h2>
+    <div class="cols-3"><div class="card accent reveal"><div class="tag">lic</div><h3>License</h3><p>Check commercial restrictions on the model card.</p></div><div class="card cyan reveal"><div class="tag">tok</div><h3>Tokenizer match</h3><p>Always use the tokenizer that matches the model.</p></div><div class="card reveal"><div class="tag">leak</div><h3>Eval leak</h3><p>Don't fine-tune on your test set.</p></div></div>
+  </div>
+  <div class="foot"><span>09</span><span>notes/huggingface.md</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Next</span><span class="pill">continue</span></div>
+    <h1 class="reveal" style="margin-top:100px;font-size:64px;">Borrow, fine-tune,<br /><em>share.</em></h1>
+    <p class="lead reveal" style="margin-top:28px;">notes/huggingface.md — then kaggle.md for free GPU hours.</p>
+    <a class="app-cta reveal" href="../../notes/huggingface.html">Open note →</a>
+  </div>
+  <div class="foot"><span>end</span><span>AI Lab</span></div>
+</section>
+
+</main>
+</div>
+<nav class="deck-controls">
+  <button type="button" id="prevBtn">←</button>
+  <span id="pageLabel">1</span>
+  <button type="button" id="nextBtn">→</button>
+</nav>
+<script src="../_shared/deck.js"></script>
+</body>
+</html>

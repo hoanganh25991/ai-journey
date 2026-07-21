@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Model field notes · slides</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Sora:wght@400;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="../_shared/deck.css" />
+<style>
+.shot {
+  width: 100%; height: 420px; object-fit: contain; border-radius: 14px;
+  border: 1px solid var(--line); background: #e6edf5;
+}
+.shot-lg { height: 520px; }
+.shot-md { height: 380px; }
+.mini { font-size: 18px !important; }
+.table-card { overflow: hidden; }
+.table-card table { width: 100%; border-collapse: collapse; font-size: 18px; }
+.table-card th, .table-card td {
+  text-align: left; padding: 12px 14px; border-bottom: 1px solid var(--line);
+  color: var(--muted); vertical-align: top;
+}
+.table-card th { color: var(--ink); font-family: var(--font-mono); font-size: 14px;
+  letter-spacing: 0.06em; text-transform: uppercase; }
+.code-block {
+  font-family: var(--font-mono); font-size: 18px; line-height: 1.55;
+  background: rgba(22,32,46,0.92); color: #e8eef7; padding: 24px 28px;
+  border-radius: 14px; white-space: pre; overflow: hidden;
+}
+.code-block .c { color: #8b97a8; }
+.code-block .k { color: #5ec8d4; }
+.code-block .s { color: #f0a35e; }
+</style>
+</head>
+<body>
+<div class="deck-viewport">
+<main class="deck-stage" id="deckStage">
+
+<section class="slide active">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Field notes · model-notes</span><span class="pill">teaching</span></div>
+    <h1 class="reveal" style="margin-top:72px;">Model field notes · <em>≠ harness</em></h1>
+    <p class="lead reveal" style="margin-top:28px;">Notes on the models themselves (OpenRouter + Cursor). Harness comparison lives in agents.</p>
+    <div class="flow-row reveal"><span class="step">pick model</span><span class="arr">→</span><span class="step">task fit</span><span class="arr">→</span><span class="step">cost</span><span class="arr">→</span><span class="step">speed</span></div>
+  </div>
+  <div class="foot"><span>01</span><span>AI Lab</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Why</span><span class="pill">split</span></div>
+    <h2 class="reveal">Harness shapes workflow — model shapes reasoning</h2>
+    <div class="cols-3"><div class="card accent reveal"><div class="tag">qual</div><h3>Quality</h3><p>Reasoning depth and reliability.</p></div><div class="card cyan reveal"><div class="tag">spd</div><h3>Speed</h3><p>Tokens per second / latency.</p></div><div class="card reveal"><div class="tag">$</div><h3>Cost</h3><p>Intelligence per dollar and per minute.</p></div></div>
+  </div>
+  <div class="foot"><span>02</span><span>notes/08-model-notes.md</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Illustration</span><span class="pill">model-notes-spectrum.png</span></div>
+    <h2 class="reveal" style="font-size:36px;margin-bottom:16px;">Illustration</h2>
+    <img class="shot shot-lg reveal" src="../assets/model-notes-spectrum.png" alt="Spectrum" />
+    
+  </div>
+  <div class="foot"><span>03</span><span>AI Lab · illustration</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Field</span><span class="pill">table</span></div>
+    <h2 class="reveal">Personal experience (not benchmarks)</h2>
+    <div class="card table-card reveal">
+      <table><thead><tr><th>Model</th><th>Strong</th><th>Watch</th></tr></thead><tbody><tr><td>Grok 4.5</td><td>Fast · smooth · good $/task</td><td>Hallucination on unverifiable</td></tr><tr><td>Composer Fast</td><td>Very fast replies</td><td>Costs more than Auto</td></tr><tr><td>Cursor Auto</td><td>Fast feedback loop</td><td>Quality varies with routing</td></tr><tr><td>Anthropic</td><td>Clarify · skills · ask back</td><td>Slow · session limits</td></tr><tr><td>DeepSeek V4</td><td>Debug existing code</td><td>No images · weaker greenfield</td></tr><tr><td>Qwen 3</td><td>Simple tasks</td><td>Weak on large greenfield</td></tr></tbody></table>
+    </div>
+  </div>
+  <div class="foot"><span>04</span><span>notes/08-model-notes.md</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Grok 4.5</span><span class="pill">why</span></div>
+    <h2 class="reveal">Why it impresses (mid-2026)</h2>
+    <div class="cols-3"><div class="card accent reveal"><div class="tag">tps</div><h3>~80 TPS</h3><p>Optimized for coding + agentic work.</p></div><div class="card cyan reveal"><div class="tag">tok</div><h3>Fewer tokens</h3><p>~4.2× fewer output tokens vs Opus on SWE-Bench Pro.</p></div><div class="card reveal"><div class="tag">edge</div><h3>Intel / time / $</h3><p>Wins on verifiable coding tasks.</p></div></div>
+  </div>
+  <div class="foot"><span>05</span><span>notes/08-model-notes.md</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Principles</span><span class="pill">pick</span></div>
+    <h2 class="reveal">Match model to job</h2>
+    <div class="cols-3"><div class="card accent reveal"><div class="tag">new</div><h3>Greenfield</h3><p>Favor strong reasoning (Anthropic, Grok).</p></div><div class="card cyan reveal"><div class="tag">fix</div><h3>Debug existing</h3><p>DeepSeek V4 — effective and cheap.</p></div><div class="card reveal"><div class="tag">img</div><h3>Needs images</h3><p>Avoid DeepSeek (no image input).</p></div></div>
+  </div>
+  <div class="foot"><span>06</span><span>notes/08-model-notes.md</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>More</span><span class="pill">rules of thumb</span></div>
+    <h2 class="reveal">Speed · clarify · budget</h2>
+    <div class="cols-3"><div class="card accent reveal"><div class="tag">fast</div><h3>Speed + low cost</h3><p>Grok 4.5 / Composer Fast.</p></div><div class="card cyan reveal"><div class="tag">ask</div><h3>Clarify constraints</h3><p>Anthropic strongest at asking back.</p></div><div class="card reveal"><div class="tag">bench</div><h3>Check boards</h3><p>OpenRouter prices · LMArena votes.</p></div></div>
+  </div>
+  <div class="foot"><span>07</span><span>references</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Related</span><span class="pill">links</span></div>
+    <h2 class="reveal">Keep the split clean</h2>
+    <div class="cols-3"><div class="card accent reveal"><div class="tag">harness</div><h3>07-agents.md</h3><p>Compare Cursor / Claude Code / Pi…</p></div><div class="card cyan reveal"><div class="tag">skills</div><h3>skills-rules.md</h3><p>Configure know-how.</p></div><div class="card reveal"><div class="tag">mcp</div><h3>mcp.md</h3><p>Tools the harness can call.</p></div></div>
+  </div>
+  <div class="foot"><span>08</span><span>related</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Next</span><span class="pill">continue</span></div>
+    <h1 class="reveal" style="margin-top:100px;font-size:64px;">Model for the task,<br /><em>harness for the loop.</em></h1>
+    <p class="lead reveal" style="margin-top:28px;">notes/08-model-notes.md</p>
+    <a class="app-cta reveal" href="../../notes/model-notes.html">Open note →</a>
+  </div>
+  <div class="foot"><span>end</span><span>AI Lab</span></div>
+</section>
+
+</main>
+</div>
+<nav class="deck-controls">
+  <button type="button" id="prevBtn">←</button>
+  <span id="pageLabel">1</span>
+  <button type="button" id="nextBtn">→</button>
+</nav>
+<script src="../_shared/deck.js"></script>
+</body>
+</html>

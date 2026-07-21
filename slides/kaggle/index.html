@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Kaggle · slides</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Sora:wght@400;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="../_shared/deck.css" />
+<style>
+.shot {
+  width: 100%; height: 420px; object-fit: contain; border-radius: 14px;
+  border: 1px solid var(--line); background: #e6edf5;
+}
+.shot-lg { height: 520px; }
+.shot-md { height: 380px; }
+.mini { font-size: 18px !important; }
+.table-card { overflow: hidden; }
+.table-card table { width: 100%; border-collapse: collapse; font-size: 18px; }
+.table-card th, .table-card td {
+  text-align: left; padding: 12px 14px; border-bottom: 1px solid var(--line);
+  color: var(--muted); vertical-align: top;
+}
+.table-card th { color: var(--ink); font-family: var(--font-mono); font-size: 14px;
+  letter-spacing: 0.06em; text-transform: uppercase; }
+.code-block {
+  font-family: var(--font-mono); font-size: 18px; line-height: 1.55;
+  background: rgba(22,32,46,0.92); color: #e8eef7; padding: 24px 28px;
+  border-radius: 14px; white-space: pre; overflow: hidden;
+}
+.code-block .c { color: #8b97a8; }
+.code-block .k { color: #5ec8d4; }
+.code-block .s { color: #f0a35e; }
+</style>
+</head>
+<body>
+<div class="deck-viewport">
+<main class="deck-stage" id="deckStage">
+
+<section class="slide active">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Concept · kaggle</span><span class="pill">teaching</span></div>
+    <h1 class="reveal" style="margin-top:72px;">Kaggle · <em>dataset + GPU notebook</em></h1>
+    <p class="lead reveal" style="margin-top:28px;">Free datasets, notebooks with GPU/TPU, and competitions — the hands-on twin of Hugging Face.</p>
+    <div class="flow-row reveal"><span class="step">dataset</span><span class="arr">→</span><span class="step">notebook</span><span class="arr">→</span><span class="step">enable GPU</span><span class="arr">→</span><span class="step">train</span><span class="arr">→</span><span class="step">export</span></div>
+  </div>
+  <div class="foot"><span>01</span><span>AI Lab</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Why</span><span class="pill">matters</span></div>
+    <h2 class="reveal">What learners usually lack</h2>
+    <div class="cols-3"><div class="card accent reveal"><div class="tag">data</div><h3>Good data</h3><p>Tens of thousands of public datasets.</p></div><div class="card cyan reveal"><div class="tag">compute</div><h3>Enough compute</h3><p>Free GPU/TPU hours in the browser.</p></div><div class="card reveal"><div class="tag">peers</div><h3>Public solutions</h3><p>Read top notebooks — learn faster.</p></div></div>
+  </div>
+  <div class="foot"><span>02</span><span>notes/kaggle.md</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Kaggle</span><span class="pill">ideas</span></div>
+    <h2 class="reveal">Key ideas</h2>
+    <div class="cols-3"><div class="card reveal"><div class="tag">ds</div><h3>Datasets</h3><p>Download straight into a notebook.</p></div><div class="card cyan reveal"><div class="tag">nb</div><h3>Notebooks</h3><p>Built-in libs; flip GPU on in settings.</p></div><div class="card reveal"><div class="tag">comp</div><h3>Competitions</h3><p>Metric + leaderboard + public kernels.</p></div></div>
+    <p class="lead reveal" style="margin-top:24px;font-size:20px;">Keywords: kaggle · dataset · gpu · competition · Read: <span style="color:var(--amber);font-family:var(--font-mono)">notes/kaggle.md</span></p>
+  </div>
+  <div class="foot"><span>03</span><span>notes/kaggle.md</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Illustration</span><span class="pill">kaggle-stack.png</span></div>
+    <h2 class="reveal" style="font-size:36px;margin-bottom:16px;">Illustration</h2>
+    <img class="shot shot-lg reveal" src="../assets/kaggle-stack.png" alt="Kaggle stack" />
+    
+  </div>
+  <div class="foot"><span>04</span><span>AI Lab · illustration</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Quota</span><span class="pill">limits</span></div>
+    <h2 class="reveal">Free GPU is capped</h2>
+    <div class="cols-3"><div class="card accent reveal"><div class="tag">week</div><h3>Weekly hours</h3><p>Save GPU for real training runs, not idle kernels.</p></div><div class="card cyan reveal"><div class="tag">tpu</div><h3>TPU option</h3><p>Useful for TF/Keras workloads.</p></div><div class="card reveal"><div class="tag">export</div><h3>Export model</h3><p>Download checkpoint → use in demos / Spaces.</p></div></div>
+  </div>
+  <div class="foot"><span>05</span><span>notes/kaggle.md</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Pipeline</span><span class="pill">pipeline</span></div>
+    <h2 class="reveal">Data → trained model</h2>
+    <div class="flow-row reveal" style="margin-top:48px;"><span class="step">Kaggle dataset</span><span class="arr">→</span><span class="step">notebook + GPU</span><span class="arr">→</span><span class="step">train epochs</span><span class="arr">→</span><span class="step">export</span><span class="arr">→</span><span class="step">inference</span></div>
+    
+  </div>
+  <div class="foot"><span>06</span><span>notes/kaggle.md</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Combo</span><span class="pill">HF</span></div>
+    <h2 class="reveal">Classic combo</h2>
+    <div class="cols-3"><div class="card accent reveal"><div class="tag">data</div><h3>Kaggle data</h3><p>Competition or public dataset.</p></div><div class="card cyan reveal"><div class="tag">model</div><h3>HF pretrained</h3><p>Grab BERT / MiniLM from the Hub.</p></div><div class="card reveal"><div class="tag">run</div><h3>Train on Kaggle GPU</h3><p>No local CUDA install required.</p></div></div>
+  </div>
+  <div class="foot"><span>07</span><span>notes/huggingface.md</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Practice</span><span class="pill">comp</span></div>
+    <h2 class="reveal">How to learn from competitions</h2>
+    <div class="cols-3"><div class="card accent reveal"><div class="tag">metric</div><h3>Read the metric</h3><p>Optimize what the leaderboard scores.</p></div><div class="card cyan reveal"><div class="tag">public</div><h3>Public notebooks</h3><p>Reproduce a strong baseline first.</p></div><div class="card reveal"><div class="tag">iter</div><h3>Iterate small</h3><p>One change per submit — know what moved the score.</p></div></div>
+  </div>
+  <div class="foot"><span>08</span><span>notes/kaggle.md</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Related</span><span class="pill">stack</span></div>
+    <h2 class="reveal">In the training stack</h2>
+    <div class="cols-3"><div class="card accent reveal"><div class="tag">gpu</div><h3>train-gpu.md</h3><p>Where this fits in the lab checklist.</p></div><div class="card cyan reveal"><div class="tag">pt</div><h3>PyTorch / TF</h3><p>What you write inside the notebook.</p></div><div class="card reveal"><div class="tag">infer</div><h3>train-infer</h3><p>Export → plug into browser demos.</p></div></div>
+  </div>
+  <div class="foot"><span>09</span><span>related</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Next</span><span class="pill">continue</span></div>
+    <h1 class="reveal" style="margin-top:100px;font-size:64px;">Enable GPU,<br /><em>then train.</em></h1>
+    <p class="lead reveal" style="margin-top:28px;">notes/kaggle.md</p>
+    <a class="app-cta reveal" href="../../notes/kaggle.html">Open note →</a>
+  </div>
+  <div class="foot"><span>end</span><span>AI Lab</span></div>
+</section>
+
+</main>
+</div>
+<nav class="deck-controls">
+  <button type="button" id="prevBtn">←</button>
+  <span id="pageLabel">1</span>
+  <button type="button" id="nextBtn">→</button>
+</nav>
+<script src="../_shared/deck.js"></script>
+</body>
+</html>

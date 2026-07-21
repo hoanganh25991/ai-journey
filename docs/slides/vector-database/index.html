@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Vector database · slides</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Sora:wght@400;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="../_shared/deck.css" />
+<style>
+.shot {
+  width: 100%; height: 420px; object-fit: contain; border-radius: 14px;
+  border: 1px solid var(--line); background: #e6edf5;
+}
+.shot-lg { height: 520px; }
+.shot-md { height: 380px; }
+.mini { font-size: 18px !important; }
+.table-card { overflow: hidden; }
+.table-card table { width: 100%; border-collapse: collapse; font-size: 18px; }
+.table-card th, .table-card td {
+  text-align: left; padding: 12px 14px; border-bottom: 1px solid var(--line);
+  color: var(--muted); vertical-align: top;
+}
+.table-card th { color: var(--ink); font-family: var(--font-mono); font-size: 14px;
+  letter-spacing: 0.06em; text-transform: uppercase; }
+.code-block {
+  font-family: var(--font-mono); font-size: 18px; line-height: 1.55;
+  background: rgba(22,32,46,0.92); color: #e8eef7; padding: 24px 28px;
+  border-radius: 14px; white-space: pre; overflow: hidden;
+}
+.code-block .c { color: #8b97a8; }
+.code-block .k { color: #5ec8d4; }
+.code-block .s { color: #f0a35e; }
+</style>
+</head>
+<body>
+<div class="deck-viewport">
+<main class="deck-stage" id="deckStage">
+
+<section class="slide active">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Concept · vector-database</span><span class="pill">teaching</span></div>
+    <h1 class="reveal" style="margin-top:72px;">Vector database · <em>nearest neighbors fast</em></h1>
+    <p class="lead reveal" style="margin-top:28px;">Store millions of embeddings and answer “closest to this?” in milliseconds — infrastructure under RAG and semantic search.</p>
+    <div class="flow-row reveal"><span class="step">chunk</span><span class="arr">→</span><span class="step">embed</span><span class="arr">→</span><span class="step">index</span><span class="arr">→</span><span class="step">top-k</span></div>
+  </div>
+  <div class="foot"><span>01</span><span>AI Lab</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Why</span><span class="pill">scale</span></div>
+    <h2 class="reveal">Why brute force dies</h2>
+    <div class="cols-3"><div class="card accent reveal"><div class="tag">scan</div><h3>Linear scan</h3><p>Checking every vector is too slow at real scale.</p></div><div class="card cyan reveal"><div class="tag">ann</div><h3>ANN indexes</h3><p>HNSW / IVF trade a little accuracy for huge speed.</p></div><div class="card reveal"><div class="tag">meta</div><h3>Metadata matters</h3><p>Filter by source/date/tags before or after search.</p></div></div>
+  </div>
+  <div class="foot"><span>02</span><span>notes/vector-database.md</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Vector DB</span><span class="pill">ideas</span></div>
+    <h2 class="reveal">Key ideas</h2>
+    <div class="cols-3"><div class="card reveal"><div class="tag">nn</div><h3>Nearest neighbor</h3><p>Query vector → k closest by cosine or dot.</p></div><div class="card cyan reveal"><div class="tag">ann</div><h3>Approximate</h3><p>Good enough for search; orders of magnitude faster.</p></div><div class="card reveal"><div class="tag">crud</div><h3>CRUD + filter</h3><p>Data changes; filters keep results relevant.</p></div></div>
+    <p class="lead reveal" style="margin-top:24px;font-size:20px;">Keywords: ANN · faiss · elasticsearch · pgvector · Read: <span style="color:var(--amber);font-family:var(--font-mono)">notes/vector-database.md</span></p>
+  </div>
+  <div class="foot"><span>03</span><span>notes/vector-database.md</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Illustration</span><span class="pill">vector-db-ann.png</span></div>
+    <h2 class="reveal" style="font-size:36px;margin-bottom:16px;">Illustration</h2>
+    <img class="shot shot-lg reveal" src="../assets/vector-db-ann.png" alt="ANN search" />
+    
+  </div>
+  <div class="foot"><span>04</span><span>AI Lab · illustration</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Illustration</span><span class="pill">vector-db-flow.svg</span></div>
+    <h2 class="reveal" style="font-size:36px;margin-bottom:16px;">Illustration</h2>
+    <img class="shot shot-lg reveal" src="../assets/vector-db-flow.svg" alt="Index + query" />
+    
+  </div>
+  <div class="foot"><span>05</span><span>AI Lab · illustration</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Illustration</span><span class="pill">embed-then-query.jpg</span></div>
+    <h2 class="reveal" style="font-size:36px;margin-bottom:16px;">Illustration</h2>
+    <img class="shot shot-lg reveal" src="../../notes/assets/protonx/embed-then-query.jpg" alt="Embed then query" />
+    
+  </div>
+  <div class="foot"><span>06</span><span>AI Lab · illustration</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Illustration</span><span class="pill">cosine-vs-dot.jpg</span></div>
+    <h2 class="reveal" style="font-size:36px;margin-bottom:16px;">Illustration</h2>
+    <img class="shot shot-lg reveal" src="../../notes/assets/protonx/cosine-vs-dot.jpg" alt="Cosine vs dot" />
+    
+  </div>
+  <div class="foot"><span>07</span><span>AI Lab · illustration</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Choices</span><span class="pill">tools</span></div>
+    <h2 class="reveal">Pick by need</h2>
+    <div class="card table-card reveal">
+      <table><thead><tr><th>Tool</th><th>Strength</th><th>Gap</th></tr></thead><tbody><tr><td>FAISS</td><td>In-memory speed</td><td>No durable CRUD out of the box</td></tr><tr><td>Elasticsearch kNN</td><td>Keyword + vector + scale</td><td>Heavier ops</td></tr><tr><td>pgvector / Chroma</td><td>Simple apps</td><td>Not for huge distributed loads</td></tr></tbody></table>
+    </div>
+  </div>
+  <div class="foot"><span>08</span><span>notes/vector-database.md</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Pipeline</span><span class="pill">pipeline</span></div>
+    <h2 class="reveal">Documents in · answers out</h2>
+    <div class="flow-row reveal" style="margin-top:48px;"><span class="step">docs</span><span class="arr">→</span><span class="step">chunk</span><span class="arr">→</span><span class="step">embed</span><span class="arr">→</span><span class="step">vector DB</span><span class="arr">→</span><span class="step">top-k</span><span class="arr">→</span><span class="step">RAG</span></div>
+    
+  </div>
+  <div class="foot"><span>09</span><span>feeds rag.md · semantic-search.md</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Pitfalls</span><span class="pill">watch</span></div>
+    <h2 class="reveal">Common failures</h2>
+    <div class="cols-3"><div class="card accent reveal"><div class="tag">dim</div><h3>Dim mismatch</h3><p>Query encoder must match index encoder.</p></div><div class="card cyan reveal"><div class="tag">stale</div><h3>Stale index</h3><p>Changed docs need re-embed + upsert.</p></div><div class="card reveal"><div class="tag">metric</div><h3>Wrong metric</h3><p>Cosine vs dot — ranking drifts if mismatched.</p></div></div>
+  </div>
+  <div class="foot"><span>10</span><span>notes/vector-database.md</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Next</span><span class="pill">continue</span></div>
+    <h1 class="reveal" style="margin-top:100px;font-size:64px;">Index once,<br /><em>retrieve forever.</em></h1>
+    <p class="lead reveal" style="margin-top:28px;">notes/vector-database.md</p>
+    <a class="app-cta reveal" href="../../notes/vector-database.html">Open note →</a>
+  </div>
+  <div class="foot"><span>end</span><span>AI Lab</span></div>
+</section>
+
+</main>
+</div>
+<nav class="deck-controls">
+  <button type="button" id="prevBtn">←</button>
+  <span id="pageLabel">1</span>
+  <button type="button" id="nextBtn">→</button>
+</nav>
+<script>window.LAB={"kind": "slides", "title": "Vector Database · Slides", "download": "download.html", "downloadName": "vector-database-slides.html"};</script>
+<script src="../_shared/deck.js"></script>
+</body>
+</html>

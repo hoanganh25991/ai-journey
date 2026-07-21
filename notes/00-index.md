@@ -59,26 +59,26 @@ screenshot / PDF page  →  notes/assets/<topic>/filename.jpg
 | [embedding.md](./embedding.md) | concepts | yes | yes |
 | [attention.md](./attention.md) | concepts | yes | yes |
 | [softmax.md](./softmax.md) | concepts | yes | yes |
-| [classification.md](./classification.md) | concepts | — | — |
-| [pytorch-training.md](./pytorch-training.md) | concepts | — | — |
-| [tensorflow-training.md](./tensorflow-training.md) | concepts | — | — |
-| [huggingface.md](./huggingface.md) | concepts | — | — |
-| [kaggle.md](./kaggle.md) | concepts | — | — |
-| [transformer.md](./transformer.md) | concepts | — | — |
-| [sentence-transformers.md](./sentence-transformers.md) | concepts | — | — |
+| [classification.md](./classification.md) | concepts | yes | — |
+| [pytorch-training.md](./pytorch-training.md) | concepts | yes | — |
+| [tensorflow-training.md](./tensorflow-training.md) | concepts | yes | — |
+| [huggingface.md](./huggingface.md) | concepts | yes | — |
+| [kaggle.md](./kaggle.md) | concepts | yes | — |
+| [transformer.md](./transformer.md) | concepts | yes | — |
+| [sentence-transformers.md](./sentence-transformers.md) | concepts | yes | — |
 | [rag.md](./rag.md) | concepts | yes | yes |
-| [vector-database.md](./vector-database.md) | concepts | — | — |
-| [semantic-search.md](./semantic-search.md) | projects | — | GitHub |
+| [vector-database.md](./vector-database.md) | concepts | yes | — |
+| [semantic-search.md](./semantic-search.md) | projects | yes | GitHub |
 | [mcp.md](./mcp.md) | concepts | yes | yes |
-| [skills-rules.md](./skills-rules.md) | concepts | — | mcp app |
-| [train-gpu.md](./train-gpu.md) | concepts | — | — |
+| [skills-rules.md](./skills-rules.md) | concepts | yes | mcp app |
+| [train-gpu.md](./train-gpu.md) | concepts | yes | — |
 | [04-demo-car.md](./04-demo-car.md) | projects | yes | yes |
 | [05-demo-text.md](./05-demo-text.md) | projects | yes | yes (+ complexity-router) |
-| [06-train-infer.md](./06-train-infer.md) | concepts | — | — |
-| [07-agents.md](./07-agents.md) | concepts | — | mcp app |
-| [08-model-notes.md](./08-model-notes.md) | field-notes | — | — |
+| [06-train-infer.md](./06-train-infer.md) | concepts | yes | — |
+| [07-agents.md](./07-agents.md) | concepts | yes | mcp app |
+| [08-model-notes.md](./08-model-notes.md) | field-notes | yes | — |
 | [09-agent-automation.md](./09-agent-automation.md) | field-notes | Hermess | — |
-| [10-ai-timeline.md](./10-ai-timeline.md) | field-notes | — | — |
+| [10-ai-timeline.md](./10-ai-timeline.md) | field-notes | yes | — |
 | [personal-knowledge-base.md](./personal-knowledge-base.md) | projects | overview | CLI / plan |
 
 ## Assets
