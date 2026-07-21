@@ -10,11 +10,11 @@ A personal learning hub for common AI topics — from how machines read text to 
 
 Each topic has up to three layers:
 
-| Layer | What you get |
-| ----- | ------------ |
-| **Note** | Short English explanation — start here |
+| Layer     | What you get                                   |
+| --------- | ---------------------------------------------- |
+| **Note**  | Short English explanation — start here         |
 | **Slide** | Step-by-step deck for re-lecture or presenting |
-| **Demo** | Browser app so you can *feel* the idea |
+| **Demo**  | Browser app so you can *feel* the idea         |
 
 A five-stage **Journey** map (`docs/journey.html`) ties the notes together:
 
@@ -25,6 +25,16 @@ A five-stage **Journey** map (`docs/journey.html`) ties the notes together:
 5. **Agent** — steer the machine (agents, models, MCP, skills, automation)
 
 Open [`docs/index.html`](docs/index.html) after a build — search first, then dive into a note, slide, or demo.
+
+## Screenshots
+
+| Notes                                     | Slides                                       |
+| ----------------------------------------- | -------------------------------------------- |
+| ![Note — Tokenize](screenshots/notes.png) | ![Slides — Tokenize](screenshots/slides.png) |
+
+| Demos                                         | Journey map                                           |
+| --------------------------------------------- | ----------------------------------------------------- |
+| ![Demo — Tokenize-app](screenshots/demos.png) | ![Journey — five stages](screenshots/journey-map.png) |
 
 ## Three pillars (peers)
 
