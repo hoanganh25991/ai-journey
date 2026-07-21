@@ -1,4 +1,4 @@
-/* Shared light theme for demo apps — matches docs hub */
+/* Shared light theme for demo apps — matches docs hub / slides chrome */
 :root {
   --bg: #eef3f9;
   --surface: #ffffff;
@@ -10,7 +10,7 @@
   --teal-soft: rgba(15, 138, 155, 0.12);
   --line: rgba(20, 32, 46, 0.12);
   --line-soft: rgba(20, 32, 46, 0.07);
-  --shadow: 0 1px 2px rgba(20, 32, 46, 0.05), 0 8px 24px rgba(20, 32, 46, 0.06);
+  --shadow: 0 4px 16px rgba(20, 32, 46, 0.1);
   --font: Sora, system-ui, sans-serif;
   --mono: "IBM Plex Mono", ui-monospace, monospace;
 }
@@ -24,19 +24,32 @@ body {
     radial-gradient(ellipse 55% 45% at 0% 105%, rgba(194, 112, 58, 0.08), transparent 55%),
     var(--bg);
   -webkit-font-smoothing: antialiased;
-  padding: 28px 32px 48px;
+  /* top padding clears fixed Back + Download/Share chrome */
+  padding: 72px 32px 48px;
 }
 a { color: var(--cyan); }
 ::selection { background: var(--teal-soft); }
 
-/* floating Download / Share (injected by chrome.js) */
+/* fixed top-left Back — matches slides .deck-home */
+.demo-home {
+  position: fixed; left: 22px; top: 22px; z-index: 1000;
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: var(--mono); font-size: 13px; letter-spacing: 0.06em;
+  color: var(--ink); text-decoration: none;
+  background: rgba(255, 255, 255, 0.92); border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+  padding: 9px 15px; border-radius: 999px;
+}
+.demo-home:hover { color: var(--cyan); border-color: var(--cyan); }
+.demo-home svg { width: 15px; height: 15px; }
+
+/* floating Download / Share — matches slides .lab-chrome */
 .lab-chrome {
-  position: fixed; right: 18px; top: 18px; z-index: 1000;
+  position: fixed; right: 22px; top: 22px; z-index: 1000;
   display: inline-flex; align-items: center; gap: 8px;
 }
 .lab-chrome button,
 .lab-chrome a.lab-chrome-btn {
-  /* full reset so page-level a/button rules cannot inflate size */
   box-sizing: border-box;
   display: inline-flex;
   align-items: center;
@@ -46,17 +59,17 @@ a { color: var(--cyan); }
   min-height: 0;
   height: auto;
   line-height: 1;
-  font: 500 12px/1 var(--mono);
-  letter-spacing: 0.04em;
+  font: 500 13px/1 var(--mono);
+  letter-spacing: 0.06em;
   color: var(--ink);
   text-decoration: none;
   cursor: pointer;
   appearance: none;
   -webkit-appearance: none;
-  background: rgba(255, 255, 255, 0.94);
+  background: rgba(255, 255, 255, 0.92);
   border: 1px solid var(--line);
   box-shadow: var(--shadow);
-  padding: 8px 12px;
+  padding: 9px 15px;
   border-radius: 999px;
   transition: border-color 0.15s, color 0.15s;
 }
@@ -66,7 +79,7 @@ a { color: var(--cyan); }
   border-color: var(--cyan);
 }
 .lab-toast {
-  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+  position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%);
   background: var(--ink); color: #fff; font: 500 12px/1 var(--mono);
   padding: 10px 16px; border-radius: 999px; z-index: 1100;
   opacity: 0; pointer-events: none; transition: opacity 0.2s;

@@ -1,4 +1,4 @@
-/* Download + Share chrome for demos (apps) and slides */
+/* Download + Share + Back chrome for demos — mirrors slides/_shared/deck.js */
 (function () {
   function scriptDir() {
     const scripts = document.getElementsByTagName("script");
@@ -25,12 +25,25 @@
 
   function boot() {
     const lab = window.LAB || {};
+    const hubHref = "../../../index.html";
+
+    // top-left Back → previous stack entry (fallback: hub)
+    if (!document.querySelector(".demo-home")) {
+      const home = document.createElement("a");
+      home.className = "demo-home";
+      home.href = hubHref;
+      home.innerHTML =
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg><span>Back</span>';
+      document.body.appendChild(home);
+    }
 
     if (window.AiLabNav) {
       const topic =
         (lab.title || document.title || "Demo").replace(/\s*·.*$/, "").trim() || "Demo";
       AiLabNav.enter("Demo · " + topic);
+      AiLabNav.wireBack(".demo-home", hubHref);
       document.querySelectorAll('a[href*="index.html"]').forEach((a) => {
+        if (a.classList.contains("demo-home")) return;
         const href = a.getAttribute("href") || "";
         const text = (a.textContent || "").trim().toLowerCase();
         const isHub =
@@ -46,7 +59,6 @@
           });
         }
       });
-      // Slides link in demo header should keep stack (normal navigation + saveScroll)
     }
 
     if (document.querySelector(".lab-chrome")) return;
