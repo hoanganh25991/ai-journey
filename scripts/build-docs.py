@@ -644,7 +644,7 @@ NOTE_HTML = r"""<!DOCTYPE html>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet" />
 <style>
 @@THEME@@
-.wrap { max-width: 740px; margin: 0 auto; padding: 32px 22px 96px; }
+.wrap { max-width: 960px; margin: 0 auto; padding: 32px 22px 96px; }
 .back { display: inline-flex; align-items: center; gap: 7px; text-decoration: none; color: var(--muted); font: 500 13px var(--mono); }
 .back:hover { color: var(--teal); }
 .doc {
