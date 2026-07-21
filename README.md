@@ -1,6 +1,6 @@
 # AI Lab
 
-**Notes are the source of truth.** One build pipeline writes everything into `docs/` — open / serve only from there. Search is the hub focus. Default language is **English**; Vietnamese is applied at runtime via a web translate API (no parallel files).
+**Notes are the source of truth.** One build pipeline writes everything into `docs/` — open / serve only from there. Search is the hub focus. Theme and language default to **System**; Vietnamese is applied at runtime via a web translate API (no parallel files).
 
 ## Three pillars (peers)
 
@@ -21,9 +21,9 @@ notes/tokenize.md ──(catalog.json)──┬─→ slides/tokenize/index.html
 
 ## Theme & language
 
-On the hub, notes, and journey:
+On the hub, notes, and journey (icon toggles; both default to **System**):
 
-- **Theme:** Light · System · Dark (saved in `localStorage`)
+- **Theme:** Light · System · Dark (saved in `localStorage`; System follows `prefers-color-scheme`)
 - **Language:** EN · System · VI  
   - Source content is **English**  
   - **VI** = dynamic translation via web translate API in the browser (no second set of files)  

@@ -364,34 +364,26 @@ body {
 }
 a { color: var(--teal); }
 ::selection { background: var(--teal-soft); }
+.logo-light, .logo-dark { height: 64px; width: auto; max-width: min(420px, 100%); object-fit: contain; object-position: left center; }
+.logo-light { display: block; }
 .logo-dark { display: none; }
 [data-theme="dark"] .logo-light { display: none; }
 [data-theme="dark"] .logo-dark { display: block; }
-.theme-bar {
+.theme-bar, .lang-bar {
   display: inline-flex; gap: 2px; padding: 3px;
   background: var(--surface); border: 1px solid var(--line); border-radius: 999px;
   box-shadow: var(--shadow);
 }
-.theme-bar button {
+.theme-bar button, .lang-bar button {
   appearance: none; border: 0; background: transparent; color: var(--muted);
-  font: 500 11px var(--mono); letter-spacing: .04em; text-transform: uppercase;
-  padding: 7px 11px; border-radius: 999px; cursor: pointer; transition: all .15s;
+  width: 34px; height: 30px; padding: 0; border-radius: 999px; cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center; transition: all .15s;
 }
-.theme-bar button:hover { color: var(--teal); }
-.theme-bar button.on { background: var(--teal); color: #fff; }
+.theme-bar button:hover, .lang-bar button:hover { color: var(--teal); }
+.theme-bar button.on, .lang-bar button.on { background: var(--teal); color: #fff; }
+.theme-bar button svg, .lang-bar button svg { width: 15px; height: 15px; display: block; }
+.lang-bar .lang-mark { font: 700 11px var(--mono); line-height: 1; letter-spacing: .02em; }
 .prefs { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
-.lang-bar {
-  display: inline-flex; gap: 2px; padding: 3px;
-  background: var(--surface); border: 1px solid var(--line); border-radius: 999px;
-  box-shadow: var(--shadow);
-}
-.lang-bar button {
-  appearance: none; border: 0; background: transparent; color: var(--muted);
-  font: 500 11px var(--mono); letter-spacing: .04em; text-transform: uppercase;
-  padding: 7px 11px; border-radius: 999px; cursor: pointer; transition: all .15s;
-}
-.lang-bar button:hover { color: var(--teal); }
-.lang-bar button.on { background: var(--teal); color: #fff; }
 html.i18n-busy { cursor: progress; }
 html.i18n-busy .lang-bar { opacity: .7; pointer-events: none; }
 """
@@ -417,15 +409,15 @@ LANG_BOOT = r"""<script>
 (function () {
   try {
     var KEY = "ai-lab-lang";
-    var pref = localStorage.getItem(KEY) || "en";
-    if (pref !== "en" && pref !== "vi" && pref !== "system") pref = "en";
+    var pref = localStorage.getItem(KEY) || "system";
+    if (pref !== "en" && pref !== "vi" && pref !== "system") pref = "system";
     var nav = String(navigator.language || "en").toLowerCase();
     var resolved = pref === "system" ? (nav.indexOf("vi") === 0 ? "vi" : "en") : pref;
     document.documentElement.setAttribute("data-lang-pref", pref);
     document.documentElement.setAttribute("data-lang", resolved);
     document.documentElement.lang = resolved;
   } catch (e) {
-    document.documentElement.setAttribute("data-lang-pref", "en");
+    document.documentElement.setAttribute("data-lang-pref", "system");
     document.documentElement.setAttribute("data-lang", "en");
     document.documentElement.lang = "en";
   }
@@ -434,9 +426,9 @@ LANG_BOOT = r"""<script>
 
 THEME_CTRL = r"""
 <div class="theme-bar" role="group" aria-label="Theme" translate="no">
-  <button type="button" data-theme-set="light">Light</button>
-  <button type="button" data-theme-set="system">System</button>
-  <button type="button" data-theme-set="dark">Dark</button>
+  <button type="button" data-theme-set="light" aria-label="Light" title="Light"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>
+  <button type="button" data-theme-set="system" aria-label="System" title="System"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg></button>
+  <button type="button" data-theme-set="dark" aria-label="Dark" title="Dark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 14.5A8.5 8.5 0 1 1 9.5 3a6.8 6.8 0 0 0 11.5 11.5z"/></svg></button>
 </div>
 <script>
 (function () {
@@ -475,9 +467,9 @@ THEME_CTRL = r"""
 # Dynamic EN→VI via public web translate API. Source pages stay English-only.
 LANG_CTRL = r"""
 <div class="lang-bar" role="group" aria-label="Language" translate="no">
-  <button type="button" data-lang-set="en">EN</button>
-  <button type="button" data-lang-set="system">System</button>
-  <button type="button" data-lang-set="vi">VI</button>
+  <button type="button" data-lang-set="en" aria-label="English" title="English"><span class="lang-mark">A</span></button>
+  <button type="button" data-lang-set="system" aria-label="System" title="System"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg></button>
+  <button type="button" data-lang-set="vi" aria-label="Tiếng Việt" title="Tiếng Việt"><span class="lang-mark">V</span></button>
 </div>
 <script>
 (function () {
@@ -558,7 +550,7 @@ LANG_CTRL = r"""
   }
 
   async function applyLang(pref) {
-    if (pref !== "en" && pref !== "vi" && pref !== "system") pref = "en";
+    if (pref !== "en" && pref !== "vi" && pref !== "system") pref = "system";
     var resolved = resolve(pref);
     document.documentElement.setAttribute("data-lang-pref", pref);
     document.documentElement.setAttribute("data-lang", resolved);
@@ -595,7 +587,7 @@ LANG_CTRL = r"""
     }
   }
 
-  var pref = document.documentElement.getAttribute("data-lang-pref") || "en";
+  var pref = document.documentElement.getAttribute("data-lang-pref") || "system";
   document.querySelectorAll("[data-lang-set]").forEach(function (btn) {
     btn.addEventListener("click", function () {
       applyLang(btn.getAttribute("data-lang-set"));
@@ -613,17 +605,10 @@ LANG_CTRL = r"""
 
 PREFS_CTRL = (
     '<div class="prefs" translate="no">\n'
-    '  <div class="theme-bar" role="group" aria-label="Theme">\n'
-    '    <button type="button" data-theme-set="light">Light</button>\n'
-    '    <button type="button" data-theme-set="system">System</button>\n'
-    '    <button type="button" data-theme-set="dark">Dark</button>\n'
-    "  </div>\n"
-    '  <div class="lang-bar" role="group" aria-label="Language">\n'
-    '    <button type="button" data-lang-set="en">EN</button>\n'
-    '    <button type="button" data-lang-set="system">System</button>\n'
-    '    <button type="button" data-lang-set="vi">VI</button>\n'
-    "  </div>\n"
-    "</div>\n"
+    + THEME_CTRL[: THEME_CTRL.index("<script>")].strip()
+    + "\n"
+    + LANG_CTRL[: LANG_CTRL.index("<script>")].strip()
+    + "\n</div>\n"
     + THEME_CTRL[THEME_CTRL.index("<script>") :]
     + "\n"
     + LANG_CTRL[LANG_CTRL.index("<script>") :]
@@ -651,10 +636,6 @@ HUB_HTML = r"""<!DOCTYPE html>
 .brand {
   display: block; text-decoration: none; color: inherit;
   line-height: 0;
-}
-.brand img {
-  display: block; height: 64px; width: auto; max-width: min(420px, 100%);
-  object-fit: contain; object-position: left center;
 }
 .tagline { margin-top: 14px; color: var(--muted); font-size: 15px; max-width: 560px; line-height: 1.5; }
 .journey-cta {
@@ -1139,68 +1120,125 @@ JOURNEY_HTML = r"""<!DOCTYPE html>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet" />
 <style>
 @@THEME@@
-.wrap { max-width: 820px; margin: 0 auto; padding: 32px 22px 96px; }
+.wrap { max-width: 960px; margin: 0 auto; padding: 24px 20px 48px; }
 .nav-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
 .back { display: inline-flex; align-items: center; gap: 7px; text-decoration: none; color: var(--muted); font: 500 13px var(--mono); }
 .back:hover { color: var(--teal); }
-.hero { margin: 28px 0 10px; }
+.hero { margin: 18px 0 14px; }
 .hero .kicker { font: 600 11px var(--mono); letter-spacing: .16em; text-transform: uppercase; color: var(--teal); }
-.hero h1 { font-family: var(--serif); font-weight: 400; font-size: clamp(36px, 6vw, 52px); letter-spacing: -.02em; margin: 10px 0 12px; line-height: 1.1; }
-.hero h1 em { font-style: italic; color: var(--teal); }
-.hero .lead { color: var(--muted); font-size: 16px; line-height: 1.55; max-width: 560px; }
+.hero h1 {
+  font-family: var(--serif); font-weight: 400; font-size: clamp(32px, 5vw, 44px);
+  letter-spacing: -.02em; margin: 6px 0 8px; line-height: 1.1;
+}
+.hero .lead { color: var(--muted); font-size: 14.5px; line-height: 1.5; max-width: 620px; }
 .hero .chain {
-  margin-top: 18px; font: 500 12px var(--mono); color: var(--amber);
-  letter-spacing: .02em; line-height: 1.6;
+  margin-top: 10px; font: 500 12px var(--mono); color: var(--amber);
+  letter-spacing: .02em; line-height: 1.5;
 }
-.moods { display: flex; flex-wrap: wrap; gap: 8px; margin: 28px 0 8px; }
-.moods a {
-  text-decoration: none; color: var(--teal); background: var(--teal-soft);
-  border: 1px solid transparent; border-radius: 999px; padding: 8px 13px;
-  font: 500 12px var(--mono); transition: border-color .15s;
+.moods { display: flex; flex-wrap: wrap; gap: 7px; margin: 0 0 18px; }
+.moods button {
+  appearance: none; border: 1px solid transparent; background: var(--teal-soft); color: var(--teal);
+  border-radius: 999px; padding: 7px 12px; font: 500 12px var(--mono); cursor: pointer;
+  transition: border-color .15s, transform .15s, background .15s;
 }
-.moods a:hover { border-color: var(--teal); }
-.path { margin-top: 18px; position: relative; }
-.path::before {
-  content: ""; position: absolute; left: 23px; top: 18px; bottom: 18px; width: 2px;
-  background: linear-gradient(var(--teal), var(--amber)); opacity: .35;
+.moods button:hover { border-color: var(--teal); }
+.moods button.on { background: var(--teal); color: #fff; border-color: var(--teal); }
+.map {
+  position: relative; display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px;
+  margin: 0 0 16px; padding: 4px 0 2px;
 }
-.stage {
-  position: relative; margin: 0 0 18px; padding: 22px 22px 20px 64px;
-  background: var(--surface); border: 1px solid var(--line); border-radius: 18px;
-  box-shadow: var(--shadow);
+.map::before {
+  content: ""; position: absolute; left: 8%; right: 8%; top: 28px; height: 3px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #0f8a9b, #2a9d8f 25%, #c2703a 55%, #d4894a 80%, #3d6b8a);
+  opacity: .55; z-index: 0;
 }
-.stage .dot {
-  position: absolute; left: 12px; top: 24px; width: 24px; height: 24px;
-  border-radius: 50%; background: var(--teal); color: #fff;
-  font: 600 12px var(--mono); display: grid; place-items: center;
-  box-shadow: 0 0 0 6px var(--teal-soft);
+.map-node {
+  position: relative; z-index: 1; appearance: none; border: 1px solid var(--line);
+  background: var(--surface); border-radius: 18px; padding: 14px 10px 12px;
+  cursor: pointer; text-align: center; color: inherit; box-shadow: var(--shadow);
+  transition: transform .18s ease, border-color .18s, box-shadow .18s;
 }
-.stage .roman { font: 600 12px var(--mono); color: var(--teal); letter-spacing: .08em; }
-.stage h2 { font-size: 22px; margin: 4px 0 8px; letter-spacing: -.01em; }
-.stage .goal { color: var(--muted); font-size: 14px; line-height: 1.5; margin-bottom: 14px; }
-.stops { display: flex; flex-direction: column; gap: 8px; }
+.map-node:hover { transform: translateY(-3px); border-color: var(--node); }
+.map-node.on {
+  border-color: var(--node); transform: translateY(-4px);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--node) 22%, transparent), var(--shadow);
+}
+.map-node .n {
+  width: 34px; height: 34px; margin: 0 auto 8px; border-radius: 50%;
+  display: grid; place-items: center; font: 700 13px var(--mono); color: #fff;
+  background: var(--node); box-shadow: 0 0 0 5px color-mix(in srgb, var(--node) 18%, transparent);
+}
+.map-node .short { font: 700 13px var(--font); letter-spacing: -.01em; }
+.map-node .count { margin-top: 4px; font: 500 10px var(--mono); color: var(--muted); }
+.map-node[data-tone="1"] { --node: #0f8a9b; }
+.map-node[data-tone="2"] { --node: #2a9d8f; }
+.map-node[data-tone="3"] { --node: #c2703a; }
+.map-node[data-tone="4"] { --node: #d4894a; }
+.map-node[data-tone="5"] { --node: #3d6b8a; }
+.stage-panel {
+  display: none; background: var(--surface); border: 1px solid var(--line);
+  border-radius: 22px; padding: 22px 22px 18px; box-shadow: var(--shadow);
+  animation: rise .28s ease;
+}
+.stage-panel.on { display: block; }
+@keyframes rise {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.stage-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.stage-head .roman { font: 600 12px var(--mono); color: var(--teal); letter-spacing: .1em; }
+.stage-head h2 { font-size: 22px; margin: 4px 0 6px; letter-spacing: -.01em; }
+.stage-head .goal { color: var(--muted); font-size: 14px; line-height: 1.5; max-width: 640px; }
+.stage-nav { display: flex; gap: 6px; }
+.stage-nav button {
+  appearance: none; border: 1px solid var(--line); background: transparent; color: var(--muted);
+  width: 36px; height: 36px; border-radius: 999px; cursor: pointer;
+  display: grid; place-items: center; transition: all .15s;
+}
+.stage-nav button:hover { color: var(--teal); border-color: var(--teal); }
+.stops {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 8px; margin-top: 16px;
+}
 .stop {
-  display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; align-items: baseline;
-  text-decoration: none; color: inherit; padding: 10px 12px; border-radius: 12px;
-  border: 1px solid var(--line-soft); transition: border-color .15s, background .15s;
+  display: flex; flex-direction: column; gap: 4px; text-decoration: none; color: inherit;
+  padding: 12px 12px 11px; border-radius: 14px; border: 1px solid var(--line-soft);
+  background: linear-gradient(160deg, color-mix(in srgb, var(--teal) 7%, transparent), transparent 70%);
+  transition: border-color .15s, transform .15s, background .15s;
+  min-height: 96px;
 }
-.stop:hover { border-color: var(--teal); background: var(--teal-soft); }
+.stop:hover { border-color: var(--teal); transform: translateY(-2px); background: var(--teal-soft); }
+.stop .meta { display: flex; gap: 8px; align-items: center; }
 .stop .num { font: 600 11px var(--mono); color: var(--teal); }
 .stop .when { font: 500 11px var(--mono); color: var(--amber); }
-.stop .title { font-weight: 600; font-size: 14.5px; grid-column: 2; }
-.stop .blip { grid-column: 2; color: var(--muted); font-size: 13px; line-height: 1.4; }
+.stop .title { font-weight: 600; font-size: 14px; line-height: 1.3; }
+.stop .blip { color: var(--muted); font-size: 12.5px; line-height: 1.35; }
 .boss {
-  margin-top: 14px; padding: 10px 14px; border-left: 3px solid var(--amber);
-  background: rgba(194,112,58,.08); border-radius: 0 10px 10px 0;
+  margin-top: 14px; padding: 12px 14px; border-left: 3px solid var(--amber);
+  background: rgba(194,112,58,.08); border-radius: 0 12px 12px 0;
   font-size: 13.5px; line-height: 1.5; color: var(--ink);
 }
-.boss strong { font: 600 11px var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--amber); display: block; margin-bottom: 4px; }
-.fin {
-  text-align: center; margin: 28px 0 8px; padding: 28px 20px;
-  border: 1px dashed var(--line); border-radius: 18px; color: var(--muted);
-  font: 500 14px var(--mono);
+.boss strong {
+  font: 600 11px var(--mono); letter-spacing: .08em; text-transform: uppercase;
+  color: var(--amber); display: block; margin-bottom: 4px;
 }
-.fin strong { color: var(--teal); }
+.fin {
+  text-align: center; margin: 18px 0 0; padding: 14px 16px;
+  color: var(--muted); font: 500 13px var(--mono);
+}
+.fin a { color: var(--teal); text-decoration: none; }
+.fin a:hover { text-decoration: underline; }
+@media (max-width: 760px) {
+  .map { grid-template-columns: repeat(5, minmax(64px, 1fr)); gap: 6px; overflow-x: auto; }
+  .map-node { min-width: 72px; padding: 12px 6px 10px; }
+  .map-node .short { font-size: 11px; }
+  .stops { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 520px) {
+  .stops { grid-template-columns: 1fr; }
+  .map::before { top: 24px; }
+}
 </style>
 </head>
 <body>
@@ -1213,15 +1251,47 @@ JOURNEY_HTML = r"""<!DOCTYPE html>
     @@THEME_CTRL@@
   </div>
   <header class="hero">
-    <div class="kicker">Trình bày · hành trình</div>
+    <div class="kicker">Map · five stages</div>
     <h1>@@TITLE@@</h1>
     <p class="lead">@@LEAD@@</p>
     <p class="chain">@@TAGLINE@@</p>
   </header>
-  <nav class="moods">@@MOODS@@</nav>
-  <div class="path">@@STAGES@@</div>
-  <div class="fin">End of the path? Back to the <a href="./index.html"><strong>hub</strong></a> · search by <strong>#topic</strong>.</div>
+  <nav class="moods" aria-label="Start by mood">@@MOODS@@</nav>
+  <div class="map" role="tablist" aria-label="Journey stages">@@MAP@@</div>
+  <div class="panels">@@STAGES@@</div>
+  <div class="fin">Back to the <a href="./index.html">hub</a> · search by #topic</div>
 </div>
+<script>
+(function () {
+  var ids = @@STAGE_IDS@@;
+  function show(id) {
+    if (ids.indexOf(id) < 0) id = ids[0];
+    document.querySelectorAll(".map-node").forEach(function (btn) {
+      var on = btn.getAttribute("data-stage") === id;
+      btn.classList.toggle("on", on);
+      btn.setAttribute("aria-selected", on ? "true" : "false");
+    });
+    document.querySelectorAll(".stage-panel").forEach(function (panel) {
+      panel.classList.toggle("on", panel.id === id);
+    });
+    document.querySelectorAll(".moods button").forEach(function (btn) {
+      btn.classList.toggle("on", btn.getAttribute("data-stage") === id);
+    });
+    if (location.hash !== "#" + id) {
+      history.replaceState(null, "", "#" + id);
+    }
+  }
+  document.querySelectorAll(".map-node, .moods button, [data-go]").forEach(function (el) {
+    el.addEventListener("click", function () {
+      show(el.getAttribute("data-stage") || el.getAttribute("data-go"));
+    });
+  });
+  window.addEventListener("hashchange", function () {
+    show((location.hash || "#").slice(1));
+  });
+  show((location.hash || "#").slice(1) || ids[0]);
+})();
+</script>
 </body>
 </html>
 """
@@ -1233,52 +1303,87 @@ def render_journey(payload: dict) -> str:
         return ""
     spec = json.loads(JOURNEY.read_text(encoding="utf-8"))
     by_id = {n["id"]: n for n in payload.get("notes") or []}
+    stages = spec.get("stages") or []
+    stage_ids = [st["id"] for st in stages]
 
     moods_html = []
     for m in spec.get("moods") or []:
         moods_html.append(
-            f'<a href="#{esc(m["stage"])}" title="{esc(m.get("hint") or "")}">{esc(m["label"])}</a>'
+            f'<button type="button" data-stage="{esc(m["stage"])}" title="{esc(m.get("hint") or "")}">'
+            f'{esc(m["label"])}</button>'
         )
 
+    map_html = []
     stages_html = []
-    for i, st in enumerate(spec.get("stages") or [], start=1):
+    for i, st in enumerate(stages, start=1):
+        sid = st["id"]
+        short = st.get("short") or (st.get("title") or "").split("·")[0].strip() or sid
+        notes = [nid for nid in (st.get("notes") or []) if nid in by_id]
+        map_html.append(
+            f'<button type="button" class="map-node" role="tab" data-stage="{esc(sid)}" '
+            f'data-tone="{i}" aria-selected="false">'
+            f'<div class="n">{i}</div>'
+            f'<div class="short">{esc(short)}</div>'
+            f'<div class="count">{len(notes)} notes</div>'
+            f"</button>"
+        )
+
         stops = []
-        for nid in st.get("notes") or []:
-            n = by_id.get(nid)
-            if not n:
-                continue
+        for nid in notes:
+            n = by_id[nid]
             blip = (st.get("blips") or {}).get(nid) or n.get("summary") or ""
             href = n.get("page") or f"notes/{nid}.html"
             stops.append(
                 f'<a class="stop" href="{esc(href)}">'
-                f'<span class="num">{esc(n.get("num") or "")}</span>'
-                f'<span class="when">{esc(n.get("date") or "")}</span>'
+                f'<span class="meta"><span class="num">{esc(n.get("num") or "")}</span>'
+                f'<span class="when">{esc(n.get("date") or "")}</span></span>'
                 f'<span class="title">{esc(n["title"])}</span>'
                 f'<span class="blip">{esc(blip)}</span>'
                 f"</a>"
             )
+
         boss = st.get("boss") or ""
         boss_html = (
-            f'<div class="boss"><strong>Boss màn này</strong>{esc(boss)}</div>' if boss else ""
+            f'<div class="boss"><strong>Challenge</strong>{esc(boss)}</div>' if boss else ""
         )
+        prev_id = stage_ids[i - 2] if i > 1 else ""
+        next_id = stage_ids[i] if i < len(stage_ids) else ""
+        nav_btns = []
+        if prev_id:
+            nav_btns.append(
+                f'<button type="button" data-go="{esc(prev_id)}" aria-label="Previous stage">'
+                f'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" '
+                f'stroke-width="2" stroke-linecap="round"><path d="m15 18-6-6 6-6"/></svg></button>'
+            )
+        if next_id:
+            nav_btns.append(
+                f'<button type="button" data-go="{esc(next_id)}" aria-label="Next stage">'
+                f'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" '
+                f'stroke-width="2" stroke-linecap="round"><path d="m9 18 6-6-6-6"/></svg></button>'
+            )
         stages_html.append(
-            f'<section class="stage" id="{esc(st["id"])}">'
-            f'<div class="dot">{i}</div>'
+            f'<section class="stage-panel" id="{esc(sid)}" role="tabpanel">'
+            f'<div class="stage-head"><div>'
             f'<div class="roman">{esc(st.get("roman") or "")}</div>'
             f'<h2>{esc(st["title"])}</h2>'
             f'<p class="goal">{esc(st.get("goal") or "")}</p>'
+            f"</div>"
+            f'<div class="stage-nav">{"".join(nav_btns)}</div>'
+            f"</div>"
             f'<div class="stops">{"".join(stops)}</div>'
             f"{boss_html}"
             f"</section>"
         )
 
-    title = spec.get("title") or "Hành trình AI Lab"
+    title = spec.get("title") or "AI Lab Journey"
     return _inject_theme(
         JOURNEY_HTML.replace("@@TITLE@@", esc(title))
         .replace("@@LEAD@@", esc(spec.get("lead") or ""))
         .replace("@@TAGLINE@@", esc(spec.get("tagline") or ""))
         .replace("@@MOODS@@", "\n".join(moods_html))
+        .replace("@@MAP@@", "\n".join(map_html))
         .replace("@@STAGES@@", "\n".join(stages_html))
+        .replace("@@STAGE_IDS@@", json.dumps(stage_ids, ensure_ascii=False))
     )
 
 

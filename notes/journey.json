@@ -1,10 +1,11 @@
 {
   "title": "AI Lab Journey",
-  "lead": "A different presentation from notes — a fun five-screen map. Pick a screen that fits your mood, click into notes, then move to the next screen.",
+  "lead": "One vivid map — five stages. Pick a mood or a node, open notes from that stage, then hop next.",
   "tagline": "read text → label it → find documents → try demos → let agents work",
   "stages": [
     {
       "id": "abc",
+      "short": "ABC",
       "roman": "①",
       "title": "ABC · machines read text",
       "goal": "Understand how text becomes numbers, then how models \"see\" and \"choose\".",
@@ -19,6 +20,7 @@
     },
     {
       "id": "build",
+      "short": "Build",
       "roman": "②",
       "title": "Build · train · run",
       "goal": "Label data yourself, train for a few epochs, know where to get data and models.",
@@ -44,6 +46,7 @@
     },
     {
       "id": "rag",
+      "short": "Find",
       "roman": "③",
       "title": "Find · ground in documents",
       "goal": "Do not make the model memorize everything — let it look things up, then answer.",
@@ -57,6 +60,7 @@
     },
     {
       "id": "demo",
+      "short": "Demo",
       "roman": "④",
       "title": "Demo · see it live",
       "goal": "Watch models work in the browser — not just read theory.",
@@ -71,6 +75,7 @@
     },
     {
       "id": "agent",
+      "short": "Agent",
       "roman": "⑤",
       "title": "Agent · steer the machine",
       "goal": "From \"model answers\" to \"agent controls the machine\".",
