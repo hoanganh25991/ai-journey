@@ -343,27 +343,30 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 <p>If you can train a solid classifier, you already understand loss, evaluation, and the train/infer split that every larger system (RAG routers, sentiment demos, car-nn) depends on.</p>
 <h2>Key ideas</h2>
 <ul>
-<li><strong>Classification head:</strong> the last layer turns a representation (vector) into a score per label (<em>logits</em>), then <a href="softmax.html">softmax</a> converts to probabilities → pick the highest (<code>argmax</code>).</li>
+<li><strong>Classification head:</strong> the last layer turns a representation (vector) into a score per label (<em>logits</em>), then <a href="softmax.html">softmax</a> converts to probabilities → pick the highest (<code>argmax</code>). For a <em>d</em>-dim embedding and <em>C</em> classes, the head is typically <code>W ∈ ℝ^{C×d}</code> plus bias: <code>logits = Wx + b</code>.</li>
 <li><strong>Binary vs multi-class vs multi-label:</strong></li>
 <li><em>Binary:</em> two classes (spam / not spam). Often one logit + sigmoid, or two logits + softmax.</li>
 <li><em>Multi-class:</em> pick <strong>exactly one</strong> of many (neg / neu / pos). Softmax + cross-entropy.</li>
 <li><em>Multi-label:</em> one input can carry several labels at once (e.g. a news article tagged <em>politics</em> and <em>economy</em>). Usually independent sigmoids + binary cross-entropy per label.</li>
-<li><strong>Training loss:</strong> <em>cross-entropy</em> measures how wrong the predicted probability is versus the true label; training pushes loss down (<a href="train-infer.html">06-train-infer.md</a>).</li>
-<li><strong>Evaluation beyond accuracy:</strong> accuracy is easy but misleading on imbalanced data. Also check <strong>precision</strong>, <strong>recall</strong>, and <strong>F1</strong>. For rare classes (fraud, rare diseases), recall often matters more than overall accuracy.</li>
-<li><strong>Class balance:</strong> rare labels are easily ignored — the model can get 95% accuracy by always predicting the majority class. Always inspect the label distribution before trusting a score.</li>
+<li><strong>Training loss:</strong> <em>cross-entropy</em> measures how wrong the predicted probability is versus the true label; training pushes loss down (<a href="train-infer.html">06-train-infer.md</a>). For true class <em>y</em>, multi-class CE is <code>−log p_y</code> (natural log); if the model assigns <code>p_y = 0.81</code>, loss ≈ <code>0.21</code>, and if <code>p_y = 0.05</code>, loss ≈ <code>3.0</code> — wrong and confident is expensive.</li>
+<li><strong>Evaluation beyond accuracy:</strong> accuracy is easy but misleading on imbalanced data. Also check <strong>precision</strong>, <strong>recall</strong>, and <strong>F1</strong>. For rare classes (fraud, rare diseases), recall often matters more than overall accuracy. Formulas: <code>precision = TP/(TP+FP)</code>, <code>recall = TP/(TP+FN)</code>, <code>F1 = 2·P·R/(P+R)</code>.</li>
+<li><strong>Class balance:</strong> rare labels are easily ignored — the model can get 95% accuracy by always predicting the majority class. Always inspect the label distribution before trusting a score. Mitigations: class weights in the loss, oversample the rare class, or report <em>macro</em>-F1 (average F1 per class) instead of micro/accuracy.</li>
+<li><strong>Calibration vs ranking:</strong> a model can rank classes correctly (<code>argmax</code> right) while probabilities are miscalibrated (e.g. “90%” when it is only right 70% of the time). For thresholded decisions or risk scores, check calibration (reliability diagrams) or use temperature scaling on a validation set.</li>
 </ul>
 <h2>Worked example</h2>
 <p>Input sentence: <code>"The battery dies in two hours."</code></p>
 <p>1. Tokenize → IDs → embedding → (optional Transformer) → one vector for the sentence.</p>
 <p>2. Classification head → logits, e.g. <code>[2.1, 0.3, −1.4]</code> for <code>{neg, neu, pos}</code>.</p>
-<p>3. Softmax → probabilities ≈ <code>[0.81, 0.14, 0.05]</code>.</p>
-<p>4. Prediction = <strong>neg</strong>. During training, if the true label is <code>neg</code>, cross-entropy is low; if the true label were <code>pos</code>, loss would be high and weights would update.</p>
+<p>3. Softmax → probabilities ≈ <code>[0.81, 0.14, 0.05]</code> (computed as <code>e^{2.1} / (e^{2.1}+e^{0.3}+e^{−1.4}) ≈ 8.17 / 10.08</code>).</p>
+<p>4. Prediction = <strong>neg</strong>. During training, if the true label is <code>neg</code>, cross-entropy is <code>−log(0.81) ≈ 0.21</code>; if the true label were <code>pos</code>, loss would be <code>−log(0.05) ≈ 3.0</code> and gradients would push the pos logit up and the others down.</p>
+<p>Confusion-matrix sketch for a tiny val set of 100 reviews (true → predicted): say 40 true-neg with 36 correct, 30 true-neu with 20 correct, 30 true-pos with 25 correct → overall accuracy 81%, but neu recall is only <code>20/30 ≈ 0.67</code> — the class you should dig into next.</p>
 <h2>Common pitfalls</h2>
 <ul>
 <li><strong>Wrong metric on skewed data</strong> — report F1 / per-class recall, not only accuracy.</li>
 <li><strong>Train/val leakage</strong> — same review appearing in both splits → fake high scores.</li>
 <li><strong>Label noise</strong> — inconsistent human labels cap how good the model can get.</li>
 <li><strong>Threshold blindness</strong> — for binary tasks, the default 0.5 cutoff may be wrong; tune on validation.</li>
+<li><strong>Macro vs micro F1 mix-up</strong> — micro-F1 tracks overall correctness; macro-F1 treats rare classes as equal — pick the one that matches the product goal.</li>
 </ul>
 <h2>Illustrations</h2>
 <figure><img src="assets/protonx/softmax-regression.jpg" alt="Softmax regression: multi-class classification model" loading="lazy" /><figcaption>Softmax regression: multi-class classification model</figcaption></figure>
@@ -371,6 +374,28 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 <figure><img src="assets/classification/classification-pipeline.svg" alt="Classification pipeline: input → embedding → head → softmax → label" loading="lazy" /><figcaption>Classification pipeline: input → embedding → head → softmax → label</figcaption></figure>
 <figure><img src="assets/classification/classification-hero.png" alt="Classification hero: scores become a discrete decision" loading="lazy" /><figcaption>Classification hero: scores become a discrete decision</figcaption></figure>
 <figure><img src="assets/classification/classification-worked.png" alt="Worked example: logits → softmax → label" loading="lazy" /><figcaption>Worked example: logits → softmax → label</figcaption></figure>
+<figure><img src="assets/classification/classification-metrics.png" alt="Precision, recall, F1 from the confusion matrix" loading="lazy" /><figcaption>Precision, recall, F1 from the confusion matrix</figcaption></figure>
+<h2>Deeper dive</h2>
+<ul>
+<li><strong>Logits are unbounded; probabilities are not.</strong> Softmax never outputs exact 0 or 1 in floating point, but near-zero probs still produce huge CE when the true class is missed. Clipping logits or using label smoothing (<code>ε ≈ 0.1</code>) softens targets to <code>(1−ε)</code> on the true class and <code>ε/(C−1)</code> elsewhere — often improves calibration on small datasets.</li>
+<li><strong>Binary: one logit + sigmoid vs two logits + softmax.</strong> Mathematically related: a single logit <em>z</em> with sigmoid equals a two-class softmax with logits <code>[0, z]</code> up to a constant. Prefer one logit + <code>BCEWithLogitsLoss</code> / <code>binary_crossentropy(from_logits=True)</code> for binary; prefer <em>C</em> logits + CE for multi-class — fewer footguns than hand-rolling sigmoid on multi-class.</li>
+<li><strong>Imbalance math.</strong> With 95% majority / 5% minority, always-predict-majority accuracy is 0.95 while minority recall is 0. Weighted CE multiplies the rare-class term by <code>N / (C · n_c)</code> (sklearn-style <code>balanced</code>). Compare: unweighted CE may sit at ~0.2 with useless minority recall; weighted CE raises train loss but lifts minority F1.</li>
+<li><strong>Multi-label ≠ multi-class.</strong> Softmax forces probabilities to sum to 1 (mutually exclusive). Multi-label needs independent sigmoids so <em>politics</em> and <em>economy</em> can both be high. Failure mode: applying softmax to multi-label tags collapses co-occurring labels.</li>
+<li><strong>Thresholds and operating points.</strong> For binary spam, lower the threshold (e.g. 0.3 instead of 0.5) to raise recall at the cost of precision. Plot a precision–recall curve on validation; pick the point that matches cost (false negative vs false positive).</li>
+<li><strong>Head-only vs full fine-tune.</strong> Freeze the encoder and train only the classification head when you have &amp;lt;1k labels or little GPU — fast, less overfitting. Unfreeze top Transformer layers (or full model with small LR <code>2e-5</code>) when you have more data and need domain shift.</li>
+<li><strong>Failure modes to expect.</strong> (1) Confidence on OOD inputs (out-of-vocab slang, new product names) stays high — add an abstain / “unknown” path. (2) Label schema drift (3-class → 5-class) invalidates the old head. (3) Metric hacking: optimizing accuracy while the product needs per-class recall.</li>
+</ul>
+<h2>Decision guide</h2>
+<table><thead>
+<tr><th>Situation</th><th>Prefer</th><th>Avoid / why</th></tr>
+</thead><tbody>
+<tr><td>Exactly one label from many (sentiment, intent)</td><td>Softmax + sparse CE; report accuracy <em>and</em> macro-F1</td><td>Sigmoid-per-class without care — probs won’t form a proper distribution</td></tr>
+<tr><td>Tags can co-occur (topics, attributes)</td><td>Independent sigmoid + BCE per label</td><td>Softmax — forces mutual exclusion</td></tr>
+<tr><td>Rare positive class (fraud, defect)</td><td>Recall / PR-AUC; class weights or oversampling</td><td>Accuracy alone — majority baseline looks “good”</td></tr>
+<tr><td>Need a deployable cutoff (spam filter)</td><td>Tune threshold on val PR curve</td><td>Fixed 0.5 — rarely matches business cost</td></tr>
+<tr><td>&amp;lt;1k labeled examples, strong pretrained encoder</td><td>Freeze backbone, train head (or LoRA)</td><td>Full scratch train — overfits and wastes compute</td></tr>
+<tr><td>Probabilities used as risk scores</td><td>Check calibration; temperature scale if needed</td><td>Trusting raw softmax as true probability</td></tr>
+</tbody></table>
 <h2>Pipeline</h2>
 <pre><code>
 input → embedding → classification head → softmax → label

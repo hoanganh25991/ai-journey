@@ -197,6 +197,8 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
 .code-block .k { color: #5ec8d4; }
 .code-block .s { color: #f0a35e; }
 .caption { margin-top: 14px; font-size: 20px; color: var(--muted); max-width: 92%; }
+.table-card.dense table { font-size: 16px; }
+.table-card.dense th, .table-card.dense td { padding: 9px 12px; }
 </style>
 </head>
 <body>
@@ -240,8 +242,8 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
     <div class="topbar reveal"><span>Ideas</span><span class="pill">core</span></div>
     <h2 class="reveal">Key ideas</h2>
     <div class="cols-3">
-      <div class="card reveal"><div class="tag">head</div><h3>Classification head</h3><p>Last layer → one logit per label → softmax → <code>argmax</code>.</p></div>
-      <div class="card cyan reveal"><div class="tag">loss</div><h3>Cross-entropy</h3><p>How wrong the predicted probability is vs the true label; training pushes it down.</p></div>
+      <div class="card reveal"><div class="tag">head</div><h3>Classification head</h3><p>For <em>d</em>-dim embed and <em>C</em> classes: <code>logits = Wx + b</code> → softmax → <code>argmax</code>.</p></div>
+      <div class="card cyan reveal"><div class="tag">loss</div><h3>Cross-entropy</h3><p>Multi-class CE = <code>−log p_y</code>. True class at 0.81 → loss ≈0.21; at 0.05 → ≈3.0 — wrong &amp; confident is expensive.</p></div>
       <div class="card reveal"><div class="tag">eval</div><h3>Beyond accuracy</h3><p>Precision, recall, F1 — especially when classes are rare or skewed.</p></div>
     </div>
     <p class="lead reveal" style="margin-top:24px;font-size:20px;">Keywords: logits · softmax · multi-class · F1 · Read: <span style="color:var(--amber);font-family:var(--font-mono)">notes/classification.md</span></p>
@@ -352,16 +354,77 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
 <section class="slide">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
+    <div class="topbar reveal"><span>Picture</span><span class="pill">metrics</span></div>
+    <h2 class="reveal" style="font-size:36px;margin-bottom:12px;">Precision, recall, F1 from the confusion matrix</h2>
+    <img class="shot shot-lg reveal" src="../assets/classification-metrics.png" alt="Precision recall F1 from confusion matrix" />
+    <p class="caption reveal"><code>P = TP/(TP+FP)</code> · <code>R = TP/(TP+FN)</code> · <code>F1 = 2·P·R/(P+R)</code>. On skewed data, dig into the rare-class row — not just overall accuracy.</p>
+  </div>
+  <div class="foot"><span>11</span><span>slides/assets/classification-metrics.png</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Balance</span><span class="pill">eval</span></div>
+    <h2 class="reveal">Skew, calibration, operating points</h2>
+    <div class="cols-3">
+      <div class="card accent reveal"><div class="tag">skew</div><h3>95% majority trap</h3><p>Always-predict-majority hits 0.95 accuracy with 0 minority recall. Prefer class weights, oversampling, or macro-F1.</p></div>
+      <div class="card cyan reveal"><div class="tag">calib</div><h3>Rank ≠ probability</h3><p><code>argmax</code> can be right while “90%” is only right 70% of the time. Temperature-scale on val when scores are risk inputs.</p></div>
+      <div class="card reveal"><div class="tag">PR</div><h3>Tune the cutoff</h3><p>Binary spam: try threshold 0.3 for recall. Plot the val PR curve; pick the cost trade-off, not default 0.5.</p></div>
+    </div>
+  </div>
+  <div class="foot"><span>12</span><span>inspect label distribution first</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Deeper dive</span><span class="pill">notes</span></div>
+    <h2 class="reveal">Deeper dive</h2>
+    <div class="cols-3">
+      <div class="card accent reveal"><div class="tag">logits</div><h3>Unbounded → probs</h3><p>Softmax never hits exact 0/1, but near-zero true-class probs explode CE. Label smoothing (<code>ε≈0.1</code>) softens targets and often helps calibration.</p></div>
+      <div class="card cyan reveal"><div class="tag">binary</div><h3>One logit vs two</h3><p>Sigmoid on <code>z</code> ≈ softmax on <code>[0, z]</code>. Prefer one logit + BCE-with-logits for binary; <em>C</em> logits + CE for multi-class.</p></div>
+      <div class="card reveal"><div class="tag">heads</div><h3>Multi-label ≠ multi-class</h3><p>Softmax forces mutual exclusion. Co-occurring tags need independent sigmoids + BCE — otherwise politics &amp; economy collapse.</p></div>
+    </div>
+  </div>
+  <div class="foot"><span>13</span><span>Deeper dive</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Decision guide</span><span class="pill">choose</span></div>
+    <h2 class="reveal">Decision guide</h2>
+    <div class="card table-card dense reveal">
+      <table>
+        <thead><tr><th>Situation</th><th>Prefer</th><th>Avoid / why</th></tr></thead>
+        <tbody>
+          <tr><td>Exactly one label (sentiment, intent)</td><td>Softmax + sparse CE; accuracy <em>and</em> macro-F1</td><td>Sigmoid-per-class — probs won’t form a distribution</td></tr>
+          <tr><td>Tags can co-occur</td><td>Independent sigmoid + BCE</td><td>Softmax — forces mutual exclusion</td></tr>
+          <tr><td>Rare positive (fraud, defect)</td><td>Recall / PR-AUC; weights or oversample</td><td>Accuracy alone — majority baseline looks “good”</td></tr>
+          <tr><td>Deployable cutoff (spam)</td><td>Tune threshold on val PR curve</td><td>Fixed 0.5 — rarely matches business cost</td></tr>
+          <tr><td>&lt;1k labels, strong encoder</td><td>Freeze backbone; train head (or LoRA)</td><td>Full scratch train — overfits, wastes compute</td></tr>
+          <tr><td>Probs as risk scores</td><td>Check calibration; temperature scale</td><td>Trusting raw softmax as true probability</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="foot"><span>14</span><span>Decision guide</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
     <div class="topbar reveal"><span>Pitfalls</span><span class="pill">watch</span></div>
     <h2 class="reveal">Easy ways to fool yourself</h2>
     <div class="cols-2">
-      <div class="card accent reveal"><div class="tag">metric</div><h3>Wrong metric on skew</h3><p>Report F1 / per-class recall — not only accuracy.</p></div>
+      <div class="card accent reveal"><div class="tag">metric</div><h3>Wrong metric on skew</h3><p>Report F1 / per-class recall — not only accuracy. Macro-F1 ≠ micro-F1.</p></div>
       <div class="card cyan reveal"><div class="tag">leak</div><h3>Train / val leakage</h3><p>Same review in both splits → fake high scores.</p></div>
       <div class="card reveal"><div class="tag">noise</div><h3>Label noise</h3><p>Inconsistent human labels cap how good any model can get.</p></div>
       <div class="card reveal"><div class="tag">threshold</div><h3>Threshold blindness</h3><p>Binary default 0.5 may be wrong — tune on validation.</p></div>
     </div>
   </div>
-  <div class="foot"><span>11</span><span>notes/classification.md</span></div>
+  <div class="foot"><span>15</span><span>notes/classification.md</span></div>
 </section>
 
 <section class="slide">
@@ -378,7 +441,7 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
     </div>
     <p class="lead reveal" style="margin-top:36px;">Train with <span style="font-family:var(--font-mono);color:var(--cyan)">pytorch-training.md</span> or <span style="font-family:var(--font-mono);color:var(--cyan)">tensorflow-training.md</span>. See it live in sentiment / car-nn demos.</p>
   </div>
-  <div class="foot"><span>12</span><span>train: cross-entropy</span></div>
+  <div class="foot"><span>16</span><span>train: cross-entropy</span></div>
 </section>
 
 <section class="slide">

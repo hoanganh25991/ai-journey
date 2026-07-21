@@ -195,6 +195,10 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
 .code-block .c { color: #8b97a8; }
 .code-block .k { color: #5ec8d4; }
 .code-block .s { color: #f0a35e; }
+
+.table-card.dense table { font-size: 16px; }
+.table-card.dense th, .table-card.dense td { padding: 8px 12px; }
+.card p, .card li { font-size: 19px; }
 </style>
 </head>
 <body>
@@ -232,11 +236,11 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
     <div class="topbar reveal"><span>Search</span><span class="pill">ideas</span></div>
     <h2 class="reveal">Key ideas</h2>
     <div class="cols-3">
-      <div class="card reveal"><div class="tag">two indexes</div><h3>Inverted + semantic</h3><p>Elastic keywords vs vector neighbors — different failure modes.</p></div>
-      <div class="card cyan reveal"><div class="tag">strategies</div><h3>Hybrid / Tiered / Fallback</h3><p>Cost vs accuracy knobs for the same corpus.</p></div>
-      <div class="card reveal"><div class="tag">eval</div><h3>MS MARCO metrics</h3><p>Precision@k and MRR@10 — retrieval quality, not vibes.</p></div>
+      <div class="card reveal"><div class="tag">two indexes</div><h3>Inverted + semantic</h3><p>BM25 exact IDs · vectors for paraphrase. Fuse with RRF / weighted scores.</p></div>
+      <div class="card cyan reveal"><div class="tag">latency</div><h3>~5–120 ms shape</h3><p>Keyword 5–30 · Hybrid 20–80 · Semantic-first 30–120. Tiered: p50≈keyword.</p></div>
+      <div class="card reveal"><div class="tag">eval</div><h3>MS MARCO + holdout</h3><p>Precision@k · MRR@10 · Recall@k. Private holdout beats leaderboard overfitting.</p></div>
     </div>
-    <p class="lead reveal" style="margin-top:24px;font-size:20px;">Keywords: BM25 · hybrid · tiered · MRR · Read: <span style="color:var(--amber);font-family:var(--font-mono)">notes/semantic-search.md</span></p>
+    <p class="lead reveal" style="margin-top:24px;font-size:20px;">Keywords: BM25 · hybrid · RRF · tiered · MRR · Read: <span style="color:var(--amber);font-family:var(--font-mono)">notes/semantic-search.md</span></p>
   </div>
   <div class="foot"><span>03</span><span>notes/semantic-search.md</span></div>
 </section>
@@ -268,9 +272,9 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
       <table>
         <thead><tr><th>Strategy</th><th>Flow</th><th>Cost</th><th>Risk</th></tr></thead>
         <tbody>
-          <tr><td>Hybrid</td><td>Keyword filters → semantic rerank</td><td>Efficient</td><td>Fails when keywords miss entirely</td></tr>
-          <tr><td>Tiered</td><td>Easy → keyword; hard → semantic</td><td>Balanced</td><td>Bad easy/hard classifier</td></tr>
-          <tr><td>Fallback</td><td>Semantic first; keyword if poor</td><td>Highest</td><td>Latency / spend</td></tr>
+          <tr><td>Hybrid</td><td>BM25 candidates → cosine rerank</td><td>~20–80 ms</td><td>Empty BM25 ⇒ semantic never sees truth</td></tr>
+          <tr><td>Tiered</td><td>Easy→keyword; hard→semantic/hybrid</td><td>p50 cheap</td><td>Classifier FN on hard queries</td></tr>
+          <tr><td>Fallback</td><td>Semantic first; BM25 if score low</td><td>Most accurate</td><td>Worst ≈ semantic + keyword serial</td></tr>
         </tbody>
       </table>
     </div>
@@ -284,9 +288,9 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
     <div class="topbar reveal"><span>Example</span><span class="pill">intuition</span></div>
     <h2 class="reveal">“How do I jump-start a car?”</h2>
     <div class="cols-3">
-      <div class="card reveal"><div class="tag">keyword</div><h3>May miss</h3><p>Docs that only say “boost a vehicle battery.”</p></div>
-      <div class="card cyan reveal"><div class="tag">semantic</div><h3>May wander</h3><p>Vague automotive posts that aren’t jump-start guides.</p></div>
-      <div class="card reveal"><div class="tag">hybrid</div><h3>Best of both</h3><p>Keep battery/car candidates; rank the guide to the top.</p></div>
+      <div class="card reveal"><div class="tag">keyword</div><h3>May miss</h3><p>“boost a vehicle battery” — no shared tokens with jump-start.</p></div>
+      <div class="card cyan reveal"><div class="tag">hybrid</div><h3>~50–200 candidates</h3><p>BM25 keeps battery/car; cosine ranks the true guide top-10.</p></div>
+      <div class="card reveal"><div class="tag">routes</div><h3>Tiered / Fallback</h3><p>Hard how-to → semantic. Score 0.22 → fall back to BM25.</p></div>
     </div>
   </div>
   <div class="foot"><span>06</span><span>notes/semantic-search.md</span></div>
@@ -347,18 +351,59 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
   <div class="foot"><span>11</span><span>AI Lab · illustration</span></div>
 </section>
 
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Deeper</span><span class="pill">dive</span></div>
+    <h2 class="reveal">Deeper dive</h2>
+    <div class="cols-3">
+      <div class="card reveal"><div class="tag">hybrid</div><h3>Empty filter</h3><p>“automobile won’t crank” vs “car fails to start” — strict token gate ⇒ empty set.</p></div>
+      <div class="card cyan reveal"><div class="tag">tiered</div><h3>Economics</h3><p>70% easy + keyword 5× cheaper ≈ ~70% embed/ANN savings if FN rate stays low.</p></div>
+      <div class="card reveal"><div class="tag">fallback</div><h3>Serial cost</h3><p>Worst ≈ semantic + keyword. Threshold so Fallback is rare, not the happy path.</p></div>
+      <div class="card reveal"><div class="tag">metric</div><h3>MRR vs Recall</h3><p>MRR@10 loves rank-1; RAG needs Recall@k + deduped fusion across lists.</p></div>
+      <div class="card cyan reveal"><div class="tag">elastic</div><h3>Same _id space</h3><p>bool should / RRF plugin — fuse only when IDs align across indexes.</p></div>
+      <div class="card reveal"><div class="tag">ops</div><h3>Eval loop</h3><p>200–500 gold queries: P@5, MRR@10, p95, % path taken per release.</p></div>
+    </div>
+  </div>
+  <div class="foot"><span>12</span><span>notes/semantic-search.md</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Guide</span><span class="pill">decide</span></div>
+    <h2 class="reveal">When to choose what</h2>
+    <div class="card table-card dense reveal">
+      <table>
+        <thead><tr><th>Situation</th><th>Prefer</th><th>Avoid / why</th></tr></thead>
+        <tbody>
+          <tr><td>Tight SLA, many exact IDs</td><td>Tiered or keyword-first Hybrid</td><td>Semantic-first Fallback on 100% traffic</td></tr>
+          <tr><td>Paraphrase-heavy how-to</td><td>Hybrid or semantic-first Fallback</td><td>Keyword-only — synonym blind spots</td></tr>
+          <tr><td>BM25 often 0 hits</td><td>Semantic-first or loose Hybrid gate</td><td>Strict keyword filter before ANN</td></tr>
+          <tr><td>Best offline quality</td><td>Fallback or Hybrid + cross-encoder</td><td>Tiered with untested classifier</td></tr>
+          <tr><td>Cost-sensitive high QPS</td><td>Tiered with measured easy/hard mix</td><td>Embed every query at peak QPS</td></tr>
+          <tr><td>RAG needs diverse passages</td><td>Optimize Recall@k + deduped fusion</td><td>MRR-only near-duplicate top-1</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="foot"><span>13</span><span>notes/semantic-search.md</span></div>
+</section>
+
+
 <section class="slide">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
     <div class="topbar reveal"><span>Pitfalls</span><span class="pill">watch</span></div>
     <h2 class="reveal">Easy to go wrong</h2>
     <div class="cols-3">
-      <div class="card accent reveal"><div class="tag">empty</div><h3>Hybrid empty hits</h3><p>BM25 returns nothing — need a fallback path.</p></div>
-      <div class="card cyan reveal"><div class="tag">route</div><h3>Bad tier classifier</h3><p>Hard queries wrongly sent to keyword-only.</p></div>
-      <div class="card reveal"><div class="tag">sla</div><h3>Latency budgets</h3><p>Semantic-on-everything can blow SLAs; leaderboards ≠ your corpus.</p></div>
+      <div class="card accent reveal"><div class="tag">empty</div><h3>Strict keyword gate</h3><p>Empty BM25 candidates — synonym expand, loose stage, or Fallback.</p></div>
+      <div class="card cyan reveal"><div class="tag">fusion</div><h3>Double-count IDs</h3><p>Merge without dedupe inflates scores; uncalibrated thresholds thrash paths.</p></div>
+      <div class="card reveal"><div class="tag">eval</div><h3>MRR-only trap</h3><p>Strong MRR@10 with weak Recall@50 hurts RAG needing many chunks.</p></div>
     </div>
   </div>
-  <div class="foot"><span>12</span><span>notes/semantic-search.md</span></div>
+  <div class="foot"><span>14</span><span>notes/semantic-search.md</span></div>
 </section>
 
 <section class="slide">
@@ -369,7 +414,7 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
     <div class="flow-row reveal" style="margin-top:48px;"><span class="step">question</span><span class="arr">→</span><span class="step">classify?</span><span class="arr">→</span><span class="step">keyword | semantic</span><span class="arr">→</span><span class="step">merge</span><span class="arr">→</span><span class="step">RAG</span></div>
     <p class="lead reveal" style="margin-top:36px;">Stands on embedding + vector-database; teaches the retrieve lesson of RAG.</p>
   </div>
-  <div class="foot"><span>13</span><span>notes/semantic-search.md</span></div>
+  <div class="foot"><span>15</span><span>notes/semantic-search.md</span></div>
 </section>
 
 <section class="slide">

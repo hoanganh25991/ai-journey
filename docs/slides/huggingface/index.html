@@ -31,6 +31,8 @@
 .code-block .k { color: #5ec8d4; }
 .code-block .s { color: #f0a35e; }
 .caption { margin-top: 14px; font-size: 20px; color: var(--muted); max-width: 92%; }
+.table-card.dense table { font-size: 16px; }
+.table-card.dense th, .table-card.dense td { padding: 9px 12px; }
 </style>
 </head>
 <body>
@@ -96,12 +98,12 @@
 <section class="slide">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
-    <div class="topbar reveal"><span>Illustration</span><span class="pill">fine-tune path</span></div>
-    <h2 class="reveal" style="font-size:36px;margin-bottom:16px;">Illustration</h2>
-    <img class="shot shot-lg reveal" src="../assets/hf-finetune-flow.png" alt="Fine-tune path" />
-    <p class="lead reveal" style="margin-top:14px;font-size:20px;">Datasets → pretrained checkpoint → Trainer fine-tune → Hub / Spaces.</p>
+    <div class="topbar reveal"><span>Picture</span><span class="pill">fine-tune path</span></div>
+    <h2 class="reveal" style="font-size:36px;margin-bottom:12px;">Fine-tune path on the Hub</h2>
+    <img class="shot shot-lg reveal" src="../assets/hf-finetune-flow.png" alt="Fine-tune path Datasets to Hub Spaces" />
+    <p class="caption reveal">Datasets → pretrained checkpoint → Trainer (or your loop) → <code>push_to_hub</code> → Spaces demo. A few thousand labels often beat a huge from-scratch train.</p>
   </div>
-  <div class="foot"><span>05b</span><span>AI Lab · illustration</span></div>
+  <div class="foot"><span>05</span><span>slides/assets/hf-finetune-flow.png</span></div>
 </section>
 
 
@@ -114,9 +116,9 @@
       <div class="card accent reveal"><div class="tag">load</div><h3>A few lines</h3><p>AutoTokenizer + AutoModelForSequenceClassification + load_dataset — then Trainer or a PyTorch/TF loop.</p></div>
       <div class="card cyan reveal"><div class="tag">fine-tune</div><h3>Beats scratch</h3><p>Leverage large-model knowledge. A few thousand labeled examples often beat a huge from-zero train.</p></div>
     </div>
-    <p class="lead reveal" style="margin-top:32px;">Output is a checkpoint or endpoint ready for inference (train-infer).</p>
+    <p class="lead reveal" style="margin-top:32px;">Output is a checkpoint or endpoint ready for inference (train-infer). Same <code>from_pretrained("org/name")</code> string for model <em>and</em> tokenizer.</p>
   </div>
-  <div class="foot"><span>05</span><span>fine-tune, don’t forge</span></div>
+  <div class="foot"><span>06</span><span>fine-tune, don’t forge</span></div>
 </section>
 
 <section class="slide">
@@ -133,7 +135,7 @@ model = AutoModelForSequenceClassification.from_pretrained(
     <span class="s">"bert-base-uncased"</span>, num_labels=2)
 <span class="c"># tokenize → Trainer(...).train() → model.push_to_hub("my-imdb-clf")</span></div>
   </div>
-  <div class="foot"><span>06</span><span>notes/huggingface.md</span></div>
+  <div class="foot"><span>07</span><span>notes/huggingface.md</span></div>
 </section>
 
 <section class="slide">
@@ -143,11 +145,11 @@ model = AutoModelForSequenceClassification.from_pretrained(
     <h2 class="reveal">Vietnamese sentiment without training from zero</h2>
     <div class="cols-3">
       <div class="card accent reveal"><div class="tag">1</div><h3>Search the Hub</h3><p>Multilingual or vi checkpoint + a small labeled set.</p></div>
-      <div class="card cyan reveal"><div class="tag">2</div><h3>Fine-tune 2–3 epochs</h3><p>Free GPU on Kaggle / Colab is enough for a small clf.</p></div>
+      <div class="card cyan reveal"><div class="tag">2</div><h3>Fine-tune 2–3 epochs</h3><p>Free GPU on Kaggle / Colab is enough for a small clf. Typical: LR <code>2e-5</code>, batch 16, mid–high 80s% val.</p></div>
       <div class="card reveal"><div class="tag">3</div><h3>Push to a Space</h3><p>Instant UI — you never trained a Transformer from random weights.</p></div>
     </div>
   </div>
-  <div class="foot"><span>07</span><span>pair with kaggle.md for free GPU</span></div>
+  <div class="foot"><span>08</span><span>pair with kaggle.md for free GPU</span></div>
 </section>
 
 <section class="slide">
@@ -167,7 +169,43 @@ model = AutoModelForSequenceClassification.from_pretrained(
       </table>
     </div>
   </div>
-  <div class="foot"><span>08</span><span>mismatch tokenizer → every ID is wrong</span></div>
+  <div class="foot"><span>09</span><span>mismatch tokenizer → every ID is wrong</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Deeper dive</span><span class="pill">notes</span></div>
+    <h2 class="reveal">Deeper dive</h2>
+    <div class="cols-3">
+      <div class="card accent reveal"><div class="tag">Trainer</div><h3>Trainer vs raw loop</h3><p>Trainer ≈ Keras <code>fit</code> for Transformers (device, eval, Hub upload). Raw loop wins for custom sampling / multi-loss.</p></div>
+      <div class="card cyan reveal"><div class="tag">LoRA</div><h3>Full vs PEFT</h3><p>Full: all ~110M BERT params. LoRA (<code>r=8</code>, <code>α=16</code>): &lt;1% trainable — prefer when data is small or many task variants.</p></div>
+      <div class="card reveal"><div class="tag">LR</div><h3>Rates that work</h3><p>Encoder: <code>2e-5</code>–<code>5e-5</code> + AdamW warmup. Head-only can use <code>1e-3</code> on the head. Too high on the stack → catastrophic forgetting.</p></div>
+    </div>
+  </div>
+  <div class="foot"><span>10</span><span>Deeper dive</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Decision guide</span><span class="pill">choose</span></div>
+    <h2 class="reveal">Decision guide</h2>
+    <div class="card table-card dense reveal">
+      <table>
+        <thead><tr><th>Situation</th><th>Prefer</th><th>Avoid / why</th></tr></thead>
+        <tbody>
+          <tr><td>Standard text clf fine-tune</td><td><code>AutoModelForSequenceClassification</code> + <code>Trainer</code></td><td>BERT from random init — huge data/compute</td></tr>
+          <tr><td>&lt;5k labels or tight VRAM</td><td>LoRA / PEFT or freeze encoder + head</td><td>Full 7B fine-tune “because bigger”</td></tr>
+          <tr><td>Shareable demo</td><td>Gradio Space → your Hub model</td><td>Only a local notebook nobody can open</td></tr>
+          <tr><td>Reproducible hand-in</td><td>Pin <code>revision</code> + save <code>TrainingArguments</code></td><td>Floating <code>main</code> tags that move under you</td></tr>
+          <tr><td>Embeddings for RAG / search</td><td>sentence-transformers on the Hub</td><td>Raw LM CLS without pooling/normalization</td></tr>
+          <tr><td>Commercial product</td><td>Clear commercial license + private holdout</td><td>Research-only weights; Hub test as only metric</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="foot"><span>11</span><span>Decision guide</span></div>
 </section>
 
 <section class="slide">
@@ -176,13 +214,13 @@ model = AutoModelForSequenceClassification.from_pretrained(
     <div class="topbar reveal"><span>Pitfalls</span><span class="pill">watch</span></div>
     <h2 class="reveal">Easy ways to go wrong</h2>
     <div class="cols-2">
-      <div class="card accent reveal"><div class="tag">card</div><h3>Ignoring the model card</h3><p>Wrong license or unsafe intended use — especially commercial.</p></div>
+      <div class="card accent reveal"><div class="tag">card</div><h3>Ignoring the model card</h3><p>Wrong license or unsafe intended use — especially commercial. Gated models need login + terms.</p></div>
       <div class="card cyan reveal"><div class="tag">tok</div><h3>Tokenizer mismatch</h3><p>Different vocab than the checkpoint corrupts every ID.</p></div>
       <div class="card reveal"><div class="tag">lora</div><h3>Full fine-tune when LoRA would do</h3><p>Wasted GPU and money for small tasks.</p></div>
-      <div class="card reveal"><div class="tag">eval</div><h3>Peeking at Hub test</h3><p>Keep a private holdout after exploring public splits.</p></div>
+      <div class="card reveal"><div class="tag">eval</div><h3>Peeking at Hub test</h3><p>Keep a private holdout after exploring public splits. Wrong <code>num_labels</code> silently mis-shapes the head.</p></div>
     </div>
   </div>
-  <div class="foot"><span>09</span><span>notes/huggingface.md</span></div>
+  <div class="foot"><span>12</span><span>notes/huggingface.md</span></div>
 </section>
 
 <section class="slide">
@@ -191,12 +229,12 @@ model = AutoModelForSequenceClassification.from_pretrained(
     <div class="topbar reveal"><span>With Kaggle</span><span class="pill">stack</span></div>
     <h2 class="reveal">HF model · Kaggle GPU · lab demo</h2>
     <div class="cols-3">
-      <div class="card accent reveal"><div class="tag">hf</div><h3>Hub checkpoint</h3><p>Pretrained weights + tokenizer.</p></div>
+      <div class="card accent reveal"><div class="tag">hf</div><h3>Hub checkpoint</h3><p>Pretrained weights + tokenizer. Pin revision for reproducibility.</p></div>
       <div class="card cyan reveal"><div class="tag">kg</div><h3>Kaggle notebook</h3><p>Free GPU hours to fine-tune.</p></div>
       <div class="card reveal"><div class="tag">lab</div><h3>Export → demo</h3><p>Checkpoint into inference / Spaces / sentiment apps.</p></div>
     </div>
   </div>
-  <div class="foot"><span>10</span><span>see kaggle.md · train-gpu.md</span></div>
+  <div class="foot"><span>13</span><span>see kaggle.md · train-gpu.md</span></div>
 </section>
 
 <section class="slide">
@@ -213,7 +251,7 @@ model = AutoModelForSequenceClassification.from_pretrained(
     </div>
     <p class="lead reveal" style="margin-top:36px;">Data source and runtime partner for pytorch-training / tensorflow-training.</p>
   </div>
-  <div class="foot"><span>11</span><span>notes/huggingface.md</span></div>
+  <div class="foot"><span>14</span><span>notes/huggingface.md</span></div>
 </section>
 
 <section class="slide">

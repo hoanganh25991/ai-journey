@@ -350,41 +350,76 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 <tr><td><strong>Training</strong></td><td>HF/Kaggle → notebook/endpoint → many GPU epochs</td><td>checkpoint</td></tr>
 <tr><td><strong>Inference</strong></td><td>load model → predict</td><td>label / action</td></tr>
 </tbody></table>
-<p>See <a href="train-infer.html">06-train-infer.md</a> for the two-phase mental model.</p>
+<p>See <a href="train-infer.html">06-train-infer.md</a> for the two-phase mental model. Training owns <em>optimizer state</em>, <em>data pipelines</em>, and <em>eval loops</em>; inference owns <em>forward pass only</em>. Mixing them in one mental bucket is why people try to “train in the browser.”</p>
 <ul>
 <li><strong>Stack used in practice:</strong></li>
-<li><strong>PyTorch</strong> — flexible; most training code in the lab (<a href="pytorch-training.html">pytorch-training.md</a>).</li>
-<li><strong>TensorFlow</strong> — softmax regression and Embedding Projector for visualizing vectors (<a href="tensorflow-training.html">tensorflow-training.md</a>).</li>
-<li><strong>Data:</strong> Hugging Face Datasets and Kaggle — pre-labeled, ready to download.</li>
-<li><strong>GPU online:</strong> Google Colab / Kaggle / cloud notebooks — train to ~95%+ accuracy when the task allows, then export.</li>
+<li><strong>PyTorch</strong> — flexible; most training code in the lab (<a href="pytorch-training.html">pytorch-training.md</a>). Explicit <code>loss.backward()</code> / <code>optimizer.step()</code> makes debugging shapes and gradients easier.</li>
+<li><strong>TensorFlow</strong> — softmax regression and Embedding Projector for visualizing vectors (<a href="tensorflow-training.html">tensorflow-training.md</a>). Keras <code>fit()</code> is fine for small classifiers; use TF when the notebook or Projector path already exists.</li>
+<li><strong>Data:</strong> Hugging Face Datasets and Kaggle — pre-labeled, ready to download. Prefer a Hub card with documented splits over scraping your own labels for teaching demos.</li>
+<li><strong>GPU online:</strong> Google Colab / Kaggle / cloud notebooks — train to ~95%+ accuracy when the task allows, then export. Free tiers are enough for MiniLM / small CNN; large full fine-tunes need paid GPU or LoRA.</li>
 </ul>
 <ul>
-<li><strong>Short workflow:</strong></li>
+<li><strong>Short workflow (with concrete gates):</strong></li>
 </ul>
 <pre><code>
   pick dataset (HF/Kaggle) → write notebook (PyTorch/TF) → train on GPU
 
-  → watch loss/accuracy (and val!) → export checkpoint → plug into demo (inference)
+  → watch train + val loss/accuracy every epoch → early-stop or pick best val ckpt
+
+  → export checkpoint (state_dict / SavedModel / ONNX) → plug into demo (inference)
 
 </code></pre>
+<p>Gate before GPU: one CPU batch that prints shapes and a finite loss. Gate before export: val metrics stable for 2–3 epochs and a confusion matrix that isn’t “always majority class.”</p>
 <ul>
-<li><strong>In AI Lab:</strong> browser demos show the flow; they do <strong>not</strong> replace GPU training. Train in a notebook / Kaggle / Colab, then embed weights in UI demos (car-nn, sentiment…).</li>
+<li><strong>In AI Lab:</strong> browser demos show the flow; they do <strong>not</strong> replace GPU training. Train in a notebook / Kaggle / Colab, then embed weights in UI demos (car-nn, sentiment…). The demo’s job is latency and UX; the notebook’s job is learning.</li>
 </ul>
 <ul>
-<li><strong>What “good enough” means:</strong> for teaching demos, stable val accuracy and sane confusion matrix beat chasing 0.1% leaderboard gains.</li>
+<li><strong>What “good enough” means:</strong> for teaching demos, stable val accuracy and a sane confusion matrix beat chasing 0.1% leaderboard gains. Ship the <strong>best validation</strong> checkpoint, not the last epoch. Log seed, dataset revision, and learning rate so you can reproduce the export.</li>
+</ul>
+<ul>
+<li><strong>Hardware reality check:</strong> batch size is limited by VRAM; if you OOM, cut batch size, use gradient accumulation, or switch to a smaller backbone / LoRA. Mixed precision (<code>torch.cuda.amp</code> / TF mixed precision) often doubles effective throughput with little accuracy cost on modern GPUs.</li>
 </ul>
 <h2>Worked example (intuition)</h2>
-<p>Sentiment three-class task: download a Hub dataset → fine-tune MiniLM or a small classifier in a Kaggle GPU notebook for a few epochs → export <code>state_dict</code> → load in the sentiment demo for live inference. Users never wait for training; you already paid that cost once.</p>
+<p>Sentiment three-class task (neg / neu / pos):</p>
+<p>1. <strong>Data:</strong> <code>load_dataset(...)</code> from the Hub (or a Kaggle CSV with a clean label column). Keep an 80/10/10 train/val/test split; do not peek at test while tuning.</p>
+<p>2. <strong>Model:</strong> fine-tune MiniLM or a small <code>AutoModelForSequenceClassification</code> head — not a 70B chat model. Freeze the encoder for a few epochs if labels are scarce, then unfreeze lightly.</p>
+<p>3. <strong>Train:</strong> Kaggle/Colab GPU, 3–5 epochs, AdamW, batch 16–32, watch <strong>val</strong> accuracy + F1. Save <code>best.pt</code> whenever val improves.</p>
+<p>4. <strong>Export:</strong> <code>torch.save(model.state_dict(), ...)</code> (or ONNX if the demo needs it). Copy the file into the sentiment demo assets.</p>
+<p>5. <strong>Infer:</strong> demo loads weights once at startup; each click is a forward pass only. Users never wait for training — you already paid that cost once in the notebook.</p>
+<p>If val F1 stalls below ~0.7 while train accuracy soars, stop: you are overfitting or the label set is noisy — fix data before burning more GPU hours.</p>
 <h2>Common pitfalls</h2>
 <ul>
 <li><strong>Training in the browser demo</strong> — demos are for inference; don’t expect on-device epoch loops.</li>
 <li><strong>No validation split</strong> — you ship an overfit checkpoint.</li>
 <li><strong>Forgetting to export</strong> — notebook session ends, weights gone.</li>
 <li><strong>GPU quota waste</strong> — debug shapes on CPU/small data first.</li>
+<li><strong>Exporting the last epoch</strong> — prefer best-val; last epoch often overfits.</li>
 </ul>
 <h2>Illustrations</h2>
 <figure><img src="assets/train-gpu/train-gpu-stack.png" alt="GPU training stack: data → GPU epochs → checkpoint" loading="lazy" /><figcaption>GPU training stack: data → GPU epochs → checkpoint</figcaption></figure>
 <figure><img src="assets/train-gpu/train-infer-split.png" alt="Train vs inference split" loading="lazy" /><figcaption>Train vs inference split</figcaption></figure>
+<figure><img src="assets/train-gpu/overfit-curves.png" alt="Watch val curves; export the best checkpoint" loading="lazy" /><figcaption>Watch val curves; export the best checkpoint</figcaption></figure>
+<h2>Deeper dive</h2>
+<ul>
+<li><strong>VRAM budget before you click Run:</strong> estimate roughly <code>params × dtype bytes × (activations + optimizer states)</code>. Adam stores ~2× param memory on top of weights. If a full fine-tune of BERT-base OOMs at batch 32, try batch 8 + grad accumulation 4, or LoRA adapters that train &lt;1% of parameters.</li>
+<li><strong>Checkpoint hygiene:</strong> save <code>{epoch, val_metric, state_dict, tokenizer_name, seed}</code>. Pin the Hub dataset revision (<code>revision=...</code>) so “same notebook next month” is actually the same data. Prefer <code>safetensors</code> when sharing outside a trusted machine.</li>
+<li><strong>Train/val leakage is silent:</strong> shuffle <em>after</em> splitting by document/user id when reviews or sessions can collide. Stratify multi-class splits so rare labels appear in val. A confusion matrix that looks “too perfect” is a smell.</li>
+<li><strong>When to stop:</strong> early stopping on val loss with patience 2–3; or a fixed epoch budget for demos once val plateaus. Learning-rate schedules (warmup + cosine) matter more on full fine-tunes than on tiny heads.</li>
+<li><strong>Framework pick in this lab:</strong> PyTorch for anything you will debug by hand; TensorFlow/Keras when you want Embedding Projector or an existing TF notebook. Don’t dual-maintain both for one demo.</li>
+<li><strong>Export targets:</strong> browser demos often want a small JSON/<code>state_dict</code> or ONNX; Spaces want a Hub repo. Convert once after metrics are good — don’t retrain just to change packaging.</li>
+<li><strong>Colab/Kaggle gotchas:</strong> session disconnect wipes <code>/content</code> — push checkpoints to Drive/Hub every N epochs. Free GPUs throttle; profile one epoch time × planned epochs before overnight runs.</li>
+</ul>
+<h2>Decision guide</h2>
+<table><thead>
+<tr><th>Situation</th><th>Prefer</th><th>Avoid / why</th></tr>
+</thead><tbody>
+<tr><td>Teaching demo, few labels, need a checkpoint this afternoon</td><td>Hub pretrained + 2–5 epoch fine-tune on free GPU</td><td>Training a Transformer from scratch — weeks of compute for worse results</td></tr>
+<tr><td>Debugging <code>RuntimeError: shape mismatch</code></td><td>CPU, batch size 1–2, <code>print</code> shapes before <code>.cuda()</code></td><td>Burning GPU quota on broken graphs</td></tr>
+<tr><td>Val accuracy high, train much higher</td><td>Best-val checkpoint + more regularization / less epochs</td><td>Shipping last-epoch weights — classic overfit</td></tr>
+<tr><td>Need vectors for Projector / softmax lab</td><td>TensorFlow path already in <a href="tensorflow-training.html">tensorflow-training.md</a></td><td>Rewriting the whole stack in PyTorch “for purity”</td></tr>
+<tr><td>Large model, limited VRAM</td><td>LoRA / PEFT or smaller backbone</td><td>Full fine-tune of huge models on free Colab</td></tr>
+<tr><td>Demo must load in browser quickly</td><td>Small classifier / MiniLM export</td><td>Shipping a multi-GB chat checkpoint into static HTML</td></tr>
+</tbody></table>
 <h2>Pipeline</h2>
 <pre><code>
 HF/Kaggle data → notebook (PyTorch/TF) → GPU epochs → checkpoint → demo inference

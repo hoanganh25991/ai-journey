@@ -350,20 +350,23 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 <li>Learned in order: <a href="tokenize.html">tokenize.md</a> → <a href="embedding.html">embedding.md</a> → <a href="attention.html">attention.md</a> → <a href="softmax.html">softmax.md</a>.</li>
 <li>Then retrieval: <a href="rag.html">rag.md</a>; train → infer: <a href="train-infer.html">06-train-infer.md</a>, <a href="train-gpu.html">train-gpu.md</a>.</li>
 <li><strong>July 2023</strong> — Claude 2 · Llama 2. <strong>December 2023</strong> — Gemini 1.0 · Mixtral (MoE open).</li>
+<li><strong>Stage takeaway:</strong> without tokenization, vectors, and attention, later “agent” talk is vocabulary without mechanisms. Build the substrate first.</li>
 </ul>
 <ul>
 <li><strong>Stage 2 — 2024: stronger models + early coding agents</strong></li>
 <li>Gemini 1.5 (1M context) · Claude 3 → 3.5 Sonnet (coding jump — Cursor took off) · GPT-4o · Llama 3.1 405B · o1 · DeepSeek V3.</li>
 <li>Shift from <em>reading concepts</em> to <em>using AI to code for real</em>.</li>
+<li><strong>Stage takeaway:</strong> long context and coding-specialized models made “pair programmer” practical. The bottleneck moved from “can the model code?” toward “can I steer it in a repo?”</li>
 </ul>
 <ul>
 <li><strong>Stage 3 — late 2024–2025: agent era (MCP · skills · harness)</strong></li>
 <li>Lab pivots to <strong>MCP · skills · harness</strong>.</li>
-<li><strong>November 25, 2024</strong> — <strong>MCP</strong> (Anthropic): standard agent ↔ tool connection. Hinge. See <a href="mcp.html">mcp.md</a>.</li>
+<li><strong>November 25, 2024</strong> — <strong>MCP</strong> (Anthropic): standard agent ↔ tool connection. <strong>Hinge</strong> between chatbots and tool-using agents. See <a href="mcp.html">mcp.md</a>.</li>
 <li><strong>January 2025</strong> — DeepSeek R1 — <a href="model-notes.html">08-model-notes.md</a>.</li>
 <li><strong>February 2025</strong> — Claude 3.7 Sonnet · GPT-4.5. <strong>March 2025</strong> — MCP Streamable HTTP + OAuth · Gemini 2.5 Pro.</li>
 <li><strong>May 2025</strong> — Claude 4 → <strong>Claude Code</strong> as strong harness: <a href="agents.html">07-agents.md</a>.</li>
 <li><strong>August 2025</strong> — GPT-5. <strong>November 2025</strong> — Claude Opus 4.5 · <strong>AGENTS.md</strong> standard · skills/rules: <a href="skills-rules.html">skills-rules.md</a>.</li>
+<li><strong>Stage takeaway:</strong> after MCP, progress is less “new chat UI” and more <strong>tools + loop + portable instructions</strong>. Harness quality starts to matter as much as model IQ.</li>
 </ul>
 <ul>
 <li><strong>Stage 4 — 2026: model wave + automation (now)</strong></li>
@@ -371,6 +374,7 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 <li><strong>April 2026</strong> — GPT-5.5. <strong>May 28, 2026</strong> — Claude Opus 4.8. <strong>June 2026</strong> — Claude Fable 5 · Sonnet 5.</li>
 <li><strong>July 8, 2026</strong> — <strong>Grok 4.5</strong> (trained with Cursor): fast, token-efficient, cheap. <strong>July 9, 2026</strong> — GPT-5.6.</li>
 <li>Parallel: <strong>OpenClaw</strong> (<code>pi</code> harness) opens “agent controls everything” → <strong>Hermess</strong> polishes it.</li>
+<li><strong>Stage takeaway:</strong> model waves are frequent; keep field notes fresh, but keep pipelines (RAG, train/infer, MCP) stable. Automation (OpenClaw / Hermess) asks: what should run without a human in the loop?</li>
 </ul>
 <ul>
 <li><strong>Milestone table:</strong></li>
@@ -381,24 +385,50 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 <tr><td><strong>2023</strong></td><td>first LLM exposure (ChatGPT/GPT-4)</td><td>start studying</td></tr>
 <tr><td>March 2023</td><td>GPT-4, Claude 1, Llama 1</td><td>tokenize · embedding · attention · softmax · RAG</td></tr>
 <tr><td>2024</td><td>Gemini 1.5, Claude 3.5, GPT-4o, o1</td><td>coding agents</td></tr>
-<tr><td><strong>Nov 2024</strong></td><td><strong>MCP launches</strong></td><td>mcp</td></tr>
+<tr><td><strong>Nov 2024</strong></td><td><strong>MCP launches</strong></td><td>mcp (hinge)</td></tr>
 <tr><td>2025</td><td>Claude 4 / GPT-5 / R1 · AGENTS.md</td><td>harness, skills</td></tr>
 <tr><td>2026</td><td>Grok 4.5, Opus 4.8, GPT-5.6</td><td>model notes, automation</td></tr>
 </tbody></table>
 <ul>
-<li><strong>Takeaways:</strong> journey goes from <strong>understanding models</strong> (2023–2024) → <strong>steering agents</strong> (late 2024 onward). MCP (November 2024) is the hinge. 2023 concepts are not outdated — tokenize / attention / RAG still underpin every agent. Watch harnesses (Cursor / Claude Code / pi), model waves (Grok 4.5…), automation (OpenClaw / Hermess).</li>
+<li><strong>Takeaways (compressed):</strong> journey goes from <strong>understanding models</strong> (2023–2024) → <strong>steering agents</strong> (late 2024 onward). MCP (November 2024) is the hinge. 2023 concepts are not outdated — tokenize / attention / RAG still underpin every agent. Watch harnesses (Cursor / Claude Code / pi), model waves (Grok 4.5…), automation (OpenClaw / Hermess).</li>
 </ul>
 <h2>Worked example (how to use this note)</h2>
-<p>New to the lab? Follow 2023 order (tokenize → … → RAG). Already building agents? Start at MCP + skills-rules + agents, but keep fundamentals as the substrate when retrieval or tokenization bugs appear.</p>
+<p><strong>Path A — new to the lab:</strong> follow Stage 1 order (tokenize → embedding → attention → softmax → RAG → train/infer). Only then open MCP / agents. When something breaks in an agent app, you will recognize “bad retrieve” or “bad tokenize” instead of blaming the harness.</p>
+<p><strong>Path B — already building agents:</strong> start at <a href="mcp.html">mcp.md</a> + <a href="skills-rules.html">skills-rules.md</a> + <a href="agents.html">07-agents.md</a>, but keep Stage 1 notes as the substrate. Example: agent “can’t find docs” → check embedding/RAG notes before swapping models.</p>
+<p><strong>Path C — catching up on 2026:</strong> skim Stage 4 + <a href="model-notes.html">08-model-notes.md</a> / <a href="agent-automation.html">09-agent-automation.md</a>, then decide whether your bottleneck is <strong>model</strong>, <strong>harness</strong>, or <strong>automation scope</strong> — the timeline’s point is that these are different layers.</p>
+<p><strong>MCP hinge check:</strong> if your stack still treats tools as one-off plugins with no shared protocol, you are pre-hinge mentally — read <a href="mcp.html">mcp.md</a> even if your editor already “has tools.”</p>
 <h2>Common pitfalls</h2>
 <ul>
 <li><strong>Skipping foundations because “agents are the new thing”</strong> — bad retrieve / bad tokenize still break agent apps.</li>
 <li><strong>Treating every model launch as a full rewrite</strong> — update field notes; keep pipelines stable.</li>
 <li><strong>Timeline as dogma</strong> — this is <em>my</em> path; yours may start at RAG or harnesses.</li>
+<li><strong>Collapsing model vs harness vs automation into one upgrade</strong> — swap one layer at a time.</li>
 </ul>
 <h2>Illustrations</h2>
 <figure><img src="assets/ai-timeline/ai-timeline-hero.png" alt="AI timeline hero 2023–2026" loading="lazy" /><figcaption>AI timeline hero 2023–2026</figcaption></figure>
 <figure><img src="assets/ai-timeline/ai-timeline-strip.svg" alt="Timeline strip with MCP hinge" loading="lazy" /><figcaption>Timeline strip with MCP hinge</figcaption></figure>
+<figure><img src="assets/ai-timeline/mcp-hinge.png" alt="MCP as the Nov 2024 hinge" loading="lazy" /><figcaption>MCP as the Nov 2024 hinge</figcaption></figure>
+<h2>Deeper dive</h2>
+<ul>
+<li><strong>Why Nov 25, 2024 is the hinge:</strong> before MCP, every product reinvented tool schemas. After MCP, skills/harnesses can share a connector language — lab notes shift from “how does GPT work?” to “how does the agent get arms?” (<a href="mcp.html">mcp.md</a>).</li>
+<li><strong>Foundations still fire in agent bugs:</strong> wrong chunking → bad RAG → confident wrong tool args. Attention/softmax notes explain <em>why</em> prompts and logits behave; they are not nostalgia.</li>
+<li><strong>Coding-agent jump (2024):</strong> Claude 3.5 + Cursor made repo-native edit loops mainstream. That prepared the ground for harness comparison in 2025 — once everyone could code with AI, <em>orchestration</em> became the differentiator (<a href="agents.html">07-agents.md</a>).</li>
+<li><strong>Skills / AGENTS.md (late 2025):</strong> portable instructions reduce re-prompting. They sit <em>above</em> models: same skill file, different brains (<a href="skills-rules.html">skills-rules.md</a>).</li>
+<li><strong>2026 model wave discipline:</strong> Grok 4.5 / Opus 4.8 / GPT-5.6 arrive close together — update <a href="model-notes.html">08-model-notes.md</a>, don’t rewrite RAG or train pipelines for each launch.</li>
+<li><strong>Automation layer:</strong> OpenClaw → Hermess is about <em>unattended</em> loops. Ask what must stay human-approved (prod deploys, secrets) vs what can run on a schedule (<a href="agent-automation.html">09-agent-automation.md</a>).</li>
+<li><strong>How to read industry news with this timeline:</strong> classify each headline as foundation science, model release, protocol/harness, or automation product — then open the matching lab note instead of doomscrolling.</li>
+</ul>
+<h2>Decision guide</h2>
+<table><thead>
+<tr><th>Situation</th><th>Prefer</th><th>Avoid / why</th></tr>
+</thead><tbody>
+<tr><td>Brand new to LLMs</td><td>Stage 1 path (tokenize → … → RAG)</td><td>Jumping straight to multi-agent automation — no substrate</td></tr>
+<tr><td>Shipping tool-using agents</td><td>MCP + skills + harness notes (Stage 3)</td><td>Treating ChatGPT plugins as “done” without a protocol story</td></tr>
+<tr><td>“Which model this week?”</td><td>Update <a href="model-notes.html">08-model-notes.md</a>; pin for the task</td><td>Rewriting the whole lab stack per launch</td></tr>
+<tr><td>Agent fails on retrieval-heavy tasks</td><td>Revisit embedding / RAG / semantic-search notes</td><td>Only swapping to a bigger chat model</td></tr>
+<tr><td>Want unattended runs</td><td><a href="agent-automation.html">09-agent-automation.md</a> + clear approvals</td><td>Giving a harness prod credentials “to try OpenClaw”</td></tr>
+<tr><td>Confused model vs harness pain</td><td>Read <a href="agents.html">07-agents.md</a> axes first</td><td>Blaming Grok/Opus for missing shell/MCP</td></tr>
+</tbody></table>
 <h2>Slides &amp; demo</h2>
 <table><thead>
 <tr><th></th><th>Link</th></tr>

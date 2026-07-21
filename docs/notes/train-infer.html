@@ -351,24 +351,62 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 <tr><td><strong>Train</strong></td><td>loop data for many epochs, compare prediction to label, update weights</td><td>heavy, needs GPU</td><td>checkpoint (weight file)</td></tr>
 <tr><td><strong>Inference</strong></td><td>load weights, feed input, get prediction</td><td>light, realtime</td><td>label / action</td></tr>
 </tbody></table>
+<p>Training needs labels, an optimizer, and many passes over data. Inference needs only the frozen weights and a forward pass — no labels, no <code>backward()</code>.</p>
 <ul>
-<li><strong>Learning = reducing error:</strong> each round the model predicts, measures loss (e.g. cross-entropy with <a href="softmax.html">softmax.md</a>), then nudges weights toward lower loss (<a href="pytorch-training.html">pytorch-training.md</a>).</li>
-<li><strong>Checkpoint is the product:</strong> after training, save weights; inference no longer needs training data or labels.</li>
-<li><strong>Eval mode:</strong> at inference, disable dropout / use running batch-norm stats (<code>model.eval()</code>, <code>torch.no_grad()</code>).</li>
-<li><strong>In AI Lab:</strong> browser demos show <em>inference</em> only. Heavy training in protonx / Kaggle / Colab notebooks → export → embed in UI (<a href="train-gpu.html">train-gpu.md</a>).</li>
+<li><strong>Learning = reducing error:</strong> each round the model predicts, measures loss (e.g. cross-entropy with <a href="softmax.html">softmax.md</a>), then nudges weights toward lower loss (<a href="pytorch-training.html">pytorch-training.md</a>). The update rule is usually SGD/Adam on gradients of that loss. One epoch = one full pass over the training set; “many epochs” means repeating until val metrics plateau.</li>
+</ul>
+<ul>
+<li><strong>Checkpoint is the product:</strong> after training, save weights; inference no longer needs training data or labels. A checkpoint is the transferable artifact between notebook and demo. Formats you will see: <code>state_dict</code> (<code>.pt</code>), Keras SavedModel, ONNX, Hugging Face Hub folders.</li>
+</ul>
+<ul>
+<li><strong>Eval / serve mode:</strong> at inference, disable dropout / use running batch-norm stats (<code>model.eval()</code>, <code>torch.no_grad()</code>). Training mode keeps dropout noise and updates BN stats — fine while learning, wrong when serving. Always wrap serve paths in no-grad so you do not accidentally build a graph.</li>
+</ul>
+<ul>
+<li><strong>Fine-tune is still training:</strong> loading a Hub model and updating weights on your labels is a <em>train</em> phase (lighter, but still GPU + labels). Calling the resulting API is <em>inference</em>. “Chat with the model” without updating weights is inference.</li>
+</ul>
+<ul>
+<li><strong>In AI Lab:</strong> browser demos show <em>inference</em> only. Heavy training in protonx / Kaggle / Colab notebooks → export → embed in UI (<a href="train-gpu.html">train-gpu.md</a>). If a demo button feels “smart,” it is running a forward pass on weights you already trained elsewhere.</li>
 </ul>
 <h2>Worked example (intuition)</h2>
-<p>Car-nn: sensors → network → drive action. Weeks of notebook training produced <code>weights.json</code> (or similar). The demo loads those numbers and runs forward passes in the browser. Clicking “drive” never updates weights — that would be training, and it already happened.</p>
+<p><strong>Car-nn (sensors → drive action):</strong></p>
+<p>1. <strong>Train (notebook):</strong> weeks of GPU loops on labeled sensor → action pairs. Each step: forward → compare to label → loss → backward → update weights. Periodically evaluate on a held-out track; keep the best validation checkpoint as <code>weights.json</code> (or <code>.pt</code>).</p>
+<p>2. <strong>Export:</strong> write the weight tensors into the demo’s static assets. No training data ships with the demo.</p>
+<p>3. <strong>Infer (browser):</strong> on “drive,” the UI reads current sensor values, runs one forward pass through the fixed network, and outputs an action (steer / accel). Clicks never call an optimizer — that would be training, and it already happened.</p>
+<p>4. <strong>What users feel:</strong> low latency. What you paid once: GPU hours and label collection.</p>
+<p><strong>Sentiment demo (same split):</strong> notebook fine-tunes a classifier → export → each review click is <code>argmax(softmax(logits))</code> only. If predictions look random after a deploy, check <code>eval()</code> / wrong checkpoint — not “needs more clicks to learn.”</p>
 <h2>Common pitfalls</h2>
 <ul>
 <li><strong>Confusing fine-tune with inference</strong> — fine-tune is still training (updates weights).</li>
 <li><strong>Leaving dropout on at serve time</strong> — noisy, inconsistent predictions.</li>
 <li><strong>Shipping the last epoch blindly</strong> — prefer the best validation checkpoint.</li>
 <li><strong>Re-training from scratch when a Hub model + light fine-tune would do</strong>.</li>
+<li><strong>Renting a GPU for every API call</strong> — most classification forward passes are fine on CPU once the model is small.</li>
 </ul>
 <h2>Illustrations</h2>
 <figure><img src="assets/train-infer/train-infer-split.png" alt="Train vs Inference: two panels" loading="lazy" /><figcaption>Train vs Inference: two panels</figcaption></figure>
 <figure><img src="assets/train-infer/train-infer-flow.svg" alt="Two lives of a model — flow diagram" loading="lazy" /><figcaption>Two lives of a model — flow diagram</figcaption></figure>
+<figure><img src="assets/train-infer/overfit-curves.png" alt="Training curves vs inference product" loading="lazy" /><figcaption>Training curves vs inference product</figcaption></figure>
+<h2>Deeper dive</h2>
+<ul>
+<li><strong>What each phase allocates:</strong> train keeps activations for backward, optimizer states (Adam ≈ 2× params), and data loaders. Infer keeps weights + activations for one batch. That is why train VRAM ≫ serve VRAM for the same architecture.</li>
+<li><strong><code>train()</code> vs <code>eval()</code> is not optional:</strong> dropout and BatchNorm behave differently. Forgetting <code>eval()</code> makes the same input yield different outputs across clicks — users blame “the model,” but it is mode.</li>
+<li><strong>Checkpoint selection policy:</strong> track <code>val_loss</code> / <code>val_f1</code> every epoch; save when improved; optionally keep top-3. Report metrics from the <strong>chosen</strong> checkpoint, not a cherry-picked mid-run print.</li>
+<li><strong>Quantization and distillation are inference-side tricks:</strong> they shrink or speed the forward pass after training. They do not replace a good train/val loop; they package a finished model for edge/browser.</li>
+<li><strong>Online learning ≠ clicking in a demo:</strong> continually updating weights from live traffic is a deliberate training system (labels, monitoring, rollback). Lab demos do not do this.</li>
+<li><strong>Latency budgets:</strong> train optimizes for final quality; serve optimizes for p95 latency and cost. A 0.5% accuracy gain that triples serve cost may be wrong for a product, fine for a research notebook.</li>
+<li><strong>Reproducibility bridge:</strong> same tokenizer, same preprocessing, same label map between train and infer. Mismatched class order (<code>neg/neu/pos</code> vs <code>pos/neu/neg</code>) silently swaps predictions.</li>
+</ul>
+<h2>Decision guide</h2>
+<table><thead>
+<tr><th>Situation</th><th>Prefer</th><th>Avoid / why</th></tr>
+</thead><tbody>
+<tr><td>User-facing click / API predict</td><td>Load checkpoint, <code>eval()</code>, forward only</td><td>Running epochs or <code>loss.backward()</code> in the request path</td></tr>
+<tr><td>Need better accuracy on your labels</td><td>Fine-tune (train phase) on GPU, then re-export</td><td>Hoping inference-time prompt tricks replace labeled training for classifiers</td></tr>
+<tr><td>Demo must run in static HTML</td><td>Small frozen weights + JS/ONNX forward</td><td>Expecting the page to “learn” from user clicks</td></tr>
+<tr><td>Predictions flicker with same input</td><td>Force <code>model.eval()</code> + deterministic seed where relevant</td><td>Leaving dropout active at serve</td></tr>
+<tr><td>Choosing which file to ship</td><td>Best validation checkpoint</td><td>Last epoch by default — often overfit</td></tr>
+<tr><td>Cost spike on every prediction</td><td>Distill / quantize / smaller model for serve</td><td>Renting train-class GPUs for light forward passes</td></tr>
+</tbody></table>
 <h2>Pipeline</h2>
 <pre><code>
 data → train (many GPU epochs) → checkpoint → load → infer (predict)

@@ -11,16 +11,16 @@
   width: 100%; height: 420px; object-fit: contain; border-radius: 14px;
   border: 1px solid var(--line); background: #e6edf5;
 }
-.shot-lg { height: 520px; }
+.shot-lg { height: 500px; }
 .shot-md { height: 380px; }
 .mini { font-size: 18px !important; }
 .table-card { overflow: hidden; }
-.table-card table { width: 100%; border-collapse: collapse; font-size: 18px; }
+.table-card table { width: 100%; border-collapse: collapse; font-size: 17px; }
 .table-card th, .table-card td {
-  text-align: left; padding: 12px 14px; border-bottom: 1px solid var(--line);
+  text-align: left; padding: 11px 12px; border-bottom: 1px solid var(--line);
   color: var(--muted); vertical-align: top;
 }
-.table-card th { color: var(--ink); font-family: var(--font-mono); font-size: 14px;
+.table-card th { color: var(--ink); font-family: var(--font-mono); font-size: 13px;
   letter-spacing: 0.06em; text-transform: uppercase; }
 .code-block {
   font-family: var(--font-mono); font-size: 18px; line-height: 1.55;
@@ -30,6 +30,7 @@
 .code-block .c { color: #8b97a8; }
 .code-block .k { color: #5ec8d4; }
 .code-block .s { color: #f0a35e; }
+.caption { margin-top: 14px; font-size: 20px; color: var(--muted); max-width: 92%; }
 </style>
 </head>
 <body>
@@ -68,13 +69,14 @@
     <h2 class="reveal">Two phases</h2>
     <div class="card table-card reveal">
       <table>
-        <thead><tr><th>Phase</th><th>Work</th><th>Cost</th><th>Output</th></tr></thead>
+        <thead><tr><th>Phase</th><th>Work</th><th>Needs</th><th>Cost</th><th>Output</th></tr></thead>
         <tbody>
-          <tr><td><strong>Train</strong></td><td>loop data for many epochs; compare prediction to label; update weights</td><td>heavy · needs GPU</td><td>checkpoint (weight file)</td></tr>
-          <tr><td><strong>Inference</strong></td><td>load weights; feed input; get prediction</td><td>light · realtime</td><td>label / action</td></tr>
+          <tr><td><strong>Train</strong></td><td>many epochs; compare to label; update weights</td><td>labels · optimizer · <code>backward()</code></td><td>heavy · GPU</td><td>checkpoint</td></tr>
+          <tr><td><strong>Inference</strong></td><td>load weights; feed input; predict</td><td>frozen weights · forward only</td><td>light · realtime</td><td>label / action</td></tr>
         </tbody>
       </table>
     </div>
+    <p class="lead reveal" style="margin-top:24px;font-size:20px;">Fine-tune is still <em>training</em>. “Chat without updating weights” is inference.</p>
   </div>
   <div class="foot"><span>03</span><span>key table</span></div>
 </section>
@@ -85,11 +87,10 @@
     <div class="topbar reveal"><span>Ideas</span><span class="pill">core</span></div>
     <h2 class="reveal">Key ideas</h2>
     <div class="cols-3">
-      <div class="card reveal"><div class="tag">learn</div><h3>Reducing error</h3><p>Predict → measure loss (e.g. cross-entropy + softmax) → nudge weights.</p></div>
-      <div class="card cyan reveal"><div class="tag">product</div><h3>Checkpoint is the product</h3><p>After training, save weights. Inference no longer needs labels or training data.</p></div>
-      <div class="card reveal"><div class="tag">eval</div><h3>Eval mode</h3><p><code style="font-family:var(--font-mono);font-size:15px">model.eval()</code> + <code style="font-family:var(--font-mono);font-size:15px">no_grad()</code> — disable dropout, freeze BN stats.</p></div>
+      <div class="card reveal"><div class="tag">learn</div><h3>Reducing error</h3><p>Predict → loss (CE + softmax) → SGD/Adam on gradients. One epoch = one pass; many until val plateaus.</p></div>
+      <div class="card cyan reveal"><div class="tag">product</div><h3>Checkpoint is the product</h3><p><code>.pt</code> / SavedModel / ONNX / Hub folder — transferable artifact between notebook and demo.</p></div>
+      <div class="card reveal"><div class="tag">eval</div><h3>Eval mode</h3><p><code>model.eval()</code> + <code>no_grad()</code> — disable dropout, freeze BN. Training mode at serve = flickering outputs.</p></div>
     </div>
-    <p class="lead reveal" style="margin-top:24px;font-size:20px;">Read: <span style="color:var(--amber);font-family:var(--font-mono)">notes/06-train-infer.md</span> · stack: <span style="color:var(--amber);font-family:var(--font-mono)">train-gpu.md</span></p>
   </div>
   <div class="foot"><span>04</span><span>notes/06-train-infer.md</span></div>
 </section>
@@ -97,54 +98,49 @@
 <section class="slide">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
-    <div class="topbar reveal"><span>Illustration</span><span class="pill">train-infer-split.png</span></div>
-    <h2 class="reveal" style="font-size:36px;margin-bottom:16px;">Two panels · train vs infer</h2>
-    <img class="shot shot-md reveal" src="../assets/train-infer-split.png" alt="Train panel with many GPU epochs versus inference panel with a single forward pass" />
-    <p class="lead reveal" style="margin-top:14px;font-size:20px;">Same model architecture — completely different cost profile and lifecycle.</p>
+    <div class="topbar reveal"><span>Picture</span><span class="pill">split</span></div>
+    <h2 class="reveal" style="font-size:36px;margin-bottom:12px;">Two panels · train vs infer</h2>
+    <img class="shot shot-lg reveal" src="../assets/train-infer-split.png" alt="Train panel with many GPU epochs versus inference panel with a single forward pass" />
+    <p class="caption reveal">Same architecture — completely different cost profile and lifecycle. Train VRAM ≫ serve VRAM.</p>
   </div>
-  <div class="foot"><span>05</span><span>AI Lab · illustration</span></div>
+  <div class="foot"><span>05</span><span>slides/assets/train-infer-split.png</span></div>
 </section>
 
 <section class="slide">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
-    <div class="topbar reveal"><span>Illustration</span><span class="pill">train-infer-flow.svg</span></div>
-    <h2 class="reveal" style="font-size:36px;margin-bottom:16px;">Two lives of a model</h2>
-    <img class="shot shot-md reveal" src="../assets/train-infer-flow.svg" alt="Flow diagram from data through training checkpoint into repeated inference" />
-    <p class="lead reveal" style="margin-top:14px;font-size:20px;">Data → train (many GPU epochs) → checkpoint → load → infer (predict).</p>
+    <div class="topbar reveal"><span>Picture</span><span class="pill">flow</span></div>
+    <h2 class="reveal" style="font-size:36px;margin-bottom:12px;">Two lives of a model</h2>
+    <img class="shot shot-lg reveal" src="../assets/train-infer-flow.svg" alt="Flow diagram from data through training checkpoint into repeated inference" />
+    <p class="caption reveal">Data → train (many GPU epochs) → checkpoint → load → infer (predict). Quantization / distillation package a finished model — they don’t replace the train/val loop.</p>
   </div>
-  <div class="foot"><span>06</span><span>AI Lab · illustration</span></div>
+  <div class="foot"><span>06</span><span>slides/assets/train-infer-flow.svg</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Picture</span><span class="pill">curves</span></div>
+    <h2 class="reveal" style="font-size:36px;margin-bottom:12px;">Training curves vs inference product</h2>
+    <img class="shot shot-lg reveal" src="../assets/overfit-curves.png" alt="Train and validation curves; pick the best validation checkpoint to ship" />
+    <p class="caption reveal">Track <code>val_loss</code> / <code>val_f1</code> every epoch; save when improved. Report metrics from the <em>chosen</em> checkpoint — not a cherry-picked mid-run print.</p>
+  </div>
+  <div class="foot"><span>07</span><span>slides/assets/overfit-curves.png</span></div>
 </section>
 
 <section class="slide">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
     <div class="topbar reveal"><span>Example</span><span class="pill">worked</span></div>
-    <h2 class="reveal">Worked example · car-nn</h2>
+    <h2 class="reveal">Worked example · car-nn + sentiment</h2>
     <div class="cols-3">
-      <div class="card accent reveal"><div class="tag">train</div><h3>Notebook weeks</h3><p>Sensors → network → drive action. Many epochs produced weights.</p></div>
-      <div class="card cyan reveal"><div class="tag">export</div><h3>weights.json</h3><p>(or similar) — the product you keep after the GPU session.</p></div>
-      <div class="card reveal"><div class="tag">infer</div><h3>Browser drive</h3><p>Demo loads numbers and runs forward passes. Clicking never updates weights.</p></div>
+      <div class="card accent reveal"><div class="tag">train</div><h3>Notebook weeks</h3><p>Sensors → action pairs. Forward → loss → backward. Keep best val as <code>weights.json</code>.</p></div>
+      <div class="card cyan reveal"><div class="tag">export</div><h3>Static assets</h3><p>No training data ships with the demo. Cost already paid once.</p></div>
+      <div class="card reveal"><div class="tag">infer</div><h3>Browser click</h3><p>One forward pass → action / <code>argmax(softmax(logits))</code>. Never an optimizer.</p></div>
     </div>
-    <p class="lead reveal" style="margin-top:28px;font-size:22px;">If the click updated weights, that would be training — and it already happened.</p>
+    <p class="lead reveal" style="margin-top:28px;font-size:22px;">Random predictions after deploy? Check <code>eval()</code> / wrong checkpoint — not “needs more clicks to learn.”</p>
   </div>
-  <div class="foot"><span>07</span><span>car-nn</span></div>
-</section>
-
-<section class="slide">
-  <div class="slide-bg"></div><div class="grid-overlay"></div>
-  <div class="pad">
-    <div class="topbar reveal"><span>Learning</span><span class="pill">loss</span></div>
-    <h2 class="reveal">Learning = reducing error</h2>
-    <div class="cols-2">
-      <div class="card reveal"><div class="tag">round</div><h3>Each training step</h3><p>Model predicts → loss compares to label → gradients nudge weights toward lower loss.</p></div>
-      <div class="card cyan reveal"><div class="tag">link</div><h3>Softmax + CE</h3><p>Classifiers usually train with cross-entropy after softmax — see softmax.md and pytorch-training.md.</p></div>
-    </div>
-    <div class="code-block reveal" style="margin-top:28px;font-size:17px;"><span class="c"># intuition — not the full API</span>
-predict → loss(pred, label) → backward → step  <span class="c"># train</span>
-load(weights) → predict(x)                   <span class="c"># infer</span></div>
-  </div>
-  <div class="foot"><span>08</span><span>loss loop</span></div>
+  <div class="foot"><span>08</span><span>car-nn · sentiment</span></div>
 </section>
 
 <section class="slide">
@@ -153,12 +149,53 @@ load(weights) → predict(x)                   <span class="c"># infer</span></d
     <div class="topbar reveal"><span>Serve</span><span class="pill">eval</span></div>
     <h2 class="reveal">At inference time</h2>
     <div class="cols-3">
-      <div class="card accent reveal"><div class="tag">mode</div><h3>model.eval()</h3><p>Switch layers that behave differently at train vs serve.</p></div>
-      <div class="card cyan reveal"><div class="tag">grads</div><h3>torch.no_grad()</h3><p>No gradient graph — faster, less memory.</p></div>
-      <div class="card reveal"><div class="tag">ckpt</div><h3>Best val, not last</h3><p>Prefer the best validation checkpoint over the final epoch blind.</p></div>
+      <div class="card accent reveal"><div class="tag">mode</div><h3>model.eval()</h3><p>Dropout off · BN uses running stats. Same input → same output.</p></div>
+      <div class="card cyan reveal"><div class="tag">grads</div><h3>torch.no_grad()</h3><p>No gradient graph — faster, less memory. Don’t accidentally build one.</p></div>
+      <div class="card reveal"><div class="tag">bridge</div><h3>Same preprocess</h3><p>Same tokenizer, label map, class order train↔infer. Mismatched order silently swaps preds.</p></div>
     </div>
   </div>
   <div class="foot"><span>09</span><span>eval mode</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Deeper dive</span><span class="pill">notes</span></div>
+    <h2 class="reveal">Deeper dive · memory, mode, budgets</h2>
+    <div class="cols-3">
+      <div class="card accent reveal"><div class="tag">alloc</div><h3>What each phase allocates</h3><p>Train: activations for backward + Adam (~2× params) + loaders. Infer: weights + one-batch activations.</p></div>
+      <div class="card cyan reveal"><div class="tag">mode</div><h3>train() vs eval()</h3><p>Not optional. Forgetting <code>eval()</code> → users blame “the model,” but it is mode.</p></div>
+      <div class="card reveal"><div class="tag">policy</div><h3>Checkpoint policy</h3><p>Save on val improve; optionally keep top-3. Never ship last epoch by default.</p></div>
+    </div>
+    <div class="cols-3" style="margin-top:18px;">
+      <div class="card reveal"><div class="tag">serve</div><h3>Quantize / distill</h3><p>Inference-side shrink/speed after training. Package — don’t replace — a good train/val loop.</p></div>
+      <div class="card cyan reveal"><div class="tag">online</div><h3>Online learning ≠ demos</h3><p>Live weight updates need labels, monitoring, rollback. Lab demos do not do this.</p></div>
+      <div class="card accent reveal"><div class="tag">latency</div><h3>Two optimizers</h3><p>Train optimizes quality; serve optimizes p95 + cost. +0.5% that triples serve cost may be wrong for product.</p></div>
+    </div>
+  </div>
+  <div class="foot"><span>10</span><span>Deeper dive</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Decision guide</span><span class="pill">choose</span></div>
+    <h2 class="reveal">Decision guide</h2>
+    <div class="card table-card reveal">
+      <table>
+        <thead><tr><th>Situation</th><th>Prefer</th><th>Avoid / why</th></tr></thead>
+        <tbody>
+          <tr><td>User-facing click / API predict</td><td>Load checkpoint, <code>eval()</code>, forward only</td><td>Epochs or <code>loss.backward()</code> in the request path</td></tr>
+          <tr><td>Need better accuracy on your labels</td><td>Fine-tune on GPU, then re-export</td><td>Hoping prompt tricks replace labeled training for classifiers</td></tr>
+          <tr><td>Demo must run in static HTML</td><td>Small frozen weights + JS/ONNX forward</td><td>Expecting the page to “learn” from clicks</td></tr>
+          <tr><td>Predictions flicker with same input</td><td>Force <code>model.eval()</code> + deterministic seed</td><td>Leaving dropout active at serve</td></tr>
+          <tr><td>Choosing which file to ship</td><td>Best validation checkpoint</td><td>Last epoch by default — often overfit</td></tr>
+          <tr><td>Cost spike on every prediction</td><td>Distill / quantize / smaller serve model</td><td>Renting train-class GPUs for light forwards</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="foot"><span>11</span><span>Decision guide</span></div>
 </section>
 
 <section class="slide">
@@ -173,7 +210,7 @@ load(weights) → predict(x)                   <span class="c"># infer</span></d
       <div class="card reveal"><div class="tag">pitfall</div><h3>Train from scratch always</h3><p>Hub model + light fine-tune often beats reinventing training.</p></div>
     </div>
   </div>
-  <div class="foot"><span>10</span><span>pitfalls</span></div>
+  <div class="foot"><span>12</span><span>pitfalls</span></div>
 </section>
 
 <section class="slide">
@@ -184,7 +221,7 @@ load(weights) → predict(x)                   <span class="c"># infer</span></d
     <div class="flow-row reveal" style="margin-top:48px;"><span class="step">data</span><span class="arr">→</span><span class="step">train (GPU epochs)</span><span class="arr">→</span><span class="step">checkpoint</span><span class="arr">→</span><span class="step">load</span><span class="arr">→</span><span class="step">infer</span></div>
     <p class="lead reveal" style="margin-top:40px;">In AI Lab: protonx / Kaggle / Colab notebooks → export → embed in UI. See train-gpu.md for the stack.</p>
   </div>
-  <div class="foot"><span>11</span><span>pipeline</span></div>
+  <div class="foot"><span>13</span><span>pipeline</span></div>
 </section>
 
 <section class="slide">
@@ -198,7 +235,7 @@ load(weights) → predict(x)                   <span class="c"># infer</span></d
       <div class="card reveal"><div class="tag">demo</div><h3>car-nn / sentiment</h3><p>See inference-only demos in the browser.</p></div>
     </div>
   </div>
-  <div class="foot"><span>12</span><span>related</span></div>
+  <div class="foot"><span>14</span><span>related</span></div>
 </section>
 
 <section class="slide">
@@ -209,7 +246,7 @@ load(weights) → predict(x)                   <span class="c"># infer</span></d
     <p class="lead reveal" style="margin-top:28px;">notes/06-train-infer.md — then train-gpu for the practical stack.</p>
     <a class="app-cta reveal" href="../../notes/train-infer.html">Open note →</a>
   </div>
-  <div class="foot"><span>13</span><span>AI Lab</span></div>
+  <div class="foot"><span>15</span><span>AI Lab</span></div>
 </section>
 
 </main>

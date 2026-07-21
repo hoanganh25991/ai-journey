@@ -11,13 +11,13 @@
   width: 100%; height: 420px; object-fit: contain; border-radius: 14px;
   border: 1px solid var(--line); background: #e6edf5;
 }
-.shot-lg { height: 520px; }
+.shot-lg { height: 500px; }
 .shot-md { height: 380px; }
 .mini { font-size: 18px !important; }
 .table-card { overflow: hidden; }
-.table-card table { width: 100%; border-collapse: collapse; font-size: 17px; }
+.table-card table { width: 100%; border-collapse: collapse; font-size: 16px; }
 .table-card th, .table-card td {
-  text-align: left; padding: 11px 12px; border-bottom: 1px solid var(--line);
+  text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line);
   color: var(--muted); vertical-align: top;
 }
 .table-card th { color: var(--ink); font-family: var(--font-mono); font-size: 13px;
@@ -30,6 +30,7 @@
 .code-block .c { color: #8b97a8; }
 .code-block .k { color: #5ec8d4; }
 .code-block .s { color: #f0a35e; }
+.caption { margin-top: 14px; font-size: 20px; color: var(--muted); max-width: 92%; }
 </style>
 </head>
 <body>
@@ -64,37 +65,48 @@
 <section class="slide">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
-    <div class="topbar reveal"><span>Illustration</span><span class="pill">ai-timeline-hero.png</span></div>
-    <h2 class="reveal" style="font-size:36px;margin-bottom:16px;">2023 → 2026 at a glance</h2>
-    <img class="shot shot-md reveal" src="../assets/ai-timeline-hero.png" alt="Hero graphic of the AI journey from 2023 foundations through 2026 automation" />
-    <p class="lead reveal" style="margin-top:14px;font-size:20px;">From understanding models to steering agents — one continuous path.</p>
+    <div class="topbar reveal"><span>Picture</span><span class="pill">hero</span></div>
+    <h2 class="reveal" style="font-size:36px;margin-bottom:12px;">2023 → 2026 at a glance</h2>
+    <img class="shot shot-lg reveal" src="../assets/ai-timeline-hero.png" alt="Hero graphic of the AI journey from 2023 foundations through 2026 automation" />
+    <p class="caption reveal">From understanding models to steering agents — one continuous path. Foundations still fire in agent bugs.</p>
   </div>
-  <div class="foot"><span>03</span><span>AI Lab · illustration</span></div>
+  <div class="foot"><span>03</span><span>slides/assets/ai-timeline-hero.png</span></div>
 </section>
 
 <section class="slide">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
-    <div class="topbar reveal"><span>Illustration</span><span class="pill">ai-timeline-strip.svg</span></div>
-    <h2 class="reveal" style="font-size:36px;margin-bottom:16px;">Strip · MCP as the hinge</h2>
-    <img class="shot shot-md reveal" src="../assets/ai-timeline-strip.svg" alt="Timeline strip highlighting November 2024 MCP launch as the hinge between foundations and agents" />
-    <p class="lead reveal" style="margin-top:14px;font-size:20px;">November 25, 2024 — MCP standardizes agent ↔ tool connection. Lab pivot point.</p>
+    <div class="topbar reveal"><span>Picture</span><span class="pill">strip</span></div>
+    <h2 class="reveal" style="font-size:36px;margin-bottom:12px;">Strip · MCP as the hinge</h2>
+    <img class="shot shot-lg reveal" src="../assets/ai-timeline-strip.svg" alt="Timeline strip highlighting November 2024 MCP launch as the hinge" />
+    <p class="caption reveal">November 25, 2024 — MCP standardizes agent ↔ tool connection. Lab pivot from “how does GPT work?” to “how does the agent get arms?”</p>
   </div>
-  <div class="foot"><span>04</span><span>AI Lab · illustration</span></div>
+  <div class="foot"><span>04</span><span>slides/assets/ai-timeline-strip.svg</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Picture</span><span class="pill">hinge</span></div>
+    <h2 class="reveal" style="font-size:36px;margin-bottom:12px;">MCP · the Nov 2024 hinge</h2>
+    <img class="shot shot-lg reveal" src="../assets/mcp-hinge.png" alt="MCP as the November 2024 hinge between chatbots and tool-using agents" />
+    <p class="caption reveal">Before MCP, every product reinvented tool schemas. After MCP, skills/harnesses share a connector language. Pre-hinge mentally = tools as one-off plugins.</p>
+  </div>
+  <div class="foot"><span>05</span><span>slides/assets/mcp-hinge.png</span></div>
 </section>
 
 <section class="slide">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
     <div class="topbar reveal"><span>Stage 1</span><span class="pill">2023</span></div>
-    <h2 class="reveal">First LLM exposure &amp; foundations</h2>
+    <h2 class="reveal">Foundations · first LLM exposure</h2>
     <div class="cols-3">
       <div class="card accent reveal"><div class="tag">spark</div><h3>ChatGPT → serious study</h3><p>Late 2022 GPT-3.5 mainstream → 2023 learning starts.</p></div>
-      <div class="card cyan reveal"><div class="tag">mar 2023</div><h3>GPT-4 · Claude 1 · Llama 1</h3><p>RAG explodes. Order: tokenize → embedding → attention → softmax → RAG.</p></div>
-      <div class="card reveal"><div class="tag">later</div><h3>Claude 2 · Llama 2 · Gemini · Mixtral</h3><p>Also: train → infer · train-gpu — how models actually learn.</p></div>
+      <div class="card cyan reveal"><div class="tag">mar 2023</div><h3>GPT-4 · Claude 1 · Llama 1</h3><p>Order: tokenize → embedding → attention → softmax → RAG → train/infer.</p></div>
+      <div class="card reveal"><div class="tag">takeaway</div><h3>Stage takeaway</h3><p>Without tokenization, vectors, and attention, later “agent” talk is vocabulary without mechanisms.</p></div>
     </div>
   </div>
-  <div class="foot"><span>05</span><span>2023 foundations</span></div>
+  <div class="foot"><span>06</span><span>2023 · build the substrate</span></div>
 </section>
 
 <section class="slide">
@@ -103,12 +115,12 @@
     <div class="topbar reveal"><span>Stage 2</span><span class="pill">2024</span></div>
     <h2 class="reveal">Stronger models + early coding agents</h2>
     <div class="cols-3">
-      <div class="card accent reveal"><div class="tag">models</div><h3>Wave</h3><p>Gemini 1.5 (1M) · Claude 3 → 3.5 Sonnet · GPT-4o · Llama 3.1 405B · o1 · DeepSeek V3.</p></div>
-      <div class="card cyan reveal"><div class="tag">jump</div><h3>Coding leap</h3><p>Claude 3.5 Sonnet — Cursor takes off. AI codes for real.</p></div>
-      <div class="card reveal"><div class="tag">shift</div><h3>From reading to building</h3><p>Less “learn the concept” · more “use AI to ship code.”</p></div>
+      <div class="card accent reveal"><div class="tag">models</div><h3>Wave</h3><p>Gemini 1.5 (1M) · Claude 3 → 3.5 Sonnet · GPT-4o · Llama 3.1 · o1 · DeepSeek V3.</p></div>
+      <div class="card cyan reveal"><div class="tag">jump</div><h3>Coding leap</h3><p>Claude 3.5 + Cursor — repo-native edit loops go mainstream.</p></div>
+      <div class="card reveal"><div class="tag">takeaway</div><h3>Stage takeaway</h3><p>Bottleneck moved from “can the model code?” toward “can I steer it in a repo?”</p></div>
     </div>
   </div>
-  <div class="foot"><span>06</span><span>2024 agents begin</span></div>
+  <div class="foot"><span>07</span><span>2024 · pair programmer practical</span></div>
 </section>
 
 <section class="slide">
@@ -116,13 +128,13 @@
   <div class="pad">
     <div class="topbar reveal"><span>Stage 3</span><span class="pill">late 2024–2025</span></div>
     <h2 class="reveal">Agent era · MCP · skills · harness</h2>
-    <div class="cols-2">
-      <div class="card accent reveal"><div class="tag">hinge</div><h3>Nov 25, 2024 — MCP</h3><p>Anthropic launches Model Context Protocol. Standard agent ↔ tool. Lab pivots to MCP · skills · harness.</p></div>
-      <div class="card cyan reveal"><div class="tag">2025</div><h3>Wave continues</h3><p>R1 · Claude 3.7 / 4 · GPT-4.5 / 5 · MCP Streamable HTTP + OAuth · Claude Code · AGENTS.md · skills/rules.</p></div>
+    <div class="cols-3">
+      <div class="card accent reveal"><div class="tag">hinge</div><h3>Nov 25, 2024 — MCP</h3><p>Standard agent ↔ tool. Lab pivots to MCP · skills · harness.</p></div>
+      <div class="card cyan reveal"><div class="tag">2025</div><h3>Wave continues</h3><p>R1 · Claude 4 / Claude Code · GPT-5 · AGENTS.md · skills/rules.</p></div>
+      <div class="card reveal"><div class="tag">takeaway</div><h3>Stage takeaway</h3><p>Progress is less “new chat UI” and more <em>tools + loop + portable instructions</em>. Harness quality ≈ model IQ.</p></div>
     </div>
-    <p class="lead reveal" style="margin-top:28px;font-size:22px;">May 2025: Claude Code as strong harness — see agents.md. Nov 2025: AGENTS.md standard.</p>
   </div>
-  <div class="foot"><span>07</span><span>MCP hinge</span></div>
+  <div class="foot"><span>08</span><span>MCP hinge · orchestration matters</span></div>
 </section>
 
 <section class="slide">
@@ -132,11 +144,11 @@
     <h2 class="reveal">Model wave + automation · now</h2>
     <div class="cols-3">
       <div class="card accent reveal"><div class="tag">models</div><h3>2026 wave</h3><p>GPT-5.5 · Opus 4.8 · Fable 5 / Sonnet 5 · Grok 4.5 (Jul 8) · GPT-5.6.</p></div>
-      <div class="card cyan reveal"><div class="tag">focus</div><h3>Field notes</h3><p>model-notes · agent-automation — pick engines and kitchens deliberately.</p></div>
-      <div class="card reveal"><div class="tag">auto</div><h3>OpenClaw → Hermess</h3><p>pi opens “agent controls everything”; Hermess polishes reliable automation.</p></div>
+      <div class="card cyan reveal"><div class="tag">auto</div><h3>OpenClaw → Hermess</h3><p>Unattended loops. Ask: what must stay human-approved?</p></div>
+      <div class="card reveal"><div class="tag">takeaway</div><h3>Stage takeaway</h3><p>Update field notes; keep pipelines (RAG, train/infer, MCP) stable. Don’t rewrite the lab per launch.</p></div>
     </div>
   </div>
-  <div class="foot"><span>08</span><span>2026 now</span></div>
+  <div class="foot"><span>09</span><span>2026 · model · harness · automation layers</span></div>
 </section>
 
 <section class="slide">
@@ -151,42 +163,69 @@
           <tr><td><strong>2023</strong></td><td>first LLM exposure (ChatGPT / GPT-4)</td><td>start studying</td></tr>
           <tr><td>March 2023</td><td>GPT-4, Claude 1, Llama 1</td><td>tokenize · embedding · attention · softmax · RAG</td></tr>
           <tr><td>2024</td><td>Gemini 1.5, Claude 3.5, GPT-4o, o1</td><td>coding agents</td></tr>
-          <tr><td><strong>Nov 2024</strong></td><td><strong>MCP launches</strong></td><td>mcp</td></tr>
+          <tr><td><strong>Nov 2024</strong></td><td><strong>MCP launches</strong></td><td>mcp (hinge)</td></tr>
           <tr><td>2025</td><td>Claude 4 / GPT-5 / R1 · AGENTS.md</td><td>harness, skills</td></tr>
           <tr><td>2026</td><td>Grok 4.5, Opus 4.8, GPT-5.6</td><td>model notes, automation</td></tr>
         </tbody>
       </table>
     </div>
   </div>
-  <div class="foot"><span>09</span><span>milestones</span></div>
+  <div class="foot"><span>10</span><span>milestones</span></div>
 </section>
 
 <section class="slide">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
-    <div class="topbar reveal"><span>Example</span><span class="pill">how to use</span></div>
-    <h2 class="reveal">Worked example · enter the lab</h2>
-    <div class="cols-2">
-      <div class="card accent reveal"><div class="tag">new</div><h3>New to the lab?</h3><p>Follow 2023 order: tokenize → embedding → attention → softmax → RAG.</p></div>
-      <div class="card cyan reveal"><div class="tag">agents</div><h3>Already building agents?</h3><p>Start at MCP + skills-rules + agents — keep fundamentals as substrate when retrieval or tokenization bugs appear.</p></div>
-    </div>
-  </div>
-  <div class="foot"><span>10</span><span>worked example</span></div>
-</section>
-
-<section class="slide">
-  <div class="slide-bg"></div><div class="grid-overlay"></div>
-  <div class="pad">
-    <div class="topbar reveal"><span>Takeaways</span><span class="pill">remember</span></div>
-    <h2 class="reveal">From understanding → steering</h2>
+    <div class="topbar reveal"><span>Example</span><span class="pill">paths</span></div>
+    <h2 class="reveal">Worked example · how to enter</h2>
     <div class="cols-3">
-      <div class="card accent reveal"><div class="tag">arc</div><h3>2023–2024</h3><p>Understand models — tokenize, attention, RAG, train/infer.</p></div>
-      <div class="card cyan reveal"><div class="tag">hinge</div><h3>Nov 2024+</h3><p>MCP is the hinge. Steer agents with tools, skills, harnesses.</p></div>
-      <div class="card reveal"><div class="tag">watch</div><h3>Now</h3><p>Harnesses (Cursor / Claude Code / pi) · model waves · OpenClaw / Hermess.</p></div>
+      <div class="card accent reveal"><div class="tag">A · new</div><h3>Stage 1 order</h3><p>tokenize → … → RAG → train/infer. Then MCP / agents. Recognize “bad retrieve” vs “bad harness.”</p></div>
+      <div class="card cyan reveal"><div class="tag">B · agents</div><h3>Start at Stage 3</h3><p>mcp + skills-rules + agents — keep Stage 1 as substrate when retrieval fails.</p></div>
+      <div class="card reveal"><div class="tag">C · 2026</div><h3>Catch up</h3><p>Skim Stage 4 + model-notes / agent-automation. Bottleneck: model, harness, or automation scope?</p></div>
     </div>
-    <p class="lead reveal" style="margin-top:24px;font-size:20px;">2023 concepts are not outdated — they underpin every agent.</p>
   </div>
-  <div class="foot"><span>11</span><span>takeaways</span></div>
+  <div class="foot"><span>11</span><span>worked example</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Deeper dive</span><span class="pill">read news</span></div>
+    <h2 class="reveal">Deeper dive · classify every headline</h2>
+    <div class="cols-3">
+      <div class="card accent reveal"><div class="tag">hinge</div><h3>Why Nov 2024</h3><p>Shared connector language → lab notes shift to arms (tools) not only brains.</p></div>
+      <div class="card cyan reveal"><div class="tag">bugs</div><h3>Foundations still fire</h3><p>Wrong chunking → bad RAG → wrong tool args. Attention/softmax explain why prompts behave.</p></div>
+      <div class="card reveal"><div class="tag">2024</div><h3>Coding-agent jump</h3><p>Prepared 2025 harness comparison — once everyone could code with AI, orchestration differentiated.</p></div>
+    </div>
+    <div class="cols-3" style="margin-top:18px;">
+      <div class="card reveal"><div class="tag">skills</div><h3>AGENTS.md / skills</h3><p>Portable instructions sit <em>above</em> models: same skill file, different brains.</p></div>
+      <div class="card cyan reveal"><div class="tag">wave</div><h3>2026 discipline</h3><p>Update model-notes; don’t rewrite RAG or train pipelines for each launch.</p></div>
+      <div class="card accent reveal"><div class="tag">news</div><h3>Headline taxonomy</h3><p>Foundation science · model release · protocol/harness · automation — open the matching note.</p></div>
+    </div>
+  </div>
+  <div class="foot"><span>12</span><span>Deeper dive</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Decision guide</span><span class="pill">choose</span></div>
+    <h2 class="reveal">Decision guide</h2>
+    <div class="card table-card reveal">
+      <table>
+        <thead><tr><th>Situation</th><th>Prefer</th><th>Avoid / why</th></tr></thead>
+        <tbody>
+          <tr><td>Brand new to LLMs</td><td>Stage 1 path (tokenize → … → RAG)</td><td>Jumping straight to multi-agent automation</td></tr>
+          <tr><td>Shipping tool-using agents</td><td>MCP + skills + harness notes (Stage 3)</td><td>Treating ChatGPT plugins as “done”</td></tr>
+          <tr><td>“Which model this week?”</td><td>Update model-notes; pin for the task</td><td>Rewriting the whole lab stack per launch</td></tr>
+          <tr><td>Agent fails on retrieval-heavy tasks</td><td>Revisit embedding / RAG / semantic-search</td><td>Only swapping to a bigger chat model</td></tr>
+          <tr><td>Want unattended runs</td><td>agent-automation + clear approvals</td><td>Giving a harness prod credentials “to try OpenClaw”</td></tr>
+          <tr><td>Confused model vs harness pain</td><td>Read agents axes first</td><td>Blaming Grok/Opus for missing shell/MCP</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="foot"><span>13</span><span>Decision guide</span></div>
 </section>
 
 <section class="slide">
@@ -194,27 +233,28 @@
   <div class="pad">
     <div class="topbar reveal"><span>Pitfalls</span><span class="pill">watch</span></div>
     <h2 class="reveal">Easy to go wrong</h2>
-    <div class="cols-3">
+    <div class="cols-2">
       <div class="card accent reveal"><div class="tag">pitfall</div><h3>Skip foundations</h3><p>“Agents are the new thing” — bad retrieve / tokenize still break agent apps.</p></div>
       <div class="card cyan reveal"><div class="tag">pitfall</div><h3>Rewrite on every launch</h3><p>Update field notes; keep pipelines stable.</p></div>
       <div class="card reveal"><div class="tag">pitfall</div><h3>Timeline as dogma</h3><p>This is <em>my</em> path — yours may start at RAG or harnesses.</p></div>
+      <div class="card reveal"><div class="tag">pitfall</div><h3>Collapse three layers</h3><p>Model vs harness vs automation — swap one layer at a time.</p></div>
     </div>
   </div>
-  <div class="foot"><span>12</span><span>pitfalls</span></div>
+  <div class="foot"><span>14</span><span>pitfalls</span></div>
 </section>
 
 <section class="slide">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
-    <div class="topbar reveal"><span>Related</span><span class="pill">next</span></div>
-    <h2 class="reveal">Where the journey points</h2>
+    <div class="topbar reveal"><span>Takeaways</span><span class="pill">arc</span></div>
+    <h2 class="reveal">From understanding → steering</h2>
     <div class="cols-3">
-      <div class="card accent reveal"><div class="tag">agents</div><h3>agents · model-notes</h3><p>Harnesses and engines for daily work.</p></div>
-      <div class="card cyan reveal"><div class="tag">auto</div><h3>Hermess</h3><p>Automation done right after OpenClaw.</p></div>
-      <div class="card reveal"><div class="tag">base</div><h3>tokenize · attention · RAG</h3><p>Still the substrate under every agent.</p></div>
+      <div class="card accent reveal"><div class="tag">arc</div><h3>2023–2024</h3><p>Understand models — tokenize, attention, RAG, train/infer.</p></div>
+      <div class="card cyan reveal"><div class="tag">hinge</div><h3>Nov 2024+</h3><p>MCP is the hinge. Steer agents with tools, skills, harnesses.</p></div>
+      <div class="card reveal"><div class="tag">watch</div><h3>Now</h3><p>Harnesses · model waves · OpenClaw / Hermess. 2023 concepts still underpin every agent.</p></div>
     </div>
   </div>
-  <div class="foot"><span>13</span><span>related</span></div>
+  <div class="foot"><span>15</span><span>takeaways</span></div>
 </section>
 
 <section class="slide">
@@ -222,10 +262,10 @@
   <div class="pad">
     <div class="topbar reveal"><span>Next</span><span class="pill">continue</span></div>
     <h1 class="reveal" style="margin-top:100px;font-size:64px;">Map the path,<br /><em>then pick a door.</em></h1>
-    <p class="lead reveal" style="margin-top:28px;">notes/10-ai-timeline.md — stages, MCP hinge, milestone table.</p>
+    <p class="lead reveal" style="margin-top:28px;">notes/10-ai-timeline.md — stages, MCP hinge, decision guide. → agents · model-notes · Hermess.</p>
     <a class="app-cta reveal" href="../../notes/ai-timeline.html">Open note →</a>
   </div>
-  <div class="foot"><span>14</span><span>AI Lab</span></div>
+  <div class="foot"><span>16</span><span>AI Lab</span></div>
 </section>
 
 </main>

@@ -31,6 +31,8 @@
 .code-block .k { color: #5ec8d4; }
 .code-block .s { color: #f0a35e; }
 .caption { margin-top: 14px; font-size: 20px; color: var(--muted); max-width: 92%; }
+.table-card.dense table { font-size: 16px; }
+.table-card.dense th, .table-card.dense td { padding: 9px 12px; }
 </style>
 </head>
 <body>
@@ -130,7 +132,7 @@
     <div class="cols-3">
       <div class="card accent reveal"><div class="tag">1</div><h3>Wrong → high loss</h3><p>Tiny binary net misses the batch; cross-entropy spikes.</p></div>
       <div class="card cyan reveal"><div class="tag">2</div><h3>Backward blames weights</h3><p>Gradients say how each parameter contributed to the error.</p></div>
-      <div class="card reveal"><div class="tag">3</div><h3>Step nudges slightly</h3><p>Next forward is a bit less wrong. Thousands of batches later: a decision boundary.</p></div>
+      <div class="card reveal"><div class="tag">3</div><h3>Step nudges slightly</h3><p>Next forward is a bit less wrong. Batch 32, Adam <code>1e-3</code>: loss ~0.69→0.25 is learning; train→0.05 while val↑0.30→0.55 is overfit.</p></div>
     </div>
   </div>
   <div class="foot"><span>07</span><span>that is the loop-level story</span></div>
@@ -159,6 +161,53 @@
 <section class="slide">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
+    <div class="topbar reveal"><span>Picture</span><span class="pill">overfit</span></div>
+    <h2 class="reveal" style="font-size:36px;margin-bottom:12px;">Train vs val loss: stop at the best checkpoint</h2>
+    <img class="shot shot-lg reveal" src="../assets/overfit-curves.png" alt="Train and validation loss curves showing overfitting" />
+    <p class="caption reveal">Healthy: both curves fall together. Overfit: train keeps falling while val rises after epoch <em>k</em> — early-stop and keep the best val weights, not “more epochs.”</p>
+  </div>
+  <div class="foot"><span>09</span><span>slides/assets/overfit-curves.png</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Deeper dive</span><span class="pill">notes</span></div>
+    <h2 class="reveal">Deeper dive</h2>
+    <div class="cols-3">
+      <div class="card accent reveal"><div class="tag">grads</div><h3>Why zero_grad exists</h3><p>PyTorch <em>accumulates</em> <code>.grad</code> so you can micro-batch (4×8 ≈ batch 32). Forget <code>zero_grad</code> → yesterday’s grads stack and loss explodes.</p></div>
+      <div class="card cyan reveal"><div class="tag">CE</div><h3>Loss wants raw logits</h3><p><code>CrossEntropyLoss</code> = log_softmax + NLL. Do <strong>not</strong> softmax before it. Softmax belongs at inference when you need probs.</p></div>
+      <div class="card reveal"><div class="tag">AMP</div><h3>Schedules &amp; AMP</h3><p>Transformers: warmup then cosine/linear decay. AMP + GradScaler ≈ 1.5–2× throughput — unscaled underflow → silent zero grads.</p></div>
+    </div>
+  </div>
+  <div class="foot"><span>10</span><span>Deeper dive</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Decision guide</span><span class="pill">choose</span></div>
+    <h2 class="reveal">Decision guide</h2>
+    <div class="card table-card dense reveal">
+      <table>
+        <thead><tr><th>Situation</th><th>Prefer</th><th>Avoid / why</th></tr></thead>
+        <tbody>
+          <tr><td>Small MLP / softmax demo</td><td>Adam <code>lr=1e-3</code>, full batch loop</td><td>Tiny LR like <code>1e-6</code> — looks stuck for hours</td></tr>
+          <tr><td>Fine-tune BERT / MiniLM</td><td>AdamW <code>2e-5</code>–<code>5e-5</code>, warmup, freeze/LoRA if tiny data</td><td>Adam <code>1e-3</code> on all layers — destroys pretrained features</td></tr>
+          <tr><td>Val ↑, train ↓</td><td>Early stop + best ckpt; more regularization</td><td>More epochs on the same setup — deepens overfit</td></tr>
+          <tr><td>Custom loss / multi-task / RL</td><td>Explicit PyTorch loop</td><td>Fighting Keras <code>fit</code> with awkward callbacks</td></tr>
+          <tr><td>GPU OOM at batch 32</td><td>Grad accumulation (4×8) or AMP</td><td>Blindly lowering LR — doesn’t free memory</td></tr>
+          <tr><td>Reproducible run</td><td>Seed + DataLoader generator + saved config</td><td>Only final weights with no hyperparams log</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="foot"><span>11</span><span>Decision guide</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
     <div class="topbar reveal"><span>Pitfalls</span><span class="pill">watch</span></div>
     <h2 class="reveal">Easy ways to break training</h2>
     <div class="cols-2">
@@ -168,7 +217,7 @@
       <div class="card reveal"><div class="tag">leak</div><h3>Leaky validation</h3><p>Tuning on the test set — keep a true held-out test.</p></div>
     </div>
   </div>
-  <div class="foot"><span>09</span><span>notes/pytorch-training.md</span></div>
+  <div class="foot"><span>12</span><span>notes/pytorch-training.md</span></div>
 </section>
 
 <section class="slide">
@@ -177,13 +226,13 @@
     <div class="topbar reveal"><span>Compare</span><span class="pill">vs TF</span></div>
     <h2 class="reveal">PyTorch vs Keras style</h2>
     <div class="cols-3">
-      <div class="card accent reveal"><div class="tag">pt</div><h3>PyTorch</h3><p>You write the loop — maximum control and visibility.</p></div>
-      <div class="card cyan reveal"><div class="tag">tf</div><h3>Keras</h3><p><code>compile</code> + <code>fit</code> — framework runs the same math.</p></div>
+      <div class="card accent reveal"><div class="tag">pt</div><h3>PyTorch</h3><p>You write the loop — maximum control and visibility. Best for custom losses, GANs, RL.</p></div>
+      <div class="card cyan reveal"><div class="tag">tf</div><h3>Keras</h3><p><code>compile</code> + <code>fit</code> — fastest baseline + TensorBoard.</p></div>
       <div class="card reveal"><div class="tag">same</div><h3>Same learning</h3><p>Forward → loss → gradients → update. Only the API shape differs.</p></div>
     </div>
-    <p class="lead reveal" style="margin-top:28px;">GPU: <code>.to("cuda")</code> or <code>"mps"</code> for model <em>and</em> each batch — see train-gpu.md.</p>
+    <p class="lead reveal" style="margin-top:28px;">GPU: <code>.to("cuda")</code> or <code>"mps"</code> for model <em>and</em> each batch — see train-gpu.md. DataLoader: <code>num_workers</code>, <code>pin_memory</code> often beat micro-optimizing the net.</p>
   </div>
-  <div class="foot"><span>10</span><span>related: tensorflow-training</span></div>
+  <div class="foot"><span>13</span><span>related: tensorflow-training</span></div>
 </section>
 
 <section class="slide">
@@ -200,9 +249,9 @@
       <span class="step">step</span><span class="arr">→</span>
       <span class="step">ckpt.pt</span>
     </div>
-    <p class="lead reveal" style="margin-top:36px;"><code>torch.save(model.state_dict(), "ckpt.pt")</code> — prefer the best val checkpoint for inference.</p>
+    <p class="lead reveal" style="margin-top:36px;"><code>torch.save(model.state_dict(), "ckpt.pt")</code> — prefer the best val checkpoint for inference. Save optimizer state if you plan to resume.</p>
   </div>
-  <div class="foot"><span>11</span><span>implements classification.md</span></div>
+  <div class="foot"><span>14</span><span>implements classification.md</span></div>
 </section>
 
 <section class="slide">

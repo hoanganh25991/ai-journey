@@ -343,27 +343,34 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 <p>Everything in this lab that feels “modern” — chat models, embeddings from BERT-like encoders, cross-attention in translation — sits inside this frame.</p>
 <h2>Key ideas</h2>
 <ul>
-<li><strong>Stacked attention blocks:</strong> each layer has multi-head <a href="attention.html">attention</a> plus a feed-forward network; stack many layers for increasingly abstract representations (syntax → entities → discourse).</li>
-<li><strong>Positional encoding:</strong> parallel processing has no built-in order — inject position info (sinusoidal or learned) so the model knows word sequence. Without it, “dog bites man” ≈ “man bites dog.”</li>
+<li><strong>Stacked attention blocks:</strong> each layer has multi-head <a href="attention.html">attention</a> plus a feed-forward network (typically two linear layers with a nonlinearity, expanding to ~4× model width then projecting back). Stack many layers for increasingly abstract representations (syntax → entities → discourse). A typical BERT-base has <strong>12 layers × 768 hidden × 12 heads</strong>; GPT-class chat models often push into tens or hundreds of layers and billions of parameters.</li>
+<li><strong>Positional encoding:</strong> parallel processing has no built-in order — inject position info so the model knows word sequence. Without it, “dog bites man” ≈ “man bites dog.”</li>
+<li><em>Sinusoidal</em> (original paper): fixed <code>sin</code>/<code>cos</code> functions of position and dimension — extrapolates somewhat to longer sequences.</li>
+<li><em>Learned absolute</em> (early BERT): a trainable embedding table per position index (capped by max length, e.g. 512).</li>
+<li><em>Relative / RoPE / ALiBi</em> (modern LLMs): encode <em>distance</em> between tokens rather than absolute index — better long-context behavior.</li>
 <li><strong>Encoder / decoder / both:</strong></li>
-<li><em>Encoder</em> (BERT): read and understand the whole sentence → good for <a href="classification.html">classification</a> and embeddings.</li>
-<li><em>Decoder</em> (GPT): generate left to right with causal masking → good for text generation.</li>
-<li><em>Encoder-decoder:</em> translation, summarization (uses <a href="attention.html">cross-attention</a>).</li>
-<li><strong>Residual + layer norm:</strong> skip connections and normalization keep deep stacks stable during training.</li>
-<li><strong>Multi-head = parallel views:</strong> one head may track grammar, another coreference — outputs concatenate and project.</li>
-<li><strong>Parallel = fast:</strong> no step-by-step dependency → full GPU utilization (<a href="train-gpu.html">train-gpu.md</a>).</li>
+<li><em>Encoder</em> (BERT, RoBERTa): bidirectional self-attention over the full sequence → good for <a href="classification.html">classification</a> and sentence embeddings. Masked LM pretraining fills blanks from left <em>and</em> right context.</li>
+<li><em>Decoder</em> (GPT, LLaMA): generate left to right with <strong>causal masking</strong> (token <em>i</em> may only attend to ≤ <em>i</em>) → good for chat and completion. Next-token prediction is the training objective.</li>
+<li><em>Encoder-decoder</em> (T5, BART, original Transformer): encoder reads the source; decoder generates the target and uses <strong>cross-attention</strong> (queries from decoder, keys/values from encoder) — classic for translation and summarization.</li>
+<li><strong>Residual + layer norm:</strong> each sublayer is wrapped as <code>x + Sublayer(Norm(x))</code> (Pre-LN is common today). Skip connections keep gradients flowing through deep stacks; layer norm stabilizes activation scales.</li>
+<li><strong>Multi-head = parallel views:</strong> split <code>d_model</code> across <em>h</em> heads (e.g. 768 / 12 = 64 dims per head). One head may track grammar, another coreference — outputs concatenate and project with <code>W_O</code>.</li>
+<li><strong>Complexity:</strong> full self-attention is <strong>O(n² · d)</strong> in sequence length <em>n</em> and width <em>d</em>. Doubling context roughly quadruples attention compute/memory — why long docs need chunking, sliding windows, or sparse/linear attention variants (<a href="train-gpu.html">train-gpu.md</a>).</li>
+<li><strong>Parallel = fast training:</strong> no step-by-step RNN dependency across time → full sequence batched on GPU. Autoregressive <em>inference</em> is still sequential token-by-token (unless speculative decoding / parallel drafts).</li>
 </ul>
 <h2>Worked example (intuition)</h2>
-<p>Sentence: <code>"The cat sat on the mat."</code></p>
-<p>1. Tokens → embeddings + positional encodings.</p>
-<p>2. Layer 1 self-attention: <code>"sat"</code> strongly attends to <code>"cat"</code> (subject) and <code>"mat"</code> (location).</p>
-<p>3. Feed-forward mixes features per position.</p>
-<p>4. After N layers, a classification head (BERT-style) or next-token head (GPT-style) reads the representation.</p>
+<p>Sentence: <code>"The cat sat on the mat."</code> (6 tokens after simple whitespace split; real BPE might be similar or slightly different.)</p>
+<p>1. <strong>Embed:</strong> each token ID → vector of size <code>d_model</code> (e.g. 768) + positional encoding of the same size → matrix <code>X ∈ ℝ^{6×768}</code>.</p>
+<p>2. <strong>Layer 1 self-attention (encoder):</strong> for query <code>"sat"</code>, compute scores against all keys. After <a href="softmax.html">softmax</a>, <code>"sat"</code> might put ~0.35 on <code>"cat"</code> (subject), ~0.25 on <code>"mat"</code> (location), and smaller mass on function words. Multi-head repeats this with different projections.</p>
+<p>3. <strong>Feed-forward:</strong> each position independently: <code>FFN(x) = W₂ · GELU(W₁ x)</code> — mixes features <em>within</em> the token’s new context-aware vector.</p>
+<p>4. <strong>After N layers:</strong> representations are contextual. A <strong>classification head</strong> (BERT-style) often reads the <code>[CLS]</code> vector (or mean pool) → logits over labels. A <strong>LM head</strong> (GPT-style) reads the <em>last</em> position → vocabulary logits for the next token (softmax over ~50k–100k+ tokens).</p>
+<p>5. <strong>Decoder contrast:</strong> if this were causal GPT, when predicting the word after <code>"sat"</code>, attention to <code>"mat"</code> would be <strong>masked out</strong> — the future must not leak.</p>
 <h2>Common pitfalls</h2>
 <ul>
-<li><strong>Confusing encoder vs decoder tasks</strong> — don’t expect a pure encoder to generate fluent chat; don’t expect a causal decoder to be the best frozen sentence embedder without pooling tricks.</li>
-<li><strong>Ignoring context length</strong> — attention is O(n²) in sequence length; long docs need chunking or efficient variants.</li>
-<li><strong>Dropping positional info when hacking</strong> — broken order sensitivity.</li>
+<li><strong>Confusing encoder vs decoder tasks</strong> — don’t expect a pure encoder to generate fluent chat; don’t expect a causal decoder to be the best frozen sentence embedder without pooling tricks (<a href="sentence-transformers.html">sentence-transformers.md</a>).</li>
+<li><strong>Ignoring context length</strong> — attention is O(n²); stuffing a 50-page PDF into one forward pass OOMs or truncates silently.</li>
+<li><strong>Dropping positional info when hacking</strong> — broken order sensitivity; bag-of-embeddings behavior.</li>
+<li><strong>Mixing Pre-LN vs Post-LN assumptions</strong> — copying layer order from one paper into another codebase can destabilize training.</li>
+<li><strong>Assuming bidirectional = always better</strong> — for open-ended generation, causal decoders win; bidirectional encoders shine at understanding fixed text.</li>
 </ul>
 <h2>Illustrations</h2>
 <figure><img src="assets/protonx/self-attention.jpg" alt="Self-attention inside one encoder block" loading="lazy" /><figcaption>Self-attention inside one encoder block</figcaption></figure>
@@ -371,6 +378,28 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 <figure><img src="assets/protonx/attention-after-softmax.jpg" alt="Attention weights after softmax inside one layer" loading="lazy" /><figcaption>Attention weights after softmax inside one layer</figcaption></figure>
 <figure><img src="assets/transformer/transformer-stack.png" alt="Transformer stack: attention + feed-forward layers" loading="lazy" /><figcaption>Transformer stack: attention + feed-forward layers</figcaption></figure>
 <figure><img src="assets/transformer/transformer-block-detail.png" alt="Encoder block internals: attention + residual + FFN" loading="lazy" /><figcaption>Encoder block internals: attention + residual + FFN</figcaption></figure>
+<figure><img src="assets/transformer/encoder-vs-decoder.png" alt="Encoder (bidirectional) vs decoder (causal)" loading="lazy" /><figcaption>Encoder (bidirectional) vs decoder (causal)</figcaption></figure>
+<h2>Deeper dive</h2>
+<ul>
+<li><strong>Scaled dot-product attention:</strong> <code>Attention(Q,K,V) = softmax(QKᵀ / √d_k) V</code>. The <code>√d_k</code> scale (e.g. √64 ≈ 8) keeps logits from saturating softmax when dimensions grow — without it, gradients vanish.</li>
+<li><strong>Causal mask mechanics:</strong> before softmax, set future positions to <code>−∞</code> (or a large negative). One bug (off-by-one in the mask) leaks the next token during training and inflates perplexity metrics while breaking real generation.</li>
+<li><strong>Cross-attention shapes:</strong> decoder queries are <code>T_tgt × d</code>; encoder keys/values are <code>T_src × d</code>. Translation quality collapses if source encodings are truncated or misaligned with the tokenizer.</li>
+<li><strong>KV cache (decoder inference):</strong> reuse past keys/values so each new token attends in <strong>O(n)</strong> to history instead of recomputing the full triangle — memory grows with context; this is the main serving bottleneck for long chats.</li>
+<li><strong>Parameter intuition:</strong> attention projections are <code>4 · d²</code> per layer (Q,K,V,O); FFN is often <code>8 · d²</code> (up and down). FFN usually dominates parameter count; attention dominates <strong>memory</strong> at long <em>n</em>.</li>
+<li><strong>Failure mode — context stuffing:</strong> past the trained context window, quality drops sharply unless the model uses RoPE scaling / YaRN / sliding window. Silent truncation of the <em>beginning</em> of a prompt is a common production bug.</li>
+<li><strong>Encoder-vs-decoder choice API-wise:</strong> Hugging Face <code>AutoModel</code> (encoder body), <code>AutoModelForMaskedLM</code>, <code>AutoModelForCausalLM</code>, <code>AutoModelForSeq2SeqLM</code> — picking the wrong head class is a frequent beginner error.</li>
+</ul>
+<h2>Decision guide</h2>
+<table><thead>
+<tr><th>Situation</th><th>Prefer</th><th>Avoid / why</th></tr>
+</thead><tbody>
+<tr><td>Classify or embed a whole sentence/doc</td><td>Encoder (BERT-family) or Sentence-BERT on top</td><td>Pure causal decoder without pooling — not trained for symmetric similarity</td></tr>
+<tr><td>Chat, code completion, open generation</td><td>Causal decoder (GPT-family)</td><td>Bidirectional encoder alone — cannot emit fluent left-to-right text</td></tr>
+<tr><td>Translation / summarization seq2seq</td><td>Encoder–decoder (T5, BART) or instruction-tuned decoder with careful prompting</td><td>Encoder-only — no generative pathway</td></tr>
+<tr><td>Need &gt;4k–8k tokens of context</td><td>Models with RoPE/ALiBi + long-context training; or chunk + retrieve</td><td>Naively extending sinusoidal absolute positions — poor extrapolation</td></tr>
+<tr><td>On-device / low latency classify</td><td>DistilBERT / MiniLM-class encoders</td><td>Full 70B decoder “just to label sentiment” — cost without benefit</td></tr>
+<tr><td>Debugging “model ignores word order”</td><td>Check positional encodings / RoPE applied</td><td>Assuming attention alone encodes position — it does not</td></tr>
+</tbody></table>
 <h2>Pipeline</h2>
 <pre><code>
 tokens → embedding + positional → [N × (multi-head attention + feed-forward)] → representation

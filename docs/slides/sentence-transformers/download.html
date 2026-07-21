@@ -195,6 +195,10 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
 .code-block .c { color: #8b97a8; }
 .code-block .k { color: #5ec8d4; }
 .code-block .s { color: #f0a35e; }
+
+.table-card.dense table { font-size: 16px; }
+.table-card.dense th, .table-card.dense td { padding: 8px 12px; }
+.card p, .card li { font-size: 19px; }
 </style>
 </head>
 <body>
@@ -232,11 +236,11 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
     <div class="topbar reveal"><span>ST</span><span class="pill">ideas</span></div>
     <h2 class="reveal">Key ideas</h2>
     <div class="cols-3">
-      <div class="card reveal"><div class="tag">unit</div><h3>Sentence → one vector</h3><p>Pooling is baked in — compare meaning, not per-token states.</p></div>
-      <div class="card cyan reveal"><div class="tag">metric</div><h3>util.cos_sim</h3><p>Core of semantic search and RAG retrieve ranking.</p></div>
-      <div class="card reveal"><div class="tag">space</div><h3>Same model both sides</h3><p>Encode query and docs with one checkpoint — never mix indexes.</p></div>
+      <div class="card reveal"><div class="tag">unit</div><h3>Sentence → one vector</h3><p>Transformer → pooling → optional L2. Mean (masked) vs CLS vs max — wrong pooling = silent bugs.</p></div>
+      <div class="card cyan reveal"><div class="tag">metric</div><h3>util.cos_sim</h3><p>384-d MiniLM or 768-d mpnet. normalize_embeddings=True ⇒ cosine ≡ IP.</p></div>
+      <div class="card reveal"><div class="tag">space</div><h3>Same model both sides</h3><p>Same checkpoint + same prefixes (E5/BGE query:/passage:). Never mix indexes.</p></div>
     </div>
-    <p class="lead reveal" style="margin-top:24px;font-size:20px;">Keywords: SBERT · MiniLM · encode · cosine · Read: <span style="color:var(--amber);font-family:var(--font-mono)">notes/sentence-transformers.md</span></p>
+    <p class="lead reveal" style="margin-top:24px;font-size:20px;">Keywords: SBERT · MiniLM · pooling · E5/BGE · Read: <span style="color:var(--amber);font-family:var(--font-mono)">notes/sentence-transformers.md</span></p>
   </div>
   <div class="foot"><span>03</span><span>notes/sentence-transformers.md</span></div>
 </section>
@@ -249,9 +253,12 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
     <pre class="code-block reveal"><span class="k">from</span> sentence_transformers <span class="k">import</span> SentenceTransformer, util
 
 model = SentenceTransformer(<span class="s">"all-MiniLM-L6-v2"</span>)
-emb = model.encode([<span class="s">"Hello"</span>, <span class="s">"Hi there"</span>, <span class="s">"Battery life is awful"</span>])
-print(util.cos_sim(emb[0], emb[1]))  <span class="c"># high — greetings</span>
-print(util.cos_sim(emb[0], emb[2]))  <span class="c"># lower — different topic</span></pre>
+emb = model.encode(
+    [<span class="s">"Hello"</span>, <span class="s">"Hi there"</span>, <span class="s">"Battery life is awful"</span>],
+    normalize_embeddings=<span class="k">True</span>,  <span class="c"># cosine ≡ dot</span>
+)
+print(util.cos_sim(emb[0], emb[1]))  <span class="c"># ~0.7–0.9 greetings</span>
+print(util.cos_sim(emb[0], emb[2]))  <span class="c"># ~0.0–0.3 different topic</span></pre>
   </div>
   <div class="foot"><span>04</span><span>notes/sentence-transformers.md</span></div>
 </section>
@@ -265,9 +272,10 @@ print(util.cos_sim(emb[0], emb[2]))  <span class="c"># lower — different topic
       <table>
         <thead><tr><th>Model</th><th>Strength</th><th>Trade-off</th><th>Use when</th></tr></thead>
         <tbody>
-          <tr><td>all-MiniLM-L6-v2</td><td>Light and fast</td><td>Less nuance than larger models</td><td>Demos, local apps, default</td></tr>
-          <tr><td>paraphrase-mpnet</td><td>Higher quality</td><td>Heavier encode cost</td><td>Accuracy-first retrieval</td></tr>
-          <tr><td>Multilingual variants</td><td>Cross-language space</td><td>Larger footprint</td><td>Mixed-language corpora</td></tr>
+          <tr><td>all-MiniLM-L6-v2</td><td>~22M · 384-d · fast CPU</td><td>Less nuance than larger</td><td>Demos, &lt;100k chunks</td></tr>
+          <tr><td>all-mpnet-base-v2</td><td>~110M · 768-d quality</td><td>Slower / heavier</td><td>English FAQ / RAG quality</td></tr>
+          <tr><td>multi-qa-* / E5·BGE</td><td>Asymmetric Q→passage</td><td>Need correct prefixes</td><td>Short query, long docs</td></tr>
+          <tr><td>Multilingual MiniLM / E5</td><td>Shared cross-lingual space</td><td>Uneven by language</td><td>Mixed VI/EN corpora</td></tr>
         </tbody>
       </table>
     </div>
@@ -281,9 +289,9 @@ print(util.cos_sim(emb[0], emb[2]))  <span class="c"># lower — different topic
     <div class="topbar reveal"><span>Example</span><span class="pill">intuition</span></div>
     <h2 class="reveal">FAQ corpus → grounded reply</h2>
     <div class="cols-3">
-      <div class="card reveal"><div class="tag">offline</div><h3>Encode once</h3><p>Embed all FAQ answers → store in FAISS / Chroma.</p></div>
-      <div class="card cyan reveal"><div class="tag">query</div><h3>Cheap online</h3><p>Encode the question → top-5 by cosine.</p></div>
-      <div class="card reveal"><div class="tag">RAG</div><h3>Hand to LLM</h3><p>Pass chunks for a grounded answer — heavy model ran once per doc.</p></div>
+      <div class="card reveal"><div class="tag">offline</div><h3>Encode once</h3><p>5k FAQs → 5000×384 (~7.3 MB). Batch 64; MiniLM CPU = thousands/min.</p></div>
+      <div class="card cyan reveal"><div class="tag">query</div><h3>Cheap online</h3><p>One encode (ms) → FAISS IndexFlatIP after L2-norm → top-5.</p></div>
+      <div class="card reveal"><div class="tag">RAG</div><h3>Hand to LLM</h3><p>Concat FAQ bodies. Switch language ⇒ rebuild whole index.</p></div>
     </div>
   </div>
   <div class="foot"><span>06</span><span>notes/sentence-transformers.md</span></div>
@@ -322,18 +330,59 @@ print(util.cos_sim(emb[0], emb[2]))  <span class="c"># lower — different topic
   <div class="foot"><span>09</span><span>AI Lab · illustration</span></div>
 </section>
 
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Deeper</span><span class="pill">dive</span></div>
+    <h2 class="reveal">Deeper dive</h2>
+    <div class="cols-3">
+      <div class="card reveal"><div class="tag">train</div><h3>Why SBERT exists</h3><p>Siamese/triplet fine-tune so cosine matches labels. Vanilla BERT CLS is weak at similarity.</p></div>
+      <div class="card cyan reveal"><div class="tag">API</div><h3>encode knobs</h3><p>batch_size, convert_to_numpy, normalize_embeddings — set True when DB uses IP.</p></div>
+      <div class="card reveal"><div class="tag">speed</div><h3>Throughput</h3><p>MiniLM CPU ~500–2000 short sent/s; GPU often 5–20×. 512-tok chunks ≫ titles.</p></div>
+      <div class="card reveal"><div class="tag">RAM</div><h3>Matryoshka</h3><p>Some models allow first-256 dims. Don’t truncate arbitrary MiniLM unless trained for it.</p></div>
+      <div class="card cyan reveal"><div class="tag">asym</div><h3>Q vs passage</h3><p>QA / MultipleNegativesRankingLoss beats symmetric paraphrase on FAQ search.</p></div>
+      <div class="card reveal"><div class="tag">eval</div><h3>Multilingual</h3><p>Measure Recall@k on your language pair — not only English MTEB headlines.</p></div>
+    </div>
+  </div>
+  <div class="foot"><span>10</span><span>notes/sentence-transformers.md</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Guide</span><span class="pill">decide</span></div>
+    <h2 class="reveal">When to choose what</h2>
+    <div class="card table-card dense reveal">
+      <table>
+        <thead><tr><th>Situation</th><th>Prefer</th><th>Avoid / why</th></tr></thead>
+        <tbody>
+          <tr><td>Demo / laptop / &lt;100k chunks</td><td>all-MiniLM-L6-v2 (384-d)</td><td>mpnet or 7B embedders — cost without need</td></tr>
+          <tr><td>Max EN FAQ / RAG quality</td><td>all-mpnet-base-v2 or strong E5/BGE</td><td>Random Hub model, no retrieval training</td></tr>
+          <tr><td>Mixed-language corpus</td><td>Multilingual SBERT / mE5</td><td>English-only MiniLM — silent cliff</td></tr>
+          <tr><td>Question → long passage</td><td>multi-qa-* or asymmetric E5</td><td>Symmetric paraphrase alone</td></tr>
+          <tr><td>Realtime keystroke embed</td><td>MiniLM + batch/cache</td><td>Re-encode full corpus per keystroke</td></tr>
+          <tr><td>DB metric = inner product</td><td>L2-normalize in encode</td><td>Raw vectors + IP — magnitude dominates</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="foot"><span>11</span><span>notes/sentence-transformers.md</span></div>
+</section>
+
+
 <section class="slide">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
     <div class="topbar reveal"><span>Pitfalls</span><span class="pill">watch</span></div>
     <h2 class="reveal">Easy to go wrong</h2>
     <div class="cols-3">
-      <div class="card accent reveal"><div class="tag">mix</div><h3>Mixed models</h3><p>Dimensions and geometry won’t match — rebuild the index.</p></div>
-      <div class="card cyan reveal"><div class="tag">pool</div><h3>Token ≠ sentence</h3><p>Using raw token states without pooling breaks comparisons.</p></div>
-      <div class="card reveal"><div class="tag">metric</div><h3>Cosine vs dot</h3><p>Know what the DB expects; unnormalized dot shifts rankings.</p></div>
+      <div class="card accent reveal"><div class="tag">mix</div><h3>Mixed models</h3><p>Same-d different geometry is the silent killer — rebuild.</p></div>
+      <div class="card cyan reveal"><div class="tag">pool</div><h3>Wrong pooling / prefix</h3><p>Token states as sentences, or missing E5 query: — quality cliff.</p></div>
+      <div class="card reveal"><div class="tag">domain</div><h3>Domain shift</h3><p>General MiniLM on legal/medical clusters poorly — fine-tune or pick domain model.</p></div>
     </div>
   </div>
-  <div class="foot"><span>10</span><span>notes/sentence-transformers.md</span></div>
+  <div class="foot"><span>12</span><span>notes/sentence-transformers.md</span></div>
 </section>
 
 <section class="slide">
@@ -344,7 +393,7 @@ print(util.cos_sim(emb[0], emb[2]))  <span class="c"># lower — different topic
     <div class="flow-row reveal" style="margin-top:48px;"><span class="step">sentence</span><span class="arr">→</span><span class="step">encode()</span><span class="arr">→</span><span class="step">vector</span><span class="arr">→</span><span class="step">cos_sim</span><span class="arr">→</span><span class="step">classifier / DB</span></div>
     <p class="lead reveal" style="margin-top:36px;">Bridge from embedding.md into semantic-search, vector-database, and RAG.</p>
   </div>
-  <div class="foot"><span>11</span><span>notes/sentence-transformers.md</span></div>
+  <div class="foot"><span>13</span><span>notes/sentence-transformers.md</span></div>
 </section>
 
 <section class="slide">
@@ -358,7 +407,7 @@ print(util.cos_sim(emb[0], emb[2]))  <span class="c"># lower — different topic
       <div class="card reveal"><div class="tag">demo</div><h3>Embedding app</h3><p>Try similarity in the browser.</p></div>
     </div>
   </div>
-  <div class="foot"><span>12</span><span>related notes</span></div>
+  <div class="foot"><span>14</span><span>related notes</span></div>
 </section>
 
 <section class="slide">

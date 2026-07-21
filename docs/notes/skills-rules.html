@@ -370,35 +370,62 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
   # step-by-step guide + script paths
 
 </code></pre>
-<p>The <strong>description</strong> is the most important field: write a clear trigger (“use when…”) so the agent picks correctly. Skills can include scripts the agent runs via shell/MCP.</p>
+<p>The <strong>description</strong> is the most important field: write a clear trigger (“use when…”) <em>and</em> negative space (“do not use when…”) so the agent picks correctly. Skills can include scripts the agent runs via shell/MCP.</p>
 <ul>
+<li><strong>Description triggers (how auto-load works):</strong> clients expose skill names + descriptions to the model (often as a compact catalog). The model decides which <code>SKILL.md</code> bodies to read. Vague descriptions (“helps with coding”) either never fire or fire constantly; specific verbs + artifacts (“create HTML slides”, “export PPTX”, “crawl with Tavily”) match user intent reliably.</li>
+<li><strong>Context cost:</strong></li>
+<li><em>Always rules</em> are injected every turn → pay tokens forever; keep them short (dozens of lines, not novels).</li>
+<li><em>Glob rules</em> load only when matching files are in play → cheaper.</li>
+<li><em>Skills</em> cost catalog tokens always (descriptions) + full <code>SKILL.md</code> tokens when triggered. A 2k-line skill loaded by mistake is an expensive false positive.</li>
+<li>Prefer: short always-rules → glob rules for file conventions → deep procedures in skills → user <code>/commands</code> for intentional heavy workflows.</li>
 <li><strong>Global home: <code>~/.agents</code></strong></li>
 <li>Canonical path: <code>~/.agents/skills/&lt;name&gt;/SKILL.md</code>.</li>
 <li>Cursor / Claude / Pi load from here → write once, use across clients.</li>
 <li>Do not copy skills into <code>~/.cursor/skills</code> or <code>~/.claude/skills</code> (keep empty); Pi uses <strong>symlinks</strong> to <code>~/.agents</code> only.</li>
 <li>Install GitHub skill packs with the custom manager (<code>skill.sh</code> / lockfile) — not <code>npx skills</code> for <code>~/.agents</code>.</li>
-</ul>
-<ul>
 <li><strong>Project-local exception:</strong> repo-specific skills may live in that repo’s <code>.cursor/skills</code>. Global skills stay in <code>~/.agents/skills</code>.</li>
-</ul>
-<ul>
-<li><strong>Rules in practice:</strong> “always” rules consume context every turn → keep them short. Glob rules (<code><em>.tsx</code>, <code>notes/</em>.md</code>) load only on matching files → cheaper. Rules for conventions; skills for complex processes.</li>
-</ul>
-<ul>
-<li><strong>Skill interactions:</strong> when adding a skill, consider overlap with existing ones (conflicting triggers or instructions). Strong models (Opus/Sonnet) often ask back to clarify interactions — design descriptions to reduce collisions.</li>
+<li><strong>Skill interactions:</strong> overlapping triggers (two PDF skills, two “search the web” skills) cause hesitation or contradictory steps. Strong models often ask to clarify — design descriptions to reduce collisions; document precedence in the skill body when overlap is intentional.</li>
 </ul>
 <h2>Worked example (intuition)</h2>
-<p>You want every AI Lab change to stay notes-first. Put a short <strong>rule</strong> on <code>notes/<strong></code>. When you ask for a new deck, the agent loads </strong>frontend-slides<strong> skill because the description matches “create presentation.” You type <code>/graphify .</code> as a </strong>command** when you need a fresh knowledge graph — no essay required.</p>
+<p>You want every AI Lab change to stay notes-first.</p>
+<p>1. <strong>Rule (glob):</strong> on <code>notes/**</code>, a short always-ish rule: “edit English notes under <code>notes/</code>; keep section structure; don’t invent slide assets.” Cost: only when note files are touched — not on every unrelated TypeScript edit.</p>
+<p>2. <strong>Skill trigger:</strong> you ask “build a new deck about vector DBs.” The agent sees <code>frontend-slides</code> description (“create stunning HTML presentations…”) → reads that <code>SKILL.md</code> → follows the slide workflow. A vague skill named <code>docs</code> with description “helps with documentation” might <em>also</em> fire and fight over format — tighten descriptions.</p>
+<p>3. <strong>Command:</strong> you type <code>/graphify .</code> when you want a fresh knowledge graph — explicit, no reliance on the model guessing. Commands are ideal for expensive or rare workflows you don’t want auto-triggered.</p>
+<p>4. <strong>Context math (rough):</strong> a 150-line always-rule × every turn on a busy day wastes more tokens than a 400-line skill loaded twice a week. Move depth out of always-rules.</p>
 <h2>Common pitfalls</h2>
 <ul>
 <li><strong>Always-rules that are novels</strong> — waste tokens every turn; split into globs/skills.</li>
 <li><strong>Vague skill descriptions</strong> — agent never auto-triggers, or triggers on everything.</li>
 <li><strong>Duplicating skill trees</strong> into Cursor/Claude folders — drift and double maintenance.</li>
 <li><strong>Conflicting skills</strong> — two skills claim the same trigger with opposite steps.</li>
+<li><strong>Putting secrets in rules/skills</strong> — they may be copied into prompts and logs; use env/secret stores.</li>
+<li><strong>Command sprawl</strong> — twenty overlapping <code>/foo</code> shortcuts nobody remembers; prefer skills for discovery, commands for the few high-value rituals.</li>
 </ul>
 <h2>Illustrations</h2>
 <figure><img src="assets/skills-rules/skills-rules-commands.png" alt="Skill vs Rule vs Command" loading="lazy" /><figcaption>Skill vs Rule vs Command</figcaption></figure>
 <figure><img src="assets/skills-rules/skills-layers.svg" alt="Three layers side by side" loading="lazy" /><figcaption>Three layers side by side</figcaption></figure>
+<figure><img src="assets/skills-rules/skill-trigger.png" alt="Skill description is the auto-trigger" loading="lazy" /><figcaption>Skill description is the auto-trigger</figcaption></figure>
+<h2>Deeper dive</h2>
+<ul>
+<li><strong>Trigger writing pattern:</strong> <code>Use when the user asks to X, Y, or Z (artifacts: .pptx, HTML slides). Do not use for ordinary markdown notes or code refactors.</code> Positive + negative triggers cut false positives sharply.</li>
+<li><strong>Catalog vs body:</strong> the model may only see <code>name</code> + <code>description</code> until it chooses to open the file. If the <em>only</em> disambiguation lives buried in the body, the wrong skill gets selected — put disambiguation in the description.</li>
+<li><strong>Token budget intuition:</strong> always-rules are a tax on <em>every</em> request (including “fix the typo”). If an always-rule exceeds ~50–100 lines, ask whether half belongs in a skill. Skills that exceed ~500–1000 lines should link to scripts/docs instead of inlining everything.</li>
+<li><strong>Progressive disclosure:</strong> good skills say “read <code>references/foo.md</code> only if doing bar” — agents that follow this avoid stuffing the whole tree into context on every trigger.</li>
+<li><strong>Installation path:</strong> <code>~/.agents/scripts/skill.sh install owner/repo --id my-pack</code> then <code>sync</code> / <code>check</code>. Parallel copies under <code>~/.cursor/skills</code> defeat the single source of truth — keep one tree under <code>~/.agents</code>.</li>
+<li><strong>Failure mode — silent non-trigger:</strong> user says “make slides” but description only lists “PPTX export” → skill never loads → agent freestyles a worse deck. Fix descriptions when you observe misses in real chats.</li>
+<li><strong>Failure mode — trigger storm:</strong> five search skills all match “research X” → model loads multiple huge SKILL.md files → context pressure and contradictory citation rules. Narrow descriptions; add explicit “prefer this over…” notes.</li>
+</ul>
+<h2>Decision guide</h2>
+<table><thead>
+<tr><th>Situation</th><th>Prefer</th><th>Avoid / why</th></tr>
+</thead><tbody>
+<tr><td>Must never violate (license, secrets, notes-first)</td><td>Short always or glob <strong>rule</strong></td><td>Burying it only in a skill — may not load</td></tr>
+<tr><td>Multi-step specialized workflow (slides, graphify, browser QA)</td><td><strong>Skill</strong> with crisp description</td><td>Always-rule novel — pays tokens forever</td></tr>
+<tr><td>You want an intentional, rare, expensive ritual</td><td><strong>Command</strong> (<code>/graphify</code>, <code>/deep-plan</code>)</td><td>Auto-trigger skill that surprises mid-chat</td></tr>
+<tr><td>Convention only for <code>*.tsx</code> or <code>notes/**</code></td><td>Glob <strong>rule</strong></td><td>Global always-rule for file-local style</td></tr>
+<tr><td>Two skills overlap on “search / research”</td><td>Tighten descriptions; document precedence</td><td>Shipping both vague — trigger storms</td></tr>
+<tr><td>Sharing across Cursor / Claude / Pi</td><td>Single tree in <code>~/.agents/skills</code></td><td>Copy-paste into client-specific skill folders</td></tr>
+</tbody></table>
 <h2>Pipeline</h2>
 <pre><code>
 task → (rules always/glob) + (matching skills) + (optional /command) → agent acts with MCP/tools

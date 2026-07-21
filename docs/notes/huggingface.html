@@ -347,12 +347,13 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 <li><em>Datasets</em> — labeled data, often one line: <code>load_dataset("imdb")</code>.</li>
 <li><em>Models (Hub)</em> — pretrained BERT, GPT, ViT, MiniLM, etc.; fine-tune instead of training from zero.</li>
 <li><em>Spaces</em> — host demo apps (Gradio/Streamlit), with optional GPU, plus a simple API endpoint.</li>
-<li><strong><code>transformers</code> + <code>datasets</code>:</strong> a few lines to load model, tokenizer, and data; fine-tune with <code>Trainer</code> or a familiar PyTorch/TF loop.</li>
-<li><strong>Fine-tune beats scratch:</strong> leverage knowledge from large models → needs far less data and time. A few thousand labeled examples often beat a huge scratch train.</li>
+<li><strong><code>transformers</code> + <code>datasets</code>:</strong> a few lines to load model, tokenizer, and data; fine-tune with <code>Trainer</code> or a familiar PyTorch/TF loop. Typical APIs: <code>AutoTokenizer</code>, <code>AutoModelForSequenceClassification</code>, <code>TrainingArguments</code>, <code>Trainer</code>.</li>
+<li><strong>Fine-tune beats scratch:</strong> leverage knowledge from large models → needs far less data and time. A few thousand labeled examples often beat a huge scratch train. Rough scale: full BERT-base pretraining is ~110M params on billions of tokens; your fine-tune may use 2k–50k labels and finish in minutes–hours on one GPU.</li>
 <li><strong>Spaces = demo + endpoint:</strong> push a model to a Space → instant UI and API for others to try.</li>
-<li><strong>Model card and license:</strong> read license, intended use, and limitations before commercial use. Some weights are research-only.</li>
-<li><strong>Tokenizer must match the model:</strong> always load the tokenizer that belongs to that checkpoint — mismatch corrupts every ID (<a href="tokenize.html">tokenize.md</a>).</li>
-<li><strong>Output is a model:</strong> checkpoint or endpoint ready for <a href="train-infer.html">inference</a>.</li>
+<li><strong>Model card and license:</strong> read license, intended use, and limitations before commercial use. Some weights are research-only (e.g. restrictive RAIL or non-commercial clauses).</li>
+<li><strong>Tokenizer must match the model:</strong> always load the tokenizer that belongs to that checkpoint — mismatch corrupts every ID (<a href="tokenize.html">tokenize.md</a>). Same <code>from_pretrained("org/name")</code> string for both.</li>
+<li><strong>Output is a model:</strong> checkpoint or endpoint ready for <a href="train-infer.html">inference</a>. Prefer <code>model.push_to_hub(...)</code> + <code>tokenizer.push_to_hub(...)</code> so consumers get a matched pair.</li>
+<li><strong>Task head swap:</strong> <code>AutoModelForSequenceClassification.from_pretrained(..., num_labels=C)</code> replaces the pretrained LM head with a fresh <em>C</em>-way classifier — those new weights need enough steps to learn; the encoder starts strong.</li>
 </ul>
 <h2>Typical path</h2>
 <pre><code>
@@ -373,16 +374,40 @@ model = AutoModelForSequenceClassification.from_pretrained("bert-base-uncased", 
 </code></pre>
 <h2>Worked example (intuition)</h2>
 <p>Want a Vietnamese sentiment demo? Search the Hub for a multilingual or vi checkpoint → load a small labeled set → fine-tune 2–3 epochs on a free GPU (<a href="kaggle.html">kaggle.md</a> / Colab) → push to a Space. You never trained a Transformer from random weights.</p>
+<p>Concrete path: <code>load_dataset("imdb")</code> → ~25k train reviews → tokenize with <code>max_length=256</code>, <code>truncation=True</code> → <code>TrainingArguments(learning_rate=2e-5, per_device_train_batch_size=16, num_train_epochs=3, evaluation_strategy="epoch")</code> → <code>Trainer.train()</code>. Expect ~ few thousand optimizer steps; val accuracy often jumps from ~50% (random binary) to mid–high 80s/%90s depending on model size — then <code>push_to_hub</code> and wrap with Gradio on a Space.</p>
 <h2>Common pitfalls</h2>
 <ul>
 <li><strong>Ignoring the model card</strong> — wrong license or unsafe intended use.</li>
 <li><strong>Tokenizer mismatch</strong> — using a different vocab than the checkpoint.</li>
 <li><strong>Fine-tuning the whole giant model when LoRA would do</strong> — wasted GPU and money for small tasks.</li>
 <li><strong>Eval on the Hub’s test split after peeking</strong> — keep a private holdout.</li>
+<li><strong>Wrong <code>num_labels</code></strong> — loading a 2-class head onto a 5-class problem (or vice versa) silently mis-shapes the classifier.</li>
+<li><strong>Forgetting <code>padding</code> / dynamic padding</strong> — slow training or shape errors; use a data collator (<code>DataCollatorWithPadding</code>) with the tokenizer.</li>
 </ul>
 <h2>Illustrations</h2>
 <figure><img src="assets/huggingface/huggingface-hub.png" alt="Hugging Face Hub: Datasets, Models, Spaces" loading="lazy" /><figcaption>Hugging Face Hub: Datasets, Models, Spaces</figcaption></figure>
 <figure><img src="assets/huggingface/hf-finetune-flow.png" alt="Fine-tune path on the Hub" loading="lazy" /><figcaption>Fine-tune path on the Hub</figcaption></figure>
+<h2>Deeper dive</h2>
+<ul>
+<li>**<code>Auto*</code> classes resolve configs from the Hub.** <code>from_pretrained("bert-base-uncased")</code> downloads <code>config.json</code>, weights, and vocab. Pin a revision (<code>revision="abc123"</code>) for reproducibility — <code>main</code> can move. Offline later: <code>local_files_only=True</code> after the first cache hit under <code>~/.cache/huggingface/</code>.</li>
+<li><strong>Trainer vs raw PyTorch.</strong> <code>Trainer</code> handles device placement, eval loops, logging, and Hub upload. Raw loop wins when you need custom sampling or multi-loss. Mini comparison: Trainer ≈ Keras <code>fit</code> for Transformers; raw loop ≈ full PyTorch control (<a href="pytorch-training.html">pytorch-training.md</a>).</li>
+<li><strong>Full fine-tune vs LoRA / PEFT.</strong> Full update: all ~110M BERT params, highest quality ceiling, most VRAM. LoRA: train low-rank adapters (<code>r=8</code>, <code>α=16</code> typical) — often &amp;lt;1% trainable params, fits smaller GPUs, easy to swap task heads. Prefer LoRA when data is small or you host many task variants.</li>
+<li><strong>Learning rates that work.</strong> Encoder fine-tunes: <code>2e-5</code>–<code>5e-5</code> with AdamW + linear warmup (~6% of steps). Classification head-only: you can use higher LR (<code>1e-3</code>) on the head while freezing the body. Too-high LR on the whole stack → catastrophic forgetting (val falls below the zero-shot baseline).</li>
+<li><strong>Dataset map and cache.</strong> <code>ds.map(tokenize, batched=True)</code> caches tokenized Arrow tables. Failure mode: changing the tokenize function but reusing a stale cache — pass a new <code>cache_file_name</code> or <code>load_from_cache_file=False</code> when debugging.</li>
+<li><strong>Spaces runtime.</strong> Free CPU Spaces are fine for tiny models; GPU Spaces cost quota. Gradio <code>Interface</code> can call <code>pipeline("sentiment-analysis", model="you/model")</code>. Cold starts and sleep on free tiers — not an SLA. For production, export ONNX/TorchScript or host your own endpoint.</li>
+<li><strong>Safety and cards.</strong> Check <code>license</code>, <code>datasets</code> used for training, and bias notes. Gated models need <code>huggingface-cli login</code> + accepting terms. Shipping without reading the card is a legal/product risk, not just a style issue.</li>
+</ul>
+<h2>Decision guide</h2>
+<table><thead>
+<tr><th>Situation</th><th>Prefer</th><th>Avoid / why</th></tr>
+</thead><tbody>
+<tr><td>Standard text classification fine-tune</td><td><code>AutoModelForSequenceClassification</code> + <code>Trainer</code></td><td>Training BERT from random init — needs huge data/compute</td></tr>
+<tr><td>&amp;lt;5k labels or tight VRAM</td><td>LoRA / PEFT or freeze encoder + train head</td><td>Full 7B fine-tune “because bigger”</td></tr>
+<tr><td>Shareable demo for classmates</td><td>Gradio Space pointing at your Hub model</td><td>Only a local notebook nobody can open</td></tr>
+<tr><td>Reproducible paper / course hand-in</td><td>Pin <code>revision</code> + save <code>TrainingArguments</code></td><td>Floating <code>main</code> tags that change under you</td></tr>
+<tr><td>Embeddings for RAG / search</td><td><a href="sentence-transformers.html">sentence-transformers</a> models on the Hub</td><td>Raw LM CLS without pooling/normalization</td></tr>
+<tr><td>Commercial product</td><td>Models with clear commercial license + private holdout eval</td><td>Research-only weights; Hub test set as your only metric</td></tr>
+</tbody></table>
 <h2>Pipeline</h2>
 <pre><code>
 HF Datasets → pretrained model (Hub) → fine-tune (PyTorch/TF) → push to Hub / Spaces → use

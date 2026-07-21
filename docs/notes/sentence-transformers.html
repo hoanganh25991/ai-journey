@@ -343,15 +343,22 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 <p>This is the shortest path from <a href="embedding.html">embedding.md</a> into <a href="semantic-search.html">semantic-search.md</a>, <a href="vector-database.html">vector-database.md</a>, and retrieval for <a href="rag.html">rag.md</a>.</p>
 <h2>Key ideas</h2>
 <ul>
-<li><strong>Sentence → one vector:</strong> <code>encode()</code> returns embeddings optimized for <em>sentence-level</em> meaning comparison (not per-token vectors). Pooling (often mean of token states) is already baked in.</li>
-<li><strong>Fast classification:</strong> encode sentences, then attach a light classifier (logistic / k-NN) on top — no full Transformer fine-tune required for many text tasks.</li>
-<li><strong>Similarity and search:</strong> <code>util.cos_sim</code> finds semantically close sentences; core of semantic search and RAG retrieve.</li>
-<li><strong>Load into a vector DB:</strong> vectors from <code>encode()</code> go straight into a vector database for top-k search.</li>
+<li><strong>Sentence → one vector:</strong> <code>model.encode(texts)</code> returns a matrix <code>n × d</code> optimized for <em>sentence-level</em> meaning comparison (not raw per-token hidden states). Internally: Transformer → <strong>pooling</strong> → optional L2 normalize.</li>
+<li><strong>Pooling choices matter:</strong></li>
+<li><em>Mean pooling</em> (default for many MiniLM/mpnet checkpoints): average token states, often masked so padding does not dilute the vector.</li>
+<li><em>CLS pooling:</em> take the <code>[CLS]</code> token (BERT-style) — only good if the checkpoint was trained that way.</li>
+<li><em>Max pooling:</em> element-wise max — less common for modern SBERT models.</li>
+<li>Wrong pooling on a checkpoint = systematic similarity bugs even when dimensions “look right.”</li>
+<li><strong>Fast classification:</strong> encode sentences once, then attach logistic regression / k-NN / a tiny MLP on frozen vectors — often enough for topic or intent labels without full Transformer fine-tune.</li>
+<li><strong>Similarity and search:</strong> <code>util.cos_sim(a, b)</code> (or dot on normalized vectors) ranks paraphrases; core of semantic search and RAG retrieve. Typical demo dims: <strong>384</strong> (<code>all-MiniLM-L6-v2</code>) or <strong>768</strong> (<code>all-mpnet-base-v2</code>).</li>
+<li><strong>Load into a vector DB:</strong> <code>encode()</code> output goes straight into FAISS / pgvector / Elastic kNN — store the <em>same</em> <code>d</code> and metric the model expects (<a href="vector-database.html">vector-database.md</a>).</li>
 <li><strong>Pick a model for the job:</strong></li>
-<li><em>MiniLM</em> (<code>all-MiniLM-L6-v2</code>) — light and fast; great default for demos.</li>
-<li><em>mpnet</em> — more accurate, heavier.</li>
-<li>Multilingual variants when you mix languages.</li>
-<li><strong>Same space for query and docs:</strong> encode both with the same model; never mix two incompatible checkpoints in one index.</li>
+<li><em><code>all-MiniLM-L6-v2</code></em> — ~22M params, 384-d, very fast CPU; strong default for demos and medium corpora.</li>
+<li><em><code>all-mpnet-base-v2</code></em> — ~110M params, 768-d; usually higher retrieval quality, slower/heavier.</li>
+<li><em><code>multi-qa-</em></code> / asymmetric models* — trained for question→passage; better when queries are short and docs are long.</li>
+<li><em>Multilingual</em> (<code>paraphrase-multilingual-MiniLM-L12-v2</code>, <code>distiluse-base-multilingual-cased-v2</code>, etc.) when queries and docs mix languages — English-only MiniLM will quietly fail on Vietnamese/French text.</li>
+<li><em>E5 / BGE / GTE</em> families (also loadable via SBERT or <code>transformers</code>) — strong MTEB retrieval scores; check whether they want <code>"query: "</code> / <code>"passage: "</code> prefixes.</li>
+<li><strong>Same space for query and docs:</strong> encode both with the <strong>same checkpoint and same prompts/prefixes</strong>. Never mix two incompatible models in one index — dimensions and geometry will not match.</li>
 </ul>
 <h2>Quick use</h2>
 <pre><code>
@@ -361,26 +368,60 @@ from sentence_transformers import SentenceTransformer, util
 
 model = SentenceTransformer("all-MiniLM-L6-v2")
 
-emb = model.encode(["Hello", "Hi there", "Battery life is awful"])
+emb = model.encode(
 
-print(util.cos_sim(emb[0], emb[1]))  # high — greetings
+    ["Hello", "Hi there", "Battery life is awful"],
 
-print(util.cos_sim(emb[0], emb[2]))  # lower — different topic
+    normalize_embeddings=True,  # safe for cosine == dot
+
+)
+
+print(util.cos_sim(emb[0], emb[1]))  # high — greetings (~0.7–0.9)
+
+print(util.cos_sim(emb[0], emb[2]))  # lower — different topic (~0.0–0.3)
 
 </code></pre>
 <h2>Worked example (intuition)</h2>
-<p>Corpus of FAQ answers. Encode all offline → store in FAISS/Chroma. At query time, encode the user question → top-5 FAQs by cosine → pass to an LLM for a grounded reply (<a href="rag.html">rag.md</a>). The heavy model ran once per document; queries stay cheap.</p>
+<p>Corpus: 5,000 FAQ answers, ~80–200 tokens each.</p>
+<p>1. <strong>Offline index build:</strong> <code>model.encode(faqs, batch_size=64, show_progress_bar=True)</code> → <code>5000 × 384</code> float32 matrix (~7.3 MB raw). On a laptop CPU, MiniLM often does thousands of short sentences per minute; on GPU, large corpora finish in seconds to minutes.</p>
+<p>2. <strong>Store:</strong> push vectors + FAQ text + <code>faq_id</code> into FAISS (<code>IndexFlatIP</code> after L2-normalize) or Chroma/pgvector.</p>
+<p>3. <strong>Query:</strong> user asks <code>"How do I reset my password?"</code> → encode <strong>one</strong> vector (milliseconds) → top-5 by cosine.</p>
+<p>4. <strong>RAG handoff:</strong> concatenate the 5 FAQ bodies into the LLM context (<a href="rag.html">rag.md</a>). The heavy Transformer ran once per document at index time; each live query is one short encode + ANN lookup.</p>
+<p>5. <strong>Multilingual twist:</strong> if half the FAQs are Vietnamese, switch to a multilingual checkpoint and <strong>rebuild the whole index</strong> — you cannot bolt vi queries onto an English-only MiniLM space.</p>
 <h2>Common pitfalls</h2>
 <ul>
-<li><strong>Mixing models in one index</strong> — dimensions and geometry won’t match.</li>
-<li><strong>Using token embeddings as if they were sentence vectors</strong> — wrong pooling.</li>
+<li><strong>Mixing models in one index</strong> — dimensions and geometry won’t match; top-k becomes noise.</li>
+<li><strong>Using token embeddings as if they were sentence vectors</strong> — wrong pooling; similarity collapses.</li>
 <li><strong>Cosine vs dot without normalizing</strong> — rankings shift; know which metric your DB expects.</li>
-<li><strong>Encoding huge batches on CPU only</strong> — fine for tiny demos; use GPU for large corpora.</li>
+<li><strong>Encoding huge batches on CPU only</strong> — fine for tiny demos; use GPU + batched <code>encode</code> for large corpora.</li>
+<li><strong>Ignoring instruction prefixes</strong> (E5/BGE-style) — retrieval drops several points if you forget <code>query:</code> vs <code>passage:</code>.</li>
+<li><strong>Assuming multilingual “just works”</strong> with English-only weights — cross-lingual nearest neighbors are unreliable.</li>
 </ul>
 <h2>Illustrations</h2>
 <figure><img src="assets/protonx/cosine-similarity.jpg" alt="Cosine similarity between two sentence vectors" loading="lazy" /><figcaption>Cosine similarity between two sentence vectors</figcaption></figure>
 <figure><img src="assets/protonx/embeddings-function.jpg" alt="Embedding: a function that maps text to vectors" loading="lazy" /><figcaption>Embedding: a function that maps text to vectors</figcaption></figure>
 <figure><img src="assets/sentence-transformers/sentence-embed.png" alt="Sentence embedding and cosine angle" loading="lazy" /><figcaption>Sentence embedding and cosine angle</figcaption></figure>
+<h2>Deeper dive</h2>
+<ul>
+<li><strong>SBERT training idea:</strong> siamese/triplet fine-tune of a pretrained encoder so cosine distance matches labeled similarity (NLI, paraphrase, MS MARCO). Vanilla BERT CLS vectors are weak at sentence similarity without this step — that is why <code>sentence-transformers</code> exists.</li>
+<li><strong>API surface:</strong> <code>SentenceTransformer.encode(sentences, batch_size=32, convert_to_numpy=True, normalize_embeddings=False)</code>. Set <code>normalize_embeddings=True</code> when the vector DB uses inner product and you want cosine ranking.</li>
+<li><strong>Throughput ballpark:</strong> <code>all-MiniLM-L6-v2</code> on a modern CPU might embed ~500–2000 short sentences/sec depending on length; GPU (e.g. T4) often 5–20× that. Profile on <em>your</em> chunk length — 512-token chunks are far slower than 64-token titles.</li>
+<li><strong>Matryoshka / truncation:</strong> some newer models allow using only the first 256 dims with small quality loss — useful when FAISS RAM dominates. Do not truncate arbitrary MiniLM vectors unless the card says it is trained for that.</li>
+<li><strong>Failure mode — domain shift:</strong> general MiniLM on legal/medical jargon clusters poorly. Fix: domain fine-tune with MultipleNegativesRankingLoss on your query–passage pairs, or pick a domain checkpoint.</li>
+<li><strong>Asymmetric retrieval:</strong> short query vs long passage — models trained with <code>MultipleNegativesRankingLoss</code> on QA pairs beat symmetric paraphrase models on FAQ search; the reverse is true for “find duplicate sentences.”</li>
+<li><strong>Multilingual pitfall:</strong> <code>paraphrase-multilingual-<em></code> shares one space across languages, but quality is uneven by language; always measure Recall@k on </em>your* language pair, not only English MTEB headlines.</li>
+</ul>
+<h2>Decision guide</h2>
+<table><thead>
+<tr><th>Situation</th><th>Prefer</th><th>Avoid / why</th></tr>
+</thead><tbody>
+<tr><td>Demo / laptop / &lt;100k chunks</td><td><code>all-MiniLM-L6-v2</code> (384-d)</td><td>mpnet or 7B embedders — latency and RAM without need</td></tr>
+<tr><td>Max retrieval quality, English FAQ/RAG</td><td><code>all-mpnet-base-v2</code> or strong E5/BGE</td><td>Random Hub model with no retrieval training</td></tr>
+<tr><td>Mixed-language corpus or queries</td><td>Multilingual SBERT / multilingual-E5</td><td>English-only MiniLM — silent quality cliff</td></tr>
+<tr><td>Question → long passage search</td><td><code>multi-qa-*</code> or asymmetric E5 (<code>query:</code>/<code>passage:</code>)</td><td>Symmetric paraphrase model alone</td></tr>
+<tr><td>Real-time embed on every keystroke</td><td>MiniLM + batch/cache; or smaller distilled embedder</td><td>Re-encoding the full corpus per keystroke</td></tr>
+<tr><td>Metric in DB is inner product</td><td>L2-normalize in <code>encode</code> (cosine ≡ dot)</td><td>Raw unnormalized vectors with IP — magnitude dominates</td></tr>
+</tbody></table>
 <h2>Pipeline</h2>
 <pre><code>
 sentence → SentenceTransformer.encode → vector → { cos_sim | light classifier | vector DB }

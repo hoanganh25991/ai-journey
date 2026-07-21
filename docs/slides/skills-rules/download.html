@@ -195,6 +195,10 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
 .code-block .c { color: #8b97a8; }
 .code-block .k { color: #5ec8d4; }
 .code-block .s { color: #f0a35e; }
+
+.table-card.dense table { font-size: 16px; }
+.table-card.dense th, .table-card.dense td { padding: 8px 12px; }
+.card p, .card li { font-size: 19px; }
 </style>
 </head>
 <body>
@@ -232,9 +236,9 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
     <div class="topbar reveal"><span>Layers</span><span class="pill">ideas</span></div>
     <h2 class="reveal">Key ideas</h2>
     <div class="cols-3">
-      <div class="card reveal"><div class="tag">skill</div><h3>SKILL.md package</h3><p>Folder + description trigger + steps/scripts — loaded when relevant.</p></div>
-      <div class="card cyan reveal"><div class="tag">rule</div><h3>Always or glob</h3><p>Always-rules cost tokens every turn; globs load cheaper by file pattern.</p></div>
-      <div class="card reveal"><div class="tag">command</div><h3>User-fired</h3><p>/graphify, /deep-plan, /loop — shortcuts into a workflow.</p></div>
+      <div class="card reveal"><div class="tag">skill</div><h3>Catalog → body</h3><p>Model sees name+description first; vague triggers miss or storm. Put disambiguation in description.</p></div>
+      <div class="card cyan reveal"><div class="tag">cost</div><h3>Token budget</h3><p>Always-rules tax every turn. Prefer short always → globs → deep skills → /commands.</p></div>
+      <div class="card reveal"><div class="tag">home</div><h3>~/.agents only</h3><p>Write once across clients. Empty Cursor/Claude skill dirs; Pi = symlinks.</p></div>
     </div>
     <p class="lead reveal" style="margin-top:24px;font-size:20px;">Keywords: SKILL.md · ~/.agents · AGENTS.md · Read: <span style="color:var(--amber);font-family:var(--font-mono)">notes/skills-rules.md</span></p>
   </div>
@@ -268,10 +272,10 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
     <pre class="code-block reveal">~/.agents/skills/&lt;name&gt;/SKILL.md
 ---
 name: &lt;name&gt;
-description: use when…   <span class="c">← model auto-trigger</span>
+description: Use when X/Y/Z (artifacts: .pptx). Do not use for ordinary notes.
 ---
-# step-by-step guide + script paths</pre>
-    <p class="lead reveal" style="margin-top:24px;font-size:20px;">Write a clear “use when…” so the agent picks correctly — vagueness causes silence or collisions.</p>
+# steps + scripts; progressive disclosure → references/</pre>
+    <p class="lead reveal" style="margin-top:24px;font-size:20px;">Positive + negative triggers cut false positives — bury disambiguation only in the body and the wrong skill wins.</p>
   </div>
   <div class="foot"><span>05</span><span>notes/skills-rules.md</span></div>
 </section>
@@ -296,9 +300,9 @@ description: use when…   <span class="c">← model auto-trigger</span>
     <div class="topbar reveal"><span>Example</span><span class="pill">intuition</span></div>
     <h2 class="reveal">AI Lab, notes-first</h2>
     <div class="cols-3">
-      <div class="card reveal"><div class="tag">rule</div><h3>notes/**</h3><p>Short always/glob rule: changes stay notes-first.</p></div>
-      <div class="card cyan reveal"><div class="tag">skill</div><h3>frontend-slides</h3><p>Ask for a new deck → description matches → skill loads.</p></div>
-      <div class="card reveal"><div class="tag">command</div><h3>/graphify .</h3><p>Refresh the knowledge graph without writing an essay.</p></div>
+      <div class="card reveal"><div class="tag">rule</div><h3>notes/** glob</h3><p>Notes-first only when note files touched — not every TS edit.</p></div>
+      <div class="card cyan reveal"><div class="tag">skill</div><h3>frontend-slides</h3><p>“Build a deck” matches; vague “docs” skill may fight over format.</p></div>
+      <div class="card reveal"><div class="tag">math</div><h3>Context trade</h3><p>150-line always × every turn &gt; 400-line skill loaded twice/week.</p></div>
     </div>
   </div>
   <div class="foot"><span>07</span><span>notes/skills-rules.md</span></div>
@@ -326,18 +330,71 @@ description: use when…   <span class="c">← model auto-trigger</span>
   <div class="foot"><span>09</span><span>AI Lab · illustration</span></div>
 </section>
 
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Illustration</span><span class="pill">trigger</span></div>
+    <h2 class="reveal" style="font-size:36px;margin-bottom:16px;">Skill description is the auto-trigger</h2>
+    <img class="shot shot-md reveal" src="../assets/skill-trigger.png" alt="Skill description auto-trigger" />
+    <p class="lead reveal" style="margin-top:12px;font-size:20px;">Catalog shows name + description; the body loads only after the model chooses that skill.</p>
+  </div>
+  <div class="foot"><span>10</span><span>AI Lab · illustration</span></div>
+</section>
+
 <section class="slide">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
     <div class="topbar reveal"><span>Rules</span><span class="pill">practice</span></div>
     <h2 class="reveal">Keep always-rules short</h2>
     <div class="cols-2">
-      <div class="card accent reveal"><div class="tag">cost</div><h3>Always = every turn</h3><p>Novels in always-rules burn context. Split into globs or skills.</p></div>
-      <div class="card cyan reveal"><div class="tag">scope</div><h3>Glob when possible</h3><p>*.tsx or notes/*.md load only on matching files — cheaper and clearer.</p></div>
+      <div class="card accent reveal"><div class="tag">budget</div><h3>~50–100 lines always</h3><p>Beyond that, half likely belongs in a skill. &gt;500–1000 line skills → link out.</p></div>
+      <div class="card cyan reveal"><div class="tag">scope</div><h3>Glob when possible</h3><p>*.tsx / notes/** load only on matching files — cheaper and clearer.</p></div>
     </div>
   </div>
-  <div class="foot"><span>10</span><span>notes/skills-rules.md</span></div>
+  <div class="foot"><span>11</span><span>notes/skills-rules.md</span></div>
 </section>
+
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Deeper</span><span class="pill">dive</span></div>
+    <h2 class="reveal">Deeper dive</h2>
+    <div class="cols-3">
+      <div class="card reveal"><div class="tag">write</div><h3>Trigger pattern</h3><p>Use when X/Y/Z (artifacts…). Do not use for… — positive + negative cuts false positives.</p></div>
+      <div class="card cyan reveal"><div class="tag">select</div><h3>Catalog vs body</h3><p>If disambiguation is only in the body, the wrong skill gets selected first.</p></div>
+      <div class="card reveal"><div class="tag">size</div><h3>Progressive disclose</h3><p>“Read references/foo.md only if bar” — avoid stuffing the whole tree every trigger.</p></div>
+      <div class="card reveal"><div class="tag">install</div><h3>skill.sh</h3><p>install owner/repo --id · sync · check. Parallel ~/.cursor/skills defeats one source of truth.</p></div>
+      <div class="card cyan reveal"><div class="tag">miss</div><h3>Silent non-trigger</h3><p>“Make slides” but description only says PPTX export → freestyle worse deck.</p></div>
+      <div class="card reveal"><div class="tag">storm</div><h3>Trigger storm</h3><p>Five search skills match “research X” → context pressure + contradictory rules.</p></div>
+    </div>
+  </div>
+  <div class="foot"><span>12</span><span>notes/skills-rules.md</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Guide</span><span class="pill">decide</span></div>
+    <h2 class="reveal">When to choose what</h2>
+    <div class="card table-card dense reveal">
+      <table>
+        <thead><tr><th>Situation</th><th>Prefer</th><th>Avoid / why</th></tr></thead>
+        <tbody>
+          <tr><td>Must never violate</td><td>Short always or glob <b>rule</b></td><td>Only in a skill — may not load</td></tr>
+          <tr><td>Multi-step specialized workflow</td><td><b>Skill</b> with crisp description</td><td>Always-rule novel — tokens forever</td></tr>
+          <tr><td>Rare expensive ritual</td><td><b>Command</b> (/graphify, /deep-plan)</td><td>Auto-skill that surprises mid-chat</td></tr>
+          <tr><td>Convention for *.tsx / notes/**</td><td>Glob <b>rule</b></td><td>Global always for file-local style</td></tr>
+          <tr><td>Two skills overlap on search</td><td>Tighten descriptions; document precedence</td><td>Both vague — trigger storms</td></tr>
+          <tr><td>Share across Cursor / Claude / Pi</td><td>Single tree in ~/.agents/skills</td><td>Copy-paste into client folders</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="foot"><span>13</span><span>notes/skills-rules.md</span></div>
+</section>
+
 
 <section class="slide">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
@@ -350,7 +407,7 @@ description: use when…   <span class="c">← model auto-trigger</span>
       <div class="card reveal"><div class="tag">drift</div><h3>Duplicate trees</h3><p>Copying into Cursor/Claude folders → drift and conflicts.</p></div>
     </div>
   </div>
-  <div class="foot"><span>11</span><span>notes/skills-rules.md</span></div>
+  <div class="foot"><span>14</span><span>notes/skills-rules.md</span></div>
 </section>
 
 <section class="slide">
@@ -361,7 +418,7 @@ description: use when…   <span class="c">← model auto-trigger</span>
     <div class="flow-row reveal" style="margin-top:48px;"><span class="step">task</span><span class="arr">→</span><span class="step">rules (always/glob)</span><span class="arr">+</span><span class="step">matching skills</span><span class="arr">+</span><span class="step">/command?</span><span class="arr">→</span><span class="step">tools</span></div>
     <p class="lead reveal" style="margin-top:36px;">Agent acts with MCP/tools under the loaded configuration — not a blank model.</p>
   </div>
-  <div class="foot"><span>12</span><span>notes/skills-rules.md</span></div>
+  <div class="foot"><span>15</span><span>notes/skills-rules.md</span></div>
 </section>
 
 <section class="slide">
@@ -375,7 +432,7 @@ description: use when…   <span class="c">← model auto-trigger</span>
       <div class="card reveal"><div class="tag">demo</div><h3>MCP app</h3><p>See tool calling in the browser demo.</p></div>
     </div>
   </div>
-  <div class="foot"><span>13</span><span>related notes</span></div>
+  <div class="foot"><span>16</span><span>related notes</span></div>
 </section>
 
 <section class="slide">

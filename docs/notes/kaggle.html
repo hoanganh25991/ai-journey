@@ -343,12 +343,13 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 <p>Pair it with <a href="huggingface.html">Hugging Face</a>: grab a pretrained model from the Hub, train on Kaggle’s GPU, export the checkpoint into a lab demo.</p>
 <h2>Key ideas</h2>
 <ul>
-<li><strong>Datasets:</strong> tens of thousands of public datasets, downloadable straight into a notebook (or via the Kaggle API).</li>
-<li><strong>Notebooks (Kernels):</strong> built-in libraries (PyTorch, TF, sklearn…); enable GPU/TPU in settings → train without installing CUDA locally.</li>
+<li><strong>Datasets:</strong> tens of thousands of public datasets, downloadable straight into a notebook (or via the Kaggle API: <code>kaggle datasets download -d owner/slug</code>).</li>
+<li><strong>Notebooks (Kernels):</strong> built-in libraries (PyTorch, TF, sklearn…); enable GPU/TPU in settings → train without installing CUDA locally. Typical free GPU tiers are on the order of ~30 GPU hours/week (quota changes — check current Settings → Accelerator).</li>
 <li><strong>Competitions:</strong> real problem + metric + leaderboard; submit predictions for a score. Read <em>public notebooks</em> for tips — reproducing a strong baseline teaches faster than starting blank.</li>
-<li><strong>Quota limits:</strong> free GPU hours are capped per week — save them for real training runs, not idle kernels left open overnight.</li>
-<li><strong>HF connection:</strong> often download data on Kaggle, grab a pretrained model from Hugging Face, then train in a Kaggle notebook.</li>
-<li><strong>Export:</strong> download weights / ONNX / TorchScript → plug into <a href="train-infer.html">inference</a> demos (car-nn, sentiment…).</li>
+<li><strong>Quota limits:</strong> free GPU hours are capped per week — save them for real training runs, not idle kernels left open overnight. Disable the accelerator while debugging prints and plots.</li>
+<li><strong>HF connection:</strong> often download data on Kaggle, grab a pretrained model from Hugging Face, then train in a Kaggle notebook (<code>!pip install -q transformers datasets</code> if needed).</li>
+<li><strong>Export:</strong> download weights / ONNX / TorchScript → plug into <a href="train-infer.html">inference</a> demos (car-nn, sentiment…). Persist to a Kaggle Dataset version so the next session can <code>add data</code> instead of re-uploading.</li>
+<li><strong>Public vs private LB:</strong> the public leaderboard is a visible slice; the private LB (final) can reshuffle ranks — overfit the public slice and you drop at the end.</li>
 </ul>
 <h2>Short workflow</h2>
 <pre><code>
@@ -361,16 +362,40 @@ pick dataset (or competition) → new notebook → enable GPU
 </code></pre>
 <h2>Worked example (intuition)</h2>
 <p>Competition: classify dog breeds from images. You fork a public EfficientNet notebook, swap in a Hub vision model, train 5 epochs on GPU, submit. Leaderboard feedback tells you if augmentation or LR was the real lever — not just “I trained something.”</p>
+<p>Numbers to expect: ~10k labeled images, 120 breeds, EfficientNet-B0 fine-tune with LR <code>1e-3</code> (head) then <code>1e-4</code> (full), batch 32 on a P100/T4-class GPU → roughly 5–20 minutes/epoch depending on image size. If public LB is log-loss, a model at accuracy 0.85 can still lose to one with better-calibrated probs at accuracy 0.83 — optimize the <strong>stated metric</strong>, not vibes.</p>
 <h2>Common pitfalls</h2>
 <ul>
 <li><strong>Burning GPU quota on print-debug loops</strong> — debug on CPU / tiny samples first.</li>
 <li><strong>Ignoring the competition metric</strong> — optimizing accuracy when the score is log-loss.</li>
 <li><strong>Copy-paste without understanding</strong> — public notebooks win until the private leaderboard; learn <em>why</em> steps exist.</li>
 <li><strong>No offline export plan</strong> — notebook dies with the session; save artifacts to Kaggle datasets or download them.</li>
+<li><strong>Internet off in competitions</strong> — many code comps disable network; pre-bundle datasets/models or use official competition data only.</li>
+<li><strong>Leaky preprocessing</strong> — fitting scalers / augment stats on train+test together; fit on train only.</li>
 </ul>
 <h2>Illustrations</h2>
 <figure><img src="assets/kaggle/kaggle-stack.png" alt="Kaggle stack: dataset → notebook → free GPU" loading="lazy" /><figcaption>Kaggle stack: dataset → notebook → free GPU</figcaption></figure>
 <figure><img src="assets/kaggle/kaggle-loop.png" alt="Competition loop: train, submit, learn" loading="lazy" /><figcaption>Competition loop: train, submit, learn</figcaption></figure>
+<h2>Deeper dive</h2>
+<ul>
+<li><strong>Accelerator settings.</strong> Notebook → Settings → Accelerator → GPU (or TPU). Verify with <code>!nvidia-smi</code> or <code>torch.cuda.is_available()</code>. Failure mode: code assumes CUDA but accelerator is <strong>None</strong> → silent CPU crawl that burns session time without using quota efficiently.</li>
+<li><strong>Quota economics.</strong> GPU hours are weekly; interactive sessions count while the kernel is on. Pattern: prototype on CPU with <code>df.head()</code> / 1% sample → flip GPU on for the real <code>fit</code> / <code>Trainer.train()</code> → save checkpoint → turn GPU off. Leaving a Gradio loop or infinite plot refresh overnight wastes the week’s budget.</li>
+<li><strong>Metric alignment.</strong> Competitions publish an exact score (log-loss, macro-F1, quadratic weighted kappa, …). Mini comparison: accuracy cares about hard labels; log-loss punishes confident wrong probs — temperature scaling or softer labels can raise LB without changing <code>argmax</code> accuracy. Always implement a <strong>local</strong> validation that mirrors the host metric.</li>
+<li><strong>Public notebooks as curriculum.</strong> Sort by score, fork the simplest high scorer, delete unused cells, re-run end-to-end, then change one variable (LR, augmentation, model size). Blind stacking of 10 notebooks without a local CV usually overfits the public LB.</li>
+<li><strong>HF + Kaggle bridge.</strong> <code>from_pretrained</code> needs network (or a pre-downloaded model Dataset). In offline comps, attach a Dataset that already contains the weights folder and point <code>from_pretrained("/kaggle/input/.../model")</code>. Tokenizer files must travel with the weights.</li>
+<li><strong>Export checklist.</strong> Save: (1) <code>state_dict</code> / <code>.keras</code> / safetensors, (2) tokenizer / label map JSON, (3) preprocessing config (image size, normalize mean/std). Version them as a Kaggle Dataset. Without (2)–(3), the demo loads weights but predicts garbage.</li>
+<li><strong>CV discipline.</strong> Prefer stratified <em>k</em>-fold or a fixed GroupKFold when related rows leak (same patient / same product). Report mean±std of the competition metric across folds before trusting a single public submit.</li>
+</ul>
+<h2>Decision guide</h2>
+<table><thead>
+<tr><th>Situation</th><th>Prefer</th><th>Avoid / why</th></tr>
+</thead><tbody>
+<tr><td>Learning + free GPU for a lab model</td><td>Kaggle notebook + HF pretrained weights</td><td>Buying cloud GPU before you have a working CPU baseline</td></tr>
+<tr><td>Debugging data / plotting</td><td>CPU accelerator (or tiny sample on GPU)</td><td>Full-data GPU epochs while fixing print typos</td></tr>
+<tr><td>Competition scored by log-loss</td><td>Calibrated probs; match local CV to log-loss</td><td>Maximizing accuracy only — LB won’t move with you</td></tr>
+<tr><td>Offline / no-internet code comp</td><td>Bundle model+tokenizer as a Dataset input</td><td>Runtime <code>pip install</code> / Hub download mid-submit</td></tr>
+<tr><td>Keeping work across sessions</td><td>Versioned Kaggle Dataset of checkpoints</td><td>Relying on ephemeral <code>/kaggle/working</code> alone</td></tr>
+<tr><td>Climbing the leaderboard</td><td>One change at a time + solid local CV</td><td>Mega-ensembles copied blindly before you understand the metric</td></tr>
+</tbody></table>
 <h2>Pipeline</h2>
 <pre><code>
 Kaggle dataset → notebook (enable GPU) → train (epochs) → export model → inference

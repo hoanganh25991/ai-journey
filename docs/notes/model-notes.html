@@ -357,7 +357,20 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 <tr><td><strong>Kimi / GLM</strong></td><td>good code</td><td>expensive</td></tr>
 </tbody></table>
 <ul>
-<li><strong>Grok 4.5 — why it impresses:</strong> fast, smooth, genuinely good — especially as Cursor default; does not burn much budget yet often beats Auto. Public context (xAI, mid-2026): optimized for coding + agentic at ~<strong>80 TPS</strong>; ~<strong>4.2× fewer output tokens</strong> than Opus 4.8 on SWE-Bench Pro → much cheaper per task ($2 in / $6 out per 1M). Benchmarks competitive with Opus 4.8 / GPT-5.5 on many coding evals; trained with Cursor. Main edge = <strong>intelligence per unit time and cost</strong> on verifiable tasks.</li>
+<li><strong>Task → model map (practical):</strong></li>
+</ul>
+<table><thead>
+<tr><th>Task shape</th><th>First pick</th><th>Runner-up</th><th>Skip</th></tr>
+</thead><tbody>
+<tr><td>Greenfield scaffold / architecture</td><td>Grok 4.5 or Anthropic</td><td>Composer Fast if speed-critical</td><td>DeepSeek / Qwen alone on empty repos</td></tr>
+<tr><td>Debug / fix in a large existing tree</td><td>DeepSeek V4</td><td>Grok 4.5</td><td>Tiny “simple task” models for subtle bugs</td></tr>
+<tr><td>Skill / rule design, ask-back needed</td><td>Anthropic (Opus/Sonnet/Fable)</td><td>Grok</td><td>Auto when constraints must be explicit</td></tr>
+<tr><td>Screenshot / diagram / UI bug from image</td><td>Vision-capable (Grok / Anthropic / GPT family)</td><td>—</td><td>DeepSeek (no image input)</td></tr>
+<tr><td>Cheap high-volume edits</td><td>Grok 4.5 / Auto</td><td>Composer Fast</td><td>Always-Opus for typo fixes</td></tr>
+<tr><td>Long verifiable coding agent loops</td><td>Grok 4.5 (token-efficient) or pinned Sonnet</td><td>—</td><td>Unlogged Auto mid-refactor</td></tr>
+</tbody></table>
+<ul>
+<li><strong>Grok 4.5 — why it impresses:</strong> fast, smooth, genuinely good — especially as Cursor default; does not burn much budget yet often beats Auto. Public context (xAI, mid-2026): optimized for coding + agentic at ~<strong>80 TPS</strong>; ~<strong>4.2× fewer output tokens</strong> than Opus 4.8 on SWE-Bench Pro → much cheaper per task ($2 in / $6 out per 1M). Benchmarks competitive with Opus 4.8 / GPT-5.5 on many coding evals; trained with Cursor. Main edge = <strong>intelligence per unit time and cost</strong> on verifiable tasks. Watch for overconfidence when you cannot run tests.</li>
 </ul>
 <ul>
 <li><strong>Principles:</strong></li>
@@ -366,24 +379,54 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 <li><em>Needs images (screenshots, diagrams):</em> avoid DeepSeek (no image input).</li>
 <li><em>Speed + low cost:</em> Grok 4.5 / Composer Fast.</li>
 <li><em>Clarifying constraints and skill design:</em> Anthropic strongest at asking back.</li>
+<li><em>Verifiable vs vibes:</em> prefer models that stay short and correct when tests exist; prefer ask-back models when requirements are fuzzy.</li>
 </ul>
 <ul>
-<li><strong>Re-check prices:</strong> OpenRouter and vendor pages move — treat $ numbers as snapshots, not eternal truth.</li>
+<li><strong>Re-check prices:</strong> OpenRouter and vendor pages move — treat $ numbers as snapshots, not eternal truth. Re-read TPS/cost claims quarterly.</li>
 </ul>
 <h2>Worked example (intuition)</h2>
-<p>Task A: “Scaffold a new notes-first docs site.” → Grok or Anthropic (greenfield + structure).</p>
-<p>Task B: “This failing pytest, repo already large.” → DeepSeek V4 or Grok (local reasoning + cheap iteration).</p>
-<p>Task C: “Read this screenshot of the broken UI.” → not DeepSeek; pick a vision-capable model.</p>
+<table><thead>
+<tr><th>ID</th><th>Prompt gist</th><th>Model choice</th><th>Why</th></tr>
+</thead><tbody>
+<tr><td><strong>A</strong></td><td>“Scaffold a notes-first docs site with catalog + journey.”</td><td>Grok 4.5 or Anthropic</td><td>Greenfield structure; needs coherent IA, not a local stack trace</td></tr>
+<tr><td><strong>B</strong></td><td>“This pytest fails in <code>train_loop.py</code> line 142; repo is large.”</td><td>DeepSeek V4 or Grok</td><td>Local reasoning + cheap iteration; codebase already exists</td></tr>
+<tr><td><strong>C</strong></td><td>“Read this screenshot of the broken settings UI.”</td><td>Vision model (not DeepSeek)</td><td>Image tokens required; text-only models invent layouts</td></tr>
+<tr><td><strong>D</strong></td><td>“Draft a skill that must coexist with graphify + frontend-slides.”</td><td>Anthropic</td><td>Ask-back on overlaps; skill-description design</td></tr>
+<tr><td><strong>E</strong></td><td>“Rename a prop across 3 files.”</td><td>Auto or Grok</td><td>Don’t spend Opus tokens on mechanical edits</td></tr>
+</tbody></table>
+<p>After the run: if A looks shallow, switch harness context (pin files) before switching models. If B loops without running tests, fix tools (<a href="agents.html">07-agents.md</a>), not the model card.</p>
 <h2>Common pitfalls</h2>
 <ul>
 <li><strong>One model for every job</strong> — waste money or quality.</li>
 <li><strong>Trusting marketing TPS without task fit</strong> — fast wrong answers still waste time.</li>
 <li><strong>Ignoring image capability</strong> — vision tasks silently degrade.</li>
 <li><strong>Confusing Auto routing with a single model’s skill</strong>.</li>
+<li><strong>Upgrading model when the harness can’t run tests</strong> — pays more for the same blindfold.</li>
 </ul>
 <h2>Illustrations</h2>
 <figure><img src="assets/model-notes/model-notes-spectrum.png" alt="Model spectrum: fast/cheap ↔ deep/slow" loading="lazy" /><figcaption>Model spectrum: fast/cheap ↔ deep/slow</figcaption></figure>
 <figure><img src="assets/model-notes/model-vs-harness.png" alt="Model vs harness reminder" loading="lazy" /><figcaption>Model vs harness reminder</figcaption></figure>
+<h2>Deeper dive</h2>
+<ul>
+<li><strong>Optimize for task shape, not leaderboard rank:</strong> SWE-bench winners can still be wrong for greenfield product sense, and vice versa. Keep a personal matrix (above) and update it when a model surprises you twice.</li>
+<li><strong>Token economics beat sticker price:</strong> a “cheap” model that writes 4× more tokens can cost more than a “expensive” terse model. Grok’s edge on SWE-Bench Pro is partly <strong>output brevity</strong> under agent loops.</li>
+<li><strong>Hallucination surface:</strong> unverifiable tasks (obscure APIs, guessed configs) punish confident models. Force tool use (read file, curl docs) or pick ask-back Anthropic when stakes are high.</li>
+<li><strong>Vision is a hard gate:</strong> if the user attaches an image, filter the model list first. Don’t route to DeepSeek and hope.</li>
+<li><strong>Pair with harness axes:</strong> a strong model in a tool-poor harness underperforms a mid model with shell+MCP. Diagnose harness before model (<a href="agents.html">07-agents.md</a>).</li>
+<li><strong>Session limits and latency:</strong> Opus-quality sessions that hit caps mid-refactor cost more in human time than a slightly weaker unlimited loop. Plan task chunks accordingly.</li>
+<li><strong>Re-benchmark on your repo:</strong> run the same failing test / same scaffold prompt quarterly; field notes rot when vendors ship silent updates.</li>
+</ul>
+<h2>Decision guide</h2>
+<table><thead>
+<tr><th>Situation</th><th>Prefer</th><th>Avoid / why</th></tr>
+</thead><tbody>
+<tr><td>Empty repo / new architecture</td><td>Grok or Anthropic</td><td>DeepSeek/Qwen as sole brain — weaker greenfield feel</td></tr>
+<tr><td>Failing tests in a known codebase</td><td>DeepSeek V4 (or Grok)</td><td>Burning Opus on every red CI without trying a cheap debugger</td></tr>
+<tr><td>Screenshot or diagram attached</td><td>Vision-capable model</td><td>DeepSeek — no image input; will guess UI</td></tr>
+<tr><td>Designing skills/rules with conflicts</td><td>Anthropic (clarifying)</td><td>Auto that never asks and invents policy</td></tr>
+<tr><td>High-volume small edits</td><td>Grok 4.5 / Auto / Composer Fast</td><td>Always-max model — cost without quality gain</td></tr>
+<tr><td>Need reproducible long agent run</td><td>Pinned model + logged id</td><td>Untracked Auto routing mid-task</td></tr>
+</tbody></table>
 <h2>Slides &amp; demo</h2>
 <table><thead>
 <tr><th></th><th>Link</th></tr>

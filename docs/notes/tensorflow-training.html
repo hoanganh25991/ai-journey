@@ -343,12 +343,13 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 <p>Keras is especially handy for quick softmax-regression experiments and for the Embedding Projector, which makes vector space visible in 3D while you train (<a href="embedding.html">embedding.md</a>).</p>
 <h2>Key ideas</h2>
 <ul>
-<li><strong><code>compile</code> = declare how to learn:</strong> pick optimizer, loss (softmax + cross-entropy for multi-class), and metrics to track (<code>accuracy</code>, etc.).</li>
-<li><strong><code>fit</code> = run training:</strong> the framework handles epoch/batch iteration and backprop — no manual <code>backward()</code>/<code>step()</code> like PyTorch.</li>
-<li><strong>Monitor with metrics:</strong> <code>accuracy</code> and <code>val_loss</code> print each epoch; rising <code>val_loss</code> while train loss falls → overfitting.</li>
-<li><strong>Callbacks:</strong> <code>EarlyStopping</code> stops when val stops improving; <code>ModelCheckpoint</code> saves the best weights automatically.</li>
-<li><strong>TensorBoard and Projector:</strong> plot loss curves and project embeddings into 3D to inspect clusters and outliers.</li>
-<li><strong>Same math as PyTorch:</strong> under the hood it is still forward → loss → gradients → weight update. Only the API shape differs.</li>
+<li><strong><code>compile</code> = declare how to learn:</strong> pick optimizer, loss (softmax + cross-entropy for multi-class), and metrics to track (<code>accuracy</code>, etc.). Example: <code>optimizer=keras.optimizers.Adam(1e-3)</code>, <code>loss="sparse_categorical_crossentropy"</code>, <code>metrics=["accuracy"]</code>.</li>
+<li><strong><code>fit</code> = run training:</strong> the framework handles epoch/batch iteration and backprop — no manual <code>backward()</code>/<code>step()</code> like PyTorch. Default <code>batch_size=32</code> if you pass NumPy arrays; override explicitly for memory control.</li>
+<li><strong>Monitor with metrics:</strong> <code>accuracy</code> and <code>val_loss</code> print each epoch; rising <code>val_loss</code> while train loss falls → overfitting. Watch the Keras progress bar: <code>loss: 0.42 - accuracy: 0.85 - val_loss: 0.51 - val_accuracy: 0.80</code>.</li>
+<li><strong>Callbacks:</strong> <code>EarlyStopping(patience=3, restore_best_weights=True)</code> stops when val stops improving; <code>ModelCheckpoint("best.keras", save_best_only=True)</code> saves the best weights automatically. <code>ReduceLROnPlateau</code> halves LR when val plateaus.</li>
+<li><strong>TensorBoard and Projector:</strong> plot loss curves and project embeddings into 3D to inspect clusters and outliers. Hook with <code>keras.callbacks.TensorBoard(log_dir="./logs")</code>.</li>
+<li><strong>Same math as PyTorch:</strong> under the hood it is still forward → loss → gradients → weight update. Only the API shape differs. Functional/<code>tf.GradientTape</code> exists when you need a custom loop.</li>
+<li><strong>Loss name must match label encoding:</strong> integer class IDs → <code>sparse_categorical_crossentropy</code>; one-hot <code>[B, C]</code> → <code>categorical_crossentropy</code>; binary 0/1 → <code>binary_crossentropy</code> (often with a single sigmoid unit).</li>
 </ul>
 <h2>Skeleton</h2>
 <pre><code>
@@ -391,17 +392,41 @@ model.fit(
 </code></pre>
 <h2>Worked example (intuition)</h2>
 <p>You stack a small dense net ending in <code>softmax</code> with <code>NUM_CLASSES</code> units. After <code>compile</code>, each <code>fit</code> epoch shuffles batches, computes cross-entropy against integer labels, and updates weights. When <code>val_loss</code> bottoms out, EarlyStopping restores that checkpoint — ready for inference.</p>
+<p>Numeric sketch: 8 000 train / 2 000 val reviews, <code>batch_size=64</code> → 125 steps/epoch. Epoch 1: <code>loss≈1.05</code>, <code>val_loss≈0.72</code>. Epoch 4: <code>loss≈0.28</code>, <code>val_loss≈0.41</code> (best). Epoch 7: <code>loss≈0.12</code>, <code>val_loss≈0.55</code> — overfit. With <code>patience=3</code> and <code>restore_best_weights=True</code>, Keras rolls back to the epoch-4 weights instead of keeping the overfit epoch-7 state.</p>
 <h2>Common pitfalls</h2>
 <ul>
 <li><strong><code>categorical</code> vs <code>sparse_categorical</code></strong> — one-hot labels need <code>categorical_crossentropy</code>; integer labels need <code>sparse_*</code>. Mixing them silently fails or errors.</li>
 <li><strong>Forgot validation_data</strong> — you only see train accuracy and miss overfitting.</li>
 <li><strong>No EarlyStopping</strong> — you keep the last epoch, which may be worse than an earlier one.</li>
 <li><strong>Projector without labels</strong> — hard to interpret; color points by class when possible.</li>
+<li><strong>Softmax + <code>from_logits</code> confusion</strong> — if the last layer already has <code>activation="softmax"</code>, use plain CE string losses; if the last layer is linear, prefer <code>from_logits=True</code> losses for better numerical stability.</li>
 </ul>
 <h2>Illustrations</h2>
 <figure><img src="assets/protonx/softmax-regression.jpg" alt="Softmax regression — multi-class classification in TensorFlow" loading="lazy" /><figcaption>Softmax regression — multi-class classification in TensorFlow</figcaption></figure>
 <figure><img src="assets/protonx/tf-projector.jpg" alt="TensorFlow Embedding Projector: vectors projected into 3D" loading="lazy" /><figcaption>TensorFlow Embedding Projector: vectors projected into 3D</figcaption></figure>
 <figure><img src="assets/tensorflow-training/tensorflow-keras.png" alt="Keras compile → fit flow" loading="lazy" /><figcaption>Keras compile → fit flow</figcaption></figure>
+<figure><img src="assets/tensorflow-training/overfit-curves.png" alt="Overfitting: val loss rises while train falls" loading="lazy" /><figcaption>Overfitting: val loss rises while train falls</figcaption></figure>
+<h2>Deeper dive</h2>
+<ul>
+<li><strong><code>compile</code> wires the training step graph.</strong> Optimizer + loss + metrics are fixed at compile time (unless you recompile). Changing LR mid-run: either pass a <code>LearningRateScheduler</code> / <code>ReduceLROnPlateau</code>, or set <code>model.optimizer.learning_rate.assign(new_lr)</code>.</li>
+<li><strong>Sparse vs categorical — shapes.</strong> Labels shape <code>[B]</code> ints → sparse CE. Labels shape <code>[B, C]</code> floats → categorical CE. Wrong pairing: cryptic shape errors or nonsense loss (~ tens instead of ~1). Quick check: <code>y_train.ndim</code> and <code>y_train.max()</code>.</li>
+<li><strong><code>from_logits=True</code> vs softmax activation.</strong> Prefer linear last layer + <code>SparseCategoricalCrossentropy(from_logits=True)</code> for stability (softmax + log combined). Mini comparison: softmax-in-model is convenient for <code>model.predict</code> probs; logits + <code>from_logits</code> is safer for training — many production setups train on logits and apply softmax only at serve time.</li>
+<li><strong>Callbacks that change outcomes.</strong> <code>EarlyStopping(monitor="val_loss", patience=3)</code> vs <code>monitor="val_accuracy"</code>. On imbalanced data, accuracy can plateau while CE still improves rare classes — monitor the metric you care about. <code>ModelCheckpoint</code> with <code>save_best_only=True</code> pairs with EarlyStopping’s <code>restore_best_weights</code>.</li>
+<li><strong><code>tf.data</code> beats giant NumPy.</strong> <code>ds = tf.data.Dataset.from_tensor_slices((x, y)).shuffle(10_000).batch(64).prefetch(tf.data.AUTOTUNE)</code> keeps the GPU fed. Failure mode: feeding full <code>x_train</code> that doesn’t fit RAM, or no <code>prefetch</code> → GPU idle between steps.</li>
+<li><strong>Custom training with <code>GradientTape</code>.</strong> When <code>fit</code> is too rigid: <code>with tf.GradientTape() as tape: loss = ...; grads = tape.gradient(loss, model.trainable_weights); opt.apply_gradients(zip(grads, model.trainable_weights))</code>. Same four steps as PyTorch, TF-flavored.</li>
+<li><strong>Keras vs PyTorch choice.</strong> Keras <code>fit</code>: fastest path to a baseline + TensorBoard. PyTorch loop: research flexibility, HF <code>Trainer</code> ecosystem. Same CE math; different knobs and error messages.</li>
+</ul>
+<h2>Decision guide</h2>
+<table><thead>
+<tr><th>Situation</th><th>Prefer</th><th>Avoid / why</th></tr>
+</thead><tbody>
+<tr><td>Quick multi-class baseline on tabular/text features</td><td><code>Sequential</code> + <code>fit</code> + EarlyStopping</td><td>Hand-rolled <code>GradientTape</code> before you need it</td></tr>
+<tr><td>Integer labels <code>0..C-1</code></td><td><code>sparse_categorical_crossentropy</code></td><td><code>categorical_*</code> without one-hot — shape/loss bugs</td></tr>
+<tr><td>One-hot labels already prepared</td><td><code>categorical_crossentropy</code></td><td>Sparse loss — wrong assumption on rank</td></tr>
+<tr><td>Val loss rising after epoch 5</td><td>EarlyStopping + restore best + Checkpoint</td><td>Running fixed 50 epochs “just in case”</td></tr>
+<tr><td>Need non-standard loss / multi-optimizer</td><td><code>GradientTape</code> custom loop (or PyTorch)</td><td>Stretching <code>fit</code> with opaque callback hacks</td></tr>
+<tr><td>Embedding debugging / teaching</td><td>TensorBoard Projector colored by class</td><td>Projector with unlabeled gray clouds</td></tr>
+</tbody></table>
 <h2>Pipeline</h2>
 <pre><code>
 dataset → model (Keras) → compile → fit (epochs) → checkpoint

@@ -22,7 +22,18 @@ Use them as a starting map: greenfield vs debug, image needs, and budget change 
   | **Qwen 3** | simple tasks | weak on complex following / describing large projects without codebase |
   | **Kimi / GLM** | good code | expensive |
 
-- **Grok 4.5 — why it impresses:** fast, smooth, genuinely good — especially as Cursor default; does not burn much budget yet often beats Auto. Public context (xAI, mid-2026): optimized for coding + agentic at ~**80 TPS**; ~**4.2× fewer output tokens** than Opus 4.8 on SWE-Bench Pro → much cheaper per task ($2 in / $6 out per 1M). Benchmarks competitive with Opus 4.8 / GPT-5.5 on many coding evals; trained with Cursor. Main edge = **intelligence per unit time and cost** on verifiable tasks.
+- **Task → model map (practical):**
+
+  | Task shape | First pick | Runner-up | Skip |
+  |------------|------------|-----------|------|
+  | Greenfield scaffold / architecture | Grok 4.5 or Anthropic | Composer Fast if speed-critical | DeepSeek / Qwen alone on empty repos |
+  | Debug / fix in a large existing tree | DeepSeek V4 | Grok 4.5 | Tiny “simple task” models for subtle bugs |
+  | Skill / rule design, ask-back needed | Anthropic (Opus/Sonnet/Fable) | Grok | Auto when constraints must be explicit |
+  | Screenshot / diagram / UI bug from image | Vision-capable (Grok / Anthropic / GPT family) | — | DeepSeek (no image input) |
+  | Cheap high-volume edits | Grok 4.5 / Auto | Composer Fast | Always-Opus for typo fixes |
+  | Long verifiable coding agent loops | Grok 4.5 (token-efficient) or pinned Sonnet | — | Unlogged Auto mid-refactor |
+
+- **Grok 4.5 — why it impresses:** fast, smooth, genuinely good — especially as Cursor default; does not burn much budget yet often beats Auto. Public context (xAI, mid-2026): optimized for coding + agentic at ~**80 TPS**; ~**4.2× fewer output tokens** than Opus 4.8 on SWE-Bench Pro → much cheaper per task ($2 in / $6 out per 1M). Benchmarks competitive with Opus 4.8 / GPT-5.5 on many coding evals; trained with Cursor. Main edge = **intelligence per unit time and cost** on verifiable tasks. Watch for overconfidence when you cannot run tests.
 
 - **Principles:**
   - *Greenfield* (new project, thin codebase): favor strong reasoning (Anthropic, Grok) over DeepSeek/Qwen.
@@ -30,14 +41,21 @@ Use them as a starting map: greenfield vs debug, image needs, and budget change 
   - *Needs images (screenshots, diagrams):* avoid DeepSeek (no image input).
   - *Speed + low cost:* Grok 4.5 / Composer Fast.
   - *Clarifying constraints and skill design:* Anthropic strongest at asking back.
+  - *Verifiable vs vibes:* prefer models that stay short and correct when tests exist; prefer ask-back models when requirements are fuzzy.
 
-- **Re-check prices:** OpenRouter and vendor pages move — treat $ numbers as snapshots, not eternal truth.
+- **Re-check prices:** OpenRouter and vendor pages move — treat $ numbers as snapshots, not eternal truth. Re-read TPS/cost claims quarterly.
 
 ## Worked example (intuition)
 
-Task A: “Scaffold a new notes-first docs site.” → Grok or Anthropic (greenfield + structure).  
-Task B: “This failing pytest, repo already large.” → DeepSeek V4 or Grok (local reasoning + cheap iteration).  
-Task C: “Read this screenshot of the broken UI.” → not DeepSeek; pick a vision-capable model.
+| ID | Prompt gist | Model choice | Why |
+|----|-------------|--------------|-----|
+| **A** | “Scaffold a notes-first docs site with catalog + journey.” | Grok 4.5 or Anthropic | Greenfield structure; needs coherent IA, not a local stack trace |
+| **B** | “This pytest fails in `train_loop.py` line 142; repo is large.” | DeepSeek V4 or Grok | Local reasoning + cheap iteration; codebase already exists |
+| **C** | “Read this screenshot of the broken settings UI.” | Vision model (not DeepSeek) | Image tokens required; text-only models invent layouts |
+| **D** | “Draft a skill that must coexist with graphify + frontend-slides.” | Anthropic | Ask-back on overlaps; skill-description design |
+| **E** | “Rename a prop across 3 files.” | Auto or Grok | Don’t spend Opus tokens on mechanical edits |
+
+After the run: if A looks shallow, switch harness context (pin files) before switching models. If B loops without running tests, fix tools ([07-agents.md](./07-agents.md)), not the model card.
 
 ## Common pitfalls
 
@@ -45,12 +63,34 @@ Task C: “Read this screenshot of the broken UI.” → not DeepSeek; pick a vi
 - **Trusting marketing TPS without task fit** — fast wrong answers still waste time.
 - **Ignoring image capability** — vision tasks silently degrade.
 - **Confusing Auto routing with a single model’s skill**.
+- **Upgrading model when the harness can’t run tests** — pays more for the same blindfold.
 
 ## Illustrations
 
 ![Model spectrum: fast/cheap ↔ deep/slow](assets/model-notes/model-notes-spectrum.png)
 
 ![Model vs harness reminder](assets/model-notes/model-vs-harness.png)
+
+## Deeper dive
+
+- **Optimize for task shape, not leaderboard rank:** SWE-bench winners can still be wrong for greenfield product sense, and vice versa. Keep a personal matrix (above) and update it when a model surprises you twice.
+- **Token economics beat sticker price:** a “cheap” model that writes 4× more tokens can cost more than a “expensive” terse model. Grok’s edge on SWE-Bench Pro is partly **output brevity** under agent loops.
+- **Hallucination surface:** unverifiable tasks (obscure APIs, guessed configs) punish confident models. Force tool use (read file, curl docs) or pick ask-back Anthropic when stakes are high.
+- **Vision is a hard gate:** if the user attaches an image, filter the model list first. Don’t route to DeepSeek and hope.
+- **Pair with harness axes:** a strong model in a tool-poor harness underperforms a mid model with shell+MCP. Diagnose harness before model ([07-agents.md](./07-agents.md)).
+- **Session limits and latency:** Opus-quality sessions that hit caps mid-refactor cost more in human time than a slightly weaker unlimited loop. Plan task chunks accordingly.
+- **Re-benchmark on your repo:** run the same failing test / same scaffold prompt quarterly; field notes rot when vendors ship silent updates.
+
+## Decision guide
+
+| Situation | Prefer | Avoid / why |
+|-----------|--------|-------------|
+| Empty repo / new architecture | Grok or Anthropic | DeepSeek/Qwen as sole brain — weaker greenfield feel |
+| Failing tests in a known codebase | DeepSeek V4 (or Grok) | Burning Opus on every red CI without trying a cheap debugger |
+| Screenshot or diagram attached | Vision-capable model | DeepSeek — no image input; will guess UI |
+| Designing skills/rules with conflicts | Anthropic (clarifying) | Auto that never asks and invents policy |
+| High-volume small edits | Grok 4.5 / Auto / Composer Fast | Always-max model — cost without quality gain |
+| Need reproducible long agent run | Pinned model + logged id | Untracked Auto routing mid-task |
 
 ## Slides & demo
 

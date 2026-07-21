@@ -29,6 +29,10 @@
 .code-block .c { color: #8b97a8; }
 .code-block .k { color: #5ec8d4; }
 .code-block .s { color: #f0a35e; }
+
+.table-card.dense table { font-size: 16px; }
+.table-card.dense th, .table-card.dense td { padding: 8px 12px; }
+.card p, .card li { font-size: 19px; }
 </style>
 </head>
 <body>
@@ -66,11 +70,11 @@
     <div class="topbar reveal"><span>Transformer</span><span class="pill">ideas</span></div>
     <h2 class="reveal">Key ideas</h2>
     <div class="cols-3">
-      <div class="card reveal"><div class="tag">stack</div><h3>Attention + FFN</h3><p>Each layer: multi-head attention, then feed-forward. Stack for syntax → entities → discourse.</p></div>
-      <div class="card cyan reveal"><div class="tag">order</div><h3>Positional encoding</h3><p>Parallel has no built-in order — inject position or “dog bites man” ≈ “man bites dog.”</p></div>
-      <div class="card reveal"><div class="tag">stability</div><h3>Residual + LayerNorm</h3><p>Skip connections keep deep stacks trainable; multi-head = parallel views.</p></div>
+      <div class="card reveal"><div class="tag">stack</div><h3>Attention + FFN</h3><p>Multi-head + ~4× expand FFN. BERT-base: 12×768×12 heads. Stack: syntax → entities → discourse.</p></div>
+      <div class="card cyan reveal"><div class="tag">order</div><h3>Positional encoding</h3><p>Sinusoidal / learned / RoPE·ALiBi. Without it “dog bites man” ≈ “man bites dog.”</p></div>
+      <div class="card reveal"><div class="tag">cost</div><h3>O(n² · d) + Pre-LN</h3><p>Full attention memory grows with n². Residual + LayerNorm; Pre-LN common today.</p></div>
     </div>
-    <p class="lead reveal" style="margin-top:24px;font-size:20px;">Keywords: encoder · decoder · multi-head · O(n²) · Read: <span style="color:var(--amber);font-family:var(--font-mono)">notes/transformer.md</span></p>
+    <p class="lead reveal" style="margin-top:24px;font-size:20px;">Keywords: encoder · decoder · multi-head · RoPE · KV cache · Read: <span style="color:var(--amber);font-family:var(--font-mono)">notes/transformer.md</span></p>
   </div>
   <div class="foot"><span>03</span><span>notes/transformer.md</span></div>
 </section>
@@ -100,9 +104,9 @@
     <div class="topbar reveal"><span>Example</span><span class="pill">intuition</span></div>
     <h2 class="reveal">“The cat sat on the mat.”</h2>
     <div class="cols-3">
-      <div class="card reveal"><div class="tag">1</div><h3>Embed + position</h3><p>Tokens become vectors; position signals keep word order.</p></div>
-      <div class="card cyan reveal"><div class="tag">2</div><h3>Layer-1 attention</h3><p>“sat” strongly attends to “cat” (subject) and “mat” (location).</p></div>
-      <div class="card reveal"><div class="tag">3</div><h3>After N layers</h3><p>Classification head (BERT) or next-token head (GPT) reads the stack.</p></div>
+      <div class="card reveal"><div class="tag">1</div><h3>Embed + position</h3><p>6 tokens → X ∈ ℝ^{6×768}; add positional of same width.</p></div>
+      <div class="card cyan reveal"><div class="tag">2</div><h3>Layer-1 attention</h3><p>“sat” ≈0.35 on “cat”, ≈0.25 on “mat”; FFN mixes within each position.</p></div>
+      <div class="card reveal"><div class="tag">3</div><h3>Heads &amp; causal</h3><p>BERT: [CLS]/mean → labels. GPT: last token → vocab; future masked.</p></div>
     </div>
   </div>
   <div class="foot"><span>05</span><span>notes/transformer.md</span></div>
@@ -163,6 +167,58 @@
   <div class="foot"><span>10</span><span>AI Lab · illustration</span></div>
 </section>
 
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Illustration</span><span class="pill">encoder vs decoder</span></div>
+    <h2 class="reveal" style="font-size:36px;margin-bottom:16px;">Encoder (bidirectional) vs decoder (causal)</h2>
+    <img class="shot shot-md reveal" src="../assets/encoder-vs-decoder.png" alt="Encoder bidirectional vs decoder causal" />
+    <p class="lead reveal" style="margin-top:12px;font-size:20px;">Full-sequence self-attention for understanding · left-to-right masking for generation.</p>
+  </div>
+  <div class="foot"><span>11</span><span>AI Lab · illustration</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Deeper</span><span class="pill">dive</span></div>
+    <h2 class="reveal">Deeper dive</h2>
+    <div class="cols-3">
+      <div class="card reveal"><div class="tag">math</div><h3>Scaled QKᵀ</h3><p>softmax(QKᵀ/√d_k)V — √64≈8 stops logit saturation and dead gradients.</p></div>
+      <div class="card cyan reveal"><div class="tag">mask</div><h3>Causal −∞</h3><p>Future → −∞ before softmax. Off-by-one leaks next token and fakes low perplexity.</p></div>
+      <div class="card reveal"><div class="tag">shapes</div><h3>Cross-attn</h3><p>Q: T_tgt×d · K/V: T_src×d. Truncated source encodings kill MT quality.</p></div>
+      <div class="card reveal"><div class="tag">serve</div><h3>KV cache</h3><p>Reuse past K/V → O(n) per new token. Memory grows with context — long-chat bottleneck.</p></div>
+      <div class="card cyan reveal"><div class="tag">params</div><h3>FFN vs attn</h3><p>Attn ≈4d²; FFN often ≈8d² (dominates params). Attn dominates memory at long n.</p></div>
+      <div class="card reveal"><div class="tag">API</div><h3>HF heads</h3><p>AutoModel vs ForCausalLM vs ForSeq2SeqLM — wrong head class is a common beginner bug.</p></div>
+    </div>
+  </div>
+  <div class="foot"><span>12</span><span>notes/transformer.md</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Guide</span><span class="pill">decide</span></div>
+    <h2 class="reveal">When to choose what</h2>
+    <div class="card table-card dense reveal">
+      <table>
+        <thead><tr><th>Situation</th><th>Prefer</th><th>Avoid / why</th></tr></thead>
+        <tbody>
+          <tr><td>Classify / embed a sentence</td><td>Encoder or Sentence-BERT</td><td>Causal decoder without pooling — not trained for similarity</td></tr>
+          <tr><td>Chat / code / open gen</td><td>Causal decoder (GPT-family)</td><td>Encoder alone — cannot emit fluent L→R text</td></tr>
+          <tr><td>Translation / summarization</td><td>Encoder–decoder (T5, BART)</td><td>Encoder-only — no generative pathway</td></tr>
+          <tr><td>Need &gt;4k–8k context</td><td>RoPE/ALiBi + long-ctx train; or chunk</td><td>Naive sinusoidal extension — poor extrapolate</td></tr>
+          <tr><td>On-device classify</td><td>DistilBERT / MiniLM encoders</td><td>70B decoder “just for sentiment”</td></tr>
+          <tr><td>Ignores word order</td><td>Check positional / RoPE applied</td><td>Assuming attention encodes position alone</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="foot"><span>13</span><span>notes/transformer.md</span></div>
+</section>
+
+
 <section class="slide">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
@@ -174,7 +230,7 @@
       <div class="card reveal"><div class="tag">order</div><h3>Dropping position</h3><p>Hack without positional info and order sensitivity breaks.</p></div>
     </div>
   </div>
-  <div class="foot"><span>11</span><span>notes/transformer.md</span></div>
+  <div class="foot"><span>14</span><span>notes/transformer.md</span></div>
 </section>
 
 <section class="slide">
@@ -185,7 +241,7 @@
     <div class="flow-row reveal" style="margin-top:48px;"><span class="step">tokens</span><span class="arr">→</span><span class="step">embed + pos</span><span class="arr">→</span><span class="step">N × (attn + FFN)</span><span class="arr">→</span><span class="step">repr</span><span class="arr">→</span><span class="step">head</span></div>
     <p class="lead reveal" style="margin-top:36px;">Wraps attention, embedding, and softmax into one complete model house-frame.</p>
   </div>
-  <div class="foot"><span>12</span><span>classification / generation</span></div>
+  <div class="foot"><span>15</span><span>classification / generation</span></div>
 </section>
 
 <section class="slide">
@@ -199,7 +255,7 @@
       <div class="card reveal"><div class="tag">hub</div><h3>Hugging Face</h3><p>Pretrained Transformer checkpoints to load.</p></div>
     </div>
   </div>
-  <div class="foot"><span>13</span><span>related notes</span></div>
+  <div class="foot"><span>16</span><span>related notes</span></div>
 </section>
 
 <section class="slide">

@@ -343,7 +343,7 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 <p>If you can write <code>forward → loss → backward → step</code> confidently, you can debug exploding loss, pick learning rates, and move models to GPU without treating training as a black box.</p>
 <h2>Key ideas</h2>
 <ul>
-<li><strong>Epoch vs batch:</strong> an <em>epoch</em> is one pass over all data; a <em>batch</em> is a small chunk processed per step. Many epochs let the model learn gradually. Large batches are stabler but need more memory; small batches are noisier but can generalize better.</li>
+<li><strong>Epoch vs batch:</strong> an <em>epoch</em> is one pass over all data; a <em>batch</em> is a small chunk processed per step. Many epochs let the model learn gradually. Large batches are stabler but need more memory; small batches are noisier but can generalize better. Rule of thumb: for <em>N</em> examples and batch size <em>B</em>, steps per epoch ≈ <code>⌈N/B⌉</code> — e.g. 10 000 examples / batch 32 ≈ 313 steps/epoch.</li>
 <li><strong>Four steps per batch:</strong></li>
 </ul>
 <p>1. <code>zero_grad()</code> — clear old gradients (they accumulate by default).</p>
@@ -351,10 +351,11 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 <p>3. <strong>Loss</strong> — compare logits to labels (e.g. <code>CrossEntropyLoss</code>).</p>
 <p>4. <strong><code>backward()</code></strong> then <strong><code>step()</code></strong> — compute gradients, update weights.</p>
 <ul>
-<li><strong>Optimizer and learning rate:</strong> Adam/SGD decides how far to move each step. LR too high → unstable jumps / NaNs; too low → painfully slow learning. Start with <code>1e-3</code> for Adam on small nets; fine-tuning Transformers often uses <code>2e-5</code>–<code>5e-5</code>.</li>
-<li><strong>Train/val split:</strong> track <strong>validation</strong> loss to catch <em>overfitting</em> (memorizes training data, fails on new data). Rising val loss while train loss falls is the classic signal.</li>
-<li><strong>GPU:</strong> <code>.to("cuda")</code> (or <code>"mps"</code> on Apple Silicon) for <strong>both</strong> model and each batch → much faster training; see <a href="train-gpu.html">train-gpu.md</a>.</li>
-<li><strong>When done, save:</strong> <code>torch.save(model.state_dict(), "ckpt.pt")</code> → checkpoint for <a href="train-infer.html">inference</a>. Prefer saving the best val checkpoint, not only the last epoch.</li>
+<li><strong>Optimizer and learning rate:</strong> Adam/SGD decides how far to move each step. LR too high → unstable jumps / NaNs; too low → painfully slow learning. Start with <code>1e-3</code> for Adam on small nets; fine-tuning Transformers often uses <code>2e-5</code>–<code>5e-5</code>. AdamW (<code>weight_decay≈0.01</code>) is the usual default for Transformers.</li>
+<li><strong>Train/val split:</strong> track <strong>validation</strong> loss to catch <em>overfitting</em> (memorizes training data, fails on new data). Rising val loss while train loss falls is the classic signal. Prefer saving the checkpoint with best <em>val</em> metric, not the last epoch.</li>
+<li><strong>GPU:</strong> <code>.to("cuda")</code> (or <code>"mps"</code> on Apple Silicon) for <strong>both</strong> model and each batch → much faster training; see <a href="train-gpu.html">train-gpu.md</a>. Mixed precision (<code>torch.cuda.amp</code>) often ~1.5–2× throughput on modern NVIDIA GPUs with little accuracy loss.</li>
+<li><strong>When done, save:</strong> <code>torch.save(model.state_dict(), "ckpt.pt")</code> → checkpoint for <a href="train-infer.html">inference</a>. Prefer saving the best val checkpoint, not only the last epoch. Also save optimizer state if you plan to resume: <code>{"model": ..., "opt": ..., "epoch": ...}</code>.</li>
+<li><strong>Autograd graph:</strong> only tensors with <code>requires_grad=True</code> (parameters) get gradients. Detach with <code>.detach()</code> or wrap eval in <code>torch.no_grad()</code> so validation does not build a graph or leak memory.</li>
 </ul>
 <h2>Training loop (skeleton)</h2>
 <pre><code>
@@ -389,16 +390,40 @@ for epoch in range(EPOCHS):
 </code></pre>
 <h2>Worked example (intuition)</h2>
 <p>Suppose a tiny binary classifier is wrong on a batch. Loss is high → <code>backward()</code> assigns blame to each weight → <code>step()</code> nudges weights slightly so the next forward pass is a bit less wrong. After thousands of batches, the decision boundary fits the data. That is all “learning” is, at the loop level.</p>
+<p>Concrete numbers: batch size 32, LR <code>1e-3</code>, Adam. If <code>loss</code> drops from ~0.69 (random binary CE) to ~0.25 over a few epochs while val loss follows, you are learning. If train loss → 0.05 but val loss climbs from 0.30 → 0.55, you are overfitting — add dropout, early-stop, or more data. Gradient clipping (<code>clip_grad_norm_(params, max_norm=1.0)</code>) before <code>step()</code> is a common fix when loss spikes to NaN on deeper nets.</p>
 <h2>Common pitfalls</h2>
 <ul>
 <li><strong>Forgot <code>zero_grad()</code></strong> — gradients stack across batches → wild updates.</li>
 <li><strong>Train mode at eval</strong> — dropout/batchnorm behave differently; use <code>model.eval()</code> + <code>torch.no_grad()</code> when validating.</li>
 <li><strong>Device mismatch</strong> — model on CUDA, batch on CPU → runtime error. Move both.</li>
 <li><strong>Leaky validation</strong> — tuning hyperparameters on the test set; keep a true held-out test.</li>
+<li><strong>In-place ops on views</strong> — rare but real: mutating a tensor that is still needed for autograd breaks the graph; prefer functional style inside <code>forward</code>.</li>
 </ul>
 <h2>Illustrations</h2>
 <figure><img src="assets/pytorch-training/pytorch-loop.png" alt="PyTorch training loop as a circular flowchart" loading="lazy" /><figcaption>PyTorch training loop as a circular flowchart</figcaption></figure>
 <figure><img src="assets/pytorch-training/pytorch-steps.svg" alt="Four steps per batch: forward → loss → backward → step" loading="lazy" /><figcaption>Four steps per batch: forward → loss → backward → step</figcaption></figure>
+<figure><img src="assets/pytorch-training/overfit-curves.png" alt="Train vs val loss: stop at the best checkpoint" loading="lazy" /><figcaption>Train vs val loss: stop at the best checkpoint</figcaption></figure>
+<h2>Deeper dive</h2>
+<ul>
+<li><strong>Why <code>zero_grad()</code> exists.</strong> PyTorch <em>accumulates</em> gradients into <code>.grad</code> so you can simulate large batches: run <code>backward()</code> on micro-batches of 8 four times, then one <code>step()</code> ≈ batch 32. Forgetting <code>zero_grad()</code> means every step also applies yesterday’s gradients — loss often explodes within a few iterations.</li>
+<li><strong><code>CrossEntropyLoss</code> expects raw logits.</strong> It applies <code>log_softmax</code> + NLL internally. Do <strong>not</strong> put <code>softmax</code> in the model before this loss (double-softmax / wrong scale). Shape: logits <code>[B, C]</code>, labels <code>[B]</code> long integers in <code>0..C-1</code>. Softmax belongs at inference when you need probabilities.</li>
+<li><strong>Learning-rate schedules.</strong> Constant LR is fine for tiny MLPs. For Transformers, linear warmup (e.g. 500–2000 steps) then linear/cosine decay is standard — avoids early gradient shock. Formula for linear warmup: <code>lr_t = lr_max · t / T_warm</code> for <code>t &lt; T_warm</code>.</li>
+<li><strong>Overfitting signature.</strong> Plot train vs val loss: healthy curves fall together; overfit when train keeps falling and val rises after epoch <em>k</em>. Fix: early stopping at <em>k</em>, stronger weight decay, dropout, data augmentation, or more data — not “more epochs.”</li>
+<li><strong>AMP and grad scaling.</strong> <code>with autocast(): loss = ...</code> then <code>scaler.scale(loss).backward(); scaler.step(opt); scaler.update()</code>. Failure mode: unscaled underflow → silent zero grads; the GradScaler exists to prevent that.</li>
+<li><strong>DataLoader knobs that matter.</strong> <code>num_workers=2–4</code>, <code>pin_memory=True</code> (CUDA), and <code>persistent_workers=True</code> often matter more than micro-optimizing the model once GPU util is &amp;lt;50%. Shuffle train, not val. Set <code>torch.manual_seed</code> + <code>generator</code> for reproducible splits.</li>
+<li><strong>Compare to Keras.</strong> Same math; PyTorch makes the loop explicit (easier custom losses, GANs, RL). Cost: you own <code>train()</code>/<code>eval()</code>, device moves, and checkpointing. Prefer PyTorch when you need non-standard training; prefer Keras <code>fit</code> for fast baselines (<a href="tensorflow-training.html">tensorflow-training.md</a>).</li>
+</ul>
+<h2>Decision guide</h2>
+<table><thead>
+<tr><th>Situation</th><th>Prefer</th><th>Avoid / why</th></tr>
+</thead><tbody>
+<tr><td>Small MLP / softmax regression demo</td><td>Adam <code>lr=1e-3</code>, full batch loop as above</td><td>Tiny LR like <code>1e-6</code> — looks “stuck” for hours</td></tr>
+<tr><td>Fine-tuning BERT / MiniLM</td><td>AdamW <code>2e-5</code>–<code>5e-5</code>, warmup, freeze or LoRA if tiny data</td><td>Adam <code>1e-3</code> on all layers — often destroys pretrained features</td></tr>
+<tr><td>Val loss rising, train falling</td><td>Early stop + best checkpoint; more regularization</td><td>More epochs on the same setup — deepens overfit</td></tr>
+<tr><td>Custom loss / multi-task / RL</td><td>Explicit PyTorch loop</td><td>Fighting Keras <code>fit</code> with awkward callbacks</td></tr>
+<tr><td>GPU OOM at batch 32</td><td>Gradient accumulation (4×8) or AMP</td><td>Blindly lowering LR — doesn’t free memory</td></tr>
+<tr><td>Publishing a reproducible run</td><td>Seed + fixed DataLoader generator + saved config</td><td>Only saving final weights with no hyperparams log</td></tr>
+</tbody></table>
 <h2>Pipeline</h2>
 <pre><code>
 dataset → DataLoader → [epoch loop: forward → loss → backward → step] → checkpoint

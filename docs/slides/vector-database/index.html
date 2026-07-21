@@ -29,6 +29,10 @@
 .code-block .c { color: #8b97a8; }
 .code-block .k { color: #5ec8d4; }
 .code-block .s { color: #f0a35e; }
+
+.table-card.dense table { font-size: 16px; }
+.table-card.dense th, .table-card.dense td { padding: 8px 12px; }
+.card p, .card li { font-size: 19px; }
 </style>
 </head>
 <body>
@@ -66,9 +70,9 @@
     <div class="topbar reveal"><span>Vector DB</span><span class="pill">ideas</span></div>
     <h2 class="reveal">Key ideas</h2>
     <div class="cols-3">
-      <div class="card reveal"><div class="tag">ANN</div><h3>Approximate indexes</h3><p>HNSW / IVF trade a little recall for orders-of-magnitude speed.</p></div>
-      <div class="card cyan reveal"><div class="tag">chunk</div><h3>Passages, not books</h3><p>Store chunk text + vector + metadata together — rarely one vector per doc.</p></div>
-      <div class="card reveal"><div class="tag">filter</div><h3>Metadata CRUD</h3><p>Filter by source/date; refresh when documents change.</p></div>
+      <div class="card reveal"><div class="tag">ANN</div><h3>HNSW · IVF · Flat</h3><p>HNSW: M / efSearch. IVF: nlist / nprobe (+ PQ). Flat = exact baseline.</p></div>
+      <div class="card cyan reveal"><div class="tag">chunk</div><h3>~200–400 tokens</h3><p>Too big blurs topics; too small loses context. Store text+vector+meta.</p></div>
+      <div class="card reveal"><div class="tag">metric</div><h3>Match training</h3><p>Cosine-trained ⇒ cosine (or L2-norm + IP). Wrong metric = wrong rank.</p></div>
     </div>
     <p class="lead reveal" style="margin-top:24px;font-size:20px;">Keywords: ANN · HNSW · FAISS · pgvector · Read: <span style="color:var(--amber);font-family:var(--font-mono)">notes/vector-database.md</span></p>
   </div>
@@ -100,9 +104,9 @@
     <div class="topbar reveal"><span>Example</span><span class="pill">intuition</span></div>
     <h2 class="reveal">Chunk → index → question → top-8</h2>
     <div class="cols-3">
-      <div class="card reveal"><div class="tag">1–2</div><h3>Chunk &amp; encode</h3><p>~200–400 token passages via sentence-transformers.</p></div>
-      <div class="card cyan reveal"><div class="tag">3</div><h3>Upsert</h3><p>Store (vector, text, source, date) in the DB.</p></div>
-      <div class="card reveal"><div class="tag">4</div><h3>Query</h3><p>Embed question → ANN top-8 → optional date filter → LLM.</p></div>
+      <div class="card reveal"><div class="tag">1–2</div><h3>Chunk &amp; encode</h3><p>8k wiki chunks → 8000×384 (~12 MB). Same MiniLM both sides.</p></div>
+      <div class="card cyan reveal"><div class="tag">3</div><h3>Upsert</h3><p>(vector, text, source, date). HNSW build once; Elastic dense_vector field.</p></div>
+      <div class="card reveal"><div class="tag">4</div><h3>Query</h3><p>Embed 1–5 ms → ANN top-8 (high efSearch) → filter → LLM.</p></div>
     </div>
   </div>
   <div class="foot"><span>05</span><span>notes/vector-database.md</span></div>
@@ -163,18 +167,70 @@
   <div class="foot"><span>10</span><span>AI Lab · illustration</span></div>
 </section>
 
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Illustration</span><span class="pill">choices</span></div>
+    <h2 class="reveal" style="font-size:36px;margin-bottom:16px;">FAISS vs Elasticsearch vs pgvector</h2>
+    <img class="shot shot-md reveal" src="../assets/vector-db-choices.png" alt="Vector database product choices" />
+    <p class="lead reveal" style="margin-top:12px;font-size:20px;">Speed research · hybrid + CRUD · relational home — pick the shelf that matches ops.</p>
+  </div>
+  <div class="foot"><span>11</span><span>AI Lab · illustration</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Deeper</span><span class="pill">dive</span></div>
+    <h2 class="reveal">Deeper dive</h2>
+    <div class="cols-3">
+      <div class="card reveal"><div class="tag">HNSW</div><h3>Cost model</h3><p>RAM ~ N·M·d. efSearch 32→128 lifts recall toward flat; latency ~linear — measure Recall@10.</p></div>
+      <div class="card cyan reveal"><div class="tag">IVF</div><h3>Miss modes</h3><p>Low nprobe skips the true cell. Train set ≠ traffic ⇒ bad list assignment.</p></div>
+      <div class="card reveal"><div class="tag">PQ</div><h3>Compress</h3><p>4–16× smaller at 100M+ vectors; A/B vs float32 on a gold set before ship.</p></div>
+      <div class="card reveal"><div class="tag">metric</div><h3>Mismatch</h3><p>SBERT+L2, IP on unnormalized, Elastic cosine vs FAISS IP — “demo fine, prod random.”</p></div>
+      <div class="card cyan reveal"><div class="tag">SLA</div><h3>Latency band</h3><p>Embed 2–20 + ANN 1–30 + fetch 1–10 ms. Spikes: cold cache, huge k, heavy filters.</p></div>
+      <div class="card reveal"><div class="tag">hybrid</div><h3>RRF join</h3><p>BM25 + HNSW then fuse. Pure vector misses exact SKUs/IDs keyword catches.</p></div>
+    </div>
+  </div>
+  <div class="foot"><span>12</span><span>notes/vector-database.md</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Guide</span><span class="pill">decide</span></div>
+    <h2 class="reveal">When to choose what</h2>
+    <div class="card table-card dense reveal">
+      <table>
+        <thead><tr><th>Situation</th><th>Prefer</th><th>Avoid / why</th></tr></thead>
+        <tbody>
+          <tr><td>&lt;50k vectors, prototype</td><td>Flat FAISS / Chroma / pgvector exact</td><td>Premature IVF/PQ — complexity without gain</td></tr>
+          <tr><td>Millions, high recall</td><td>HNSW + tuned efSearch</td><td>Tiny efSearch “because fast” — silent recall drop</td></tr>
+          <tr><td>Huge N, RAM-tight</td><td>IVF + PQ or disk engines</td><td>Pure in-RAM float32 HNSW — OOM</td></tr>
+          <tr><td>BM25 + vectors + CRUD</td><td>Elasticsearch / OpenSearch kNN</td><td>FAISS alone — reinvent ops + keyword</td></tr>
+          <tr><td>App already on Postgres</td><td>pgvector HNSW/IVFFlat</td><td>Extra DB unless scale demands it</td></tr>
+          <tr><td>Cosine-trained embeddings</td><td>Cosine space, or normalize + IP</td><td>L2 on raw SBERT — ranking distortion</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="foot"><span>13</span><span>notes/vector-database.md</span></div>
+</section>
+
+
 <section class="slide">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
     <div class="topbar reveal"><span>Pitfalls</span><span class="pill">watch</span></div>
     <h2 class="reveal">Easy to go wrong</h2>
     <div class="cols-3">
-      <div class="card accent reveal"><div class="tag">stale</div><h3>Stale index</h3><p>Docs changed but vectors never re-embedded.</p></div>
-      <div class="card cyan reveal"><div class="tag">model</div><h3>Encoder mismatch</h3><p>Query model ≠ index model → nonsense neighbors.</p></div>
-      <div class="card reveal"><div class="tag">k</div><h3>k too small / large</h3><p>Miss context, or drown the LLM in noise.</p></div>
+      <div class="card accent reveal"><div class="tag">stale</div><h3>Stale / CRUD</h3><p>Delete all chunk vectors per doc. Model upgrade ⇒ full reindex.</p></div>
+      <div class="card cyan reveal"><div class="tag">ANN</div><h3>Under-tuned</h3><p>Low efSearch / nprobe looks fast, drops Recall@10.</p></div>
+      <div class="card reveal"><div class="tag">filter</div><h3>Filter order</h3><p>Prefilter can empty candidates; postfilter may return &lt;k hits.</p></div>
     </div>
   </div>
-  <div class="foot"><span>11</span><span>notes/vector-database.md</span></div>
+  <div class="foot"><span>14</span><span>notes/vector-database.md</span></div>
 </section>
 
 <section class="slide">
@@ -185,7 +241,7 @@
     <div class="flow-row reveal" style="margin-top:36px;"><span class="step">documents</span><span class="arr">→</span><span class="step">chunk</span><span class="arr">→</span><span class="step">embed</span><span class="arr">→</span><span class="step">vector DB</span></div>
     <div class="flow-row reveal" style="margin-top:28px;"><span class="step">question</span><span class="arr">→</span><span class="step">embed</span><span class="arr">→</span><span class="step">top-k search</span><span class="arr">→</span><span class="step">RAG / search</span></div>
   </div>
-  <div class="foot"><span>12</span><span>notes/vector-database.md</span></div>
+  <div class="foot"><span>15</span><span>notes/vector-database.md</span></div>
 </section>
 
 <section class="slide">
@@ -199,7 +255,7 @@
       <div class="card reveal"><div class="tag">hybrid</div><h3>Semantic search</h3><p>Combine keyword filters with ANN rank.</p></div>
     </div>
   </div>
-  <div class="foot"><span>13</span><span>related notes</span></div>
+  <div class="foot"><span>16</span><span>related notes</span></div>
 </section>
 
 <section class="slide">

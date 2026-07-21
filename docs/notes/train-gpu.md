@@ -15,28 +15,41 @@ Lab demos illustrate inference only. To get a model you can plug in, you must tr
   | **Training** | HF/Kaggle → notebook/endpoint → many GPU epochs | checkpoint |
   | **Inference** | load model → predict | label / action |
 
-  See [06-train-infer.md](./06-train-infer.md) for the two-phase mental model.
+  See [06-train-infer.md](./06-train-infer.md) for the two-phase mental model. Training owns *optimizer state*, *data pipelines*, and *eval loops*; inference owns *forward pass only*. Mixing them in one mental bucket is why people try to “train in the browser.”
 
 - **Stack used in practice:**
-  - **PyTorch** — flexible; most training code in the lab ([pytorch-training.md](./pytorch-training.md)).
-  - **TensorFlow** — softmax regression and Embedding Projector for visualizing vectors ([tensorflow-training.md](./tensorflow-training.md)).
-  - **Data:** Hugging Face Datasets and Kaggle — pre-labeled, ready to download.
-  - **GPU online:** Google Colab / Kaggle / cloud notebooks — train to ~95%+ accuracy when the task allows, then export.
+  - **PyTorch** — flexible; most training code in the lab ([pytorch-training.md](./pytorch-training.md)). Explicit `loss.backward()` / `optimizer.step()` makes debugging shapes and gradients easier.
+  - **TensorFlow** — softmax regression and Embedding Projector for visualizing vectors ([tensorflow-training.md](./tensorflow-training.md)). Keras `fit()` is fine for small classifiers; use TF when the notebook or Projector path already exists.
+  - **Data:** Hugging Face Datasets and Kaggle — pre-labeled, ready to download. Prefer a Hub card with documented splits over scraping your own labels for teaching demos.
+  - **GPU online:** Google Colab / Kaggle / cloud notebooks — train to ~95%+ accuracy when the task allows, then export. Free tiers are enough for MiniLM / small CNN; large full fine-tunes need paid GPU or LoRA.
 
-- **Short workflow:**
+- **Short workflow (with concrete gates):**
 
   ```
   pick dataset (HF/Kaggle) → write notebook (PyTorch/TF) → train on GPU
-  → watch loss/accuracy (and val!) → export checkpoint → plug into demo (inference)
+  → watch train + val loss/accuracy every epoch → early-stop or pick best val ckpt
+  → export checkpoint (state_dict / SavedModel / ONNX) → plug into demo (inference)
   ```
 
-- **In AI Lab:** browser demos show the flow; they do **not** replace GPU training. Train in a notebook / Kaggle / Colab, then embed weights in UI demos (car-nn, sentiment…).
+  Gate before GPU: one CPU batch that prints shapes and a finite loss. Gate before export: val metrics stable for 2–3 epochs and a confusion matrix that isn’t “always majority class.”
 
-- **What “good enough” means:** for teaching demos, stable val accuracy and sane confusion matrix beat chasing 0.1% leaderboard gains.
+- **In AI Lab:** browser demos show the flow; they do **not** replace GPU training. Train in a notebook / Kaggle / Colab, then embed weights in UI demos (car-nn, sentiment…). The demo’s job is latency and UX; the notebook’s job is learning.
+
+- **What “good enough” means:** for teaching demos, stable val accuracy and a sane confusion matrix beat chasing 0.1% leaderboard gains. Ship the **best validation** checkpoint, not the last epoch. Log seed, dataset revision, and learning rate so you can reproduce the export.
+
+- **Hardware reality check:** batch size is limited by VRAM; if you OOM, cut batch size, use gradient accumulation, or switch to a smaller backbone / LoRA. Mixed precision (`torch.cuda.amp` / TF mixed precision) often doubles effective throughput with little accuracy cost on modern GPUs.
 
 ## Worked example (intuition)
 
-Sentiment three-class task: download a Hub dataset → fine-tune MiniLM or a small classifier in a Kaggle GPU notebook for a few epochs → export `state_dict` → load in the sentiment demo for live inference. Users never wait for training; you already paid that cost once.
+Sentiment three-class task (neg / neu / pos):
+
+1. **Data:** `load_dataset(...)` from the Hub (or a Kaggle CSV with a clean label column). Keep an 80/10/10 train/val/test split; do not peek at test while tuning.
+2. **Model:** fine-tune MiniLM or a small `AutoModelForSequenceClassification` head — not a 70B chat model. Freeze the encoder for a few epochs if labels are scarce, then unfreeze lightly.
+3. **Train:** Kaggle/Colab GPU, 3–5 epochs, AdamW, batch 16–32, watch **val** accuracy + F1. Save `best.pt` whenever val improves.
+4. **Export:** `torch.save(model.state_dict(), ...)` (or ONNX if the demo needs it). Copy the file into the sentiment demo assets.
+5. **Infer:** demo loads weights once at startup; each click is a forward pass only. Users never wait for training — you already paid that cost once in the notebook.
+
+If val F1 stalls below ~0.7 while train accuracy soars, stop: you are overfitting or the label set is noisy — fix data before burning more GPU hours.
 
 ## Common pitfalls
 
@@ -44,12 +57,36 @@ Sentiment three-class task: download a Hub dataset → fine-tune MiniLM or a sma
 - **No validation split** — you ship an overfit checkpoint.
 - **Forgetting to export** — notebook session ends, weights gone.
 - **GPU quota waste** — debug shapes on CPU/small data first.
+- **Exporting the last epoch** — prefer best-val; last epoch often overfits.
 
 ## Illustrations
 
 ![GPU training stack: data → GPU epochs → checkpoint](assets/train-gpu/train-gpu-stack.png)
 
 ![Train vs inference split](assets/train-gpu/train-infer-split.png)
+
+![Watch val curves; export the best checkpoint](assets/train-gpu/overfit-curves.png)
+
+## Deeper dive
+
+- **VRAM budget before you click Run:** estimate roughly `params × dtype bytes × (activations + optimizer states)`. Adam stores ~2× param memory on top of weights. If a full fine-tune of BERT-base OOMs at batch 32, try batch 8 + grad accumulation 4, or LoRA adapters that train <1% of parameters.
+- **Checkpoint hygiene:** save `{epoch, val_metric, state_dict, tokenizer_name, seed}`. Pin the Hub dataset revision (`revision=...`) so “same notebook next month” is actually the same data. Prefer `safetensors` when sharing outside a trusted machine.
+- **Train/val leakage is silent:** shuffle *after* splitting by document/user id when reviews or sessions can collide. Stratify multi-class splits so rare labels appear in val. A confusion matrix that looks “too perfect” is a smell.
+- **When to stop:** early stopping on val loss with patience 2–3; or a fixed epoch budget for demos once val plateaus. Learning-rate schedules (warmup + cosine) matter more on full fine-tunes than on tiny heads.
+- **Framework pick in this lab:** PyTorch for anything you will debug by hand; TensorFlow/Keras when you want Embedding Projector or an existing TF notebook. Don’t dual-maintain both for one demo.
+- **Export targets:** browser demos often want a small JSON/`state_dict` or ONNX; Spaces want a Hub repo. Convert once after metrics are good — don’t retrain just to change packaging.
+- **Colab/Kaggle gotchas:** session disconnect wipes `/content` — push checkpoints to Drive/Hub every N epochs. Free GPUs throttle; profile one epoch time × planned epochs before overnight runs.
+
+## Decision guide
+
+| Situation | Prefer | Avoid / why |
+|-----------|--------|-------------|
+| Teaching demo, few labels, need a checkpoint this afternoon | Hub pretrained + 2–5 epoch fine-tune on free GPU | Training a Transformer from scratch — weeks of compute for worse results |
+| Debugging `RuntimeError: shape mismatch` | CPU, batch size 1–2, `print` shapes before `.cuda()` | Burning GPU quota on broken graphs |
+| Val accuracy high, train much higher | Best-val checkpoint + more regularization / less epochs | Shipping last-epoch weights — classic overfit |
+| Need vectors for Projector / softmax lab | TensorFlow path already in [tensorflow-training.md](./tensorflow-training.md) | Rewriting the whole stack in PyTorch “for purity” |
+| Large model, limited VRAM | LoRA / PEFT or smaller backbone | Full fine-tune of huge models on free Colab |
+| Demo must load in browser quickly | Small classifier / MiniLM export | Shipping a multi-GB chat checkpoint into static HTML |
 
 ## Pipeline
 

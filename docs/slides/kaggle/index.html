@@ -31,6 +31,8 @@
 .code-block .k { color: #5ec8d4; }
 .code-block .s { color: #f0a35e; }
 .caption { margin-top: 14px; font-size: 20px; color: var(--muted); max-width: 92%; }
+.table-card.dense table { font-size: 16px; }
+.table-card.dense th, .table-card.dense td { padding: 9px 12px; }
 </style>
 </head>
 <body>
@@ -96,12 +98,12 @@
 <section class="slide">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
-    <div class="topbar reveal"><span>Illustration</span><span class="pill">competition loop</span></div>
-    <h2 class="reveal" style="font-size:36px;margin-bottom:16px;">Illustration</h2>
-    <img class="shot shot-lg reveal" src="../assets/kaggle-loop.png" alt="Kaggle loop" />
-    <p class="lead reveal" style="margin-top:14px;font-size:20px;">Dataset → GPU notebook → submit → leaderboard feedback → iterate.</p>
+    <div class="topbar reveal"><span>Picture</span><span class="pill">competition loop</span></div>
+    <h2 class="reveal" style="font-size:36px;margin-bottom:12px;">Competition loop: train, submit, learn</h2>
+    <img class="shot shot-lg reveal" src="../assets/kaggle-loop.png" alt="Kaggle competition train submit leaderboard loop" />
+    <p class="caption reveal">Dataset → GPU notebook → submit → leaderboard feedback → iterate. Optimize the <em>stated</em> metric (log-loss ≠ accuracy); public LB is only a slice — private can reshuffle ranks.</p>
   </div>
-  <div class="foot"><span>05b</span><span>AI Lab · illustration</span></div>
+  <div class="foot"><span>05</span><span>slides/assets/kaggle-loop.png</span></div>
 </section>
 
 
@@ -123,7 +125,7 @@
     </div>
     <p class="lead reveal" style="margin-top:36px;">Often: Kaggle data + Hugging Face pretrained model → train here → use in a lab demo or Space.</p>
   </div>
-  <div class="foot"><span>05</span><span>notes/kaggle.md</span></div>
+  <div class="foot"><span>06</span><span>notes/kaggle.md</span></div>
 </section>
 
 <section class="slide">
@@ -133,11 +135,11 @@
     <h2 class="reveal">Dog-breed competition, one afternoon</h2>
     <div class="cols-3">
       <div class="card accent reveal"><div class="tag">1</div><h3>Fork a baseline</h3><p>Public EfficientNet notebook — don’t start from an empty cell.</p></div>
-      <div class="card cyan reveal"><div class="tag">2</div><h3>Swap Hub vision model</h3><p>Train ~5 epochs on GPU; submit for a score.</p></div>
-      <div class="card reveal"><div class="tag">3</div><h3>Read the feedback</h3><p>Leaderboard tells you if augmentation or LR was the real lever.</p></div>
+      <div class="card cyan reveal"><div class="tag">2</div><h3>Swap Hub vision model</h3><p>~10k images, 120 breeds, batch 32 on T4/P100 → ~5–20 min/epoch. Train ~5 epochs; submit.</p></div>
+      <div class="card reveal"><div class="tag">3</div><h3>Read the feedback</h3><p>If score is log-loss, calibrated probs can beat higher accuracy. Optimize the stated metric.</p></div>
     </div>
   </div>
-  <div class="foot"><span>06</span><span>not just “I trained something”</span></div>
+  <div class="foot"><span>07</span><span>not just “I trained something”</span></div>
 </section>
 
 <section class="slide">
@@ -157,7 +159,7 @@
       </table>
     </div>
   </div>
-  <div class="foot"><span>07</span><span>weekly GPU hours are capped</span></div>
+  <div class="foot"><span>08</span><span>weekly GPU hours are capped</span></div>
 </section>
 
 <section class="slide">
@@ -167,11 +169,47 @@
     <h2 class="reveal">Kaggle + Hugging Face</h2>
     <div class="cols-2">
       <div class="card accent reveal"><div class="tag">kaggle</div><h3>Data + GPU runtime</h3><p>Competition images, tabular sets, free accelerator hours.</p></div>
-      <div class="card cyan reveal"><div class="tag">hf</div><h3>Pretrained weights</h3><p>Grab BERT / ViT / MiniLM from the Hub; fine-tune in the notebook.</p></div>
+      <div class="card cyan reveal"><div class="tag">hf</div><h3>Pretrained weights</h3><p>Grab BERT / ViT / MiniLM from the Hub; fine-tune in the notebook. Offline comps: bundle weights as a Dataset input.</p></div>
     </div>
-    <p class="lead reveal" style="margin-top:32px;">Export: weights / ONNX / TorchScript → plug into inference demos (car-nn, sentiment…).</p>
+    <p class="lead reveal" style="margin-top:32px;">Export checklist: state_dict / safetensors + tokenizer / label map + preprocess config (image size, mean/std).</p>
   </div>
-  <div class="foot"><span>08</span><span>see huggingface.md · train-gpu.md</span></div>
+  <div class="foot"><span>09</span><span>see huggingface.md · train-gpu.md</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Deeper dive</span><span class="pill">notes</span></div>
+    <h2 class="reveal">Deeper dive</h2>
+    <div class="cols-3">
+      <div class="card accent reveal"><div class="tag">quota</div><h3>Quota economics</h3><p>Prototype on CPU / 1% sample → flip GPU for real <code>fit</code> / <code>Trainer.train()</code> → save ckpt → turn GPU off. Interactive sessions count while the kernel is on.</p></div>
+      <div class="card cyan reveal"><div class="tag">metric</div><h3>Metric alignment</h3><p>Log-loss punishes confident wrongs; accuracy only cares about <code>argmax</code>. Implement a <strong>local</strong> CV that mirrors the host metric before submitting.</p></div>
+      <div class="card reveal"><div class="tag">CV</div><h3>Public NB as curriculum</h3><p>Fork the simplest high scorer, re-run end-to-end, change one lever. Blind stacking of 10 notebooks usually overfits the public LB.</p></div>
+    </div>
+  </div>
+  <div class="foot"><span>10</span><span>Deeper dive</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Decision guide</span><span class="pill">choose</span></div>
+    <h2 class="reveal">Decision guide</h2>
+    <div class="card table-card dense reveal">
+      <table>
+        <thead><tr><th>Situation</th><th>Prefer</th><th>Avoid / why</th></tr></thead>
+        <tbody>
+          <tr><td>Learning + free GPU for a lab model</td><td>Kaggle notebook + HF pretrained weights</td><td>Buying cloud GPU before a working CPU baseline</td></tr>
+          <tr><td>Debugging data / plotting</td><td>CPU accelerator (or tiny sample on GPU)</td><td>Full-data GPU epochs while fixing print typos</td></tr>
+          <tr><td>Scored by log-loss</td><td>Calibrated probs; local CV = log-loss</td><td>Maximizing accuracy only — LB won’t move with you</td></tr>
+          <tr><td>Offline / no-internet code comp</td><td>Bundle model+tokenizer as Dataset input</td><td>Runtime <code>pip</code> / Hub download mid-submit</td></tr>
+          <tr><td>Keep work across sessions</td><td>Versioned Kaggle Dataset of checkpoints</td><td>Relying on ephemeral <code>/kaggle/working</code> alone</td></tr>
+          <tr><td>Climbing the leaderboard</td><td>One change at a time + solid local CV</td><td>Mega-ensembles copied blindly before the metric</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="foot"><span>11</span><span>Decision guide</span></div>
 </section>
 
 <section class="slide">
@@ -180,13 +218,13 @@
     <div class="topbar reveal"><span>Pitfalls</span><span class="pill">watch</span></div>
     <h2 class="reveal">Easy ways to waste the workshop</h2>
     <div class="cols-2">
-      <div class="card accent reveal"><div class="tag">quota</div><h3>Burning GPU on debug</h3><p>Print-debug on CPU first; tiny subsets until the loop runs.</p></div>
+      <div class="card accent reveal"><div class="tag">quota</div><h3>Burning GPU on debug</h3><p>Print-debug on CPU first; tiny subsets until the loop runs. Verify accelerator with <code>nvidia-smi</code>.</p></div>
       <div class="card cyan reveal"><div class="tag">metric</div><h3>Ignoring the metric</h3><p>Optimizing accuracy when the score is log-loss.</p></div>
       <div class="card reveal"><div class="tag">copy</div><h3>Copy-paste without understanding</h3><p>Public notebooks win until the private leaderboard — learn <em>why</em>.</p></div>
-      <div class="card reveal"><div class="tag">export</div><h3>No offline export plan</h3><p>Session dies with the kernel; save artifacts deliberately.</p></div>
+      <div class="card reveal"><div class="tag">export</div><h3>No offline export plan</h3><p>Session dies with the kernel; save artifacts deliberately. Fit scalers on train only.</p></div>
     </div>
   </div>
-  <div class="foot"><span>09</span><span>notes/kaggle.md</span></div>
+  <div class="foot"><span>12</span><span>notes/kaggle.md</span></div>
 </section>
 
 <section class="slide">
@@ -195,12 +233,12 @@
     <div class="topbar reveal"><span>Competitions</span><span class="pill">practice</span></div>
     <h2 class="reveal">How to use competitions as a curriculum</h2>
     <div class="cols-3">
-      <div class="card accent reveal"><div class="tag">read</div><h3>Problem + metric</h3><p>Understand the score before you train.</p></div>
+      <div class="card accent reveal"><div class="tag">read</div><h3>Problem + metric</h3><p>Understand the score before you train. Prefer stratified k-fold / GroupKFold when rows leak.</p></div>
       <div class="card cyan reveal"><div class="tag">fork</div><h3>Strong public NB</h3><p>Reproduce a baseline — then change one lever.</p></div>
-      <div class="card reveal"><div class="tag">submit</div><h3>Feedback loop</h3><p>Leaderboard is the teacher; iterate deliberately.</p></div>
+      <div class="card reveal"><div class="tag">submit</div><h3>Feedback loop</h3><p>Leaderboard is the teacher; iterate deliberately. Public ≠ private.</p></div>
     </div>
   </div>
-  <div class="foot"><span>10</span><span>Kaggle Learn for structured courses</span></div>
+  <div class="foot"><span>13</span><span>Kaggle Learn for structured courses</span></div>
 </section>
 
 <section class="slide">
@@ -217,7 +255,7 @@
     </div>
     <p class="lead reveal" style="margin-top:36px;">Same role as “data + GPU” alongside Hugging Face; stack overview in train-gpu.md.</p>
   </div>
-  <div class="foot"><span>11</span><span>notes/kaggle.md</span></div>
+  <div class="foot"><span>14</span><span>notes/kaggle.md</span></div>
 </section>
 
 <section class="slide">

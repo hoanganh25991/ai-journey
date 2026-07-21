@@ -197,6 +197,8 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
 .code-block .k { color: #5ec8d4; }
 .code-block .s { color: #f0a35e; }
 .caption { margin-top: 14px; font-size: 20px; color: var(--muted); max-width: 92%; }
+.table-card.dense table { font-size: 16px; }
+.table-card.dense th, .table-card.dense td { padding: 9px 12px; }
 </style>
 </head>
 <body>
@@ -338,16 +340,63 @@ model.fit(x_train, y_train, epochs=EPOCHS,
 <section class="slide">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
+    <div class="topbar reveal"><span>Picture</span><span class="pill">overfit</span></div>
+    <h2 class="reveal" style="font-size:36px;margin-bottom:12px;">Val rises while train falls — stop there</h2>
+    <img class="shot shot-lg reveal" src="../assets/overfit-curves.png" alt="Overfitting curves train vs validation loss" />
+    <p class="caption reveal">Numeric sketch: epoch 4 best (<code>val_loss≈0.41</code>); epoch 7 overfit (<code>0.55</code>). With <code>patience=3</code> and <code>restore_best_weights=True</code>, Keras rolls back to epoch 4.</p>
+  </div>
+  <div class="foot"><span>10</span><span>slides/assets/overfit-curves.png</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Deeper dive</span><span class="pill">notes</span></div>
+    <h2 class="reveal">Deeper dive</h2>
+    <div class="cols-3">
+      <div class="card accent reveal"><div class="tag">logits</div><h3>from_logits vs softmax</h3><p>Prefer linear last layer + <code>SparseCategoricalCrossentropy(from_logits=True)</code>. Softmax-in-model is handy for <code>predict</code>; logits are safer to train.</p></div>
+      <div class="card cyan reveal"><div class="tag">data</div><h3>tf.data beats giant NumPy</h3><p><code>shuffle → batch → prefetch(AUTOTUNE)</code> keeps the GPU fed. Full <code>x_train</code> in RAM or no prefetch → idle GPU.</p></div>
+      <div class="card reveal"><div class="tag">tape</div><h3>GradientTape when fit is rigid</h3><p>Custom loss / multi-optimizer: same four steps as PyTorch — tape → grads → <code>apply_gradients</code>.</p></div>
+    </div>
+  </div>
+  <div class="foot"><span>11</span><span>Deeper dive</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Decision guide</span><span class="pill">choose</span></div>
+    <h2 class="reveal">Decision guide</h2>
+    <div class="card table-card dense reveal">
+      <table>
+        <thead><tr><th>Situation</th><th>Prefer</th><th>Avoid / why</th></tr></thead>
+        <tbody>
+          <tr><td>Quick multi-class baseline</td><td><code>Sequential</code> + <code>fit</code> + EarlyStopping</td><td>Hand-rolled <code>GradientTape</code> before you need it</td></tr>
+          <tr><td>Integer labels <code>0..C-1</code></td><td><code>sparse_categorical_crossentropy</code></td><td><code>categorical_*</code> without one-hot — shape/loss bugs</td></tr>
+          <tr><td>One-hot labels prepared</td><td><code>categorical_crossentropy</code></td><td>Sparse loss — wrong assumption on rank</td></tr>
+          <tr><td>Val loss rising after epoch 5</td><td>EarlyStopping + restore best + Checkpoint</td><td>Fixed 50 epochs “just in case”</td></tr>
+          <tr><td>Non-standard loss / multi-opt</td><td><code>GradientTape</code> (or PyTorch)</td><td>Stretching <code>fit</code> with opaque callback hacks</td></tr>
+          <tr><td>Embedding debugging / teaching</td><td>Projector colored by class</td><td>Unlabeled gray clouds</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="foot"><span>12</span><span>Decision guide</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
     <div class="topbar reveal"><span>Pitfalls</span><span class="pill">watch</span></div>
     <h2 class="reveal">Easy ways to go wrong</h2>
     <div class="cols-2">
-      <div class="card accent reveal"><div class="tag">labels</div><h3>Wrong CE variant</h3><p>One-hot vs integer — mixing them fails silently or loudly.</p></div>
+      <div class="card accent reveal"><div class="tag">labels</div><h3>Wrong CE variant</h3><p>One-hot vs integer — mixing them fails silently or loudly. Check <code>y.ndim</code> and <code>y.max()</code>.</p></div>
       <div class="card cyan reveal"><div class="tag">val</div><h3>No validation_data</h3><p>You only see train accuracy and miss overfitting.</p></div>
       <div class="card reveal"><div class="tag">last</div><h3>No EarlyStopping</h3><p>Last epoch may be worse than an earlier one.</p></div>
       <div class="card reveal"><div class="tag">viz</div><h3>Projector without labels</h3><p>Color points by class — otherwise the cloud is hard to read.</p></div>
     </div>
   </div>
-  <div class="foot"><span>10</span><span>notes/tensorflow-training.md</span></div>
+  <div class="foot"><span>13</span><span>notes/tensorflow-training.md</span></div>
 </section>
 
 <section class="slide">
@@ -362,9 +411,9 @@ model.fit(x_train, y_train, epochs=EPOCHS,
       <span class="step">fit</span><span class="arr">→</span>
       <span class="step">best.keras</span>
     </div>
-    <p class="lead reveal" style="margin-top:36px;">Same target as pytorch-training — serving <span style="font-family:var(--font-mono);color:var(--cyan)">classification.md</span>.</p>
+    <p class="lead reveal" style="margin-top:36px;">Same target as pytorch-training — serving <span style="font-family:var(--font-mono);color:var(--cyan)">classification.md</span>. Monitor the metric you care about (on imbalance, accuracy can plateau while CE still moves).</p>
   </div>
-  <div class="foot"><span>11</span><span>TensorBoard for curves · Projector for vectors</span></div>
+  <div class="foot"><span>14</span><span>TensorBoard for curves · Projector for vectors</span></div>
 </section>
 
 <section class="slide">

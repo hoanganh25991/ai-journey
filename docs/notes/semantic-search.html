@@ -349,31 +349,41 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 <table><thead>
 <tr><th>Index</th><th>Mechanism</th><th>Strong</th><th>Weak</th></tr>
 </thead><tbody>
-<tr><td><strong>Inverted index</strong> (Elastic)</td><td>keyword → documents</td><td>fast, cheap, precise on exact terms</td><td>no synonym understanding</td></tr>
-<tr><td><strong>Semantic index</strong> (embedding)</td><td>vectors in <a href="vector-database.html">vector database</a></td><td>captures meaning, varied phrasing</td><td>heavier, needs a model</td></tr>
+<tr><td><strong>Inverted index</strong> (Elastic)</td><td>keyword → documents</td><td>fast, cheap, precise on exact terms / IDs</td><td>no synonym understanding</td></tr>
+<tr><td><strong>Semantic index</strong> (embedding)</td><td>vectors in <a href="vector-database.html">vector database</a></td><td>captures meaning, varied phrasing</td><td>heavier embed + ANN cost</td></tr>
 </tbody></table>
 <ul>
 <li><strong>Three search strategies:</strong></li>
-<li><em>Hybrid:</em> inverted index <em>filters</em> candidates by keyword, semantic index <em>reranks</em> by meaning. Cost-efficient; fails when keywords miss entirely.</li>
-<li><em>Tiered:</em> classify questions as easy/hard first → easy goes keyword, hard goes semantic. Balances speed and precision (same idea as <a href="sentiment-routing.html">complexity router</a>).</li>
-<li><em>Fallback:</em> semantic first for max accuracy; if results are poor, <em>fall back</em> to keyword. Most accurate, most expensive.</li>
-<li><strong>Dataset and evaluation:</strong> MS MARCO — real user questions plus relevant passages. Metrics: <em>Precision@k</em>, <em>MRR@10</em>. A query classifier labels simple vs complex questions for the Tiered strategy.</li>
+<li><em>Hybrid:</em> inverted index <em>filters</em> (or retrieves) candidates by keyword, semantic index <em>reranks</em> by cosine/dot. Cost-efficient when keywords hit; fails when BM25 returns empty or irrelevant candidates — semantic never sees the right docs.</li>
+<li><em>Tiered:</em> classify questions as easy/hard first → easy goes keyword-only, hard goes semantic (or hybrid). Balances p50 latency and precision (same idea as <a href="sentiment-routing.html">complexity router</a>). Classifier errors are the main failure mode.</li>
+<li><em>Fallback:</em> try semantic (or hybrid) first for max accuracy; if results look poor (low scores, empty, or low confidence), <em>fall back</em> to keyword. Most accurate when tuned; most expensive on the happy path if semantic always runs first.</li>
+<li><strong>Latency shape (typical intuition):</strong></li>
+<li>Keyword-only: ~5–30 ms (Elastic cache-warm).</li>
+<li>Hybrid: keyword + embed query + rerank top-N → often ~20–80 ms.</li>
+<li>Semantic-first / Fallback happy path: embed + ANN (+ optional BM25 merge) → often ~30–120 ms, plus model load cold starts.</li>
+<li>Tiered: p50 near keyword; p95 near semantic — <em>if</em> the easy/hard split is calibrated.</li>
+<li><strong>Dataset and evaluation:</strong> MS MARCO — real user questions plus relevant passages. Metrics: <em>Precision@k</em>, <em>MRR@10</em>, <em>Recall@k</em>. A query classifier labels simple vs complex questions for Tiered. Always keep a private holdout — leaderboard overfitting is real.</li>
 <li><strong>Storage:</strong> MongoDB for raw documents; Elasticsearch for indexed data (inverted + kNN) for fast search.</li>
+<li><strong>Score fusion:</strong> when both lists return hits, <strong>RRF</strong> (reciprocal rank fusion) or weighted sum of normalized BM25 + cosine beats naive “semantic only” on exact entities (order IDs, error codes).</li>
 <li><strong>Why this teaches RAG:</strong> retrieval quality dominates answer quality — the same lesson as <a href="rag.html">rag.md</a>, measured with ranking metrics instead of vibes.</li>
 </ul>
 <h2>Worked example (intuition)</h2>
 <p>Question: <code>"How do I jump-start a car?"</code></p>
 <ul>
-<li>Keyword alone may miss docs that only say <code>"boost a vehicle battery"</code>.</li>
-<li>Semantic alone may retrieve vaguely related automotive posts.</li>
-<li>Hybrid: keyword keeps battery/car candidates, semantic ranks the jump-start guide to the top.</li>
+<li><strong>Keyword alone:</strong> may miss docs that only say <code>"boost a vehicle battery"</code> (no shared tokens with “jump-start”). MRR suffers on paraphrase-heavy queries.</li>
+<li><strong>Semantic alone:</strong> retrieves automotive battery posts, but may also surface “jump” as in <em>jump training</em> or metaphorical “jump-start your career” if the corpus is messy — high recall, noisier precision.</li>
+<li><strong>Hybrid:</strong> BM25 keeps candidates with <code>battery</code> / <code>car</code> / <code>vehicle</code>; cosine ranks the true jump-start guide above generic car maintenance. End-to-end: keyword candidate set size ~50–200, embed once, rerank → top-10 for the UI or RAG.</li>
+<li><strong>Tiered path:</strong> classifier marks this as <em>hard</em> (how-to, paraphrase risk) → semantic or hybrid path. A different query <code>"error code E42"</code> might be <em>easy</em> → keyword-only, sub-20 ms.</li>
+<li><strong>Fallback path:</strong> semantic returns top score 0.22 (below threshold) → fall back to BM25 so the user still sees exact-token matches instead of an empty page.</li>
 </ul>
 <h2>Common pitfalls</h2>
 <ul>
-<li><strong>Hybrid with empty keyword hits</strong> — need a fallback path when BM25 returns nothing.</li>
-<li><strong>Tiered with a bad easy/hard classifier</strong> — hard queries wrongly sent to keyword.</li>
-<li><strong>Optimizing only public leaderboards</strong> — overfit MS MARCO quirks; validate on your own corpus.</li>
-<li><strong>Ignoring latency budgets</strong> — semantic-on-everything can blow SLAs.</li>
+<li><strong>Hybrid with empty keyword hits</strong> — need a fallback path when BM25 returns nothing (rare tokens, typos, pure paraphrase).</li>
+<li><strong>Tiered with a bad easy/hard classifier</strong> — hard queries wrongly sent to keyword → systematic paraphrase failures; easy queries sent to semantic → wasted latency/cost.</li>
+<li><strong>Optimizing only public leaderboards</strong> — overfit MS MARCO quirks; validate on your own corpus and languages.</li>
+<li><strong>Ignoring latency budgets</strong> — semantic-on-everything can blow SLAs; watch p95/p99, not only mean.</li>
+<li><strong>Uncalibrated “poor result” thresholds</strong> in Fallback — thrashing between paths or never falling back.</li>
+<li><strong>Double-counting in fusion</strong> — merging lists without deduping doc IDs inflates scores for duplicates.</li>
 </ul>
 <h2>Illustrations</h2>
 <figure><img src="assets/protonx/embed-then-query.jpg" alt="Embed the question, then query — the retrieve step of semantic search" loading="lazy" /><figcaption>Embed the question, then query — the retrieve step of semantic search</figcaption></figure>
@@ -381,6 +391,27 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 <figure><img src="assets/semantic-search/semantic-hybrid.svg" alt="Hybrid: inverted index + semantic index" loading="lazy" /><figcaption>Hybrid: inverted index + semantic index</figcaption></figure>
 <figure><img src="assets/semantic-search/search-twoway.svg" alt="Two-way search flow" loading="lazy" /><figcaption>Two-way search flow</figcaption></figure>
 <figure><img src="assets/semantic-search/semantic-strategies.png" alt="Hybrid vs Tiered vs Fallback strategies" loading="lazy" /><figcaption>Hybrid vs Tiered vs Fallback strategies</figcaption></figure>
+<h2>Deeper dive</h2>
+<ul>
+<li><strong>Hybrid failure case:</strong> query <code>"automobile won't crank in winter"</code> with a corpus that only says <code>"car engine fails to start in cold"</code>. If the keyword filter requires <code>"automobile"</code>, the candidate set is empty and reranking cannot recover — fix with synonym expansion, a looser first stage, or Fallback-to-semantic-without-filter.</li>
+<li><strong>Tiered economics:</strong> if 70% of traffic is “easy” and keyword is 5× cheaper than semantic, Tiered can cut embed/ANN cost ~70% while holding MRR if the classifier’s false-negative rate on hard queries stays low (measure that rate explicitly).</li>
+<li><strong>Fallback latency:</strong> worst case ≈ semantic_time + keyword_time (serial). Parallelize only if you always need both; otherwise you pay semantic on every request <em>and</em> sometimes BM25 — set a score threshold so Fallback is rare.</li>
+<li><strong>MS MARCO metric gotcha:</strong> MRR@10 rewards getting a relevant hit near rank 1; a system can look strong on MRR while Recall@50 is mediocre — bad for RAG that needs several supporting chunks.</li>
+<li><strong>Elastic kNN + BM25:</strong> <code>bool</code> query with <code>should</code> clauses or RRF plugin; ensure the same <code>_id</code> space so fusion isn’t comparing apples to oranges across indexes.</li>
+<li><strong>Cold-start / failure modes:</strong> embedding model not loaded (multi-second first query), ANN index relocating shards, Mongo fetch slower than search — users blame “search quality” when the real bug is timeout → empty UI.</li>
+<li><strong>Eval loop:</strong> fix a 200–500 query gold set from <em>your</em> logs; track Precision@5, MRR@10, p95 latency, and % path taken (keyword / hybrid / semantic / fallback) per release.</li>
+</ul>
+<h2>Decision guide</h2>
+<table><thead>
+<tr><th>Situation</th><th>Prefer</th><th>Avoid / why</th></tr>
+</thead><tbody>
+<tr><td>Tight latency SLA, many exact-ID queries</td><td>Tiered (easy → BM25) or keyword-first Hybrid</td><td>Semantic-first Fallback on 100% traffic</td></tr>
+<tr><td>Paraphrase-heavy how-to / natural language</td><td>Hybrid or semantic-first Fallback</td><td>Keyword-only — synonym blind spots</td></tr>
+<tr><td>BM25 often returns 0 hits (typos, other language)</td><td>Semantic-first or Hybrid with loose/no keyword gate</td><td>Strict keyword filter before ANN</td></tr>
+<tr><td>Need best offline quality, cost secondary</td><td>Fallback or Hybrid + cross-encoder rerank</td><td>Tiered with an untested classifier</td></tr>
+<tr><td>Cost-sensitive high QPS</td><td>Tiered with measured easy/hard mix</td><td>Embedding every query at peak QPS</td></tr>
+<tr><td>RAG needs diverse supporting passages</td><td>Optimize Recall@k + deduped fusion</td><td>MRR-only tuning that returns one near-duplicate</td></tr>
+</tbody></table>
 <h2>Pipeline</h2>
 <pre><code>
 question → (classify easy/hard) → { keyword: inverted index | meaning: semantic index }
