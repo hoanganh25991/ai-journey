@@ -32,22 +32,42 @@ a { color: var(--cyan); }
 /* floating Download / Share (injected by chrome.js) */
 .lab-chrome {
   position: fixed; right: 18px; top: 18px; z-index: 1000;
-  display: inline-flex; gap: 8px;
+  display: inline-flex; align-items: center; gap: 8px;
 }
-.lab-chrome button, .lab-chrome a {
-  display: inline-flex; align-items: center; gap: 6px;
-  font-family: var(--mono); font-size: 12px; letter-spacing: 0.04em;
-  color: var(--ink); text-decoration: none; cursor: pointer;
-  background: rgba(255, 255, 255, 0.94); border: 1px solid var(--line);
-  box-shadow: var(--shadow); padding: 8px 12px; border-radius: 999px;
+.lab-chrome button,
+.lab-chrome a.lab-chrome-btn {
+  /* full reset so page-level a/button rules cannot inflate size */
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin: 0;
+  min-height: 0;
+  height: auto;
+  line-height: 1;
+  font: 500 12px/1 var(--mono);
+  letter-spacing: 0.04em;
+  color: var(--ink);
+  text-decoration: none;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  background: rgba(255, 255, 255, 0.94);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+  padding: 8px 12px;
+  border-radius: 999px;
   transition: border-color 0.15s, color 0.15s;
 }
-.lab-chrome button:hover, .lab-chrome a:hover {
-  color: var(--cyan); border-color: var(--cyan);
+.lab-chrome button:hover,
+.lab-chrome a.lab-chrome-btn:hover {
+  color: var(--cyan);
+  border-color: var(--cyan);
 }
 .lab-toast {
   position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
-  background: var(--ink); color: #fff; font: 500 12px var(--mono);
+  background: var(--ink); color: #fff; font: 500 12px/1 var(--mono);
   padding: 10px 16px; border-radius: 999px; z-index: 1100;
   opacity: 0; pointer-events: none; transition: opacity 0.2s;
 }

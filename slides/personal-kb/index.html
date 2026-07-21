@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Personal KB · slides</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Sora:wght@400;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="../_shared/deck.css" />
+<style>
+.shot {
+  width: 100%; height: 420px; object-fit: contain; border-radius: 14px;
+  border: 1px solid var(--line); background: #e6edf5;
+}
+.shot-lg { height: 560px; }
+</style>
+</head>
+<body>
+<div class="deck-viewport">
+<main class="deck-stage" id="deckStage">
+
+<section class="slide active">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Concept · personal-kb</span><span class="pill">sibling repo</span></div>
+    <h1 class="reveal" style="margin-top:100px;">Personal KB · <em>videos · docs · GitHub</em></h1>
+    <p class="lead reveal" style="margin-top:28px;">Repo riêng <span style="font-family:var(--font-mono);color:var(--cyan)">~/work-station/personal-kb</span> — FTS search + Graph RAG keywords. Hub AI Lab chỉ search notes.</p>
+    <div class="flow-row reveal">
+      <span class="step">notes (ai-lab)</span><span class="arr">≠</span>
+      <span class="step">videos / docs / stars</span><span class="arr">→</span>
+      <span class="step">personal-kb</span>
+    </div>
+  </div>
+  <div class="foot"><span>01</span><span>notes/personal-kb.md</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Why</span><span class="pill">split</span></div>
+    <h2 class="reveal">Hai lớp search</h2>
+    <div class="cols-2">
+      <div class="card cyan reveal"><div class="tag">ai-lab hub</div><h3>Notes only</h3><p><code>docs/index.html</code> — search notes · mở document · slides/demo khi có.</p></div>
+      <div class="card accent reveal"><div class="tag">personal-kb</div><h3>Memory machine</h3><p>YouTube · docs · GitHub stars · Graph RAG — chạy UI riêng trên :8765.</p></div>
+    </div>
+  </div>
+  <div class="foot"><span>02</span><span>không gộp vào một mega-deck</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Picture</span><span class="pill">graph</span></div>
+    <h2 class="reveal" style="font-size:36px;margin-bottom:16px;">Hình minh họa</h2>
+    <img class="shot shot-lg reveal" src="../assets/kb-graph-hero.png" alt="Knowledge graph visualization" />
+  </div>
+  <div class="foot"><span>03</span><span>slides/assets/kb-graph-hero.png</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Taxonomy</span><span class="pill">topic graph</span></div>
+    <h2 class="reveal">Keyword liên kết <em>nội dung</em></h2>
+    <div class="cols-2">
+      <img class="shot reveal" src="../assets/taxonomy-flow.svg" alt="Taxonomy flow" style="height:480px;" />
+      <div>
+        <div class="card reveal" style="margin-bottom:16px;"><h3>Ví dụ chuỗi</h3><p style="margin-top:8px;">database → sharding → partition → performance</p></div>
+        <div class="card cyan reveal"><h3>Nguồn nuôi graph</h3><ul><li>Video (title, tags, transcript)</li><li>Documents / notes</li><li>Starred GitHub repos</li></ul></div>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>04</span><span>bidirectional topic links</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Search</span><span class="pill">two-way</span></div>
+    <h2 class="reveal">Local first · hỏi lại · rồi <em>Tavily</em></h2>
+    <img class="shot shot-lg reveal" src="../assets/search-twoway.svg" alt="Two-way search flow" />
+  </div>
+  <div class="foot"><span>05</span><span>miss → follow-up → external</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Run</span><span class="pill">sibling path</span></div>
+    <h2 class="reveal">Chạy personal-kb</h2>
+    <div class="cols-2">
+      <div class="card reveal"><div class="tag">index</div><h3>Build</h3><p><code>build-kb-index.py</code><br/><code>build-keyword-graph.py</code></p></div>
+      <div class="card cyan reveal"><div class="tag">ui</div><h3>Serve</h3><p><code>ui/server.py</code> → <strong>:8765</strong><br/>search + graph</p></div>
+    </div>
+    <p class="lead reveal" style="margin-top:36px;">Chi tiết: note Personal KB · README trong repo sibling.</p>
+  </div>
+  <div class="foot"><span>06</span><span>~/work-station/personal-kb</span></div>
+</section>
+
+</main>
+</div>
+<nav class="deck-controls">
+  <button type="button" id="prevBtn">←</button>
+  <span id="pageLabel">1 / 6</span>
+  <button type="button" id="nextBtn">→</button>
+</nav>
+<script src="../_shared/deck.js"></script>
+</body>
+</html>

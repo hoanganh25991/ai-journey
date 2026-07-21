@@ -163,7 +163,7 @@
       "summary": "Repo riêng ~/work-station/personal-kb: FTS search + Graph RAG keywords. Sẽ gắn submodule.",
       "topics": ["knowledge-base", "youtube", "github-stars", "graph-rag", "taxonomy"],
       "group": "concept",
-      "slides": "slides/ai-lab-notes.html",
+      "slides": "slides/personal-kb/index.html",
       "demo": null,
       "extra_links": [
         { "label": "personal-kb README", "href": "../personal-kb/README.md" },

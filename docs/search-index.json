@@ -1,5 +1,5 @@
 {
-  "built_at": "2026-07-21T05:03:44Z",
+  "built_at": "2026-07-21T07:15:22Z",
   "synonyms": [
     [
       "tokenize",
@@ -413,7 +413,7 @@
       ],
       "group": "concept",
       "page": "notes/personal-kb.html",
-      "slides": "slides/ai-lab-notes.html",
+      "slides": "slides/personal-kb/index.html",
       "demo": null,
       "extra_links": [
         {

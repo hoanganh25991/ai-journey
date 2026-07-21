@@ -50,11 +50,20 @@
     const bar = document.createElement("div");
     bar.className = "lab-chrome";
     if (lab.download) {
-      const a = document.createElement("a");
-      a.href = lab.download;
-      if (lab.downloadName) a.download = lab.downloadName;
-      a.textContent = "Download";
-      bar.appendChild(a);
+      const dl = document.createElement("button");
+      dl.type = "button";
+      dl.textContent = "Download";
+      dl.setAttribute("aria-label", "Download");
+      dl.addEventListener("click", () => {
+        const a = document.createElement("a");
+        a.href = lab.download;
+        if (lab.downloadName) a.download = lab.downloadName;
+        a.rel = "noopener";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+      });
+      bar.appendChild(dl);
     }
     const shareBtn = document.createElement("button");
     shareBtn.type = "button";

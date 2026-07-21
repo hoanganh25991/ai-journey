@@ -914,45 +914,6 @@ def enhance_demos_and_slides() -> None:
             standalone = _make_standalone_slide(slides_html, slide_shared)
             (slide_dir / "download.html").write_text(standalone, encoding="utf-8")
 
-    # --- top-level slides/*.html (e.g. ai-lab-notes.html) ---
-    if not slides_root.is_dir():
-        return
-    for html_path in sorted(slides_root.glob("*.html")):
-        if html_path.name.endswith("-download.html"):
-            continue
-        text = html_path.read_text(encoding="utf-8")
-        if "window.LAB" in text:
-            continue
-        dl_name = html_path.stem + "-download.html"
-        src_clean = ROOT / "slides" / html_path.name
-        if src_clean.is_file():
-            shutil.copy2(src_clean, slides_root / dl_name)
-        else:
-            (slides_root / dl_name).write_text(text, encoding="utf-8")
-
-        lab = {
-            "kind": "slides",
-            "title": html_path.stem,
-            "download": dl_name,
-            "downloadName": html_path.name,
-        }
-        css = """
-<style>
-.lab-chrome{position:fixed;right:22px;top:22px;z-index:1000;display:inline-flex;gap:8px}
-.lab-chrome button,.lab-chrome a{display:inline-flex;align-items:center;gap:6px;font-family:"IBM Plex Mono",monospace;font-size:13px;letter-spacing:.06em;color:#16202e;text-decoration:none;cursor:pointer;background:rgba(255,255,255,.92);border:1px solid rgba(20,32,46,.14);box-shadow:0 4px 16px rgba(20,32,46,.1);padding:9px 15px;border-radius:999px}
-.lab-chrome button:hover,.lab-chrome a:hover{color:#0f8a9b;border-color:#0f8a9b}
-.lab-toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:#16202e;color:#fff;font:500 12px "IBM Plex Mono",monospace;padding:10px 16px;border-radius:999px;z-index:1100;opacity:0;pointer-events:none;transition:opacity .2s}
-.lab-toast.on{opacity:1}
-</style>
-"""
-        if ".lab-chrome" not in text:
-            text = text.replace("</head>", css + "</head>", 1)
-        snip = (
-            f"<script>window.LAB={json.dumps(lab, ensure_ascii=False)};</script>\n"
-            '<script src="../demos/_shared/chrome.js"></script>\n'
-        )
-        html_path.write_text(_inject_before_body_end(text, snip), encoding="utf-8")
-
 
 # --------------------------------------------------------------------------- #
 # Main                                                                         #

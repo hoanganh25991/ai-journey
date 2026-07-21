@@ -136,20 +136,23 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
 /* Download / Share — top-right (injected by deck.js) */
 .lab-chrome {
   position: fixed; right: 22px; top: 22px; z-index: 1000;
-  display: inline-flex; gap: 8px;
+  display: inline-flex; align-items: center; gap: 8px;
 }
-.lab-chrome button, .lab-chrome a {
-  display: inline-flex; align-items: center; gap: 6px;
-  font-family: var(--font-mono); font-size: 13px; letter-spacing: 0.06em;
+.lab-chrome button {
+  box-sizing: border-box;
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  margin: 0; min-height: 0; height: auto; line-height: 1;
+  font: 500 13px/1 var(--font-mono); letter-spacing: 0.06em;
   color: var(--ink); text-decoration: none; cursor: pointer;
+  appearance: none; -webkit-appearance: none;
   background: rgba(255,255,255,0.92); border: 1px solid var(--line);
   box-shadow: 0 4px 16px rgba(20,32,46,.1);
   padding: 9px 15px; border-radius: 999px;
 }
-.lab-chrome button:hover, .lab-chrome a:hover { color: var(--cyan); border-color: var(--cyan); }
+.lab-chrome button:hover { color: var(--cyan); border-color: var(--cyan); }
 .lab-toast {
   position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%);
-  background: var(--ink); color: #fff; font: 500 12px var(--font-mono);
+  background: var(--ink); color: #fff; font: 500 12px/1 var(--font-mono);
   padding: 10px 16px; border-radius: 999px; z-index: 1100;
   opacity: 0; pointer-events: none; transition: opacity .2s;
 }
@@ -313,11 +316,20 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
     const bar = document.createElement("div");
     bar.className = "lab-chrome";
     if (lab.download) {
-      const a = document.createElement("a");
-      a.href = lab.download;
-      if (lab.downloadName) a.download = lab.downloadName;
-      a.textContent = "Download";
-      bar.appendChild(a);
+      const dl = document.createElement("button");
+      dl.type = "button";
+      dl.textContent = "Download";
+      dl.setAttribute("aria-label", "Download");
+      dl.addEventListener("click", () => {
+        const a = document.createElement("a");
+        a.href = lab.download;
+        if (lab.downloadName) a.download = lab.downloadName;
+        a.rel = "noopener";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+      });
+      bar.appendChild(dl);
     }
     const shareBtn = document.createElement("button");
     shareBtn.type = "button";

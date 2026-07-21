@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Demo · RAG</title>
+<title>Personal KB · slides</title>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Sora:wght@400;600;700&display=swap" rel="stylesheet" />
 <style>
 /* Shared Neural Ledger deck — fixed 1920×1080 */
@@ -177,7 +177,7 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
   width: 100%; height: 420px; object-fit: contain; border-radius: 14px;
   border: 1px solid var(--line); background: #e6edf5;
 }
-.shot-lg { height: 520px; }
+.shot-lg { height: 560px; }
 </style>
 </head>
 <body>
@@ -187,81 +187,89 @@ h2 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 
 <section class="slide active">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
-    <div class="topbar reveal"><span>Concept · rag</span><span class="pill">slides + app</span></div>
-    <h1 class="reveal" style="margin-top:100px;">RAG · <em>retrieve then generate</em></h1>
-    <p class="lead reveal" style="margin-top:28px;">Embed query → top-k chunks → LLM answer with citations.</p>
+    <div class="topbar reveal"><span>Concept · personal-kb</span><span class="pill">sibling repo</span></div>
+    <h1 class="reveal" style="margin-top:100px;">Personal KB · <em>videos · docs · GitHub</em></h1>
+    <p class="lead reveal" style="margin-top:28px;">Repo riêng <span style="font-family:var(--font-mono);color:var(--cyan)">~/work-station/personal-kb</span> — FTS search + Graph RAG keywords. Hub AI Lab chỉ search notes.</p>
     <div class="flow-row reveal">
-      <span class="step">notes/rag.md</span><span class="arr">→</span>
-      <span class="step">slides</span><span class="arr">→</span>
-      <span class="step">working app</span>
+      <span class="step">notes (ai-lab)</span><span class="arr">≠</span>
+      <span class="step">videos / docs / stars</span><span class="arr">→</span>
+      <span class="step">personal-kb</span>
     </div>
   </div>
-  <div class="foot"><span>01</span><span>protonx-nlp3 + AI Lab</span></div>
+  <div class="foot"><span>01</span><span>notes/personal-kb.md</span></div>
 </section>
 
 <section class="slide">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
-    <div class="topbar reveal"><span>RAG</span><span class="pill">idea</span></div>
-    <h2 class="reveal">Ý chính</h2>
+    <div class="topbar reveal"><span>Why</span><span class="pill">split</span></div>
+    <h2 class="reveal">Hai lớp search</h2>
     <div class="cols-2">
-      <div class="card reveal"><div class="tag">remember</div><h3>RAG</h3><p>Embed query → top-k chunks → LLM answer with citations.</p></div>
-      <div class="card cyan reveal"><div class="tag">topics</div><h3>Keywords</h3><p>RAG, vector-db, retrieve</p>
-        <p style="margin-top:12px">Nguồn học: <span style="color:var(--amber);font-family:var(--font-mono);font-size:16px">~/work-station/ai-learning-protonx-nlp3</span></p>
+      <div class="card cyan reveal"><div class="tag">ai-lab hub</div><h3>Notes only</h3><p><code>docs/index.html</code> — search notes · mở document · slides/demo khi có.</p></div>
+      <div class="card accent reveal"><div class="tag">personal-kb</div><h3>Memory machine</h3><p>YouTube · docs · GitHub stars · Graph RAG — chạy UI riêng trên :8765.</p></div>
+    </div>
+  </div>
+  <div class="foot"><span>02</span><span>không gộp vào một mega-deck</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Picture</span><span class="pill">graph</span></div>
+    <h2 class="reveal" style="font-size:36px;margin-bottom:16px;">Hình minh họa</h2>
+    <img class="shot shot-lg reveal" src="../assets/kb-graph-hero.png" alt="Knowledge graph visualization" />
+  </div>
+  <div class="foot"><span>03</span><span>slides/assets/kb-graph-hero.png</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Taxonomy</span><span class="pill">topic graph</span></div>
+    <h2 class="reveal">Keyword liên kết <em>nội dung</em></h2>
+    <div class="cols-2">
+      <img class="shot reveal" src="../assets/taxonomy-flow.svg" alt="Taxonomy flow" style="height:480px;" />
+      <div>
+        <div class="card reveal" style="margin-bottom:16px;"><h3>Ví dụ chuỗi</h3><p style="margin-top:8px;">database → sharding → partition → performance</p></div>
+        <div class="card cyan reveal"><h3>Nguồn nuôi graph</h3><ul><li>Video (title, tags, transcript)</li><li>Documents / notes</li><li>Starred GitHub repos</li></ul></div>
       </div>
     </div>
   </div>
-  <div class="foot"><span>02</span><span>notes/rag.md</span></div>
+  <div class="foot"><span>04</span><span>bidirectional topic links</span></div>
 </section>
 
 <section class="slide">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
-    <div class="topbar reveal"><span>From protonx</span><span class="pill">graph-rag.jpg</span></div>
-    <h2 class="reveal" style="font-size:36px;margin-bottom:16px;">Hình minh họa</h2>
-    <img class="shot shot-lg reveal" src="../../notes/assets/protonx/graph-rag.jpg" alt="graph-rag.jpg" />
+    <div class="topbar reveal"><span>Search</span><span class="pill">two-way</span></div>
+    <h2 class="reveal">Local first · hỏi lại · rồi <em>Tavily</em></h2>
+    <img class="shot shot-lg reveal" src="../assets/search-twoway.svg" alt="Two-way search flow" />
   </div>
-  <div class="foot"><span>03</span><span>ai-learning-protonx-nlp3</span></div>
+  <div class="foot"><span>05</span><span>miss → follow-up → external</span></div>
 </section>
 
 <section class="slide">
   <div class="slide-bg"></div><div class="grid-overlay"></div>
   <div class="pad">
-    <div class="topbar reveal"><span>From protonx</span><span class="pill">embed-then-query.jpg</span></div>
-    <h2 class="reveal" style="font-size:36px;margin-bottom:16px;">Hình minh họa</h2>
-    <img class="shot shot-lg reveal" src="../../notes/assets/protonx/embed-then-query.jpg" alt="embed-then-query.jpg" />
+    <div class="topbar reveal"><span>Run</span><span class="pill">sibling path</span></div>
+    <h2 class="reveal">Chạy personal-kb</h2>
+    <div class="cols-2">
+      <div class="card reveal"><div class="tag">index</div><h3>Build</h3><p><code>build-kb-index.py</code><br/><code>build-keyword-graph.py</code></p></div>
+      <div class="card cyan reveal"><div class="tag">ui</div><h3>Serve</h3><p><code>ui/server.py</code> → <strong>:8765</strong><br/>search + graph</p></div>
+    </div>
+    <p class="lead reveal" style="margin-top:36px;">Chi tiết: note Personal KB · README trong repo sibling.</p>
   </div>
-  <div class="foot"><span>04</span><span>ai-learning-protonx-nlp3</span></div>
+  <div class="foot"><span>06</span><span>~/work-station/personal-kb</span></div>
 </section>
 
-<section class="slide">
-  <div class="slide-bg"></div><div class="grid-overlay"></div>
-  <div class="pad">
-    <div class="topbar reveal"><span>From protonx</span><span class="pill">rag-advanced.jpg</span></div>
-    <h2 class="reveal" style="font-size:36px;margin-bottom:16px;">Hình minh họa</h2>
-    <img class="shot shot-lg reveal" src="../../notes/assets/protonx/rag-advanced.jpg" alt="rag-advanced.jpg" />
-  </div>
-  <div class="foot"><span>05</span><span>ai-learning-protonx-nlp3</span></div>
-</section>
-
-<section class="slide">
-  <div class="slide-bg"></div><div class="grid-overlay"></div>
-  <div class="pad">
-    <div class="topbar reveal"><span>Next</span><span class="pill">app</span></div>
-    <h1 class="reveal" style="margin-top:120px;font-size:64px;">Mở working app<br /><em>thử tay.</em></h1>
-    <p class="lead reveal" style="margin-top:28px;">demos/rag/app — interactive, không cần GPU.</p>
-    <a class="app-cta reveal" href="../../demos/rag/app/index.html">Mở working app →</a>
-  </div>
-  <div class="foot"><span>end</span><span>demos/rag/app</span></div>
-</section>
 </main>
 </div>
 <nav class="deck-controls">
   <button type="button" id="prevBtn">←</button>
-  <span id="pageLabel">1</span>
+  <span id="pageLabel">1 / 6</span>
   <button type="button" id="nextBtn">→</button>
 </nav>
-<script>window.LAB={"kind": "slides", "title": "Rag · Slides", "download": "download.html", "downloadName": "rag-slides.html"};</script>
+<script>window.LAB={"kind": "slides", "title": "Personal Kb · Slides", "download": "download.html", "downloadName": "personal-kb-slides.html"};</script>
 
 <script>
 (function () {

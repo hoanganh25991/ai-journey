@@ -35,20 +35,34 @@
     }
   }
 
-  const bar = document.createElement("div");
-  bar.className = "lab-chrome";
-
-  if (lab.download) {
+  function download() {
+    if (!lab.download) return;
     const a = document.createElement("a");
     a.href = lab.download;
     if (lab.downloadName) a.download = lab.downloadName;
-    a.textContent = "Download";
-    a.setAttribute("aria-label", "Download");
-    bar.appendChild(a);
+    a.rel = "noopener";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  }
+
+  const bar = document.createElement("div");
+  bar.className = "lab-chrome";
+
+  // Both controls are <button> so page-level `a {…}` / mismatched padding cannot skew size.
+  if (lab.download) {
+    const dl = document.createElement("button");
+    dl.type = "button";
+    dl.className = "lab-chrome-btn";
+    dl.textContent = "Download";
+    dl.setAttribute("aria-label", "Download");
+    dl.addEventListener("click", download);
+    bar.appendChild(dl);
   }
 
   const shareBtn = document.createElement("button");
   shareBtn.type = "button";
+  shareBtn.className = "lab-chrome-btn";
   shareBtn.textContent = "Share";
   shareBtn.addEventListener("click", share);
   bar.appendChild(shareBtn);

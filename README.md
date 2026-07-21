@@ -27,7 +27,7 @@ Sau khi sửa bất kỳ `notes/*.md`, `notes/catalog.json`, `slides/`, hay `dem
 
 ```bash
 cd /Users/anhle/work-station/ai-lab
-python3 scripts/build-docs.py
+./scripts/buid.sh
 ```
 
 Nó build lại toàn bộ: hub `docs/index.html`, các trang note `docs/notes/*.html`, copy `demos/` + `slides/`, và `search-index.json`.
@@ -37,7 +37,7 @@ Nó build lại toàn bộ: hub `docs/index.html`, các trang note `docs/notes/*
 GitHub Pages publish repo này ở **sub-path** `https://<user>.github.io/ai-lab/`, nên `docs/` chạy ở `.../ai-lab/docs/…`. Script sau **build rồi serve dưới đúng sub-path `/ai-lab`** để link/ảnh resolve y hệt production:
 
 ```bash
-python3 scripts/serve-docs.py
+./scripts/review.sh
 # → http://127.0.0.1:8080/ai-lab/docs/index.html   (tự mở browser)
 ```
 
@@ -60,7 +60,7 @@ notes/*.md + notes/catalog.json     # knowledge — source of truth
 slides/<topic>/index.html           # decks (+ slides/_shared/deck.css|js)
 demos/<topic>/app/index.html        # working apps (+ demos/_shared/app.css|chrome.js)
         │
-        ▼  python3 scripts/build-docs.py
+        ▼  ./scripts/buid.sh
 docs/                               # OUTPUT — chỗ duy nhất để mở / serve
   index.html                        # hub: search-first, list view
   notes/<id>.html                   # document view mỗi note
@@ -82,7 +82,7 @@ Root `index.html` chỉ redirect sang `docs/index.html`. Không sửa file trong
 1. Viết / sửa `notes/*.md` (kiến thức)
 2. (tuỳ chọn) Thêm deck `slides/<topic>/index.html` và/hoặc app `demos/<topic>/app/`
 3. Khai báo trong [`notes/catalog.json`](notes/catalog.json): trỏ `slides` / `demo` vào file trên (`null` nếu chưa có)
-4. `python3 scripts/build-docs.py`
+4. `./scripts/buid.sh`
 
 ## Personal KB (repo riêng)
 
