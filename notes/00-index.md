@@ -60,6 +60,8 @@ screenshot / PDF page  →  notes/assets/<topic>/filename.jpg
 | [attention.md](./attention.md) | concepts | yes | yes |
 | [softmax.md](./softmax.md) | concepts | yes | yes |
 | [classification.md](./classification.md) | concepts | yes | — |
+| [curve-fitting.md](./curve-fitting.md) | concepts | yes | yes |
+| [neural-networks.md](./neural-networks.md) | concepts | yes | yes |
 | [pytorch-training.md](./pytorch-training.md) | concepts | yes | — |
 | [tensorflow-training.md](./tensorflow-training.md) | concepts | yes | — |
 | [huggingface.md](./huggingface.md) | concepts | yes | — |
@@ -67,15 +69,20 @@ screenshot / PDF page  →  notes/assets/<topic>/filename.jpg
 | [transformer.md](./transformer.md) | concepts | yes | — |
 | [sentence-transformers.md](./sentence-transformers.md) | concepts | yes | — |
 | [rag.md](./rag.md) | concepts | yes | yes |
+| [advanced-rag.md](./advanced-rag.md) | concepts | yes | yes |
 | [vector-database.md](./vector-database.md) | concepts | yes | — |
 | [semantic-search.md](./semantic-search.md) | projects | yes | GitHub |
 | [mcp.md](./mcp.md) | concepts | yes | yes |
 | [skills-rules.md](./skills-rules.md) | concepts | yes | mcp app |
 | [train-gpu.md](./train-gpu.md) | concepts | yes | — |
-| [04-demo-car.md](./04-demo-car.md) | projects | yes | yes |
+| [self-driving-car.md](./self-driving-car.md) | projects | yes | yes |
+| [image-gen.md](./image-gen.md) | projects | yes | yes |
 | [05-demo-text.md](./05-demo-text.md) | projects | yes | yes (+ complexity-router) |
 | [06-train-infer.md](./06-train-infer.md) | concepts | yes | — |
 | [07-agents.md](./07-agents.md) | concepts | yes | mcp app |
+| [agentic-patterns.md](./agentic-patterns.md) | concepts | yes | yes |
+| [langgraph.md](./langgraph.md) | concepts | yes | yes |
+| [langsmith.md](./langsmith.md) | concepts | yes | yes |
 | [08-model-notes.md](./08-model-notes.md) | field-notes | yes | — |
 | [09-agent-automation.md](./09-agent-automation.md) | field-notes | Hermess | — |
 | [10-ai-timeline.md](./10-ai-timeline.md) | field-notes | yes | — |

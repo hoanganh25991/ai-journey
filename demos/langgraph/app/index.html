@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>LangGraph · App</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Sora:wght@400;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../../_shared/app.css"/>
+<style>
+header{display:flex;justify-content:space-between;margin-bottom:16px;max-width:1000px}
+a{color:var(--cyan);font:13px var(--mono);text-decoration:none}
+.wrap{max-width:1000px;display:grid;grid-template-columns:1.2fr 1fr;gap:20px}
+canvas{width:100%;height:420px;background:#fff;border:1px solid var(--line);border-radius:14px;cursor:pointer}
+.panel{border:1px solid var(--line);border-radius:14px;padding:18px;background:rgba(255,255,255,.92)}
+.panel h2{font:13px var(--mono);color:var(--amber);letter-spacing:.08em;text-transform:uppercase}
+.panel p{margin-top:12px;line-height:1.5}
+.log{margin-top:16px;font:12px var(--mono);color:var(--muted);white-space:pre-wrap}
+button{margin-top:14px;margin-right:8px;border:1px solid var(--line);background:#fff;padding:8px 12px;border-radius:10px;font:12px var(--mono);cursor:pointer}
+button.primary{border-color:var(--amber);color:var(--amber)}
+@media(max-width:800px){.wrap{grid-template-columns:1fr}}
+</style></head><body>
+<header><h1>LangGraph · app</h1><div><a href="../../../slides/langgraph/">Slides</a> · <a href="../../../index.html">Lab UI</a></div></header>
+<div class="wrap">
+  <canvas id="c" width="640" height="420"></canvas>
+  <div class="panel">
+    <h2>Self-reflective RAG graph</h2>
+    <p id="desc">Click a node or press Run to animate the path.</p>
+    <button type="button" class="primary" id="run">Run flow →</button>
+    <button type="button" id="reset">Reset</button>
+    <div class="log" id="log"></div>
+  </div>
+</div>
+<script>
+const nodes=[
+  {id:'start',x:80,y:210,label:'Start'},
+  {id:'retrieve',x:220,y:210,label:'Retrieve'},
+  {id:'grade',x:360,y:210,label:'Grade'},
+  {id:'rewrite',x:360,y:90,label:'Rewrite'},
+  {id:'generate',x:520,y:210,label:'Generate'},
+  {id:'end',x:620,y:210,label:'End'},
+];
+const edges=[
+  ['start','retrieve'],['retrieve','grade'],['grade','generate'],['grade','rewrite'],['rewrite','retrieve'],['generate','end']
+];
+const info={
+  start:'User question enters shared state.',
+  retrieve:'Embed + top-k from vector store.',
+  grade:'Are docs relevant? Else rewrite.',
+  rewrite:'Query translation (see advanced-rag).',
+  generate:'LLM answers with citations.',
+  end:'Return response to user.',
+};
+let active='start', path=[], log=[];
+const c=document.getElementById('c'), ctx=c.getContext('2d');
+function node(id){return nodes.find(n=>n.id===id);}
+function paint(){
+  ctx.clearRect(0,0,c.width,c.height);
+  ctx.strokeStyle='rgba(20,32,46,.2)'; ctx.lineWidth=2;
+  edges.forEach(([a,b])=>{
+    const A=node(a), B=node(b);
+    ctx.beginPath(); ctx.moveTo(A.x,A.y); ctx.lineTo(B.x,B.y); ctx.stroke();
+  });
+  nodes.forEach(n=>{
+    ctx.beginPath(); ctx.arc(n.x,n.y,28,0,Math.PI*2);
+    ctx.fillStyle=n.id===active?'rgba(194,112,58,.2)':path.includes(n.id)?'rgba(15,138,155,.15)':'#fff';
+    ctx.fill(); ctx.strokeStyle=n.id===active?'#c2703a':'#0f8a9b'; ctx.lineWidth=n.id===active?3:2; ctx.stroke();
+    ctx.fillStyle='#16202e'; ctx.font='12px IBM Plex Mono,monospace'; ctx.textAlign='center';
+    ctx.fillText(n.label,n.x,n.y+4);
+  });
+  document.getElementById('desc').textContent=info[active];
+  document.getElementById('log').textContent=log.join('\n')||'log empty';
+}
+c.onclick=e=>{
+  const r=c.getBoundingClientRect(); const x=(e.clientX-r.left)*c.width/r.width, y=(e.clientY-r.top)*c.height/r.height;
+  const hit=nodes.find(n=>Math.hypot(n.x-x,n.y-y)<30);
+  if(hit){active=hit.id; if(!path.includes(hit.id)) path.push(hit.id); log.push('> focus '+hit.id); paint();}
+};
+const sequence=['start','retrieve','grade','rewrite','retrieve','grade','generate','end'];
+let i=0, timer=null;
+document.getElementById('run').onclick=()=>{
+  clearInterval(timer); i=0; path=[]; log=['run: reflective RAG'];
+  timer=setInterval(()=>{
+    if(i>=sequence.length){clearInterval(timer); return;}
+    active=sequence[i]; path.push(active); log.push((i+1)+'. '+active); i++; paint();
+  },650);
+};
+document.getElementById('reset').onclick=()=>{clearInterval(timer); active='start'; path=[]; log=[]; paint();};
+paint();
+</script></body></html>

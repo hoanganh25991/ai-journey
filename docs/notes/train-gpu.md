@@ -33,7 +33,7 @@ Lab demos illustrate inference only. To get a model you can plug in, you must tr
 
   Gate before GPU: one CPU batch that prints shapes and a finite loss. Gate before export: val metrics stable for 2–3 epochs and a confusion matrix that isn’t “always majority class.”
 
-- **In AI Journey:** browser demos show the flow; they do **not** replace GPU training. Train in a notebook / Kaggle / Colab, then embed weights in UI demos (car-nn, sentiment…). The demo’s job is latency and UX; the notebook’s job is learning.
+- **In AI Journey:** browser demos show the flow; they do **not** replace GPU training. Train in a notebook / Kaggle / Colab, then embed weights in UI demos (self-driving-car, sentiment…). The demo’s job is latency and UX; the notebook’s job is learning.
 
 - **What “good enough” means:** for teaching demos, stable val accuracy and a sane confusion matrix beat chasing 0.1% leaderboard gains. Ship the **best validation** checkpoint, not the last epoch. Log seed, dataset revision, and learning rate so you can reproduce the export.
 
@@ -123,7 +123,7 @@ HF/Kaggle data → notebook (PyTorch/TF) → GPU epochs → checkpoint → demo 
 | | Link |
 |--|------|
 | Slides | [slides/train-gpu](../slides/train-gpu/index.html) |
-| Related demos | [car-nn](../demos/car-nn/app/index.html) · [sentiment](../demos/sentiment/app/index.html) |
+| Related demos | [self-driving-car](../demos/self-driving-car/app/index.html) · [sentiment](../demos/sentiment/app/index.html) |
 
 ## References
 
@@ -134,4 +134,4 @@ HF/Kaggle data → notebook (PyTorch/TF) → GPU epochs → checkpoint → demo 
 
 - [06-train-infer.md](./06-train-infer.md) — train vs infer
 - [pytorch-training.md](./pytorch-training.md), [tensorflow-training.md](./tensorflow-training.md), [huggingface.md](./huggingface.md), [kaggle.md](./kaggle.md)
-- Demo notes: [04-demo-car.md](./04-demo-car.md), [05-demo-text.md](./05-demo-text.md)
+- Demo notes: [self-driving-car.md](./self-driving-car.md), [05-demo-text.md](./05-demo-text.md)

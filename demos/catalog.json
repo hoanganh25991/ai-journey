@@ -1,13 +1,13 @@
 [
   {
     "id": "tokenize",
-    "title": "Tokenize — cut text into units",
+    "title": "Tokenize \u2014 cut text into units",
     "topics": [
       "tokenize",
       "BPE",
       "vocabulary"
     ],
-    "summary": "Text → tokens / subwords → IDs. BPE vs WordPiece.",
+    "summary": "Text \u2192 tokens / subwords \u2192 IDs. BPE vs WordPiece.",
     "notes": [
       "notes/tokenize.md"
     ],
@@ -17,13 +17,13 @@
   },
   {
     "id": "embedding",
-    "title": "Embedding — IDs become vectors",
+    "title": "Embedding \u2014 IDs become vectors",
     "topics": [
       "embedding",
       "cosine",
       "CBOW"
     ],
-    "summary": "Token IDs → dense vectors; similarity in vector space.",
+    "summary": "Token IDs \u2192 dense vectors; similarity in vector space.",
     "notes": [
       "notes/embedding.md"
     ],
@@ -33,13 +33,13 @@
   },
   {
     "id": "attention",
-    "title": "Attention — which tokens matter",
+    "title": "Attention \u2014 which tokens matter",
     "topics": [
       "attention",
       "QKV",
       "transformer"
     ],
-    "summary": "Query · Key · Value — contextual mixing across tokens.",
+    "summary": "Query \u00b7 Key \u00b7 Value \u2014 contextual mixing across tokens.",
     "notes": [
       "notes/attention.md"
     ],
@@ -49,13 +49,13 @@
   },
   {
     "id": "softmax",
-    "title": "Softmax — scores to probabilities",
+    "title": "Softmax \u2014 scores to probabilities",
     "topics": [
       "softmax",
       "logits",
       "classification"
     ],
-    "summary": "Logits → distribution (sum=1). Used in attention & classifiers.",
+    "summary": "Logits \u2192 distribution (sum=1). Used in attention & classifiers.",
     "notes": [
       "notes/softmax.md"
     ],
@@ -65,13 +65,13 @@
   },
   {
     "id": "rag",
-    "title": "RAG — retrieve then generate",
+    "title": "RAG \u2014 retrieve then generate",
     "topics": [
       "RAG",
       "vector-db",
       "retrieve"
     ],
-    "summary": "Embed query → top-k chunks → LLM answer with citations.",
+    "summary": "Embed query \u2192 top-k chunks \u2192 LLM answer with citations.",
     "notes": [
       "notes/rag.md"
     ],
@@ -81,13 +81,13 @@
   },
   {
     "id": "mcp",
-    "title": "MCP — tools for agents",
+    "title": "MCP \u2014 tools for agents",
     "topics": [
       "MCP",
       "tools",
       "skills"
     ],
-    "summary": "Model Context Protocol — host ↔ server ↔ tools (browser, blender…).",
+    "summary": "Model Context Protocol \u2014 host \u2194 server \u2194 tools (browser, blender\u2026).",
     "notes": [
       "notes/mcp.md"
     ],
@@ -96,21 +96,22 @@
     "kind": "concept"
   },
   {
-    "id": "car-nn",
-    "title": "Car NN — sensor to action",
+    "id": "self-driving-car",
+    "title": "Self-driving car \u2014 sensors \u00b7 brains \u00b7 maps",
     "topics": [
-      "fully-connected",
-      "classification",
+      "sensors",
+      "neural-network",
+      "mutation",
       "inference",
-      "sensors"
+      "self-driving"
     ],
-    "summary": "3 sensors [L,M,R] → hidden FC → forward / back / left / right.",
+    "summary": "Ray sensors \u2192 NN \u2192 mutate N cars / save bestBrain on a traffic road.",
     "notes": [
-      "notes/04-demo-car.md",
+      "notes/self-driving-car.md",
       "notes/06-train-infer.md"
     ],
-    "slides": "slides/car-nn/index.html",
-    "app": "demos/car-nn/app/index.html",
+    "slides": "slides/self-driving-car/index.html",
+    "app": "demos/self-driving-car/app/index.html",
     "kind": "project"
   },
   {
@@ -122,7 +123,7 @@
       "classification",
       "softmax"
     ],
-    "summary": "Text → tokens → scores → negative / neutral / positive.",
+    "summary": "Text \u2192 tokens \u2192 scores \u2192 negative / neutral / positive.",
     "notes": [
       "notes/05-demo-text.md",
       "notes/01-tokenize-embed.md",
@@ -141,7 +142,7 @@
       "agents",
       "orchestration"
     ],
-    "summary": "Text → simple / complex → fast path or heavy crew path.",
+    "summary": "Text \u2192 simple / complex \u2192 fast path or heavy crew path.",
     "notes": [
       "notes/05-demo-text.md",
       "notes/07-agents.md"
@@ -149,5 +150,112 @@
     "slides": "slides/complexity-router/index.html",
     "app": "demos/complexity-router/app/index.html",
     "kind": "project"
+  },
+  {
+    "id": "curve-fitting",
+    "title": "Curve fitting \u2014 loss & knobs",
+    "topics": [
+      "loss",
+      "gradient"
+    ],
+    "summary": "Fit a line; watch loss; take a gradient step.",
+    "notes": [
+      "notes/curve-fitting.md"
+    ],
+    "slides": "slides/curve-fitting/index.html",
+    "app": "demos/curve-fitting/app/index.html",
+    "kind": "concept"
+  },
+  {
+    "id": "neural-networks",
+    "title": "Neural networks \u2014 depth & width",
+    "topics": [
+      "layers",
+      "hyperparameters"
+    ],
+    "summary": "Resize the net and edit a weight by hand.",
+    "notes": [
+      "notes/neural-networks.md"
+    ],
+    "slides": "slides/neural-networks/index.html",
+    "app": "demos/neural-networks/app/index.html",
+    "kind": "concept"
+  },
+  {
+    "id": "advanced-rag",
+    "title": "Advanced RAG \u2014 query strategies",
+    "topics": [
+      "RAG",
+      "HyDE",
+      "multi-query"
+    ],
+    "summary": "Pick a query translation strategy and see rewrites.",
+    "notes": [
+      "notes/advanced-rag.md"
+    ],
+    "slides": "slides/advanced-rag/index.html",
+    "app": "demos/advanced-rag/app/index.html",
+    "kind": "concept"
+  },
+  {
+    "id": "image-gen",
+    "title": "Image gen \u2014 prompt gallery",
+    "topics": [
+      "prompt",
+      "image"
+    ],
+    "summary": "Browse recoverable prompt experiments.",
+    "notes": [
+      "notes/image-gen.md"
+    ],
+    "slides": "slides/image-gen/index.html",
+    "app": "demos/image-gen/app/index.html",
+    "kind": "project"
+  },
+  {
+    "id": "agentic-patterns",
+    "title": "Agentic patterns",
+    "topics": [
+      "reflection",
+      "tools",
+      "planning"
+    ],
+    "summary": "Step through reflection, tools, planning, multi-agent.",
+    "notes": [
+      "notes/agentic-patterns.md"
+    ],
+    "slides": "slides/agentic-patterns/index.html",
+    "app": "demos/agentic-patterns/app/index.html",
+    "kind": "concept"
+  },
+  {
+    "id": "langgraph",
+    "title": "LangGraph \u2014 reflective RAG graph",
+    "topics": [
+      "LangGraph",
+      "state"
+    ],
+    "summary": "Click nodes and animate a self-reflective RAG flow.",
+    "notes": [
+      "notes/langgraph.md"
+    ],
+    "slides": "slides/langgraph/index.html",
+    "app": "demos/langgraph/app/index.html",
+    "kind": "concept"
+  },
+  {
+    "id": "langsmith",
+    "title": "LangSmith \u2014 trace & eval",
+    "topics": [
+      "tracing",
+      "evaluation"
+    ],
+    "summary": "Inspect a sample trace and eval scorecards.",
+    "notes": [
+      "notes/langsmith.md"
+    ],
+    "slides": "slides/langsmith/index.html",
+    "app": "demos/langsmith/app/index.html",
+    "kind": "concept"
   }
 ]

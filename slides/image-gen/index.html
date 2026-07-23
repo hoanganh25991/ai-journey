@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Image Gen · Slides</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Sora:wght@400;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="../_shared/deck.css" />
+<style>
+.shot { width:100%; height:420px; object-fit:contain; border-radius:14px; border:1px solid var(--line); background:#e6edf5; }
+.shot-lg { height:500px; }
+</style>
+</head>
+<body>
+<div class="deck-viewport">
+<main class="deck-stage" id="deckStage">
+
+<section class="slide active">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Demo · image-gen</span><span class="pill">slides + app</span></div>
+    <h1 class="reveal" style="margin-top:88px;">Prompt · <em>generate</em> · critique</h1>
+    <p class="lead reveal" style="margin-top:28px;">Less is more — brief the illustrator clearly.</p>
+  </div>
+  <div class="foot"><span>01</span><span>notes/image-gen.md</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Craft</span><span class="pill">less is more</span></div>
+    <h2 class="reveal" style="font-size:34px;margin-bottom:12px;">Start short</h2>
+    <img class="shot shot-lg reveal" src="../assets/image-gen-less-is-more.jpg" alt="Less is more" />
+  </div>
+  <div class="foot"><span>02</span><span>slides/assets/image-gen-less-is-more.jpg</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Gallery</span><span class="pill">style</span></div>
+    <h2 class="reveal" style="font-size:34px;margin-bottom:12px;">Landscape variants</h2>
+    <img class="shot shot-lg reveal" src="../assets/image-gen-landscape.jpg" alt="Landscape" />
+  </div>
+  <div class="foot"><span>03</span><span>slides/assets/image-gen-landscape.jpg</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Applied</span><span class="pill">logo · menu</span></div>
+    <h2 class="reveal">Text-in-image is hard</h2>
+<div class="cols-3">
+<div class="card reveal"><div class="tag">logo</div><h3>Wordmarks</h3><p>Clarity over decoration.</p></div>
+<div class="card cyan reveal"><div class="tag">menu</div><h3>Menus</h3><p>Subject + layout constraints.</p></div>
+<div class="card accent reveal"><div class="tag">video</div><h3>Motion</h3><p>Same craft + duration.</p></div>
+</div>
+  </div>
+  <div class="foot"><span>04</span><span>gallery in demo</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Next</span><span class="pill">working app</span></div>
+    <h1 class="reveal" style="margin-top:100px;">Browse the <em>prompt gallery</em></h1>
+    <a class="app-cta reveal" href="../../demos/image-gen/app/index.html">Open working app →</a>
+  </div>
+  <div class="foot"><span>05</span><span>demos/image-gen/app</span></div>
+</section>
+
+</main>
+</div>
+<nav class="deck-controls">
+  <button type="button" id="prevBtn">←</button>
+  <span id="pageLabel">1 / 5</span>
+  <button type="button" id="nextBtn">→</button>
+</nav>
+<script src="../_shared/deck.js"></script>
+</body>
+</html>

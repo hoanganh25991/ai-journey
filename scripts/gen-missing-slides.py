@@ -484,7 +484,7 @@ def deck_classification() -> str:
                 [
                     ("before", "Softmax", "How scores become probabilities."),
                     ("train", "PyTorch / TensorFlow", "Actually run the training loop."),
-                    ("demo", "Sentiment / car-nn", "See classification in a browser demo."),
+                    ("demo", "Sentiment / self-driving-car", "See classification in a browser demo."),
                 ],
                 "11",
                 "related notes",
@@ -1370,7 +1370,7 @@ def deck_train_gpu() -> str:
                 [
                     ("loss", "Loss / accuracy", "Watch train and val together."),
                     ("stop", "~95%+", "Good enough for many demos — then export."),
-                    ("infer", "Back to UI", "car-nn · sentiment · softmax demos."),
+                    ("infer", "Back to UI", "self-driving-car · sentiment · softmax demos."),
                 ],
                 "08",
                 "demos",
@@ -1470,7 +1470,7 @@ def deck_train_infer() -> str:
                 "Where each half lives",
                 [
                     ("nb", "Notebooks", "protonx / Kaggle / Colab — real training."),
-                    ("ui", "Browser demos", "car-nn · sentiment — inference only."),
+                    ("ui", "Browser demos", "self-driving-car · sentiment — inference only."),
                     ("stack", "train-gpu.md", "Full tool checklist."),
                 ],
                 "09",

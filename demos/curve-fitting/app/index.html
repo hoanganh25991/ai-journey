@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Curve Fitting · App</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Sora:wght@400;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../../_shared/app.css"/>
+<style>
+header{display:flex;justify-content:space-between;margin-bottom:16px;max-width:960px}
+a{color:var(--cyan);font:13px var(--mono);text-decoration:none}
+.wrap{max-width:960px;display:grid;grid-template-columns:1.2fr 1fr;gap:24px}
+canvas{width:100%;height:320px;background:#fff;border:1px solid var(--line);border-radius:14px}
+.panel{border:1px solid var(--line);border-radius:14px;padding:18px;background:rgba(255,255,255,.9)}
+label{display:block;margin:12px 0 6px;font:13px var(--mono);color:var(--muted)}
+input[type=range]{width:100%;accent-color:var(--cyan)}
+.meta{font:13px var(--mono);color:var(--muted);margin-top:14px;line-height:1.5}
+button{margin-top:14px;border:1px solid var(--amber);background:transparent;color:var(--amber);padding:10px 14px;border-radius:10px;font:13px var(--mono);cursor:pointer}
+@media(max-width:800px){.wrap{grid-template-columns:1fr}}
+</style></head><body>
+<header><h1>Curve fitting · app</h1><div><a href="../../../slides/curve-fitting/">Slides</a> · <a href="../../../index.html">Lab UI</a></div></header>
+<div class="wrap">
+  <canvas id="c" width="640" height="320"></canvas>
+  <div class="panel">
+    <h2 style="font:14px var(--mono);color:var(--amber);letter-spacing:.08em;text-transform:uppercase">Guess · line ŷ = ax + b</h2>
+    <label>a (slope) <span id="va">0.50</span></label>
+    <input id="a" type="range" min="-2" max="2" step="0.01" value="0.5"/>
+    <label>b (intercept) <span id="vb">0.00</span></label>
+    <input id="b" type="range" min="-2" max="2" step="0.01" value="0"/>
+    <p class="meta" id="loss"></p>
+    <button type="button" id="step">One gradient step →</button>
+    <p class="meta">Dots = reality. Line = guess. Loss = mean (y−ŷ)². Step nudges a,b opposite ∇L.</p>
+  </div>
+</div>
+<script>
+const pts=[[-1.5,-0.2],[-1,0.1],[-0.5,0.55],[0,0.95],[0.5,1.4],[1,1.85],[1.5,2.1]];
+const aEl=document.getElementById('a'), bEl=document.getElementById('b');
+const c=document.getElementById('c'), ctx=c.getContext('2d');
+function loss(a,b){return pts.reduce((s,[x,y])=>s+(y-(a*x+b))**2,0)/pts.length;}
+function grad(a,b){
+  let ga=0,gb=0; const n=pts.length;
+  for(const [x,y] of pts){const e=(a*x+b)-y; ga+=2*e*x/n; gb+=2*e/n;}
+  return [ga,gb];
+}
+function paint(){
+  const a=+aEl.value, b=+bEl.value;
+  document.getElementById('va').textContent=a.toFixed(2);
+  document.getElementById('vb').textContent=b.toFixed(2);
+  const L=loss(a,b);
+  document.getElementById('loss').textContent=`loss = ${L.toFixed(4)}`;
+  ctx.clearRect(0,0,c.width,c.height);
+  const X=(x)=> (x+2)/4*c.width, Y=(y)=> c.height-(y+1)/4*c.height;
+  ctx.strokeStyle='rgba(20,32,46,.12)'; ctx.beginPath();
+  ctx.moveTo(0,Y(0)); ctx.lineTo(c.width,Y(0)); ctx.moveTo(X(0),0); ctx.lineTo(X(0),c.height); ctx.stroke();
+  ctx.fillStyle='#0f8a9b';
+  for(const [x,y] of pts){ctx.beginPath();ctx.arc(X(x),Y(y),5,0,Math.PI*2);ctx.fill();}
+  ctx.strokeStyle='#c2703a'; ctx.lineWidth=3; ctx.beginPath();
+  ctx.moveTo(X(-2),Y(a*(-2)+b)); ctx.lineTo(X(2),Y(a*2+b)); ctx.stroke();
+}
+aEl.oninput=bEl.oninput=paint; paint();
+document.getElementById('step').onclick=()=>{
+  let a=+aEl.value, b=+bEl.value; const [ga,gb]=grad(a,b); const eta=0.15;
+  aEl.value=(a-eta*ga).toFixed(2); bEl.value=(b-eta*gb).toFixed(2); paint();
+};
+</script></body></html>

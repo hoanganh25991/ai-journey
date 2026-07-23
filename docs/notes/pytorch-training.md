@@ -6,7 +6,7 @@
 
 PyTorch is the most popular flexible framework for building and training models yourself. Understanding its training loop means understanding how learning actually happens — the same mechanism every high-level library ([Hugging Face](./huggingface.md), sentence-transformers) wraps underneath.
 
-If you can write `forward → loss → backward → step` confidently, you can debug exploding loss, pick learning rates, and move models to GPU without treating training as a black box.
+If you can write `forward → loss → backward → step` confidently, you can debug exploding loss, pick learning rates, and move models to GPU without treating training as a black box. Start with the knob-and-loss intuition in [curve-fitting.md](./curve-fitting.md) if the loop still feels abstract.
 
 ## Key ideas
 
@@ -130,4 +130,5 @@ This is how to implement training for [classification.md](./classification.md); 
 ## Related
 
 - [classification.md](./classification.md), [tensorflow-training.md](./tensorflow-training.md)
+- [curve-fitting.md](./curve-fitting.md), [neural-networks.md](./neural-networks.md)
 - [train-gpu.md](./train-gpu.md), [huggingface.md](./huggingface.md), [06-train-infer.md](./06-train-infer.md)

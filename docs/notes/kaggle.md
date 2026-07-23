@@ -15,7 +15,7 @@ Pair it with [Hugging Face](./huggingface.md): grab a pretrained model from the 
 - **Competitions:** real problem + metric + leaderboard; submit predictions for a score. Read *public notebooks* for tips — reproducing a strong baseline teaches faster than starting blank.
 - **Quota limits:** free GPU hours are capped per week — save them for real training runs, not idle kernels left open overnight. Disable the accelerator while debugging prints and plots.
 - **HF connection:** often download data on Kaggle, grab a pretrained model from Hugging Face, then train in a Kaggle notebook (`!pip install -q transformers datasets` if needed).
-- **Export:** download weights / ONNX / TorchScript → plug into [inference](./06-train-infer.md) demos (car-nn, sentiment…). Persist to a Kaggle Dataset version so the next session can `add data` instead of re-uploading.
+- **Export:** download weights / ONNX / TorchScript → plug into [inference](./06-train-infer.md) demos (self-driving-car, sentiment…). Persist to a Kaggle Dataset version so the next session can `add data` instead of re-uploading.
 - **Public vs private LB:** the public leaderboard is a visible slice; the private LB (final) can reshuffle ranks — overfit the public slice and you drop at the end.
 
 ## Short workflow

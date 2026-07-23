@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>LangGraph · Slides</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Sora:wght@400;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="../_shared/deck.css" />
+<style>
+.shot { width:100%; height:420px; object-fit:contain; border-radius:14px; border:1px solid var(--line); background:#e6edf5; }
+.shot-lg { height:500px; }
+</style>
+</head>
+<body>
+<div class="deck-viewport">
+<main class="deck-stage" id="deckStage">
+
+<section class="slide active">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Agent · langgraph</span><span class="pill">slides + app</span></div>
+    <h1 class="reveal" style="margin-top:88px;">Agents as <em>graphs</em></h1>
+    <p class="lead reveal" style="margin-top:28px;">State · nodes · edges — loops allowed.</p>
+  </div>
+  <div class="foot"><span>01</span><span>notes/langgraph.md</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Core</span><span class="pill">model</span></div>
+    <h2 class="reveal">Shared state travels</h2>
+<div class="cols-3">
+<div class="card reveal"><div class="tag">node</div><h3>Work</h3><p>LLM, tool, retriever, router.</p></div>
+<div class="card cyan reveal"><div class="tag">edge</div><h3>Control</h3><p>Next step / conditional branch.</p></div>
+<div class="card accent reveal"><div class="tag">loop</div><h3>Retry</h3><p>Reflective RAG, web agents.</p></div>
+</div>
+  </div>
+  <div class="foot"><span>02</span><span>executable patterns</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Shapes</span><span class="pill">examples</span></div>
+    <h2 class="reveal">From support bot to web agent</h2>
+<div class="cols-3">
+<div class="card reveal"><div class="tag">route</div><h3>Routing</h3><p>Classifier → specialist path.</p></div>
+<div class="card cyan reveal"><div class="tag">rag</div><h3>Self-RAG</h3><p>Retrieve → grade → rewrite.</p></div>
+<div class="card accent reveal"><div class="tag">web</div><h3>WebVoyager</h3><p>Observe page → act → loop.</p></div>
+</div>
+  </div>
+  <div class="foot"><span>03</span><span>simple → complex</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Next</span><span class="pill">working app</span></div>
+    <h1 class="reveal" style="margin-top:100px;">Click nodes · <em>follow the flow</em></h1>
+    <a class="app-cta reveal" href="../../demos/langgraph/app/index.html">Open working app →</a>
+  </div>
+  <div class="foot"><span>04</span><span>demos/langgraph/app</span></div>
+</section>
+
+</main>
+</div>
+<nav class="deck-controls">
+  <button type="button" id="prevBtn">←</button>
+  <span id="pageLabel">1 / 4</span>
+  <button type="button" id="nextBtn">→</button>
+</nav>
+<script src="../_shared/deck.js"></script>
+</body>
+</html>

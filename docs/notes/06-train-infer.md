@@ -112,11 +112,11 @@ data → train (many GPU epochs) → checkpoint → load → infer (predict)
 | | Link |
 |--|------|
 | Slides | [slides/train-infer](../slides/train-infer/index.html) |
-| Related demos | [car-nn](../demos/car-nn/app/index.html) · [sentiment](../demos/sentiment/app/index.html) |
+| Related demos | [self-driving-car](../demos/self-driving-car/app/index.html) · [sentiment](../demos/sentiment/app/index.html) |
 
 ## Related
 
 - Full stack (PyTorch, TensorFlow, HF, Kaggle, GPU): [train-gpu.md](./train-gpu.md)
-- Demo inference: [04-demo-car.md](./04-demo-car.md), [05-demo-text.md](./05-demo-text.md)
+- Demo inference: [self-driving-car.md](./self-driving-car.md), [05-demo-text.md](./05-demo-text.md)
 - [softmax.md](./softmax.md) — loss when training classifiers
 - [pytorch-training.md](./pytorch-training.md), [tensorflow-training.md](./tensorflow-training.md)

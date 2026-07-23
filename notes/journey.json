@@ -1,32 +1,39 @@
 {
   "title": "AI Journey",
-  "lead": "One vivid map — five stages. Pick a mood or a node, open notes from that stage, then hop next.",
-  "tagline": "read text → label it → find documents → try demos → let agents work",
+  "lead": "One vivid map \u2014 five stages. Pick a mood or a node, open notes from that stage, then hop next.",
+  "tagline": "read text \u2192 label it \u2192 find documents \u2192 try demos \u2192 let agents work",
   "stages": [
     {
       "id": "abc",
       "short": "ABC",
-      "roman": "①",
-      "title": "ABC · machines read text",
+      "roman": "\u2460",
+      "title": "ABC \u00b7 machines read text",
       "goal": "Understand how text becomes numbers, then how models \"see\" and \"choose\".",
       "boss": "Explain why \"dog / cat\" are closer than \"dog / invoice\" using embedding + cosine.",
-      "notes": ["tokenize", "embedding", "attention", "softmax"],
+      "notes": [
+        "tokenize",
+        "embedding",
+        "attention",
+        "softmax"
+      ],
       "blips": {
-        "tokenize": "Split text → IDs. Machines do not read words.",
-        "embedding": "Similar meaning → nearby in number space.",
+        "tokenize": "Split text \u2192 IDs. Machines do not read words.",
+        "embedding": "Similar meaning \u2192 nearby in number space.",
         "attention": "Each word decides where to look.",
-        "softmax": "Raw scores → percentages that sum to 1."
+        "softmax": "Raw scores \u2192 percentages that sum to 1."
       }
     },
     {
       "id": "build",
       "short": "Build",
-      "roman": "②",
-      "title": "Build · train · run",
+      "roman": "\u2461",
+      "title": "Build \u00b7 train \u00b7 run",
       "goal": "Label data yourself, train for a few epochs, know where to get data and models.",
-      "boss": "Train a small classifier, then encode sentences with sentence-transformers.",
+      "boss": "Fit a curve by hand, then explain depth vs width on a tiny net.",
       "notes": [
         "classification",
+        "curve-fitting",
+        "neural-networks",
         "pytorch-training",
         "tensorflow-training",
         "huggingface",
@@ -36,54 +43,72 @@
       ],
       "blips": {
         "classification": "Head + softmax = labeling.",
-        "pytorch-training": "forward → loss → backward → step.",
-        "tensorflow-training": "compile then fit — Keras runs the loop.",
+        "pytorch-training": "forward \u2192 loss \u2192 backward \u2192 step.",
+        "tensorflow-training": "compile then fit \u2014 Keras runs the loop.",
         "huggingface": "Dataset + pretrained model + Spaces.",
         "kaggle": "Dataset + free GPU notebook.",
         "transformer": "Stacked attention = LLM skeleton.",
-        "sentence-transformers": "Sentence → vector in a few lines; classify fast."
+        "sentence-transformers": "Sentence \u2192 vector in a few lines; classify fast.",
+        "curve-fitting": "Guess \u2192 loss \u2192 gradient step.",
+        "neural-networks": "Depth \u00b7 width \u00b7 tune weights."
       }
     },
     {
       "id": "rag",
       "short": "Find",
-      "roman": "③",
-      "title": "Find · ground in documents",
-      "goal": "Do not make the model memorize everything — let it look things up, then answer.",
-      "boss": "Contrast keyword search (Elastic) vs meaning (embeddings), and why hybrid often wins.",
-      "notes": ["rag", "vector-database", "semantic-search"],
+      "roman": "\u2462",
+      "title": "Find \u00b7 ground in documents",
+      "goal": "Do not make the model memorize everything \u2014 let it look things up, then answer.",
+      "boss": "Contrast naive RAG vs HyDE / multi-query on a hard question.",
+      "notes": [
+        "rag",
+        "advanced-rag",
+        "vector-database",
+        "semantic-search"
+      ],
       "blips": {
         "rag": "Retrieve first, compose after + cite sources.",
         "vector-database": "Vector store + top-k neighbor search.",
-        "semantic-search": "Hybrid / tiered / fallback — real-world RAG lesson."
+        "semantic-search": "Hybrid / tiered / fallback \u2014 real-world RAG lesson.",
+        "advanced-rag": "Rewrite the question before retrieve."
       }
     },
     {
       "id": "demo",
       "short": "Demo",
-      "roman": "④",
-      "title": "Demo · see it live",
-      "goal": "Watch models work in the browser — not just read theory.",
-      "boss": "Open the car-nn or sentiment demo and point to where softmax / the classification head sits.",
-      "notes": ["train-gpu", "car-nn", "sentiment-routing", "train-infer"],
+      "roman": "\u2463",
+      "title": "Demo \u00b7 see it live",
+      "goal": "Watch models work in the browser \u2014 not just read theory.",
+      "boss": "Open the self-driving-car demo and point to sensors, the network visualizer, and how bestBrain is saved after mutation.",
+      "notes": [
+        "train-gpu",
+        "self-driving-car",
+        "sentiment-routing",
+        "train-infer",
+        "image-gen"
+      ],
       "blips": {
         "train-gpu": "Real stack: PyTorch/TF + HF/Kaggle + GPU.",
-        "car-nn": "3 sensors → 4 actions.",
+        "self-driving-car": "Sensors \u2192 NN \u2192 mutate best brain on a map.",
         "sentiment-routing": "Sentiment labels + easy/hard routing.",
-        "train-infer": "Learn heavy once, use light many times."
+        "train-infer": "Learn heavy once, use light many times.",
+        "image-gen": "Less-is-more prompts \u00b7 gallery."
       }
     },
     {
       "id": "agent",
       "short": "Agent",
-      "roman": "⑤",
-      "title": "Agent · steer the machine",
+      "roman": "\u2464",
+      "title": "Agent \u00b7 steer the machine",
       "goal": "From \"model answers\" to \"agent controls the machine\".",
-      "boss": "Explain MCP ≠ Skills, and why the same model feels different in Cursor vs Claude Code.",
+      "boss": "Explain MCP \u2260 Skills, and how a LangGraph loop shows up in a LangSmith trace.",
       "notes": [
         "mcp",
         "skills-rules",
         "agents",
+        "agentic-patterns",
+        "langgraph",
+        "langsmith",
         "model-notes",
         "agent-automation",
         "ai-timeline",
@@ -92,19 +117,42 @@
       "blips": {
         "mcp": "USB-C port for AI tool calls.",
         "skills-rules": "Three layers of teaching an agent.",
-        "agents": "Harness ≠ model — Cursor / Claude / Pi…",
-        "model-notes": "Field notes on Grok / Opus / DeepSeek…",
-        "agent-automation": "OpenClaw opened the door → Hermess polished it.",
+        "agents": "Harness \u2260 model \u2014 Cursor / Claude / Pi\u2026",
+        "model-notes": "Field notes on Grok / Opus / DeepSeek\u2026",
+        "agent-automation": "OpenClaw opened the door \u2192 Hermess polished it.",
         "ai-timeline": "Anchor the lab to real AI history.",
-        "personal-knowledge-base": "Search video / docs / GitHub + Graph RAG."
+        "personal-knowledge-base": "Search video / docs / GitHub + Graph RAG.",
+        "agentic-patterns": "Reflect \u00b7 tool \u00b7 plan \u00b7 multi-agent.",
+        "langgraph": "State graphs with loops.",
+        "langsmith": "Trace \u00b7 playground \u00b7 eval."
       }
     }
   ],
   "moods": [
-    { "label": "Just starting", "hint": "① ABC then take a break", "stage": "abc" },
-    { "label": "Want to build models", "hint": "① → ②, skip agents for now", "stage": "build" },
-    { "label": "Building search / chatbot", "hint": "① → ③, also sentence-transformers", "stage": "rag" },
-    { "label": "Prefer fun demos", "hint": "④ first, back to ① if stuck", "stage": "demo" },
-    { "label": "Coding agents", "hint": "⑤ MCP · skills · harness", "stage": "agent" }
+    {
+      "label": "Just starting",
+      "hint": "\u2460 ABC then take a break",
+      "stage": "abc"
+    },
+    {
+      "label": "Want to build models",
+      "hint": "\u2460 \u2192 \u2461, skip agents for now",
+      "stage": "build"
+    },
+    {
+      "label": "Building search / chatbot",
+      "hint": "\u2460 \u2192 \u2462, also sentence-transformers",
+      "stage": "rag"
+    },
+    {
+      "label": "Prefer fun demos",
+      "hint": "\u2463 first, back to \u2460 if stuck",
+      "stage": "demo"
+    },
+    {
+      "label": "Coding agents",
+      "hint": "\u2464 MCP \u00b7 skills \u00b7 harness",
+      "stage": "agent"
+    }
   ]
 }

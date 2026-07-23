@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>LangSmith · Slides</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Sora:wght@400;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="../_shared/deck.css" />
+<style>
+.shot { width:100%; height:420px; object-fit:contain; border-radius:14px; border:1px solid var(--line); background:#e6edf5; }
+.shot-lg { height:500px; }
+</style>
+</head>
+<body>
+<div class="deck-viewport">
+<main class="deck-stage" id="deckStage">
+
+<section class="slide active">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Agent · langsmith</span><span class="pill">slides + app</span></div>
+    <h1 class="reveal" style="margin-top:88px;">Trace · playground · <em>eval</em></h1>
+    <p class="lead reveal" style="margin-top:28px;">Flight recorder for LangChain / LangGraph runs.</p>
+  </div>
+  <div class="foot"><span>01</span><span>notes/langsmith.md</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Observe</span><span class="pill">debug</span></div>
+    <h2 class="reveal">Open the failing span</h2>
+<div class="cols-3">
+<div class="card reveal"><div class="tag">trace</div><h3>Nested spans</h3><p>LLM · tool · retriever timing.</p></div>
+<div class="card cyan reveal"><div class="tag">play</div><h3>Playground</h3><p>Edit prompts before coding.</p></div>
+<div class="card accent reveal"><div class="tag">eval</div><h3>Datasets</h3><p>Score regressions over time.</p></div>
+</div>
+  </div>
+  <div class="foot"><span>02</span><span>ship on evidence</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Loop</span><span class="pill">improve</span></div>
+    <h2 class="reveal">Measure → change → re-run</h2>
+    <div class="flow-row reveal"><span class="step">trace</span><span class="arr">→</span><span class="step">eval</span><span class="arr">→</span><span class="step">prompt/graph</span><span class="arr">→</span><span class="step">trace</span></div>
+  </div>
+  <div class="foot"><span>03</span><span>pairs with langgraph</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Next</span><span class="pill">working app</span></div>
+    <h1 class="reveal" style="margin-top:100px;">Inspect a <em>sample trace</em></h1>
+    <a class="app-cta reveal" href="../../demos/langsmith/app/index.html">Open working app →</a>
+  </div>
+  <div class="foot"><span>04</span><span>demos/langsmith/app</span></div>
+</section>
+
+</main>
+</div>
+<nav class="deck-controls">
+  <button type="button" id="prevBtn">←</button>
+  <span id="pageLabel">1 / 4</span>
+  <button type="button" id="nextBtn">→</button>
+</nav>
+<script src="../_shared/deck.js"></script>
+</body>
+</html>

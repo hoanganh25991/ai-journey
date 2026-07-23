@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Advanced RAG · App</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Sora:wght@400;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../../_shared/app.css"/>
+<style>
+header{display:flex;justify-content:space-between;margin-bottom:16px;max-width:820px}
+a{color:var(--cyan);font:13px var(--mono);text-decoration:none}
+.wrap{max-width:820px}
+textarea{width:100%;min-height:90px;border:1px solid var(--line);border-radius:12px;padding:14px;font:15px/1.5 Sora,sans-serif}
+.strategies{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}
+button.s{border:1px solid var(--line);background:#fff;padding:8px 12px;border-radius:999px;font:12px var(--mono);cursor:pointer}
+button.s.on{border-color:var(--amber);color:var(--amber);background:rgba(194,112,58,.1)}
+.out{margin-top:18px;border:1px solid var(--line);border-radius:14px;padding:16px;background:rgba(255,255,255,.9)}
+.out h3{font:13px var(--mono);color:var(--amber);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px}
+.out li{margin:8px 0 0 18px;line-height:1.45;color:var(--ink)}
+.hint{margin-top:12px;font:13px var(--mono);color:var(--muted)}
+</style></head><body>
+<header><h1>Advanced RAG · app</h1><div><a href="../../../slides/advanced-rag/">Slides</a> · <a href="../../../index.html">Lab UI</a></div></header>
+<div class="wrap">
+  <textarea id="q">How does hybrid search help RAG when keyword and vector disagree?</textarea>
+  <div class="strategies" id="strats"></div>
+  <div class="out"><h3>Rewritten queries / plan</h3><ul id="out"></ul><p class="hint" id="why"></p></div>
+</div>
+<script>
+const strategies={
+  naive:{label:'Naive', why:'Embed the user text as-is.', run:q=>[q]},
+  multi:{label:'Multi-query', why:'Paraphrases broaden recall; fuse later.', run:q=>[
+    q,
+    `Paraphrase: ${q.replace(/\?$/,'')} in simpler words?`,
+    `Related: what are failure modes of ${q.split(' ').slice(0,6).join(' ')}?`
+  ]},
+  fusion:{label:'RAG-Fusion', why:'Same paraphrases + reciprocal rank fusion of hit lists.', run:q=>[
+    `[fuse] ${q}`,
+    `[fuse] alternate phrasing of: ${q}`,
+    `[fuse] keywords-only: ${q.replace(/[^a-z0-9 ]/gi,' ').split(/\s+/).filter(Boolean).slice(0,8).join(' ')}`
+  ]},
+  stepback:{label:'Step-back', why:'Ask a more abstract question first.', run:q=>[
+    `High-level: what principles underlie “${q.replace(/\?$/,'')}”?`,
+    q
+  ]},
+  hyde:{label:'HyDE', why:'Embed a hypothetical answer document, then search.', run:q=>[
+    `Hypothetical passage answering: ${q}\n\nHybrid search blends lexical matches with embedding neighbors so disagreements can be reconciled by fusion or fallback tiers…`,
+    q
+  ]},
+  decompose:{label:'Decompose', why:'Split into sub-questions.', run:q=>[
+    'What is hybrid search?',
+    'How does RAG use retrieval?',
+    'When do keyword and vector disagree?',
+    q
+  ]},
+  route:{label:'Route', why:'Send to the right index / filter.', run:q=>[
+    `route:docs · query=${q}`,
+    `route:code · query=${q}`,
+    `route:faq · query=${q}`
+  ]},
+};
+const root=document.getElementById('strats');
+let cur='multi';
+Object.entries(strategies).forEach(([id,s])=>{
+  const b=document.createElement('button'); b.type='button'; b.className='s'+(id===cur?' on':''); b.textContent=s.label; b.dataset.id=id;
+  b.onclick=()=>{cur=id; [...root.children].forEach(x=>x.classList.toggle('on',x.dataset.id===cur)); paint();};
+  root.appendChild(b);
+});
+const qEl=document.getElementById('q');
+function paint(){
+  const s=strategies[cur]; const list=s.run(qEl.value.trim()||'…');
+  document.getElementById('out').innerHTML=list.map(t=>`<li>${t.replace(/</g,'&lt;')}</li>`).join('');
+  document.getElementById('why').textContent=s.why;
+}
+qEl.oninput=paint; paint();
+</script></body></html>

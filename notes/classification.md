@@ -6,7 +6,7 @@
 
 Much practical work is categorization: is this review positive or negative, is the email spam, is the photo a dog or a cat, is the question easy or hard. Understanding classification is understanding how a model makes **discrete decisions** — and it reuses the same tokenize → embedding → softmax chain the lab walks through.
 
-If you can train a solid classifier, you already understand loss, evaluation, and the train/infer split that every larger system (RAG routers, sentiment demos, car-nn) depends on.
+If you can train a solid classifier, you already understand loss, evaluation, and the train/infer split that every larger system (RAG routers, sentiment demos, self-driving-car) depends on.
 
 ## Key ideas
 
@@ -105,14 +105,14 @@ input → embedding → classification head → softmax → label
                                     (train: cross-entropy)
 ```
 
-Classification is the destination of [softmax.md](./softmax.md); train it with [pytorch-training.md](./pytorch-training.md) or [tensorflow-training.md](./tensorflow-training.md). See it live in [05-demo-text.md](./05-demo-text.md) and [04-demo-car.md](./04-demo-car.md).
+Classification is the destination of [softmax.md](./softmax.md); train it with [pytorch-training.md](./pytorch-training.md) or [tensorflow-training.md](./tensorflow-training.md). See it live in [05-demo-text.md](./05-demo-text.md) and [self-driving-car.md](./self-driving-car.md).
 
 ## Slides & demo
 
 | | Link |
 |--|------|
 | Slides | [slides/classification](../slides/classification/index.html) |
-| Related demos | [sentiment](../demos/sentiment/app/index.html) · [car-nn](../demos/car-nn/app/index.html) |
+| Related demos | [sentiment](../demos/sentiment/app/index.html) · [self-driving-car](../demos/self-driving-car/app/index.html) |
 
 ## References
 
@@ -121,5 +121,5 @@ Classification is the destination of [softmax.md](./softmax.md); train it with [
 
 ## Related
 
-- [softmax.md](./softmax.md), [05-demo-text.md](./05-demo-text.md), [04-demo-car.md](./04-demo-car.md)
+- [softmax.md](./softmax.md), [05-demo-text.md](./05-demo-text.md), [self-driving-car.md](./self-driving-car.md)
 - [pytorch-training.md](./pytorch-training.md), [tensorflow-training.md](./tensorflow-training.md)

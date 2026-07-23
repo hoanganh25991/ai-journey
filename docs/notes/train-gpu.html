@@ -394,7 +394,7 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 </code></pre>
 <p>Gate before GPU: one CPU batch that prints shapes and a finite loss. Gate before export: val metrics stable for 2–3 epochs and a confusion matrix that isn’t “always majority class.”</p>
 <ul>
-<li><strong>In AI Journey:</strong> browser demos show the flow; they do <strong>not</strong> replace GPU training. Train in a notebook / Kaggle / Colab, then embed weights in UI demos (car-nn, sentiment…). The demo’s job is latency and UX; the notebook’s job is learning.</li>
+<li><strong>In AI Journey:</strong> browser demos show the flow; they do <strong>not</strong> replace GPU training. Train in a notebook / Kaggle / Colab, then embed weights in UI demos (self-driving-car, sentiment…). The demo’s job is latency and UX; the notebook’s job is learning.</li>
 </ul>
 <ul>
 <li><strong>What “good enough” means:</strong> for teaching demos, stable val accuracy and a sane confusion matrix beat chasing 0.1% leaderboard gains. Ship the <strong>best validation</strong> checkpoint, not the last epoch. Log seed, dataset revision, and learning rate so you can reproduce the export.</li>
@@ -475,7 +475,7 @@ HF/Kaggle data → notebook (PyTorch/TF) → GPU epochs → checkpoint → demo 
 <tr><th></th><th>Link</th></tr>
 </thead><tbody>
 <tr><td>Slides</td><td><a href="../slides/train-gpu/index.html">slides/train-gpu</a></td></tr>
-<tr><td>Related demos</td><td><a href="../demos/car-nn/app/index.html">car-nn</a> · <a href="../demos/sentiment/app/index.html">sentiment</a></td></tr>
+<tr><td>Related demos</td><td><a href="../demos/self-driving-car/app/index.html">self-driving-car</a> · <a href="../demos/sentiment/app/index.html">sentiment</a></td></tr>
 </tbody></table>
 <h2>References</h2>
 <ul>
@@ -486,7 +486,7 @@ HF/Kaggle data → notebook (PyTorch/TF) → GPU epochs → checkpoint → demo 
 <ul>
 <li><a href="train-infer.html">06-train-infer.md</a> — train vs infer</li>
 <li><a href="pytorch-training.html">pytorch-training.md</a>, <a href="tensorflow-training.html">tensorflow-training.md</a>, <a href="huggingface.html">huggingface.md</a>, <a href="kaggle.html">kaggle.md</a></li>
-<li>Demo notes: <a href="car-nn.html">04-demo-car.md</a>, <a href="sentiment-routing.html">05-demo-text.md</a></li>
+<li>Demo notes: <a href="self-driving-car.html">self-driving-car.md</a>, <a href="sentiment-routing.html">05-demo-text.md</a></li>
 </ul></div>
   </article>
 </div>
@@ -494,7 +494,7 @@ HF/Kaggle data → notebook (PyTorch/TF) → GPU epochs → checkpoint → demo 
 <script>
 (function () {
   const title = "Train · PyTorch / TensorFlow · GPU";
-  const num = "17";
+  const num = "20";
   if (window.AiLabNav) {
     AiLabNav.enter((num ? num + " " : "") + title);
     AiLabNav.wireBack("a.back", "../index.html");

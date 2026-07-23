@@ -363,7 +363,7 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 <blockquote>Given an input (text, image, numbers), the model picks one label from a fixed set. Everyday example: a review arrives → the model says <em>positive</em>, <em>neutral</em>, or <em>negative</em>. This is the most common “build a model” problem — right after <a href="softmax.html">softmax</a>.</blockquote>
 <h2>Why it matters</h2>
 <p>Much practical work is categorization: is this review positive or negative, is the email spam, is the photo a dog or a cat, is the question easy or hard. Understanding classification is understanding how a model makes <strong>discrete decisions</strong> — and it reuses the same tokenize → embedding → softmax chain the lab walks through.</p>
-<p>If you can train a solid classifier, you already understand loss, evaluation, and the train/infer split that every larger system (RAG routers, sentiment demos, car-nn) depends on.</p>
+<p>If you can train a solid classifier, you already understand loss, evaluation, and the train/infer split that every larger system (RAG routers, sentiment demos, self-driving-car) depends on.</p>
 <h2>Key ideas</h2>
 <ul>
 <li><strong>Classification head:</strong> the last layer turns a representation (vector) into a score per label (<em>logits</em>), then <a href="softmax.html">softmax</a> converts to probabilities → pick the highest (<code>argmax</code>). For a <em>d</em>-dim embedding and <em>C</em> classes, the head is typically <code>W ∈ ℝ^{C×d}</code> plus bias: <code>logits = Wx + b</code>.</li>
@@ -447,13 +447,13 @@ input → embedding → classification head → softmax → label
                                     (train: cross-entropy)
 
 </code></pre>
-<p>Classification is the destination of <a href="softmax.html">softmax.md</a>; train it with <a href="pytorch-training.html">pytorch-training.md</a> or <a href="tensorflow-training.html">tensorflow-training.md</a>. See it live in <a href="sentiment-routing.html">05-demo-text.md</a> and <a href="car-nn.html">04-demo-car.md</a>.</p>
+<p>Classification is the destination of <a href="softmax.html">softmax.md</a>; train it with <a href="pytorch-training.html">pytorch-training.md</a> or <a href="tensorflow-training.html">tensorflow-training.md</a>. See it live in <a href="sentiment-routing.html">05-demo-text.md</a> and <a href="self-driving-car.html">self-driving-car.md</a>.</p>
 <h2>Slides &amp; demo</h2>
 <table><thead>
 <tr><th></th><th>Link</th></tr>
 </thead><tbody>
 <tr><td>Slides</td><td><a href="../slides/classification/index.html">slides/classification</a></td></tr>
-<tr><td>Related demos</td><td><a href="../demos/sentiment/app/index.html">sentiment</a> · <a href="../demos/car-nn/app/index.html">car-nn</a></td></tr>
+<tr><td>Related demos</td><td><a href="../demos/sentiment/app/index.html">sentiment</a> · <a href="../demos/self-driving-car/app/index.html">self-driving-car</a></td></tr>
 </tbody></table>
 <h2>References</h2>
 <ul>
@@ -462,7 +462,7 @@ input → embedding → classification head → softmax → label
 </ul>
 <h2>Related</h2>
 <ul>
-<li><a href="softmax.html">softmax.md</a>, <a href="sentiment-routing.html">05-demo-text.md</a>, <a href="car-nn.html">04-demo-car.md</a></li>
+<li><a href="softmax.html">softmax.md</a>, <a href="sentiment-routing.html">05-demo-text.md</a>, <a href="self-driving-car.html">self-driving-car.md</a></li>
 <li><a href="pytorch-training.html">pytorch-training.md</a>, <a href="tensorflow-training.html">tensorflow-training.md</a></li>
 </ul></div>
   </article>

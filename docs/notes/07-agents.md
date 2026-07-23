@@ -124,3 +124,4 @@ Same bug report — “CI tests fail” — across three harness thicknesses.
 ## Related
 
 - [mcp.md](./mcp.md), [skills-rules.md](./skills-rules.md), [08-model-notes.md](./08-model-notes.md)
+- [agentic-patterns.md](./agentic-patterns.md), [langgraph.md](./langgraph.md), [langsmith.md](./langsmith.md)

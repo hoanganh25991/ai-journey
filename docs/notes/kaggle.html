@@ -371,7 +371,7 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 <li><strong>Competitions:</strong> real problem + metric + leaderboard; submit predictions for a score. Read <em>public notebooks</em> for tips — reproducing a strong baseline teaches faster than starting blank.</li>
 <li><strong>Quota limits:</strong> free GPU hours are capped per week — save them for real training runs, not idle kernels left open overnight. Disable the accelerator while debugging prints and plots.</li>
 <li><strong>HF connection:</strong> often download data on Kaggle, grab a pretrained model from Hugging Face, then train in a Kaggle notebook (<code>!pip install -q transformers datasets</code> if needed).</li>
-<li><strong>Export:</strong> download weights / ONNX / TorchScript → plug into <a href="train-infer.html">inference</a> demos (car-nn, sentiment…). Persist to a Kaggle Dataset version so the next session can <code>add data</code> instead of re-uploading.</li>
+<li><strong>Export:</strong> download weights / ONNX / TorchScript → plug into <a href="train-infer.html">inference</a> demos (self-driving-car, sentiment…). Persist to a Kaggle Dataset version so the next session can <code>add data</code> instead of re-uploading.</li>
 <li><strong>Public vs private LB:</strong> the public leaderboard is a visible slice; the private LB (final) can reshuffle ranks — overfit the public slice and you drop at the end.</li>
 </ul>
 <h2>Short workflow</h2>
@@ -468,7 +468,7 @@ Kaggle dataset → notebook (enable GPU) → train (epochs) → export model →
 <script>
 (function () {
   const title = "Kaggle — Dataset + GPU Notebook";
-  const num = "09";
+  const num = "11";
   if (window.AiLabNav) {
     AiLabNav.enter((num ? num + " " : "") + title);
     AiLabNav.wireBack("a.back", "../index.html");

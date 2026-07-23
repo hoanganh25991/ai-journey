@@ -363,7 +363,7 @@ hr.sep { border: none; border-top: 1px solid var(--line-soft); margin: 22px 0; }
 <blockquote>A hands-on lesson: use PyTorch to train a classifier — epoch loop, compute loss, backprop, update weights until the model is good enough. Everyday metaphor: each batch is one practice set; each epoch is one full pass through the textbook.</blockquote>
 <h2>Why it matters</h2>
 <p>PyTorch is the most popular flexible framework for building and training models yourself. Understanding its training loop means understanding how learning actually happens — the same mechanism every high-level library (<a href="huggingface.html">Hugging Face</a>, sentence-transformers) wraps underneath.</p>
-<p>If you can write <code>forward → loss → backward → step</code> confidently, you can debug exploding loss, pick learning rates, and move models to GPU without treating training as a black box.</p>
+<p>If you can write <code>forward → loss → backward → step</code> confidently, you can debug exploding loss, pick learning rates, and move models to GPU without treating training as a black box. Start with the knob-and-loss intuition in <a href="curve-fitting.html">curve-fitting.md</a> if the loop still feels abstract.</p>
 <h2>Key ideas</h2>
 <ul>
 <li><strong>Epoch vs batch:</strong> an <em>epoch</em> is one pass over all data; a <em>batch</em> is a small chunk processed per step. Many epochs let the model learn gradually. Large batches are stabler but need more memory; small batches are noisier but can generalize better. Rule of thumb: for <em>N</em> examples and batch size <em>B</em>, steps per epoch ≈ <code>⌈N/B⌉</code> — e.g. 10 000 examples / batch 32 ≈ 313 steps/epoch.</li>
@@ -489,6 +489,7 @@ dataset → DataLoader → [epoch loop: forward → loss → backward → step] 
 <h2>Related</h2>
 <ul>
 <li><a href="classification.html">classification.md</a>, <a href="tensorflow-training.html">tensorflow-training.md</a></li>
+<li><a href="curve-fitting.html">curve-fitting.md</a>, <a href="neural-networks.html">neural-networks.md</a></li>
 <li><a href="train-gpu.html">train-gpu.md</a>, <a href="huggingface.html">huggingface.md</a>, <a href="train-infer.html">06-train-infer.md</a></li>
 </ul></div>
   </article>
@@ -497,7 +498,7 @@ dataset → DataLoader → [epoch loop: forward → loss → backward → step] 
 <script>
 (function () {
   const title = "Train With PyTorch";
-  const num = "06";
+  const num = "08";
   if (window.AiLabNav) {
     AiLabNav.enter((num ? num + " " : "") + title);
     AiLabNav.wireBack("a.back", "../index.html");

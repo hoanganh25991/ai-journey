@@ -49,4 +49,5 @@ RAG stands on [embedding.md](./embedding.md); the lab's Personal Knowledge-base 
 ## Related
 
 - [vector-database.md](./vector-database.md), [semantic-search.md](./semantic-search.md) — infrastructure and retrieval for RAG
+- [advanced-rag.md](./advanced-rag.md) — query translation, HyDE, RAPTOR, ColBERT
 - [embedding.md](./embedding.md), [personal-knowledge-base.md](./personal-knowledge-base.md)

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>LangSmith · App</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Sora:wght@400;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../../_shared/app.css"/>
+<style>
+header{display:flex;justify-content:space-between;margin-bottom:16px;max-width:960px}
+a{color:var(--cyan);font:13px var(--mono);text-decoration:none}
+.wrap{max-width:960px;display:grid;grid-template-columns:1.2fr 1fr;gap:20px}
+.trace,.evals{border:1px solid var(--line);border-radius:14px;padding:16px;background:rgba(255,255,255,.92)}
+h2{font:13px var(--mono);color:var(--amber);letter-spacing:.08em;text-transform:uppercase;margin-bottom:12px}
+.span{border-left:3px solid var(--cyan);padding:10px 12px;margin:8px 0 8px 8px;background:#f7fafc;border-radius:0 10px 10px 0;cursor:pointer}
+.span.nest{margin-left:28px;border-left-color:var(--amber)}
+.span.on{background:rgba(15,138,155,.1)}
+.span .t{font:12px var(--mono);color:var(--muted)}
+.meta{font:13px var(--mono);color:var(--muted);margin-top:10px;line-height:1.5}
+.score{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--line);font:14px Sora,sans-serif}
+.score b{font:13px var(--mono);color:var(--cyan)}
+@media(max-width:800px){.wrap{grid-template-columns:1fr}}
+</style></head><body>
+<header><h1>LangSmith · app</h1><div><a href="../../../slides/langsmith/">Slides</a> · <a href="../../../index.html">Lab UI</a></div></header>
+<div class="wrap">
+  <div class="trace">
+    <h2>Sample trace</h2>
+    <div id="spans"></div>
+    <p class="meta" id="detail">Click a span to inspect.</p>
+  </div>
+  <div class="evals">
+    <h2>Eval dataset · rag-v3</h2>
+    <div class="score"><span>faithfulness</span><b>0.91</b></div>
+    <div class="score"><span>context precision</span><b>0.84</b></div>
+    <div class="score"><span>answer relevancy</span><b>0.88</b></div>
+    <div class="score"><span>latency p50</span><b>1.4s</b></div>
+    <p class="meta">Playground (concept): edit the retrieve prompt → re-run eval → watch scores move. Pair with LangGraph traces in real projects.</p>
+  </div>
+</div>
+<script>
+const spans=[
+  {id:'root', nest:false, name:'graph:self_rag', t:'2.41s · 1 run', detail:'Root run. Input: “hybrid search vs vector-only?” Status: success.'},
+  {id:'ret', nest:true, name:'retriever', t:'410ms · top_k=6', detail:'FAISS query. Issue: 2/6 chunks off-topic → grade node fired rewrite.'},
+  {id:'llm1', nest:true, name:'llm:grade_docs', t:'620ms · 812 toks', detail:'Judge prompt returned relevant=false for chunk#3,#5.'},
+  {id:'rw', nest:true, name:'llm:rewrite_query', t:'540ms · 640 toks', detail:'Rewrote to multi-query + keyword hybrid terms.'},
+  {id:'ret2', nest:true, name:'retriever (retry)', t:'380ms · top_k=6', detail:'Better hits after rewrite.'},
+  {id:'gen', nest:true, name:'llm:generate', t:'980ms · 1.2k toks', detail:'Final answer with citations. Tokens + latency show up in evals.'},
+];
+const root=document.getElementById('spans');
+spans.forEach((s,i)=>{
+  const d=document.createElement('div'); d.className='span'+(s.nest?' nest':''); d.innerHTML=`<div>${s.name}</div><div class="t">${s.t}</div>`;
+  d.onclick=()=>{[...root.children].forEach(x=>x.classList.remove('on')); d.classList.add('on'); document.getElementById('detail').textContent=s.detail;};
+  root.appendChild(d); if(i===0) d.click();
+});
+</script></body></html>

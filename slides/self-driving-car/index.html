@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Self-Driving Car · Slides</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Sora:wght@400;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="../_shared/deck.css" />
+<style>
+.shot {
+  width: 100%; height: 420px; object-fit: contain; border-radius: 14px;
+  border: 1px solid var(--line); background: #e6edf5;
+}
+.shot-lg { height: 520px; }
+</style>
+</head>
+<body>
+<div class="deck-viewport">
+<main class="deck-stage" id="deckStage">
+
+<section class="slide active">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Demo · self-driving-car</span><span class="pill">slides + app</span></div>
+    <h1 class="reveal" style="margin-top:88px;">Sensors → <em>brain</em> → map</h1>
+    <p class="lead reveal" style="margin-top:28px;">Beyond toy classification: ray sensors, a feed-forward net, mutated clones, and a virtual world — then the same loop on a real map.</p>
+    <div class="flow-row reveal">
+      <span class="step">rays</span><span class="arr">→</span>
+      <span class="step">NN levels</span><span class="arr">→</span>
+      <span class="step">controls</span><span class="arr">→</span>
+      <span class="step">bestBrain</span>
+    </div>
+  </div>
+  <div class="foot"><span>01</span><span>notes/self-driving-car.md</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Geometry</span><span class="pill">boundaries</span></div>
+    <h2 class="reveal">Line · plane · <em>hyperplane</em></h2>
+    <div class="cols-3">
+      <div class="card reveal"><div class="tag">1D→2D</div><h3>Line</h3><p>Separates two sides on a plane — the simplest decision boundary.</p></div>
+      <div class="card cyan reveal"><div class="tag">2D→3D</div><h3>Plane</h3><p>Cuts space; weighted sum = threshold is the same idea.</p></div>
+      <div class="card accent reveal"><div class="tag">n-D</div><h3>Hyperplane</h3><p>Each neuron draws one; stacked layers compose richer regions.</p></div>
+    </div>
+    <p class="lead reveal" style="margin-top:36px;">Driving controls are just boundaries over sensor space.</p>
+  </div>
+  <div class="foot"><span>02</span><span>decision boundaries</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Network</span><span class="pill">feed-forward</span></div>
+    <h2 class="reveal">Levels: input · hidden · <em>output</em></h2>
+    <div class="cols-3">
+      <div class="card reveal"><div class="tag">input</div><h3>Sensors + speed</h3><p>Ray offsets ∈ [0,1] plus normalized speed.</p></div>
+      <div class="card cyan reveal"><div class="tag">hidden</div><h3>Weighted sums</h3><p>Hard threshold vs bias (demo) — or soft activations later.</p></div>
+      <div class="card accent reveal"><div class="tag">output</div><h3>Controls</h3><p>forward · left · right · reverse (on/off).</p></div>
+    </div>
+  </div>
+  <div class="foot"><span>03</span><span>network.js · Level.feedForward</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Sensors</span><span class="pill">rays</span></div>
+    <h2 class="reveal" style="font-size:36px;margin-bottom:16px;">Cast rays · read the world</h2>
+    <img class="shot shot-lg reveal" src="../assets/self-driving-car-sensors.png" alt="Sensors to neural net to actions" />
+  </div>
+  <div class="foot"><span>04</span><span>slides/assets/self-driving-car-sensors.png</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>World</span><span class="pill">graph → drive</span></div>
+    <h2 class="reveal" style="font-size:36px;margin-bottom:16px;">Virtual world · corridor</h2>
+    <img class="shot shot-lg reveal" src="../assets/self-driving-car-world.svg" alt="Graph to road borders to corridor" />
+  </div>
+  <div class="foot"><span>05</span><span>editor → .world → OSM optional</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Evolve</span><span class="pill">no labels needed</span></div>
+    <h2 class="reveal" style="font-size:36px;margin-bottom:16px;">Mutate N · keep bestBrain</h2>
+    <img class="shot shot-lg reveal" src="../assets/self-driving-car-mutate.svg" alt="Mutate clones and save best brain" />
+  </div>
+  <div class="foot"><span>06</span><span>localStorage bestBrain</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Lifecycle</span><span class="pill">train → infer</span></div>
+    <h2 class="reveal">Two lives of a brain</h2>
+    <div class="cols-2">
+      <div class="card reveal"><div class="tag">train</div><h3>Evolve</h3><p>N cars race; mutate losers’ copies; save the survivor’s weights.</p></div>
+      <div class="card accent reveal"><div class="tag">infer</div><h3>Drive</h3><p>Reload bestBrain; sensors → feedForward → controls every frame.</p></div>
+    </div>
+    <p class="lead reveal" style="margin-top:36px;">Same split as notes/06-train-infer.md — evolution is just another trainer.</p>
+  </div>
+  <div class="foot"><span>07</span><span>notes/06-train-infer.md</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Maps</span><span class="pill">beyond the toy road</span></div>
+    <h2 class="reveal">Road demo → <em>real campus</em></h2>
+    <div class="cols-2">
+      <div class="card reveal"><div class="tag">hub demo</div><h3>Training road</h3><p>Lanes + dummy traffic + mutate/save — runs in the browser now.</p></div>
+      <div class="card cyan reveal"><div class="tag">deeper sample</div><h3>Virtual world</h3><p>Map editor, OSM overlay, office .world — same brain, harder geometry.</p></div>
+    </div>
+  </div>
+  <div class="foot"><span>08</span><span>adc-pts/pts-sample-self-driving-car</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Next</span><span class="pill">working app</span></div>
+    <h1 class="reveal" style="margin-top:100px;font-size:64px;">Open app · watch clones<br /><em>save the best brain.</em></h1>
+    <p class="lead reveal" style="margin-top:28px;">Yellow rays = sensors. Right panel = live network. Disk = persist bestBrain for the next reload.</p>
+    <a class="app-cta reveal" href="../../demos/self-driving-car/app/index.html">Open working app →</a>
+  </div>
+  <div class="foot"><span>09</span><span>demos/self-driving-car/app</span></div>
+</section>
+
+</main>
+</div>
+<nav class="deck-controls">
+  <button type="button" id="prevBtn">←</button>
+  <span id="pageLabel">1 / 9</span>
+  <button type="button" id="nextBtn">→</button>
+</nav>
+<script src="../_shared/deck.js"></script>
+</body>
+</html>

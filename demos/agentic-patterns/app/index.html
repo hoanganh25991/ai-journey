@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Agentic Patterns · App</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Sora:wght@400;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../../_shared/app.css"/>
+<style>
+header{display:flex;justify-content:space-between;margin-bottom:16px;max-width:900px}
+a{color:var(--cyan);font:13px var(--mono);text-decoration:none}
+.tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;max-width:900px}
+.tabs button{border:1px solid var(--line);background:#fff;padding:8px 12px;border-radius:999px;font:12px var(--mono);cursor:pointer}
+.tabs button.on{border-color:var(--amber);color:var(--amber);background:rgba(194,112,58,.1)}
+.board{max-width:900px;border:1px solid var(--line);border-radius:16px;padding:20px;background:rgba(255,255,255,.92)}
+.steps{display:grid;gap:10px;margin:16px 0}
+.step{border:1px solid var(--line);border-radius:12px;padding:12px 14px;font:14px/1.45 Sora,sans-serif}
+.step.on{border-color:var(--cyan);background:rgba(15,138,155,.08)}
+.step .n{font:12px var(--mono);color:var(--muted)}
+button.next{border:1px solid var(--amber);background:transparent;color:var(--amber);padding:10px 14px;border-radius:10px;font:13px var(--mono);cursor:pointer}
+.hint{margin-top:12px;color:var(--muted);font:13px var(--mono)}
+</style></head><body>
+<header><h1>Agentic patterns · app</h1><div><a href="../../../slides/agentic-patterns/">Slides</a> · <a href="../../../index.html">Lab UI</a></div></header>
+<div class="tabs" id="tabs"></div>
+<div class="board">
+  <h2 id="title" style="font-size:22px"></h2>
+  <p id="blurb" style="color:var(--muted);margin-top:8px"></p>
+  <div class="steps" id="steps"></div>
+  <button type="button" class="next" id="next">Next step →</button>
+  <p class="hint">Patterns are portable — harnesses (Cursor / Claude Code) are the kitchen.</p>
+</div>
+<script>
+const patterns={
+  reflection:{title:'Reflection', blurb:'Draft → critique → revise before trusting the answer.', steps:[
+    'User asks for a migration plan.',
+    'Agent drafts a plan (may miss rollback).',
+    'Critic pass: “What breaks production?”',
+    'Revised plan adds canary + rollback.'
+  ]},
+  tools:{title:'Tool use', blurb:'Model chooses functions; schemas matter.', steps:[
+    'Goal: “What’s in PR #42?”',
+    'Call gh pr view 42 --json title,files',
+    'Observe JSON tool result.',
+    'Summarize for the user with citations.'
+  ]},
+  planning:{title:'Planning', blurb:'Break work into steps; replan on surprise.', steps:[
+    'Goal: add auth to an API.',
+    'Plan: routes → middleware → tests → docs.',
+    'Observation: existing JWT helper found.',
+    'Replan: reuse helper; skip greenfield JWT.'
+  ]},
+  multi:{title:'Multi-agent', blurb:'Specialists collaborate with clean handoffs.', steps:[
+    'Router: research vs implement vs review.',
+    'Researcher gathers API constraints.',
+    'Implementer writes the patch.',
+    'Reviewer checks tests + secrets.'
+  ]},
+  selfdiscover:{title:'Self-discover', blurb:'Compose a reasoning structure for a task class.', steps:[
+    'Task class: “debug flaky CI”.',
+    'Model proposes structure: reproduce → bisect → fix → lock.',
+    'Structure reused on the next flake.',
+    'Only rewrite structure when it fails.'
+  ]},
+};
+const tabs=document.getElementById('tabs');
+let cur='reflection', idx=0;
+Object.entries(patterns).forEach(([id,p])=>{
+  const b=document.createElement('button'); b.type='button'; b.textContent=p.title; b.dataset.id=id;
+  b.onclick=()=>{cur=id; idx=0; syncTabs(); paint();};
+  tabs.appendChild(b);
+});
+function syncTabs(){[...tabs.children].forEach(b=>b.classList.toggle('on',b.dataset.id===cur));}
+function paint(){
+  const p=patterns[cur];
+  document.getElementById('title').textContent=p.title;
+  document.getElementById('blurb').textContent=p.blurb;
+  document.getElementById('steps').innerHTML=p.steps.map((s,i)=>`<div class="step${i===idx?' on':''}"><span class="n">step ${i+1}</span><div>${s}</div></div>`).join('');
+}
+document.getElementById('next').onclick=()=>{idx=(idx+1)%patterns[cur].steps.length; paint();};
+syncTabs(); paint();
+</script></body></html>

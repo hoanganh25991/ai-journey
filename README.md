@@ -29,10 +29,10 @@ Each topic has up to three layers:
 A five-stage **Journey** map (`docs/journey.html`) ties the notes together:
 
 1. **ABC** — machines read text (tokenize → embedding → attention → softmax)
-2. **Build** — train and run (classifiers, PyTorch/TF, HF/Kaggle, transformers)
-3. **Find** — ground answers in documents (RAG, vector DB, semantic search)
-4. **Demo** — see it live (car NN, sentiment routing, train → infer)
-5. **Agent** — steer the machine (agents, models, MCP, skills, automation)
+2. **Build** — train and run (curve fitting, neural nets, classifiers, PyTorch/TF, HF/Kaggle)
+3. **Find** — ground answers in documents (RAG → advanced query translation, vector DB, semantic search)
+4. **Demo** — see it live (self-driving car, image gen, sentiment routing, train → infer)
+5. **Agent** — steer the machine (patterns, LangGraph, LangSmith, MCP, skills, harnesses)
 
 Open [`docs/index.html`](docs/index.html) after a build — search first, then dive into a note, slide, or demo.
 

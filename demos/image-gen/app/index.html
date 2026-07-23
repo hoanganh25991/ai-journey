@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Image Gen · App</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Sora:wght@400;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../../_shared/app.css"/>
+<style>
+header{display:flex;justify-content:space-between;margin-bottom:16px;max-width:1100px}
+a{color:var(--cyan);font:13px var(--mono);text-decoration:none}
+.wrap{max-width:1100px;display:grid;grid-template-columns:240px 1fr;gap:22px}
+.list button{display:block;width:100%;text-align:left;border:1px solid var(--line);background:#fff;padding:12px;border-radius:12px;margin-bottom:8px;cursor:pointer;font:13px Sora,sans-serif}
+.list button.on{border-color:var(--amber);background:rgba(194,112,58,.08)}
+.list button small{display:block;color:var(--muted);font:11px var(--mono);margin-top:4px}
+.viewer{border:1px solid var(--line);border-radius:16px;overflow:hidden;background:#fff}
+.viewer img{display:block;width:100%;max-height:520px;object-fit:contain;background:#e6edf5}
+.caption{padding:16px 18px;font:14px/1.5 Sora,sans-serif;color:var(--ink)}
+.caption .tag{font:12px var(--mono);color:var(--amber);text-transform:uppercase;letter-spacing:.08em}
+@media(max-width:800px){.wrap{grid-template-columns:1fr}}
+</style></head><body>
+<header><h1>Image gen · prompt gallery</h1><div><a href="../../../slides/image-gen/">Slides</a> · <a href="../../../index.html">Lab UI</a></div></header>
+<div class="wrap">
+  <div class="list" id="list"></div>
+  <div class="viewer"><img id="img" alt=""/><div class="caption"><div class="tag" id="tag"></div><p id="cap"></p></div></div>
+</div>
+<script>
+const items=[
+  {file:'ai-image-prompt-less-is-more-20240404-134700.jpg',tag:'less is more',cap:'Start with a short prompt. Add constraints only after seeing what failed.'},
+  {file:'ai-image-prompt-tranh-yen-binh-20240404-125500.jpg',tag:'landscape',cap:'Calm landscape variants — iterate style while keeping the subject stable.'},
+  {file:'ai-image-prompt-tranh-yen-binh-20240404-134700.jpg',tag:'landscape v2',cap:'Second pass on the same brief; compare composition.'},
+  {file:'ai-image-prompt-logo-insight-writ-20240412.jpg',tag:'logo',cap:'Wordmarks need clarity. Text-in-image is the hard part.'},
+  {file:'ai-image-l-n-menu-cho-qu-n-c-ph-20240404-172900.jpg',tag:'menu art',cap:'Applied design: menu / cafe illustration with layout constraints.'},
+  {file:'sereneai-image-generation-v1-20240908.jpg',tag:'product v1',cap:'Product exploration pass — treat as a style anchor.'},
+  {file:'sereneai-image-generation-v2-20240908.jpg',tag:'product v2',cap:'Revision of the same intent.'},
+  {file:'sereneai-image-generation-fantasy-character-20240909.jpg',tag:'character',cap:'Fantasy character — subject + wardrobe + mood.'},
+  {file:'ai-image-video-generator-101236-20250727.jpg',tag:'video',cap:'Video generators: same prompting habits plus motion / duration.'},
+];
+const base='gallery/';
+const list=document.getElementById('list');
+let cur=0;
+function show(i){
+  cur=i; const it=items[i];
+  [...list.children].forEach((b,j)=>b.classList.toggle('on',j===i));
+  document.getElementById('img').src=base+it.file;
+  document.getElementById('img').alt=it.tag;
+  document.getElementById('tag').textContent=it.tag;
+  document.getElementById('cap').textContent=it.cap;
+}
+items.forEach((it,i)=>{
+  const b=document.createElement('button'); b.type='button';
+  b.innerHTML=`${it.tag}<small>${it.file.replace(/ai-image-|sereneai-image-generation-?/g,'').slice(0,28)}</small>`;
+  b.onclick=()=>show(i); list.appendChild(b);
+});
+show(0);
+</script></body></html>

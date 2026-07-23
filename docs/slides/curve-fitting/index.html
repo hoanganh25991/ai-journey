@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Curve Fitting · Slides</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Sora:wght@400;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="../_shared/deck.css" />
+<style>
+.shot { width:100%; height:420px; object-fit:contain; border-radius:14px; border:1px solid var(--line); background:#e6edf5; }
+.shot-lg { height:500px; }
+</style>
+</head>
+<body>
+<div class="deck-viewport">
+<main class="deck-stage" id="deckStage">
+
+<section class="slide active">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Build · curve-fitting</span><span class="pill">slides + app</span></div>
+    <h1 class="reveal" style="margin-top:88px;">Guess · <em>loss</em> · tune</h1>
+    <p class="lead reveal" style="margin-top:28px;">Every training loop is curve fitting with knobs, a loss, and gradients.</p>
+    <div class="flow-row reveal"><span class="step">guess(θ)</span><span class="arr">→</span><span class="step">loss</span><span class="arr">→</span><span class="step">∇θ</span><span class="arr">→</span><span class="step">update</span></div>
+  </div>
+  <div class="foot"><span>01</span><span>notes/curve-fitting.md</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Idea</span><span class="pill">reality vs guess</span></div>
+    <h2 class="reveal">Fit a curve to data</h2>
+<div class="cols-3">
+<div class="card reveal"><div class="tag">data</div><h3>Reality</h3><p>Points you care about — the room temperature, the labels.</p></div>
+<div class="card cyan reveal"><div class="tag">model</div><h3>Guess</h3><p>A family of curves controlled by knobs θ.</p></div>
+<div class="card accent reveal"><div class="tag">metric</div><h3>Loss</h3><p>One number for wrongness — often mean squared error.</p></div>
+</div>
+    <p class="lead reveal" style="margin-top:28px;">Tune knobs until the guess hugs reality.</p>
+  </div>
+  <div class="foot"><span>02</span><span>loss</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Calc</span><span class="pill">gradient</span></div>
+    <h2 class="reveal">Derivative tells the direction</h2>
+<div class="cols-3">
+<div class="card reveal"><div class="tag">1D</div><h3>Slope</h3><p>dL/dθ — turn knob downhill.</p></div>
+<div class="card cyan reveal"><div class="tag">n-D</div><h3>Gradient vector</h3><p>One slope per knob; step opposite ∇L.</p></div>
+<div class="card accent reveal"><div class="tag">chain</div><h3>Backward</h3><p>Combine building-block derivatives.</p></div>
+</div>
+  </div>
+  <div class="foot"><span>03</span><span>forward → backward</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Loop</span><span class="pill">train</span></div>
+    <h2 class="reveal">Forward then backward</h2>
+<div class="cols-3">
+<div class="card reveal"><div class="tag">fwd</div><h3>Predict</h3><p>ŷ = guess(θ); L = loss(y, ŷ).</p></div>
+<div class="card cyan reveal"><div class="tag">bwd</div><h3>Nudge</h3><p>θ ← θ − η ∇θ L.</p></div>
+<div class="card accent reveal"><div class="tag">repeat</div><h3>Epochs</h3><p>Until loss plateaus — then freeze for inference.</p></div>
+</div>
+  </div>
+  <div class="foot"><span>04</span><span>same as pytorch loop</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Next</span><span class="pill">working app</span></div>
+    <h1 class="reveal" style="margin-top:100px;">Drag knobs · <em>watch loss</em></h1>
+    <p class="lead reveal" style="margin-top:28px;">Fit a line to points; see forward loss and a crude gradient step.</p>
+    <a class="app-cta reveal" href="../../demos/curve-fitting/app/index.html">Open working app →</a>
+  </div>
+  <div class="foot"><span>05</span><span>demos/curve-fitting/app</span></div>
+</section>
+
+</main>
+</div>
+<nav class="deck-controls">
+  <button type="button" id="prevBtn">←</button>
+  <span id="pageLabel">1 / 5</span>
+  <button type="button" id="nextBtn">→</button>
+</nav>
+<script>window.LAB={"kind": "slides", "title": "Curve Fitting · Slides", "download": "download.html", "downloadName": "curve-fitting-slides.html"};</script>
+<script src="../_shared/deck.js"></script>
+</body>
+</html>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Self-Driving Car · App</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Sora:wght@400;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="../../_shared/app.css" />
+<style>
+header.demo-head {
+  display: flex; justify-content: space-between; align-items: baseline;
+  max-width: 1100px; margin: 0 auto 16px; gap: 16px; flex-wrap: wrap;
+}
+header.demo-head h1 { font-size: 26px; }
+header.demo-head a {
+  color: var(--cyan); font-family: var(--mono); font-size: 13px; text-decoration: none;
+}
+.hint {
+  max-width: 1100px; margin: 0 auto 14px; color: var(--muted);
+  font-size: 14px; line-height: 1.5;
+}
+.stage {
+  display: flex; justify-content: center; align-items: stretch;
+  gap: 0; max-width: 1100px; margin: 0 auto;
+  border: 1px solid var(--line); border-radius: 16px; overflow: hidden;
+  background: #c5ccd4; box-shadow: var(--shadow);
+  height: min(72vh, 720px);
+}
+#carCanvas { background: #c5ccd4; display: block; }
+#networkCanvas { background: #ffffff; display: block; border-left: 1px solid var(--line); }
+#verticalButtons {
+  display: flex; flex-direction: column; justify-content: flex-start;
+  gap: 6px; padding: 12px 8px; background: rgba(255,255,255,.92);
+  border-left: 1px solid var(--line);
+}
+#verticalButtons button {
+  border: 1px solid var(--line); border-radius: 10px;
+  background: #fff; padding: 10px 12px; cursor: pointer; font-size: 18px;
+}
+#verticalButtons button:hover { border-color: var(--cyan); background: var(--teal-soft); }
+.legend {
+  max-width: 1100px; margin: 14px auto 0; display: flex; gap: 18px; flex-wrap: wrap;
+  font-family: var(--mono); font-size: 12px; color: var(--muted);
+}
+.legend span { color: var(--ink); }
+@media (max-width: 800px) {
+  .stage { flex-direction: column; height: auto; }
+  #networkCanvas { border-left: none; border-top: 1px solid var(--line); width: 100% !important; height: 220px !important; }
+  #carCanvas { width: 100% !important; height: 420px !important; }
+  #verticalButtons { flex-direction: row; border-left: none; border-top: 1px solid var(--line); }
+}
+</style>
+</head>
+<body>
+<header class="demo-head">
+  <h1>Self-driving car · working app</h1>
+  <div>
+    <a href="../../../slides/self-driving-car/">Slides</a>
+    ·
+    <a href="../../../index.html">Lab UI</a>
+  </div>
+</header>
+<p class="hint">
+  N AI cars share a brain; copies are mutated each reload. Yellow rays = sensors.
+  Save the farthest survivor (💾), discard (🗑️), then reload to keep evolving.
+</p>
+<div class="stage">
+  <canvas id="carCanvas"></canvas>
+  <div id="verticalButtons">
+    <button type="button" onclick="save()" title="Save best brain">💾</button>
+    <button type="button" onclick="discard()" title="Discard saved brain">🗑️</button>
+  </div>
+  <canvas id="networkCanvas"></canvas>
+</div>
+<p class="legend">
+  <span>best</span> solid car + rays ·
+  <span>clones</span> translucent ·
+  <span>traffic</span> dummy cars ·
+  localStorage key <span>bestBrain</span>
+</p>
+<script src="visualizer.js"></script>
+<script src="network.js"></script>
+<script src="sensor.js"></script>
+<script src="utils.js"></script>
+<script src="road.js"></script>
+<script src="controls.js"></script>
+<script src="car.js"></script>
+<script src="main.js"></script>
+<script>window.LAB={"kind": "app", "title": "Self Driving Car · Demo", "download": "../self-driving-car.zip", "downloadName": "self-driving-car.zip"};</script>
+<script src="../../_shared/chrome.js"></script>
+
+</body>
+</html>

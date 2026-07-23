@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Advanced RAG · Slides</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Sora:wght@400;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="../_shared/deck.css" />
+<style>
+.shot { width:100%; height:420px; object-fit:contain; border-radius:14px; border:1px solid var(--line); background:#e6edf5; }
+.shot-lg { height:500px; }
+</style>
+</head>
+<body>
+<div class="deck-viewport">
+<main class="deck-stage" id="deckStage">
+
+<section class="slide active">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Find · advanced-rag</span><span class="pill">slides + app</span></div>
+    <h1 class="reveal" style="margin-top:88px;">Rewrite the <em>question</em></h1>
+    <p class="lead reveal" style="margin-top:28px;">When naive top-k fails, translate, route, or upgrade the index.</p>
+  </div>
+  <div class="foot"><span>01</span><span>notes/advanced-rag.md</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Query translation</span><span class="pill">family</span></div>
+    <h2 class="reveal">Toolbox</h2>
+<div class="cols-3">
+<div class="card reveal"><div class="tag">multi</div><h3>Multi-query / fusion</h3><p>Paraphrases → union / RRF fuse.</p></div>
+<div class="card cyan reveal"><div class="tag">hyde</div><h3>HyDE / step-back</h3><p>Search a hypo doc or abstract Q.</p></div>
+<div class="card accent reveal"><div class="tag">split</div><h3>Decompose</h3><p>Sub-questions for hard asks.</p></div>
+</div>
+  </div>
+  <div class="foot"><span>02</span><span>RAG from scratch</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Index</span><span class="pill">side</span></div>
+    <h2 class="reveal">Beyond flat chunks</h2>
+<div class="cols-3">
+<div class="card reveal"><div class="tag">route</div><h3>Routing</h3><p>Pick the right store / filter.</p></div>
+<div class="card cyan reveal"><div class="tag">raptor</div><h3>RAPTOR</h3><p>Cluster summaries for multi-hop.</p></div>
+<div class="card accent reveal"><div class="tag">colbert</div><h3>ColBERT</h3><p>Late interaction scoring.</p></div>
+</div>
+  </div>
+  <div class="foot"><span>03</span><span>recall upgrades</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Reflect</span><span class="pill">loop</span></div>
+    <h2 class="reveal">Grade docs · try again</h2>
+    <p class="lead reveal">Self-reflective RAG pairs with LangGraph loops.</p>
+    <div class="flow-row reveal"><span class="step">retrieve</span><span class="arr">→</span><span class="step">grade</span><span class="arr">→</span><span class="step">rewrite</span><span class="arr">→</span><span class="step">retrieve</span></div>
+  </div>
+  <div class="foot"><span>04</span><span>langgraph</span></div>
+</section>
+
+<section class="slide">
+  <div class="slide-bg"></div><div class="grid-overlay"></div>
+  <div class="pad">
+    <div class="topbar reveal"><span>Next</span><span class="pill">working app</span></div>
+    <h1 class="reveal" style="margin-top:100px;">Pick a strategy · <em>see rewrites</em></h1>
+    <a class="app-cta reveal" href="../../demos/advanced-rag/app/index.html">Open working app →</a>
+  </div>
+  <div class="foot"><span>05</span><span>demos/advanced-rag/app</span></div>
+</section>
+
+</main>
+</div>
+<nav class="deck-controls">
+  <button type="button" id="prevBtn">←</button>
+  <span id="pageLabel">1 / 5</span>
+  <button type="button" id="nextBtn">→</button>
+</nav>
+<script src="../_shared/deck.js"></script>
+</body>
+</html>
