@@ -1,6 +1,6 @@
 /* AI Journey — service worker (scope = docs/) */
 /* Cache name is stamped at build time. */
-const CACHE = "ai-journey-20260723140353";
+const CACHE = "ai-journey-20260723142314";
 
 const PRECACHE = [
   "./",
