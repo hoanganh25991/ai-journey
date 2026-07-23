@@ -4,6 +4,29 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Hugging Face — Dataset + Space · AI Journey</title>
+<link rel="icon" href="../favicon.ico" sizes="any" />
+<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32.png" />
+<link rel="apple-touch-icon" href="../apple-touch-icon.png" />
+<link rel="manifest" href="../manifest.json" />
+<meta name="theme-color" content="#0f8a9b" />
+<meta name="application-name" content="AI Journey" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-title" content="AI Journey" />
+<meta name="apple-mobile-web-app-status-bar-style" content="default" />
+<script>
+(function () {
+  if (!("serviceWorker" in navigator)) return;
+  var link = document.querySelector('link[rel="manifest"]');
+  if (!link) return;
+  var manifestUrl = new URL(link.getAttribute("href"), location.href);
+  var swUrl = new URL("sw.js", manifestUrl);
+  var scope = new URL("./", manifestUrl);
+  window.addEventListener("load", function () {
+    navigator.serviceWorker.register(swUrl.href, { scope: scope.href }).catch(function () {});
+  });
+})();
+</script>
 <script>
 (function () {
   try {

@@ -391,6 +391,31 @@ html.i18n-busy { cursor: progress; }
 html.i18n-busy .lang-bar { opacity: .7; pointer-events: none; }
 """
 
+# Favicon + web app manifest (paths relative to each page via @@ICON_PREFIX@@).
+SITE_HEAD = r"""<link rel="icon" href="@@ICON_PREFIX@@favicon.ico" sizes="any" />
+<link rel="icon" type="image/png" sizes="32x32" href="@@ICON_PREFIX@@favicon-32.png" />
+<link rel="apple-touch-icon" href="@@ICON_PREFIX@@apple-touch-icon.png" />
+<link rel="manifest" href="@@ICON_PREFIX@@manifest.json" />
+<meta name="theme-color" content="#0f8a9b" />
+<meta name="application-name" content="AI Journey" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-title" content="AI Journey" />
+<meta name="apple-mobile-web-app-status-bar-style" content="default" />
+<script>
+(function () {
+  if (!("serviceWorker" in navigator)) return;
+  var link = document.querySelector('link[rel="manifest"]');
+  if (!link) return;
+  var manifestUrl = new URL(link.getAttribute("href"), location.href);
+  var swUrl = new URL("sw.js", manifestUrl);
+  var scope = new URL("./", manifestUrl);
+  window.addEventListener("load", function () {
+    navigator.serviceWorker.register(swUrl.href, { scope: scope.href }).catch(function () {});
+  });
+})();
+</script>"""
+
 # Runs in <head> before paint — prevents flash of wrong theme.
 THEME_BOOT = r"""<script>
 (function () {
@@ -627,6 +652,7 @@ HUB_HTML = r"""<!DOCTYPE html>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>AI Journey</title>
+@@SITE_HEAD@@
 @@THEME_BOOT@@
 @@LANG_BOOT@@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -969,6 +995,7 @@ NOTE_HTML = r"""<!DOCTYPE html>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>@@TITLE@@ · AI Journey</title>
+@@SITE_HEAD@@
 @@THEME_BOOT@@
 @@LANG_BOOT@@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -1085,13 +1112,15 @@ def esc(s: str) -> str:
     )
 
 
-def _inject_theme(html: str) -> str:
+def _inject_theme(html: str, *, icon_prefix: str = "") -> str:
+    site_head = SITE_HEAD.replace("@@ICON_PREFIX@@", icon_prefix)
     return (
         html.replace("@@THEME@@", THEME_CSS)
         .replace("@@THEME_BOOT@@", THEME_BOOT)
         .replace("@@LANG_BOOT@@", LANG_BOOT)
         .replace("@@THEME_CTRL@@", PREFS_CTRL)
         .replace("@@PREFS_CTRL@@", PREFS_CTRL)
+        .replace("@@SITE_HEAD@@", site_head)
     )
 
 
@@ -1117,7 +1146,8 @@ def render_note_page(n: dict) -> str:
         .replace("@@TOPICS@@", topics)
         .replace("@@BODY@@", n["body_html"])
         .replace("@@TITLE_JS@@", title_js)
-        .replace("@@NUM_JS@@", num_js)
+        .replace("@@NUM_JS@@", num_js),
+        icon_prefix="../",
     )
 
 
@@ -1132,6 +1162,7 @@ JOURNEY_HTML = r"""<!DOCTYPE html>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>@@TITLE@@ · AI Journey</title>
+@@SITE_HEAD@@
 @@THEME_BOOT@@
 @@LANG_BOOT@@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -1432,6 +1463,24 @@ def copy_assets() -> None:
         shared_dst = DOCS / "_shared"
         shared_dst.mkdir(parents=True, exist_ok=True)
         shutil.copy2(shared_src, shared_dst / "nav-stack.js")
+
+    # site chrome (favicon, PWA icons, manifest, service worker) → docs/ root
+    site_src = ROOT / "site"
+    if site_src.is_dir():
+        cache_ver = datetime.now(timezone.utc).strftime("%Y%m%d%H%M%S")
+        for path in site_src.iterdir():
+            if path.name == ".DS_Store" or not path.is_file():
+                continue
+            # keep source mark out of the published site
+            if path.name == "logo-mark.png":
+                continue
+            if path.name == "sw.js":
+                text = path.read_text(encoding="utf-8").replace(
+                    "@@CACHE_VERSION@@", cache_ver
+                )
+                (DOCS / "sw.js").write_text(text, encoding="utf-8")
+            else:
+                shutil.copy2(path, DOCS / path.name)
 
     # note assets (protonx images) → docs/notes/assets so both note pages and
     # decks (which point at ../../../notes/assets/...) resolve inside docs/.
